@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.0.0" />
+    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.9.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.18" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Krop.DataAccess\Krop.DataAccess.csproj" />
+    <ProjectReference Include="..\Krop.Entities\Krop.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Stocks\Constants\" />
+    <Folder Include="Features\Stocks\ExceptionHelpers\" />
+    <Folder Include="Features\Stocks\Profiles\" />
+    <Folder Include="Features\Stocks\Rules\" />
+    <Folder Include="Features\Stocks\Validations\" />
+    <Folder Include="Features\Stocks\Dtos\" />
+  </ItemGroup>
+
+</Project>
