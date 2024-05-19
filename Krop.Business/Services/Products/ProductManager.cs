@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Products.Dtos;
-using Krop.Business.Features.Products.ExceptionHelpers;
 using Krop.Business.Features.Products.Rules;
+using Krop.Business.Features.Products.Validations;
 using Krop.Business.Services.Stocks;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace Krop.Business.Services.Products
@@ -15,20 +16,19 @@ namespace Krop.Business.Services.Products
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
         private readonly ProductBusinessRules _productBusinessRules;
-        private readonly ProductExceptionHelper _productExceptionHelper;
         private readonly IStockService _stockService;
 
-        public ProductManager(IProductRepository productRepository, IMapper mapper, ProductBusinessRules productBusinessRules, ProductExceptionHelper productExceptionHelper, IStockService stockService)
+        public ProductManager(IProductRepository productRepository, IMapper mapper, ProductBusinessRules productBusinessRules, IStockService stockService)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _productBusinessRules = productBusinessRules;
-            _productExceptionHelper = productExceptionHelper;
             _stockService = stockService;
         }
 
         #region Add
-        public async Task<bool> AddAsync(CreateProductDTO createProductDTO)
+        [ValidationAspect(typeof(CreateProductValidator))]
+        public async Task<IResult> AddAsync(CreateProductDTO createProductDTO)
         {
             await _productBusinessRules.ProductNameCannotBeDuplicatedWhenInserted(createProductDTO.ProductName);//ProductName Rule
             await _productBusinessRules.ProductCodeCannotBeDuplicatedWhenInserted(createProductDTO.ProductCode);//ProductCode Rule
@@ -36,10 +36,11 @@ namespace Krop.Business.Services.Products
             Product product = _mapper.Map<Product>(createProductDTO);
             product.Stocks = await _stockService.NewProductAddedBranchAsync(product.Id);//Gelen stock listesini product.Stocks aktarıyoruz
 
-            return await _productRepository.AddAsync(product);
+            await _productRepository.AddAsync(product);
+            return new SuccessResult();
         }
-
-        public async Task<bool> AddRangeAsync(List<CreateProductDTO> createProductDTOs)
+        [ValidationAspect(typeof(CreateProductValidator))]
+        public async Task<IResult> AddRangeAsync(List<CreateProductDTO> createProductDTOs)
         {
             createProductDTOs.ForEach(async p =>
             {
@@ -55,77 +56,72 @@ namespace Krop.Business.Services.Products
                 p.Stocks = await _stockService.NewProductAddedBranchAsync(p.Id);
             });
 
-            return await _productRepository.AddRangeAsync(products);
+            await _productRepository.AddRangeAsync(products);
+            return new SuccessResult();
         }
         #endregion
         #region Update
-        public async Task<bool> UpdateAsync(UpdateProductDTO updateProductDTO)
+        [ValidationAspect(typeof(UpdateProductValidator))]
+        public async Task<IResult> UpdateAsync(UpdateProductDTO updateProductDTO)
         {
-            Product product = await _productRepository.FindAsync(updateProductDTO.Id);
-            if (product is null)
-                _productExceptionHelper.ThrowProductNotFound();
+            var product = await _productBusinessRules.CheckByProductId(updateProductDTO.Id);//ProductId Rule
 
             await _productBusinessRules.ProductNameCannotBeDuplicatedWhenUpdated(product.ProductName, updateProductDTO.ProductName);//ProductName Rule
             await _productBusinessRules.ProductCodeCannotBeDuplicatedWhenUpdated(product.ProductCode, updateProductDTO.ProductCode);//ProductCode Rule
 
             product = _mapper.Map(updateProductDTO, product);
 
-            return await _productRepository.UpdateAsync(product);
+            await _productRepository.UpdateAsync(product);
+            return new SuccessResult();
         }
-
-        public async Task<bool> UpdateRangeAsync(List<UpdateProductDTO> updateProductDTOs)
+        [ValidationAspect(typeof(UpdateProductValidator))]
+        public async Task<IResult> UpdateRangeAsync(List<UpdateProductDTO> updateProductDTOs)
         {
             updateProductDTOs.ForEach(async p =>
             {
-                Product product = await _productRepository.FindAsync(p.Id);
-                if (product is null)
-                    _productExceptionHelper.ThrowProductNotFound();
+                var product = await _productBusinessRules.CheckByProductId(p.Id);//ProductId Rule
 
                 await _productBusinessRules.ProductNameCannotBeDuplicatedWhenUpdated(product.ProductName, p.ProductName);//ProductName Rule
                 await _productBusinessRules.ProductCodeCannotBeDuplicatedWhenUpdated(product.ProductCode, p.ProductCode);//ProductCode Rule
             });
 
-            List<Product> products = _mapper.Map<List<Product>>(updateProductDTOs);
+            await _productRepository.UpdateRangeAsync(
+                _mapper.Map<List<Product>>(updateProductDTOs));
 
-            return await _productRepository.UpdateRangeAsync(products);
+            return new SuccessResult();
         }
         #endregion
         #region Delete
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<IResult> DeleteAsync(Guid id)
         {
-            Product product = await _productRepository.FindAsync(id);
-            if (product is null)
-                _productExceptionHelper.ThrowProductNotFound();
+            var product = await _productBusinessRules.CheckByProductId(id);
 
             //Eğer ürünler stokdan silinir ise ürünü de sil
-            if (await _stockService.ProductDeletedBranchAsync(id))
-                return await _productRepository.DeleteAsync(product);
+            await _stockService.ProductDeletedBranchAsync(id);//şubeki ürünü sil
+            await _productRepository.DeleteAsync(product);
 
-            return false;
+            return new SuccessResult(); ;
         }
 
-        public async Task<bool> DeleteRangeAsync(List<Guid> ids)
+        public async Task<IResult> DeleteRangeAsync(List<Guid> ids)
         {
             List<Product> products = new();
 
             ids.ForEach(async p =>
             {
-                Product product = await _productRepository.FindAsync(p);
-                if (product is null)
-                    _productExceptionHelper.ThrowProductNotFound();
+                var product = await _productBusinessRules.CheckByProductId(p);
 
                 products.Add(product);
             });
 
-            //Eğer ürünler stokdan silinir ise ürünü de sil
-            if (await _stockService.ProductDeletedRangeBranchAsync(ids))
-                return await _productRepository.DeleteRangeAsync(products);
+            await _stockService.ProductDeletedRangeBranchAsync(ids);//şubelerdeki ürünü sil
+            await _productRepository.DeleteRangeAsync(products);
 
-            return false;
+            return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IEnumerable<GetProductDTO>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetProductDTO>>> GetAllAsync()
         {
             var result = await _productRepository.GetAllAsync(includeProperties:new Expression<Func<Product, object>>[]
             {
@@ -133,17 +129,17 @@ namespace Krop.Business.Services.Products
                 b=>b.Brand//Include
             });
 
-            List<GetProductDTO> products = _mapper.Map<List<GetProductDTO>>(result);
-
-            return products;
+            return new SuccessDataResult<IEnumerable<GetProductDTO>>(
+                _mapper.Map<IEnumerable<GetProductDTO>>(result));
         }
         #endregion
         #region Search
-        public async Task<GetProductDTO> GetByIdAsync(Guid id)
+        public async Task<IDataResult<GetProductDTO>> GetByIdAsync(Guid id)
         {
-            Product product = await _productRepository.FindAsync(id);
+            var product = await _productBusinessRules.CheckByProductId(id);
 
-            return _mapper.Map<GetProductDTO>(product);
+            return new SuccessDataResult<GetProductDTO>(
+                _mapper.Map<GetProductDTO>(product));
         }
         #endregion    
     }

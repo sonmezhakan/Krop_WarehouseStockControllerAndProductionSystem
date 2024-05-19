@@ -1,13 +1,14 @@
 ﻿using Krop.Business.Features.Customers.Dtos;
+using Krop.Common.Utilits.Result;
 
 namespace Krop.Business.Services.Customers
 {
     public interface ICustomerService
     {
-        Task<bool> AddAsync(CreateCustomerDTO createCustomerDTO);
-        Task<bool> UpdateAsync(UpdateCustomerDTO updateCustomerDTO);
-        Task<bool> DeleteAsync(Guid id);
-        Task<IEnumerable<GetCustomerDTO>> GetAllAsync();
-        Task<GetCustomerDTO> GetByIdAsync(Guid id);
+        Task<IResult> AddAsync(CreateCustomerDTO createCustomerDTO);
+        Task<IResult> UpdateAsync(UpdateCustomerDTO updateCustomerDTO);
+        Task<IResult> DeleteAsync(Guid id);
+        Task<IDataResult<IEnumerable<GetCustomerDTO>>> GetAllAsync();
+        Task<IDataResult<GetCustomerDTO>> GetByIdAsync(Guid id);
     }
 }

@@ -2,7 +2,11 @@
 using Krop.Business.Features.AppUsers.Dtos;
 using Krop.Business.Features.AppUsers.ExceptionHelpers;
 using Krop.Business.Features.AppUsers.Rules;
+using Krop.Business.Features.AppUsers.Validations;
+using Krop.Business.Features.Branches.Validations;
 using Krop.Business.Services.AppUserRoles;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Result;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,20 +18,19 @@ namespace Krop.Business.Services.AppUsers
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         private readonly AppUserBusinessRules _appUserBusinessRules;
-        private readonly AppUserExceptionHelper _appUserExceptionHelper;
         private readonly IAppUserRoleService _appUserRoleService;
 
-        public AppUserManager(UserManager<AppUser> userManager,IMapper mapper,AppUserBusinessRules appUserBusinessRules,AppUserExceptionHelper appUserExceptionHelper,IAppUserRoleService appUserRoleService)
+        public AppUserManager(UserManager<AppUser> userManager,IMapper mapper,AppUserBusinessRules appUserBusinessRules,IAppUserRoleService appUserRoleService)
         {
             _userManager = userManager;
             _mapper = mapper;
             _appUserBusinessRules = appUserBusinessRules;
-            _appUserExceptionHelper = appUserExceptionHelper;
             _appUserRoleService = appUserRoleService;
         }
 
         #region Add
-        public async Task<bool> AddAsync(CreateAppUserDTO createAppUserDTO)
+        [ValidationAspect(typeof(CreateBranchValidator))]
+        public async Task<IResult> AddAsync(CreateAppUserDTO createAppUserDTO)
         {
             await _appUserBusinessRules.AppUserNameCannotBeDuplicatedWhenInserted(createAppUserDTO.UserName);//Username Rule
             await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenInserted(createAppUserDTO.Email);//Email Rule
@@ -35,24 +38,19 @@ namespace Krop.Business.Services.AppUsers
             await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenInserted(createAppUserDTO.NationalNumber);//NationalNumber Rule
 
             AppUser appUser = _mapper.Map<AppUser>(createAppUserDTO);
-            var result = await _userManager.CreateAsync(appUser);
-            if (result.Succeeded)
-            {
-                //todo:kayıt başarılı olduğu durumda mail aktivasyon maili gönderilecek
+            await _userManager.CreateAsync(appUser);
 
-                return true;
-            }
+            //todo:kayıt başarılı olduğu durumda mail aktivasyon maili gönderilecek
 
-            return false;
+            return new SuccessResult();
         }
         #endregion
         #region Update
+        [ValidationAspect(typeof(UpdateAppUserValidator))]
         //Şifre güncelleme işlemi burada yapılmıyor!
-        public async Task<bool> UpdateAsync(UpdateAppUserDTO updateAppUserDTO)
+        public async Task<IResult> UpdateAsync(UpdateAppUserDTO updateAppUserDTO)
         {
-            AppUser appUser = await _userManager.FindByIdAsync(updateAppUserDTO.Id.ToString());
-            if (appUser is null)
-                _appUserExceptionHelper.ThrowAppUserNotFound();
+            var appUser = await _appUserBusinessRules.CheckByAppUserId(updateAppUserDTO.Id);//AppUser Rule
 
             await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenUpdated(appUser.Email, updateAppUserDTO.Email);//Email Rule
             await _appUserBusinessRules.AppUserPhoneNumberCannotBeDuplicatedWhenUpdated(appUser.PhoneNumber, updateAppUserDTO.PhoneNumber);//PhoneNumber Rule
@@ -65,75 +63,58 @@ namespace Krop.Business.Services.AppUsers
             });
 
             appUser = _mapper.Map<AppUser>(updateAppUserDTO);
-            var resultUser = await _userManager.UpdateAsync(appUser);//Kullanıcı bilgileri güncelleniyor
+            await _userManager.UpdateAsync(appUser);//Kullanıcı bilgileri güncelleniyor
 
-            if (resultUser.Succeeded)
-            {
-                var currentRoles = await _userManager.GetRolesAsync(appUser);//Kullanıcıya ait yetkiler getiriliyor.
-                await _userManager.RemoveFromRolesAsync(appUser, currentRoles);//Kullanıcıya ait yetkiler siliniyor
-                var result = await _userManager.AddToRolesAsync(appUser, updateAppUserDTO.Roles);//Yetkileri Ekliyor
+            var currentRoles = await _userManager.GetRolesAsync(appUser);//Kullanıcıya ait yetkiler getiriliyor.
+            await _userManager.RemoveFromRolesAsync(appUser, currentRoles);//Kullanıcıya ait yetkiler siliniyor
+            var result = await _userManager.AddToRolesAsync(appUser, updateAppUserDTO.Roles);//Yetkileri Ekliyor
 
-                if (result.Succeeded)
-                    return true;
-            }
-
-
-            return false;
+            return new SuccessResult();
         }
 
         //Sadece şifre güncelleme işlemi yapılıyor.
-        public async Task<bool> UpdatePasswordAsync(UpdateAppUserPasswordDTO updateAppUserPasswordDTO)
+        [ValidationAspect(typeof(UpdatePasswordAppUserValidator))]
+        public async Task<IResult> UpdatePasswordAsync(UpdateAppUserPasswordDTO updateAppUserPasswordDTO)
         {
-            AppUser appUser = await _userManager.FindByIdAsync(updateAppUserPasswordDTO.Id.ToString());
-            if (appUser is null)
-                _appUserExceptionHelper.ThrowAppUserNotFound();
+            var appUser = await _appUserBusinessRules.CheckByAppUserId(updateAppUserPasswordDTO.Id);
 
-            var removeResult = await _userManager.RemovePasswordAsync(appUser);//Şifre ilk önce siliniyor.
-            if (removeResult.Succeeded)
-            {
-                var result = await _userManager.AddPasswordAsync(appUser, updateAppUserPasswordDTO.Password);//Yeni şifre oluşturuluyor.
-                if (result.Succeeded)
-                    return true;
-            }
+            await _userManager.RemovePasswordAsync(appUser);//Şifre ilk önce siliniyor.
+            await _userManager.AddPasswordAsync(appUser, updateAppUserPasswordDTO.Password);//Yeni şifre oluşturuluyor.
 
-            return false;
+            return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IEnumerable<GetAppUserDTO>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetAppUserDTO>>> GetAllAsync()
         {
             var result = await _userManager.Users.ToListAsync();
 
-            List<GetAppUserDTO> getAppUserDTOs = _mapper.Map<List<GetAppUserDTO>>(result);
-
-            return getAppUserDTOs;
+            return new SuccessDataResult<IEnumerable<GetAppUserDTO>>(
+                _mapper.Map<IEnumerable<GetAppUserDTO>>(result));
         }
         #endregion
         #region Search
-        public async Task<GetAppUserDTO> GetByIdAsync(Guid id)
+        public async Task<IDataResult<GetAppUserDTO>> GetByIdAsync(Guid id)
         {
-            AppUser appUser = await _userManager.FindByIdAsync(id.ToString());
-            if (appUser is null)
-                _appUserExceptionHelper.ThrowAppUserNotFound();
+            var appUser = await _appUserBusinessRules.CheckByAppUserId(id);
 
-            return _mapper.Map<GetAppUserDTO>(appUser);
+            return new SuccessDataResult<GetAppUserDTO>(
+                _mapper.Map<GetAppUserDTO>(appUser));
         }
 
-        public async Task<GetAppUserDTO> GetByUserNameAsync(string userName)
+        public async Task<IDataResult<GetAppUserDTO>> GetByUserNameAsync(string userName)
         {
-            AppUser appUser = await _userManager.FindByNameAsync(userName);
-            if(appUser is null)
-                _appUserExceptionHelper.ThrowAppUserNotFound();
+            var appUser = await _appUserBusinessRules.CheckByAppUserName(userName);
 
-            return _mapper.Map<GetAppUserDTO>(appUser);
+            return new SuccessDataResult<GetAppUserDTO>(
+                _mapper.Map<GetAppUserDTO>(appUser));
         }
 
-        public async Task<bool> AnyByIdAsync(Guid id)
+        public async Task<IResult> AnyByIdAsync(Guid id)
         {
-           AppUser appUser =  await _userManager.FindByIdAsync(id.ToString());
-            if (appUser is null)
-                _appUserExceptionHelper.ThrowAppUserNotFound();
-            return true;
+            await _appUserBusinessRules.CheckByAppUserId(id);
+
+            return new SuccessResult();
         }
         #endregion
 

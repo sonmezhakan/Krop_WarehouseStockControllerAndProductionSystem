@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Branches.Dtos;
 using Krop.Business.Features.Brands.Dtos;
 using Krop.Business.Features.Brands.ExceptionHelpers;
 using Krop.Business.Features.Brands.Rules;
+using Krop.Business.Features.Brands.Validations;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Krop.Business.Services.Brands
 {
@@ -23,98 +24,101 @@ namespace Krop.Business.Services.Brands
             _brandBusinessRules = brandBusinessRules;
             _brandExceptionHelper = brandExceptionHelper;
         }
-      
+
         #region Add
-        public async Task<bool> AddAsync(CreateBrandDTO createBrandDTO)
+        [ValidationAspect(typeof(CreateBrandValidator))]
+        public async Task<IResult> AddAsync(CreateBrandDTO createBrandDTO)
         {
             await _brandBusinessRules.BrandNameCannotBeDuplicatedWhenInserted(createBrandDTO.BrandName);//BrandName Rule
 
-            Brand brand = _mapper.Map<Brand>(createBrandDTO);
+            await _brandRepository.AddAsync(
+                _mapper.Map<Brand>(createBrandDTO));
 
-            return await _brandRepository.AddAsync(brand);
+            return new SuccessResult();
         }
 
-        public async Task<bool> AddRangeAsync(List<CreateBrandDTO> createBrandDTOs)
+        [ValidationAspect(typeof(CreateBrandValidator))]
+        public async Task<IResult> AddRangeAsync(List<CreateBrandDTO> createBrandDTOs)
         {
             createBrandDTOs.ForEach(async b =>
             {
                 await _brandBusinessRules.BrandNameCannotBeDuplicatedWhenInserted(b.BrandName);//BrandName Rule
             });
-            List<Brand> brands = _mapper.Map<List<Brand>>(createBrandDTOs);
-            return await _brandRepository.AddRangeAsync(brands);
+
+            await _brandRepository.AddRangeAsync(
+                _mapper.Map<List<Brand>>(createBrandDTOs));
+
+            return new SuccessResult();
         }
         #endregion
         #region Update
-        public async Task<bool> UpdateAsync(UpdateBrandDTO updateBrandDTO)
+        [ValidationAspect(typeof(UpdateBrandValidator))]
+        public async Task<IResult> UpdateAsync(UpdateBrandDTO updateBrandDTO)
         {
-            Brand brand = await _brandRepository.FindAsync(updateBrandDTO.Id);
-            if (brand is null)
-                _brandExceptionHelper.ThrowBrandNotFound();
+            var brand = await _brandBusinessRules.CheckByBrandId(updateBrandDTO.Id);//BrandId Rule
 
             await _brandBusinessRules.BrandNameCannotBeDuplicatedWhenUpdated(brand.BrandName,updateBrandDTO.BrandName);//BrandName Rule
 
-            brand = _mapper.Map(updateBrandDTO, brand);
+            await _brandRepository.UpdateAsync(_mapper.Map(updateBrandDTO, brand));
 
-            return await _brandRepository.UpdateAsync(brand);
+            return new SuccessResult();
         }
 
-        public async Task<bool> UpdateRangeAsync(List<UpdateBrandDTO> updateBrandDTOs)
+        [ValidationAspect(typeof(UpdateBrandValidator))]
+        public async Task<IResult> UpdateRangeAsync(List<UpdateBrandDTO> updateBrandDTOs)
         {
             updateBrandDTOs.ForEach(async b =>
             {
-                Brand brand = await _brandRepository.FindAsync(b.Id);
-                if (brand is null)
-                    _brandExceptionHelper.ThrowBrandNotFound();
+                var brand = await _brandBusinessRules.CheckByBrandId(b.Id);//BrandId Rule
 
-                await _brandBusinessRules.BrandNameCannotBeDuplicatedWhenUpdated(brand.BrandName, b.BrandName);
+                await _brandBusinessRules.BrandNameCannotBeDuplicatedWhenUpdated(brand.BrandName, b.BrandName);//BrandName Rule
             });
 
-            List<Brand> brands = _mapper.Map<List<Brand>>(updateBrandDTOs);
+            await _brandRepository.UpdateRangeAsync(
+                _mapper.Map<List<Brand>>(updateBrandDTOs));
 
-            return await _brandRepository.UpdateRangeAsync(brands);
+            return new SuccessResult();
         }
         #endregion
         #region Delete
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<IResult> DeleteAsync(Guid id)
         {
-            Brand brand = await _brandRepository.FindAsync(id);
-            if (brand is null)
-                _brandExceptionHelper.ThrowBrandNotFound();
+            var brand = await _brandBusinessRules.CheckByBrandId(id);
 
-            return await _brandRepository.DeleteAsync(brand);
+            await _brandRepository.DeleteAsync(brand);
+
+            return new SuccessResult();
         }
 
-        public async Task<bool> DeleteRangeAsync(List<Guid> ids)
+        public async Task<IResult> DeleteRangeAsync(List<Guid> ids)
         {
             List<Brand> brands = new();
             ids.ForEach(async b =>
             {
-                Brand brand = await _brandRepository.FindAsync(b);
-                if (brand is null)
-                    _brandExceptionHelper.ThrowBrandNotFound();
-
-                brands.Add(brand);
+                brands.Add(await _brandBusinessRules.CheckByBrandId(b));
             });
 
-            return await _brandRepository.DeleteRangeAsync(brands);
+            await _brandRepository.DeleteRangeAsync(brands);
+
+            return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IEnumerable<GetBrandDTO>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetBrandDTO>>> GetAllAsync()
         {
            var result = await _brandRepository.GetAllAsync();
 
-            return _mapper.Map<List<GetBrandDTO>>(result);
+            return new SuccessDataResult<IEnumerable<GetBrandDTO>>(
+                _mapper.Map<List<GetBrandDTO>>(result));
         }
         #endregion
         #region Search
-        public async Task<GetBrandDTO> GetByIdAsync(Guid id)
+        public async Task<IDataResult<GetBrandDTO>> GetByIdAsync(Guid id)
         {
-            Brand brand = await _brandRepository.FindAsync(id);
-            if(brand is null)
-                _brandExceptionHelper.ThrowBrandNotFound();
+            var brand = await _brandBusinessRules.CheckByBrandId(id);
 
-            return _mapper.Map<GetBrandDTO>(brand);
+            return new SuccessDataResult<GetBrandDTO>(
+                _mapper.Map<GetBrandDTO>(brand));
         }
         #endregion
     }

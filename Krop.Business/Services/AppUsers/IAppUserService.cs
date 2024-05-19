@@ -1,15 +1,16 @@
 ﻿using Krop.Business.Features.AppUsers.Dtos;
+using Krop.Common.Utilits.Result;
 
 namespace Krop.Business.Services.AppUsers
 {
     public interface IAppUserService
     {
-        Task<bool> AddAsync(CreateAppUserDTO createAppUserDTO);
-        Task<bool> UpdateAsync(UpdateAppUserDTO updateAppUserDTO);
-        Task<bool> UpdatePasswordAsync(UpdateAppUserPasswordDTO updateAppUserPasswordDTO);
-        Task<IEnumerable<GetAppUserDTO>> GetAllAsync();
-        Task<GetAppUserDTO> GetByIdAsync(Guid id);
-        Task<bool> AnyByIdAsync(Guid id);
-        Task<GetAppUserDTO> GetByUserNameAsync(string userName);
+        Task<IResult> AddAsync(CreateAppUserDTO createAppUserDTO);
+        Task<IResult> UpdateAsync(UpdateAppUserDTO updateAppUserDTO);
+        Task<IResult> UpdatePasswordAsync(UpdateAppUserPasswordDTO updateAppUserPasswordDTO);
+        Task<IDataResult<IEnumerable<GetAppUserDTO>>> GetAllAsync();
+        Task<IDataResult<GetAppUserDTO>> GetByIdAsync(Guid id);
+        Task<IResult> AnyByIdAsync(Guid id);
+        Task<IDataResult<GetAppUserDTO>> GetByUserNameAsync(string userName);
     }
 }

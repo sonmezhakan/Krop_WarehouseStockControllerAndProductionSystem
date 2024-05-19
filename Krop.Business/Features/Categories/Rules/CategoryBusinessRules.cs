@@ -1,5 +1,6 @@
 ﻿using Krop.Business.Features.Categories.ExceptionHelpers;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.Categories.Rules
 {
@@ -12,6 +13,23 @@ namespace Krop.Business.Features.Categories.Rules
         {
             _categoryRepository = categoryRepository;
             _categoryExceptionHelper = categoryExceptionHelper;
+        }
+
+        public async Task<Category> CheckByCategoryId(Guid id)
+        {
+            var result = await _categoryRepository.GetAsync(c=>c.Id == id);
+            if (result is null)
+                _categoryExceptionHelper.ThrowCategoryNotFoundException();
+
+            return result;
+        }
+        public async Task<Category> CheckByCategoryName(string categoryName)
+        {
+            var result = await _categoryRepository.GetAsync(c => c.CategoryName == categoryName);
+            if (result is null)
+                _categoryExceptionHelper.ThrowCategoryNotFoundException();
+
+            return result;
         }
 
         public async Task CategoryNameCannotBeDuplicatedWhenInserted(string categoryName)

@@ -1,5 +1,6 @@
 ﻿using Krop.Business.Features.Products.ExceptionHelpers;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.Products.Rules
 {
@@ -12,6 +13,22 @@ namespace Krop.Business.Features.Products.Rules
         {
             _productRepository = productRepository;
             _productExceptionHelper = productExceptionHelper;
+        }
+        public async Task<Product> CheckByProductId(Guid id)
+        {
+            var result = await _productRepository.GetAsync(p => p.Id == id);
+            if (result is null)
+                _productExceptionHelper.ThrowProductNotFound();
+
+            return result;
+        }
+        public async Task<Product> CheckByProductName(string productName)
+        {
+            var result = await _productRepository.GetAsync(p=>p.ProductCode == productName);
+            if(result is null)
+                _productExceptionHelper.ThrowProductNotFound();
+
+            return result;
         }
 
         public async Task ProductNameCannotBeDuplicatedWhenInserted(string productName)

@@ -25,27 +25,25 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// Yeni bir nesne ekleme.
         /// </summary>
         /// <param name="entity">Eklenecek nesne.</param>
-        /// <returns>İşlem başarılı ise True, başarısız ise False döner.</returns>
-        public bool Add(T entity)
+        public void Add(T entity)
         {
             ShadowPropertyAdd(entity); //ShadowPropertylerin değerleri atanıyor.
             
             _entities.Add(entity);
-            return ResultReturn(_context.SaveChanges());
+            _context.SaveChanges();
         }
 
         /// <summary>
         /// Liste halinde yeni nesne ekleme.
         /// </summary>
         /// <param name="entities">Eklenecek nesneler.</param>
-        /// <returns>İşlem başarılı ise True, başarısız ise False döner.</returns>
-        public bool AddRange(List<T> entities)
+        public void AddRange(List<T> entities)
         {
 
             entities.ForEach(e => { ShadowPropertyAdd(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.AddRange(entities);
-            return ResultReturn(_context.SaveChanges());
+            _context.SaveChanges();
         }
         #endregion
         #region Update
@@ -53,26 +51,24 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// Nesne güncelleme işlemi.
         /// </summary>
         /// <param name="entity">Güncellenecek nesne.</param>
-        /// <returns>Güncelleme başarılı ise True, başarısız ise false döner.</returns>
-        public bool Update(T entity)
+        public void Update(T entity)
         {
             ShadowPropertyUpdated(entity); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.Update(entity);
-            return ResultReturn(_context.SaveChanges());
+            _context.SaveChanges();
         }
 
         /// <summary>
         /// Liste halinde güncelleme işlemi.
         /// </summary>
         /// <param name="entities">Güncellenecek nesneler.</param>
-        /// <returns>Güncelleme başarılı ise True, başarısız ise false döner.</returns>
-        public bool UpdateRange(List<T> entities)
+        public void UpdateRange(List<T> entities)
         {
             entities.ForEach(e=> { ShadowPropertyUpdated(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
-            return ResultReturn(_context.SaveChanges());
+            _context.SaveChanges();
         }
         #endregion
         #region Delete
@@ -80,26 +76,24 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// Nesne silme işlemi. Silme işlemleri Soft Delete olarak yapılmaktadır.
         /// </summary>
         /// <param name="entity">Silinecek nesne.</param>
-        /// <returns>Silme başarılı ise True, başarısız ise false döner.</returns>
-        public bool Delete(T entity)
+        public void Delete(T entity)
         {
             ShadowPropertyDeleted(entity); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.Remove(entity);
-            return ResultReturn(_context.SaveChanges());
+            _context.SaveChanges();
         }
 
         /// <summary>
         /// Nesne silme işlemi. Silme işlemleri Soft Delete olarak yapılmaktadır.
         /// </summary>
         /// <param name="entities">Silinecek nesneler.</param>
-        /// <returns>Silme başarılı ise True, başarısız ise false döner.</returns>
-        public bool DeleteRange(List<T> entities)
+        public void DeleteRange(List<T> entities)
         {
             entities.ForEach(e=> { ShadowPropertyDeleted(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.RemoveRange(entities);
-            return ResultReturn(_context.SaveChanges());
+            _context.SaveChanges();
         }
         #endregion
         #region GetAll
@@ -134,22 +128,20 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
     public partial class EfBaseRepository<T> : IBaseRepositoryAsync<T> where T : class, IEntity<Guid>, new()
     {
         #region AddAsync
-        public async Task<bool> AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
             ShadowPropertyAdd(entity); //ShadowPropertylerin değerleri atanıyor.
 
             await _entities.AddAsync(entity);
-
-            return ResultReturn(await _context.SaveChangesAsync());
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> AddRangeAsync(List<T> entities)
+        public async Task AddRangeAsync(List<T> entities)
         {
             entities.ForEach(e=> { ShadowPropertyAdd(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             await _entities.AddRangeAsync(entities);
-
-            return ResultReturn(await _context.SaveChangesAsync());
+            await _context.SaveChangesAsync();
         }
         #endregion
         #region UpdateAsync
@@ -157,26 +149,24 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// Nesne güncelleme işlemi.
         /// </summary>
         /// <param name="entity">Güncellenecek nesne.</param>
-        /// <returns>Güncelleme başarılı ise True, başarısız ise false döner.</returns>
-        public async Task<bool> UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity)
         {
             ShadowPropertyUpdated(entity);//ShadowPropertylerin değerleri atanıyor.
 
             _entities.Update(entity);
-            return ResultReturn(await _context.SaveChangesAsync());
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
         /// Liste halinde güncelleme işlemi.
         /// </summary>
         /// <param name="entities">Güncellenecek nesneler.</param>
-        /// <returns>Güncelleme başarılı ise True, başarısız ise false döner.</returns>
-        public async Task<bool> UpdateRangeAsync(List<T> entities)
+        public async Task UpdateRangeAsync(List<T> entities)
         {
             entities.ForEach(e=> { ShadowPropertyUpdated(e); });//ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
-            return ResultReturn(await _context.SaveChangesAsync());
+            await _context.SaveChangesAsync();
         }
         #endregion
         #region DeleteAsync
@@ -184,26 +174,24 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// Nesne silme işlemi. Silme işlemleri Soft Delete olarak yapılmaktadır.
         /// </summary>
         /// <param name="entity">Silinecek nesne.</param>
-        /// <returns>Silme başarılı ise True, başarısız ise false döner.</returns>
-        public async Task<bool> DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
             ShadowPropertyDeleted(entity);
 
             _entities.Update(entity);
-            return ResultReturn(await _context.SaveChangesAsync());
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
         /// Nesne silme işlemi. Silme işlemleri Soft Delete olarak yapılmaktadır.
         /// </summary>
         /// <param name="entities">Silinecek nesneler.</param>
-        /// <returns>Silme başarılı ise True, başarısız ise false döner.</returns>
-        public async Task<bool> DeleteRangeAsync(List<T> entities)
+        public async Task DeleteRangeAsync(List<T> entities)
         {
             entities.ForEach(e=> { ShadowPropertyDeleted(e); });
 
             _entities.UpdateRange(entities);
-            return ResultReturn(await _context.SaveChangesAsync());
+            await _context.SaveChangesAsync();
         }
         #endregion
         #region GetAllAsync
@@ -239,15 +227,6 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
     //Custom Metot
     public partial class EfBaseRepository<T>
     {
-        private bool ResultReturn(int saveChange)
-        {
-            return saveChange switch
-            {
-                1 => true,
-                -1 => false
-            };
-        }
-
         private void ShadowPropertyAdd(T entity)
         {
             var entityEntry = _entities.Entry(entity);

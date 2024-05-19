@@ -12,13 +12,13 @@ namespace Krop.DataAccess.Repositories.Abstracts.BaseRepository
         T Find(Guid id);
         bool Any(Expression<Func<T,bool>> predicate = null);
 
-        bool Add(T entity);
-        bool AddRange(List<T> entities);
+        void Add(T entity);
+        void AddRange(List<T> entities);
 
-        bool Update(T entity);
-        bool UpdateRange(List<T> entities);
+        void Update(T entity);
+        void UpdateRange(List<T> entities);
 
-        bool Delete(T entity);
-        bool DeleteRange(List<T> entities);
+        void Delete(T entity);
+        void DeleteRange(List<T> entities);
     }
 }

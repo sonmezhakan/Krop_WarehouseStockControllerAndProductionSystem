@@ -1,20 +1,21 @@
 ﻿using Krop.Business.Features.Departments.Dtos;
+using Krop.Common.Utilits.Result;
 
 namespace Krop.Business.Services.Deparments
 {
     public interface IDepartmentService
     {
-        Task<bool> AddAsync(CreateDepartmentDTO createDepartmentDTO);
-        Task<bool> AddRangeAsync(List<CreateDepartmentDTO> createDepartmentDTOs);
+        Task<IResult> AddAsync(CreateDepartmentDTO createDepartmentDTO);
+        Task<IResult> AddRangeAsync(List<CreateDepartmentDTO> createDepartmentDTOs);
 
-        Task<bool> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO);
-        Task<bool> UpdateRangeAsync(List<UpdateDepartmentDTO> updateDepartmentDTOs);
+        Task<IResult> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO);
+        Task<IResult> UpdateRangeAsync(List<UpdateDepartmentDTO> updateDepartmentDTOs);
 
-        Task<bool> DeleteAsync(Guid id);
-        Task<bool> DeleteRangeAsync(List<Guid> ids);
+        Task<IResult> DeleteAsync(Guid id);
+        Task<IResult> DeleteRangeAsync(List<Guid> ids);
 
-        Task<IEnumerable<GetDepartmentDTO>> GetAllAsync();
-        Task<GetDepartmentDTO> GetById(Guid id);
-        Task<GetDepartmentDTO> GetByDepartmentName(string departmentName);
+        Task<IDataResult<IEnumerable<GetDepartmentDTO>>> GetAllAsync();
+        Task<IDataResult<GetDepartmentDTO>> GetById(Guid id);
+        Task<IDataResult<GetDepartmentDTO>> GetByDepartmentName(string departmentName);
     }
 }

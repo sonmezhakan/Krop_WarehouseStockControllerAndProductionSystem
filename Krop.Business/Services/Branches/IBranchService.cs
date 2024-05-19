@@ -1,19 +1,20 @@
 ﻿using Krop.Business.Features.Branches.Dtos;
+using Krop.Common.Utilits.Result;
 
 namespace Krop.Business.Services.Branches
 {
     public interface IBranchService
     {
-        Task<bool> AddAsync(CreateBranchDTO createBranchDTO);
-        Task<bool> AddRangeAsync(List<CreateBranchDTO> createBranchDTOs);
+        Task<IResult> AddAsync(CreateBranchDTO createBranchDTO);
+        Task<IResult> AddRangeAsync(List<CreateBranchDTO> createBranchDTOs);
 
-        Task<bool> UpdateAsync(UpdateBranchDTO updateBranchDTO);
-        Task<bool> UpdateRangeAsync(List<UpdateBranchDTO> updateBranchDTOs);
+        Task<IResult> UpdateAsync(UpdateBranchDTO updateBranchDTO);
+        Task<IResult> UpdateRangeAsync(List<UpdateBranchDTO> updateBranchDTOs);
 
-        Task<bool> DeleteAsync(Guid id);
-        Task<bool> DeleteRangeAsync(List<Guid> ids);
+        Task<IResult> DeleteAsync(Guid id);
+        Task<IResult> DeleteRangeAsync(List<Guid> ids);
 
-        Task<IEnumerable<GetBranchDTO>> GetAllAsync();
-        Task<GetBranchDTO> GetByIdAsync(Guid id);
+        Task<IDataResult<IEnumerable<GetBranchDTO>>> GetAllAsync();
+        Task<IDataResult<GetBranchDTO>> GetByIdAsync(Guid id);
     }
 }

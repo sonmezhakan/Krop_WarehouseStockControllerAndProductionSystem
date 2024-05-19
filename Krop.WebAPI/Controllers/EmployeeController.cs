@@ -11,57 +11,39 @@ namespace Krop.WebAPI.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
-        private readonly IValidator<CreateEmployeeDTO> _createEmployeValidator;
-        private readonly IValidator<UpdateEmployeeDTO> _uplodateEmployeValidator;
 
-        public EmployeeController(IEmployeeService employeeService,
-            IValidator<CreateEmployeeDTO> createEmployeValidator,
-            IValidator<UpdateEmployeeDTO> uplodateEmployeValidator)
+        public EmployeeController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
-            _createEmployeValidator = createEmployeValidator;
-            _uplodateEmployeValidator = uplodateEmployeValidator;
         }
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateEmployeeDTO createEmployeeDTO, CancellationToken cancellationToken)
         {
-            ValidationResult validationResult = await _createEmployeValidator.ValidateAsync(createEmployeeDTO);
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+            var result = await _employeeService.AddAsync(createEmployeeDTO);
 
-            bool result = await _employeeService.AddAsync(createEmployeeDTO);
-
-            return result ? Ok(result) : BadRequest(result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateEmployeeDTO updateEmployeeDTO, CancellationToken cancellationToken)
         {
-            ValidationResult validationResult = await _uplodateEmployeValidator.ValidateAsync(updateEmployeeDTO);
-            if (!validationResult.IsValid)
-                return Ok(validationResult.Errors.Select(e => e.ErrorMessage));
+            var result = await _employeeService.UpdateAsync(updateEmployeeDTO);
 
-            bool result = await _employeeService.UpdateAsync(updateEmployeeDTO);
-
-            return result ? Ok(result) : BadRequest(result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
             var result = await _employeeService.GetAllAsync();
-            if (result.Count() > 0)
-                return Ok(result);
-            else if (result.Count() <= 0)
-                return NoContent();
 
-            return BadRequest(result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
             var result = await _employeeService.GetByIdAsync(id);
 
-            return result is not null ? Ok(result) : BadRequest(result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
     }
 }

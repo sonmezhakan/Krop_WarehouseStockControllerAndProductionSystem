@@ -1,6 +1,8 @@
 ﻿using Krop.Business.Features.AppUserRoles.ExceptionHelpers;
+using Krop.Business.Features.Categories.ExceptionHelpers;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Krop.Business.Features.AppUserRoles.Rules
 {
@@ -15,6 +17,23 @@ namespace Krop.Business.Features.AppUserRoles.Rules
             _appUserRoleExceptionHelper = appUserRoleExceptionHelper;
         }
 
+
+        public async Task<AppUserRole> CheckByAppUserRoleId(Guid id)
+        {
+            var result = await _roleManager.Roles.FirstOrDefaultAsync(c => c.Id == id);
+            if (result is null)
+                _appUserRoleExceptionHelper.ThrowAppUserRoleNotFound();
+
+            return result;
+        }
+        public async Task<AppUserRole> CheckByAppUserRoleName(string appUserRoleName)
+        {
+            var result = await _roleManager.Roles.FirstOrDefaultAsync(c => c.Name == appUserRoleName);
+            if (result is null)
+                _appUserRoleExceptionHelper.ThrowAppUserRoleNotFound();
+
+            return result;
+        }
         public async Task AppUserRoleNameCannotBeDuplicatedWhenInserted(string roleName)
         {
             AppUserRole appUserRole = await _roleManager.FindByNameAsync(roleName);

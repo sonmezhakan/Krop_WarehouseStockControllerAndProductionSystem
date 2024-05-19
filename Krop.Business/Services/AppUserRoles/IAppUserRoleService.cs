@@ -1,14 +1,15 @@
 ﻿using Krop.Business.Features.AppUserRoles.Dtos;
+using Krop.Common.Utilits.Result;
 
 namespace Krop.Business.Services.AppUserRoles
 {
     public interface IAppUserRoleService
     {
-        Task<bool> AddAsync(CreateAppUserRoleDTO createAppUserRoleDTO);
-        Task<bool> UpdateAsync(UpdateAppUserRoleDTO updateAppUserRoleDTO);
-        Task<bool> DeleteAsync(Guid id);
-        Task<IEnumerable<GetAppUserRoleDTO>> GetAllAsync();
-        Task<GetAppUserRoleDTO> GetByIdAsync(Guid id);
-        Task<bool> GetByRoleNameAsync(string roleName);
+        Task<IResult> AddAsync(CreateAppUserRoleDTO createAppUserRoleDTO);
+        Task<IResult> UpdateAsync(UpdateAppUserRoleDTO updateAppUserRoleDTO);
+        Task<IResult> DeleteAsync(Guid id);
+        Task<IDataResult<IEnumerable<GetAppUserRoleDTO>>> GetAllAsync();
+        Task<IDataResult<GetAppUserRoleDTO>> GetByIdAsync(Guid id);
+        Task<IDataResult<GetAppUserRoleDTO>> GetByRoleNameAsync(string roleName);
     }
 }

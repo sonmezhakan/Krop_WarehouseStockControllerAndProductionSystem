@@ -1,4 +1,5 @@
-﻿using Krop.Entities.Entities;
+﻿using Krop.Common.Utilits.Result;
+using Krop.Entities.Entities;
 
 namespace Krop.Business.Services.Stocks
 {
@@ -8,13 +9,13 @@ namespace Krop.Business.Services.Stocks
         Task<List<Stock>> NewProductAddedBranchAsync(Guid productId);//Yeni eklenen ürünün tüm şubelere eklenmesi
 
 
-        Task<bool> StockUpdateAsync();
-        Task<bool> StockUpdateRangeAsync();
+        Task<IResult> StockUpdateAsync();
+        Task<IResult> StockUpdateRangeAsync();
 
-        Task<bool> BranchDeletedProductAsync(Guid branchId);
-        Task<bool> BranchDeletedRangeProductAsync(List<Guid> branchIds);
-        Task<bool> ProductDeletedBranchAsync(Guid productId);
-        Task<bool> ProductDeletedRangeBranchAsync(List<Guid> productIds);
+        Task<IResult> BranchDeletedProductAsync(Guid branchId);
+        Task<IResult> BranchDeletedRangeProductAsync(List<Guid> branchIds);
+        Task<IResult> ProductDeletedBranchAsync(Guid productId);
+        Task<IResult> ProductDeletedRangeBranchAsync(List<Guid> productIds);
 
     }
 }

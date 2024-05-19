@@ -1,4 +1,5 @@
 ﻿
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
 
@@ -62,17 +63,18 @@ namespace Krop.Business.Services.Stocks
 
         #endregion
         #region Branch Deleted Product
-        public async Task<bool> BranchDeletedProductAsync(Guid branchId)
+        public async Task<IResult> BranchDeletedProductAsync(Guid branchId)
         {
             var stocks = await _stockRepository.GetAllAsync(b => b.BranchId == branchId);//Gelen parametre branchId'sine ait tüm stocks verileri getirilir.
 
             if (stocks is null)
-                return true;//Eğer herhangi bir veri yoksa silenecek veri olmadığından true döndürülür.
+                return new SuccessResult();//Eğer herhangi bir veri yoksa silenecek veri olmadığından true döndürülür.
 
-            return await _stockRepository.DeleteRangeAsync(stocks.ToList());//Silme işlemi gerçekleştirilir.
+            await _stockRepository.DeleteRangeAsync(stocks.ToList());//Silme işlemi gerçekleştirilir.
+            return new SuccessResult();
         }
 
-        public async Task<bool> BranchDeletedRangeProductAsync(List<Guid> branchIds)
+        public async Task<IResult> BranchDeletedRangeProductAsync(List<Guid> branchIds)
         {
             List<Stock> stocks = new();
             //Parametre olarak gelen branchIdlerini döngüye sokarak her bir branchdeki ürünler stockdan silinir.
@@ -89,22 +91,23 @@ namespace Krop.Business.Services.Stocks
                     });
                 }
             });
-
-            return await _stockRepository.DeleteRangeAsync(stocks);//Stocks listesi toplu bir şekilde silinir.
+            await _stockRepository.DeleteRangeAsync(stocks);//Stocks listesi toplu bir şekilde silinir.
+            return new SuccessResult();
         }
         #endregion
         #region Product Deleted Branch
-        public async Task<bool> ProductDeletedBranchAsync(Guid productId)
+        public async Task<IResult> ProductDeletedBranchAsync(Guid productId)
         {
             var stocks = await _stockRepository.GetAllAsync(b => b.ProductId == productId);//Gelen parametre productId'sine ait tüm stocks verileri getirilir.
 
             if (stocks is null)
-                return true;//Eğer herhangi bir veri yoksa silenecek veri olmadığından true döndürülür.
+                return new SuccessResult();//Eğer herhangi bir veri yoksa silenecek veri olmadığından true döndürülür.
 
-            return await _stockRepository.DeleteRangeAsync(stocks.ToList());//Silme işlemi gerçekleştirilir.
+            await _stockRepository.DeleteRangeAsync(stocks.ToList());//Silme işlemi gerçekleştirilir.
+            return new SuccessResult();
         }
 
-        public async Task<bool> ProductDeletedRangeBranchAsync(List<Guid> productIds)
+        public async Task<IResult> ProductDeletedRangeBranchAsync(List<Guid> productIds)
         {
             List<Stock> stocks = new();
             //Parametre olarak gelen productIdlerini döngüye sokarak her bir ürün şubelerden silinir.
@@ -121,21 +124,21 @@ namespace Krop.Business.Services.Stocks
                     });
                 }
             });
-
-            return await _stockRepository.DeleteRangeAsync(stocks);//Stocks listesi toplu bir şekilde silinir.
+            await _stockRepository.DeleteRangeAsync(stocks);//Stocks listesi toplu bir şekilde silinir.
+            return new SuccessResult();
         }
         #endregion
         #region Stock Update
-        public async Task<bool> StockUpdateAsync()
+        public async Task<IResult> StockUpdateAsync()
         {
             //todo:stok giriş çıkış işlemleri ile birlikte yapılacak.
-            return false;
+            return new ErrorResult();
         }
 
-        public async Task<bool> StockUpdateRangeAsync()
+        public async Task<IResult> StockUpdateRangeAsync()
         {
             //todo:stok giriş çıkış işlemleri ile birlikte yapılacak.
-            return false;
+            return new ErrorResult();
         }
         #endregion
     }

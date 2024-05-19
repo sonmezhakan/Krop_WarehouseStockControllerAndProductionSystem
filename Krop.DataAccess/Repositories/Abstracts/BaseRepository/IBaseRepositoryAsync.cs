@@ -11,14 +11,14 @@ namespace Krop.DataAccess.Repositories.Abstracts.BaseRepository
         Task<T> FindAsync(Guid id);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate = null);
 
-        Task<bool> AddAsync(T entity);
-        Task<bool> AddRangeAsync(List<T> entities);
+        Task AddAsync(T entity);
+        Task AddRangeAsync(List<T> entities);
 
-        Task<bool> UpdateAsync(T entity);
-        Task<bool> UpdateRangeAsync(List<T> entities);
+        Task UpdateAsync(T entity);
+        Task UpdateRangeAsync(List<T> entities);
 
-        Task<bool> DeleteAsync(T entity);
-        Task<bool> DeleteRangeAsync(List<T> entities);
+        Task DeleteAsync(T entity);
+        Task DeleteRangeAsync(List<T> entities);
 
     }
 }

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.Business.Exceptions.HttpProblemDetails
 {
-    public class ValidationProblemDetails:ProblemDetails
+    public class FluentValidationProblemDetails:ProblemDetails
     {
-        public ValidationProblemDetails(string detail)
+        public FluentValidationProblemDetails(string detail)
         {
             Title = "Validation error(s)";
             Detail = detail;

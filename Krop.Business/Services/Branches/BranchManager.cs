@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Branches.Dtos;
-using Krop.Business.Features.Branches.ExceptionHelper;
 using Krop.Business.Features.Branches.Rules;
+using Krop.Business.Features.Branches.Validations;
 using Krop.Business.Services.Stocks;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Krop.Business.Services.Branches
 {
@@ -14,30 +15,31 @@ namespace Krop.Business.Services.Branches
         private readonly IBranchRepository _branchRepository;
         private readonly IMapper _mapper;
         private readonly BranchBusinessRules _branchBusinessRules;
-        private readonly BranchExceptionHelper _branchExceptionHelper;
         private readonly IStockService _stockService;
 
-        public BranchManager(IBranchRepository branchRepository, IMapper mapper, BranchBusinessRules branchBusinessRules, BranchExceptionHelper branchExceptionHelper, IStockService stockService)
+        public BranchManager(IBranchRepository branchRepository, IMapper mapper, BranchBusinessRules branchBusinessRules, IStockService stockService)
         {
             _branchRepository = branchRepository;
             _mapper = mapper;
             _branchBusinessRules = branchBusinessRules;
-            _branchExceptionHelper = branchExceptionHelper;
             _stockService = stockService;
         }
 
         #region Add
-        public async Task<bool> AddAsync(CreateBranchDTO createBranchDTO)
+        [ValidationAspect(typeof(CreateBranchValidator))]
+        public async Task<IResult> AddAsync(CreateBranchDTO createBranchDTO)
         {
             await _branchBusinessRules.BranchNameCannotBeDuplicatedWhenInserted(createBranchDTO.BranchName);//BranchName Rule
 
             Branch branch = _mapper.Map<Branch>(createBranchDTO);
             branch.Stocks = await _stockService.NewBranchAddedProductAsync(branch.Id);//Stock dan gelen listesi branchin stocklarına aktarıyoruz.
             //todo:ürünleri ekleme işlemi yapılacak.
-            return await _branchRepository.AddAsync(branch);
-        }
+            await _branchRepository.AddAsync(branch);
 
-        public async Task<bool> AddRangeAsync(List<CreateBranchDTO> createBranchDTOs)
+            return new SuccessResult();
+        }
+        [ValidationAspect(typeof(CreateBranchValidator))]
+        public async Task<IResult> AddRangeAsync(List<CreateBranchDTO> createBranchDTOs)
         {
             createBranchDTOs.ForEach(async b =>
             {
@@ -53,83 +55,78 @@ namespace Krop.Business.Services.Branches
             });
             //todo:ürünleri stocka ekleme işlemi yapılacak.
 
-            return await _branchRepository.AddRangeAsync(branches);
+            await _branchRepository.AddRangeAsync(branches);
+            return new SuccessResult();
         }
         #endregion
         #region Update
-        public async Task<bool> UpdateAsync(UpdateBranchDTO updateBranchDTO)
+        [ValidationAspect(typeof(UpdateBranchValidator))]
+        public async Task<IResult> UpdateAsync(UpdateBranchDTO updateBranchDTO)
         {
-            Branch branch = await _branchRepository.FindAsync(updateBranchDTO.Id);
-            if (branch is null)
-                _branchExceptionHelper.ThrowBranchNotFound();
+            var branch = await _branchBusinessRules.CheckByBranchId(updateBranchDTO.Id);
 
-            branch = _mapper.Map(updateBranchDTO, branch);
+            await _branchRepository.UpdateAsync(
+                _mapper.Map(updateBranchDTO, branch));
 
-            return await _branchRepository.UpdateAsync(branch);
+            return new SuccessResult();
         }
-
-        public async Task<bool> UpdateRangeAsync(List<UpdateBranchDTO> updateBranchDTOs)
+        [ValidationAspect(typeof(UpdateBranchValidator))]
+        public async Task<IResult> UpdateRangeAsync(List<UpdateBranchDTO> updateBranchDTOs)
         {
             updateBranchDTOs.ForEach(async b =>
             {
-                Branch branch = await _branchRepository.FindAsync(b.Id);
-                if (branch is null)
-                    _branchExceptionHelper.ThrowBranchNotFound();
+                await _branchBusinessRules.CheckByBranchId(b.Id);
             });
 
-            List<Branch> branches = _mapper.Map<List<Branch>>(updateBranchDTOs);
-            return await _branchRepository.UpdateRangeAsync(branches);
+            await _branchRepository.UpdateRangeAsync(
+                _mapper.Map<List<Branch>>(updateBranchDTOs));
+
+            return new SuccessResult();
         }
         #endregion
         #region Delete
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<IResult> DeleteAsync(Guid id)
         {
-            Branch branch = await _branchRepository.FindAsync(id);
-            if (branch is null)
-                _branchExceptionHelper.ThrowBranchNotFound();
+            var branch = await _branchBusinessRules.CheckByBranchId(id);
 
-            if (await _stockService.BranchDeletedProductAsync(branch.Id))//Belirtilen şubeye ait stokdan ürünler silinir ise şubeyi sil. 
-                return await _branchRepository.DeleteAsync(branch);
-
-            return false;
+            await _stockService.BranchDeletedProductAsync(branch.Id);//Belirtilen şubeye ait stokdan ürünler sil.
+            await _branchRepository.DeleteAsync(branch);//Şubeyi sil
+            return new SuccessResult();
         }
 
-        public async Task<bool> DeleteRangeAsync(List<Guid> ids)
+        public async Task<IResult> DeleteRangeAsync(List<Guid> ids)
         {
             List<Branch> branches = new();
 
             ids.ForEach(async b =>
             {
-                Branch branch = await _branchRepository.FindAsync(b);
-                if (branch is null)
-                    _branchExceptionHelper.ThrowBranchNotFound();
+                var branch = await _branchBusinessRules.CheckByBranchId(b);
 
                 branches.Add(branch);
             });
 
-            if (await _stockService.BranchDeletedRangeProductAsync(ids))//Belirtilen şubelere ait stokdan ürünler silinir ise şubeleri sil.
-                return await _branchRepository.DeleteRangeAsync(branches);
+            await _stockService.BranchDeletedRangeProductAsync(ids);//Belirtilen şubelere ait stokdan ürünler sil.
+            await _branchRepository.DeleteRangeAsync(branches);//Şubeleri sil
 
-            return false;
+            return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IEnumerable<GetBranchDTO>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetBranchDTO>>> GetAllAsync()
         {
             var result = await _branchRepository.GetAllAsync();
 
-            List<GetBranchDTO> getBranchDTOs = _mapper.Map<List<GetBranchDTO>>(result);
-            return getBranchDTOs;
+            return new SuccessDataResult<IEnumerable<GetBranchDTO>>(
+                _mapper.Map<IEnumerable<GetBranchDTO>>(result));
         }
         #endregion
         #region Search
-        public async Task<GetBranchDTO> GetByIdAsync(Guid id)
+        public async Task<IDataResult<GetBranchDTO>> GetByIdAsync(Guid id)
         {
-            Branch branch = await _branchRepository.FindAsync(id);
-            if (branch is null)
-                _branchExceptionHelper.ThrowBranchNotFound();
+            var branch = await _branchBusinessRules.CheckByBranchId(id);
 
-            return _mapper.Map<GetBranchDTO>(branch);
+            return new SuccessDataResult<GetBranchDTO>(
+                _mapper.Map<GetBranchDTO>(branch));
         }
         #endregion
 

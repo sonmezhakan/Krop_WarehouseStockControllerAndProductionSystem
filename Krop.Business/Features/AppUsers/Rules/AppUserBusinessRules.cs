@@ -10,6 +10,22 @@ namespace Krop.Business.Features.AppUsers.Rules
         private readonly UserManager<AppUser> _userManager;
         private readonly AppUserExceptionHelper _appUserExceptionHelper;
 
+        public async Task<AppUser> CheckByAppUserId(Guid id)
+        {
+            var result = await _userManager.FindByIdAsync(id.ToString());
+            if (result is null)
+                _appUserExceptionHelper.ThrowAppUserNotFound();
+
+            return result;
+        }
+        public async Task<AppUser> CheckByAppUserName(string userName)
+        {
+            var result = await _userManager.FindByNameAsync(userName);
+            if (result is null)
+                _appUserExceptionHelper.ThrowAppUserNotFound();
+
+            return result;
+        }
         public AppUserBusinessRules(UserManager<AppUser> userManager,AppUserExceptionHelper appUserExceptionHelper)
         {
             _userManager = userManager;

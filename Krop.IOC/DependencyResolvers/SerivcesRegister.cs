@@ -62,6 +62,7 @@ namespace Krop.IOC.DependencyResolvers
             services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 
 
+
             //ExceptionHelpers
             services.AddTransient<CategoryExceptionHelper>();
             services.AddTransient<ProductExceptionHelper>();
@@ -87,12 +88,12 @@ namespace Krop.IOC.DependencyResolvers
 
             //Identity Service
             services.AddIdentity<AppUser, AppUserRole>().AddEntityFrameworkStores<KropContext>().AddDefaultTokenProviders();
-            services.AddScoped<UserManager<AppUser>>();
+            /*services.AddScoped<UserManager<AppUser>>();
             services.AddScoped<SignInManager<AppUser>>();
-            services.AddScoped<RoleManager<AppUserRole>>();
+            services.AddScoped<RoleManager<AppUserRole>>();*/
 
             //Repositories
-            services.AddScoped(typeof(IBaseRepository<>), typeof(EfBaseRepository<>));
+            /*services.AddScoped(typeof(IBaseRepository<>), typeof(EfBaseRepository<>));
             services.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(EfBaseRepository<>));
 
             services.AddScoped<IBranchRepository, EFBranchRepository>();
@@ -102,10 +103,10 @@ namespace Krop.IOC.DependencyResolvers
             services.AddScoped<IProductRepository, EfProductRepository>();
             services.AddScoped<IStockRepository, EfStockRepository>();
             services.AddScoped<IBrandRepository, EfBrandRepository>();
-            services.AddScoped<ICustomerRepository, EfCustomerRepository>();
+            services.AddScoped<ICustomerRepository, EfCustomerRepository>();*/
 
             //Services
-            services.AddScoped<ICategoryService, CategoryManager>();
+            /*services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<IProductService, ProductManager>();
             services.AddScoped<IDepartmentService, DepartmentManager>();
             services.AddScoped<IAppUserService, AppUserManager>();
@@ -114,7 +115,7 @@ namespace Krop.IOC.DependencyResolvers
             services.AddScoped<IBranchService, BranchManager>();
             services.AddScoped<IStockService, StockManager>();
             services.AddScoped<IBrandService, BrandManager>();
-            services.AddScoped<ICustomerService, CustomerManager>();
+            services.AddScoped<ICustomerService, CustomerManager>();*/
 
             return services;
         }

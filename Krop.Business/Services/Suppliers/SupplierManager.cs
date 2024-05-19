@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Suppliers.Dtos;
-using Krop.Business.Features.Suppliers.ExceptionHelpers;
+using Krop.Business.Features.Suppliers.Rules;
+using Krop.Business.Features.Suppliers.Validations;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
 
@@ -10,60 +13,61 @@ namespace Krop.Business.Services.Suppliers
     {
         private readonly ISupplierRepository _supplierRepository;
         private readonly IMapper _mapper;
-        private readonly SupplierExceptionHelper _supplierExceptionHelper;
+        private readonly SupplierBusinessRules _supplierBusinessRules;
 
-        public SupplierManager(ISupplierRepository supplierRepository,IMapper mapper,SupplierExceptionHelper supplierExceptionHelper)
+        public SupplierManager(ISupplierRepository supplierRepository,IMapper mapper,SupplierBusinessRules supplierBusinessRules)
         {
             _supplierRepository = supplierRepository;
             _mapper = mapper;
-            _supplierExceptionHelper = supplierExceptionHelper;
+            _supplierBusinessRules = supplierBusinessRules;
         }
         #region Add
-        public async Task<bool> AddAsync(CreateSupplierDTO createSupplierDTO)
+        [ValidationAspect(typeof(CreateSupplierValidation))]
+        public async Task<IResult> AddAsync(CreateSupplierDTO createSupplierDTO)
         {
-            Supplier supplier = _mapper.Map<Supplier>(createSupplierDTO);
+            await _supplierRepository.AddAsync(
+                _mapper.Map<Supplier>(createSupplierDTO));
 
-            return await _supplierRepository.AddAsync(supplier);
+            return new SuccessResult();
         }
         #endregion
         #region Update
-        public async Task<bool> UpdateAsync(UpdateSupplierDTO updateSupplierDTO)
+        [ValidationAspect(typeof(UpdateSupplierValidator))]
+        public async Task<IResult> UpdateAsync(UpdateSupplierDTO updateSupplierDTO)
         {
-            Supplier supplier = await _supplierRepository.FindAsync(updateSupplierDTO.Id);
-            if (supplier is null)
-                _supplierExceptionHelper.ThrowSupplierNotFound();
+            var supplier = await _supplierBusinessRules.CheckBySupplierId(updateSupplierDTO.Id);
 
             supplier = _mapper.Map(updateSupplierDTO,supplier);
+            await _supplierRepository.UpdateAsync(supplier);
 
-            return await _supplierRepository.UpdateAsync(supplier);
+            return new SuccessResult();
         }
         #endregion
         #region Delete
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<IResult> DeleteAsync(Guid id)
         {
-            Supplier supplier = await _supplierRepository.FindAsync(id);
-            if (supplier is null)
-                _supplierExceptionHelper.ThrowSupplierNotFound();
+            var supplier = await _supplierBusinessRules.CheckBySupplierId(id);
 
-            return await _supplierRepository.DeleteAsync(supplier);
+            await _supplierRepository.DeleteAsync(supplier);
+            return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IEnumerable<GetSupplierDTO>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetSupplierDTO>>> GetAllAsync()
         {
             var result = await _supplierRepository.GetAllAsync();
 
-            return _mapper.Map<List<GetSupplierDTO>>(result);
+            return new SuccessDataResult<IEnumerable<GetSupplierDTO>>(
+                _mapper.Map<List<GetSupplierDTO>>(result));
         }
         #endregion
         #region Search
-        public async Task<GetSupplierDTO> GetByIdAsync(Guid id)
+        public async Task<IDataResult<GetSupplierDTO>> GetByIdAsync(Guid id)
         {
-            Supplier supplier = await _supplierRepository.FindAsync(id);
-            if (supplier is null)
-                _supplierExceptionHelper.ThrowSupplierNotFound();
+            var supplier = await _supplierBusinessRules.CheckBySupplierId(id);
 
-            return _mapper.Map<GetSupplierDTO>(supplier);
+            return new SuccessDataResult<GetSupplierDTO>(
+                _mapper.Map<GetSupplierDTO>(supplier));
         }
         #endregion
     }

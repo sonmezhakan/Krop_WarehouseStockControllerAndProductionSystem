@@ -1,5 +1,6 @@
 ﻿using Krop.Business.Features.Brands.ExceptionHelpers;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.Brands.Rules
 {
@@ -14,6 +15,14 @@ namespace Krop.Business.Features.Brands.Rules
             _brandExceptionHelper = brandExceptionHelper;
         }
 
+        public async Task<Brand> CheckByBrandId(Guid id)
+        {
+            var result = await _brandRepository.GetAsync(b => b.Id == id);
+            if (result is null)
+                _brandExceptionHelper.ThrowBrandNotFound();
+
+            return result;
+        }
         public async Task BrandNameCannotBeDuplicatedWhenInserted(string brandName)
         {
             bool result = await _brandRepository.AnyAsync(b=>b.BrandName == brandName);

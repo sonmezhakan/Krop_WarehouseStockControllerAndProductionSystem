@@ -1,28 +1,28 @@
 ﻿namespace Krop.Business.Exceptions.Types
 {
-    public class ValidationException:Exception
+    public class FluentValidationException:Exception
     {
         public IEnumerable<string> Errors { get; }
 
-        public ValidationException()
+        public FluentValidationException()
             : base()
         {
             Errors = Array.Empty<string>();
         }
 
-        public ValidationException(string? message)
+        public FluentValidationException(string? message)
             : base(message)
         {
             Errors = Array.Empty<string>();
         }
 
-        public ValidationException(string? message, Exception? innerException)
+        public FluentValidationException(string? message, Exception? innerException)
             : base(message, innerException)
         {
             Errors = Array.Empty<string>();
         }
 
-        public ValidationException(IEnumerable<string> errors)
+        public FluentValidationException(IEnumerable<string> errors)
             : base(BuildErrorMessage(errors))
         {
             Errors = errors;

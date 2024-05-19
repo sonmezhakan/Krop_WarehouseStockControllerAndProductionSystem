@@ -1,21 +1,22 @@
 ﻿using Krop.Business.Features.Categories.Dtos;
+using Krop.Common.Utilits.Result;
 
 namespace Krop.Business.Services.Categories
 {
     public interface ICategoryService
     {
-        Task<bool> AddAsync(CreateCategoryDTO createCategoryDTO);
-        Task<bool> AddRangeAsync(List<CreateCategoryDTO> createCategoryDTOs);
+        Task<IResult> AddAsync(CreateCategoryDTO createCategoryDTO);
+        Task<IResult> AddRangeAsync(List<CreateCategoryDTO> createCategoryDTOs);
 
-        Task<bool> UpdateAsync(UpdateCategoryDTO updateCategoryDTO);
-        Task<bool> UpdateRangeAsync(List<UpdateCategoryDTO> updateCategoryDTOs);
+        Task<IResult> UpdateAsync(UpdateCategoryDTO updateCategoryDTO);
+        Task<IResult> UpdateRangeAsync(List<UpdateCategoryDTO> updateCategoryDTOs);
 
-        Task<bool> DeleteAsync(Guid id);
-        Task<bool> DeleteRangeAsync(List<Guid> ids);
+        Task<IResult> DeleteAsync(Guid id);
+        Task<IResult> DeleteRangeAsync(List<Guid> ids);
 
-        Task<IEnumerable<GetCategoryDTO>> GetAllAsync();
-        Task<GetCategoryDTO> GetByIdAsync(Guid id);
-        Task<GetCategoryDTO> GetByCategoryNameAsync(string categoryName);
+        Task<IDataResult<IEnumerable<GetCategoryDTO>>> GetAllAsync();
+        Task<IDataResult<GetCategoryDTO>> GetByIdAsync(Guid id);
+        Task<IDataResult<GetCategoryDTO>> GetByCategoryNameAsync(string categoryName);
 
     }
 }

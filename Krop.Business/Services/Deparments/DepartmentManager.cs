@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Departments.Dtos;
-using Krop.Business.Features.Departments.ExceptionHelpers;
 using Krop.Business.Features.Departments.Rules;
+using Krop.Business.Features.Departments.Validations;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Krop.Business.Services.Deparments
 {
@@ -13,118 +14,115 @@ namespace Krop.Business.Services.Deparments
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
         private readonly DepartmentBusinessRules _departmentBusinessRules;
-        private readonly DepartmentExceptionHelper _departmentExceptionHelper;
 
-        public DepartmentManager(IDepartmentRepository departmentRepository, IMapper mapper, DepartmentBusinessRules departmentBusinessRules, DepartmentExceptionHelper departmentExceptionHelper)
+        public DepartmentManager(IDepartmentRepository departmentRepository, IMapper mapper, DepartmentBusinessRules departmentBusinessRules)
         {
             _departmentRepository = departmentRepository;
             _mapper = mapper;
             _departmentBusinessRules = departmentBusinessRules;
-            _departmentExceptionHelper = departmentExceptionHelper;
         }
 
         #region Add
-        public async Task<bool> AddAsync(CreateDepartmentDTO createDepartmentDTO)
+        [ValidationAspect(typeof(CreateDepartmentValidator))]
+        public async Task<IResult> AddAsync(CreateDepartmentDTO createDepartmentDTO)
         {
             await _departmentBusinessRules.DepartmentNameCannotBeDuplicatedWhenInserted(createDepartmentDTO.DepartmentName);//DepartmentName Rule
 
-            Department department = _mapper.Map<Department>(createDepartmentDTO);
+            await _departmentRepository.AddAsync(
+                _mapper.Map<Department>(createDepartmentDTO));
 
-            return await _departmentRepository.AddAsync(department);
+            return new SuccessResult();
         }
-
-        public async Task<bool> AddRangeAsync(List<CreateDepartmentDTO> createDepartmentDTOs)
+        [ValidationAspect(typeof(CreateDepartmentValidator))]
+        public async Task<IResult> AddRangeAsync(List<CreateDepartmentDTO> createDepartmentDTOs)
         {
             createDepartmentDTOs.ForEach(async d =>
             {
                 await _departmentBusinessRules.DepartmentNameCannotBeDuplicatedWhenInserted(d.DepartmentName);//DepartmentName Rule
             });
 
-            List<Department> departments = _mapper.Map<List<Department>>(createDepartmentDTOs);
+            await _departmentRepository.AddRangeAsync(
+                _mapper.Map<List<Department>>(createDepartmentDTOs));
 
-            return await _departmentRepository.AddRangeAsync(departments);
+            return new SuccessResult();
         }
         #endregion
         #region Update
-        public async Task<bool> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO)
+        [ValidationAspect(typeof(UpdateDepartmentValidator))]
+        public async Task<IResult> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO)
         {
-            Department department = await _departmentRepository.FindAsync(updateDepartmentDTO.Id);
-            if (department is null)
-                _departmentExceptionHelper.ThrowDepartmentNotFound();
-
+            var department = await _departmentBusinessRules.CheckByDepartmentId(updateDepartmentDTO.Id);//DepartmentId Rule
             await _departmentBusinessRules.DepartmentNameCannotBeDuplicateWhenUpdated(department.DepartmentName, updateDepartmentDTO.DepartmentName);//DepartmentName Rule
 
-            department = _mapper.Map(updateDepartmentDTO, department);
+            await _departmentRepository.UpdateAsync(
+                _mapper.Map(updateDepartmentDTO, department));
 
-            return await _departmentRepository.UpdateAsync(department);
+            return new SuccessResult();
         }
-
-        public async Task<bool> UpdateRangeAsync(List<UpdateDepartmentDTO> updateDepartmentDTOs)
+        [ValidationAspect(typeof(UpdateDepartmentValidator))]
+        public async Task<IResult> UpdateRangeAsync(List<UpdateDepartmentDTO> updateDepartmentDTOs)
         {
             updateDepartmentDTOs.ForEach(async d =>
             {
-                Department department = await _departmentRepository.FindAsync(d.Id);
-                if (department is null)
-                    _departmentExceptionHelper.ThrowDepartmentNotFound();
-
+                var department = await _departmentBusinessRules.CheckByDepartmentId(d.Id);//DepartmentId Rule
                 await _departmentBusinessRules.DepartmentNameCannotBeDuplicateWhenUpdated(department.DepartmentName, d.DepartmentName);//DepartmentName Rule
             });
 
-            List<Department> departments = _mapper.Map<List<Department>>(updateDepartmentDTOs);
+            await _departmentRepository.UpdateRangeAsync(
+                _mapper.Map<List<Department>>(updateDepartmentDTOs));
 
-            return await _departmentRepository.UpdateRangeAsync(departments);
+            return new SuccessResult();
         }
         #endregion
         #region Delete
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<IResult> DeleteAsync(Guid id)
         {
-            Department department = await _departmentRepository.FindAsync(id);
-            if (department is null)
-                _departmentExceptionHelper.ThrowDepartmentNotFound();
+            var department = await _departmentBusinessRules.CheckByDepartmentId(id);
 
-            return await _departmentRepository.DeleteAsync(department);
+            await _departmentRepository.DeleteAsync(department);
+
+            return new SuccessResult();
         }
 
-        public async Task<bool> DeleteRangeAsync(List<Guid> ids)
+        public async Task<IResult> DeleteRangeAsync(List<Guid> ids)
         {
             List<Department> departments = new();
             ids.ForEach(async d =>
             {
-                Department department = await _departmentRepository.FindAsync(d);
-                if (department is null)
-                    _departmentExceptionHelper.ThrowDepartmentNotFound();
+                var department = await _departmentBusinessRules.CheckByDepartmentId(d);
 
                 departments.Add(department);
             });
 
-            return await _departmentRepository.DeleteRangeAsync(departments);
+            await _departmentRepository.DeleteRangeAsync(departments);
+
+            return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IEnumerable<GetDepartmentDTO>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetDepartmentDTO>>> GetAllAsync()
         {
             var departments = await _departmentRepository.GetAllAsync();
 
-            return _mapper.Map<List<GetDepartmentDTO>>(departments);
+            return new SuccessDataResult<IEnumerable<GetDepartmentDTO>>(
+                _mapper.Map<List<GetDepartmentDTO>>(departments));
         }
         #endregion
         #region Search
-        public async Task<GetDepartmentDTO> GetByDepartmentName(string departmentName)
+        public async Task<IDataResult<GetDepartmentDTO>> GetByDepartmentName(string departmentName)
         {
-            Department department = await _departmentRepository.GetAsync(d => d.DepartmentName == departmentName);
-            if (department is null)
-                _departmentExceptionHelper.ThrowDepartmentNotFound();
+            var department = await _departmentBusinessRules.CheckByDepartmentName(departmentName);
 
-            return _mapper.Map<GetDepartmentDTO>(department);
+            return new SuccessDataResult<GetDepartmentDTO>(
+                _mapper.Map<GetDepartmentDTO>(department));
         }
 
-        public async Task<GetDepartmentDTO> GetById(Guid id)
+        public async Task<IDataResult<GetDepartmentDTO>> GetById(Guid id)
         {
-            Department department = await _departmentRepository.FindAsync(id);
-            if (department is null)
-                _departmentExceptionHelper.ThrowDepartmentNotFound();
+            var department = await _departmentBusinessRules.CheckByDepartmentId(id);
 
-            return _mapper.Map<GetDepartmentDTO>(department);
+            return new SuccessDataResult<GetDepartmentDTO>(
+                _mapper.Map<GetDepartmentDTO>(department));
         }
         #endregion
     }

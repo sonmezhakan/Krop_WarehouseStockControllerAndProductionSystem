@@ -1,5 +1,6 @@
 ﻿using Krop.Business.Features.Employees.ExceptionHelpers;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.Employees.Rules
 {
@@ -12,6 +13,15 @@ namespace Krop.Business.Features.Employees.Rules
         {
             _employeeRepository = employeeRepository;
             _employeeExceptionHelper = employeeExceptionHelper;
+        }
+
+        public async Task<Employee> CheckByEmployeeId(Guid id)
+        {
+            var result = await _employeeRepository.GetAsync(e => e.Id == id);
+            if (result is null)
+                _employeeExceptionHelper.ThrowEmployeeNotFound();
+
+            return result;
         }
         public async Task EmployeeCannotBeDuplicatedWhenInserted(Guid id)
         {

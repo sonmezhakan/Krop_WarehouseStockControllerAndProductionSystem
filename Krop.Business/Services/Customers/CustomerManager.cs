@@ -2,6 +2,9 @@
 using Krop.Business.Features.Customers.Dtos;
 using Krop.Business.Features.Customers.ExceptionHelpers;
 using Krop.Business.Features.Customers.Rules;
+using Krop.Business.Features.Customers.Valdiations;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
 
@@ -11,63 +14,65 @@ namespace Krop.Business.Services.Customers
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IMapper _mapper;
-        private readonly CustomerExceptionHelper _customerExceptionHelper;
         private readonly CustomerBusinessRules _customerBusinessRules;
 
-        public CustomerManager(ICustomerRepository customerRepository,IMapper mapper,CustomerExceptionHelper customerExceptionHelper,CustomerBusinessRules customerBusinessRules)
+        public CustomerManager(ICustomerRepository customerRepository,IMapper mapper,CustomerBusinessRules customerBusinessRules)
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
-            _customerExceptionHelper = customerExceptionHelper;
             _customerBusinessRules = customerBusinessRules;
         }
 
         #region Add
-        public async Task<bool> AddAsync(CreateCustomerDTO createCustomerDTO)
+        [ValidationAspect(typeof(CreateCustomerValidatior))]
+        public async Task<IResult> AddAsync(CreateCustomerDTO createCustomerDTO)
         {
-            Customer customer = _mapper.Map<Customer>(createCustomerDTO);
+            Customer customer = _mapper.Map<Customer>(createCustomerDTO); 
 
-            return await _customerRepository.AddAsync(customer);
+            await _customerRepository.AddAsync(customer);
+
+            return new SuccessResult();
         }
         #endregion
         #region Update
-        public async  Task<bool> UpdateAsync(UpdateCustomerDTO updateCustomerDTO)
+        [ValidationAspect(typeof(UpdateCustomerValidator))]
+        public async  Task<IResult> UpdateAsync(UpdateCustomerDTO updateCustomerDTO)
         {
-            Customer customer = await _customerRepository.FindAsync(updateCustomerDTO.Id);
-            if (customer is null)
-                _customerExceptionHelper.ThrowCustomerNotFound();
+            var customer = await _customerBusinessRules.CheckByCustomerId(updateCustomerDTO.Id);
 
             customer = _mapper.Map(updateCustomerDTO, customer);
 
-            return await _customerRepository.UpdateAsync(customer);
+            await _customerRepository.UpdateAsync(customer);
+
+            return new SuccessResult(); ;
         }
         #endregion
         #region Delete
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<IResult> DeleteAsync(Guid id)
         {
-            Customer customer = await _customerRepository.FindAsync(id);
-            if (customer is null)
-                _customerExceptionHelper.ThrowCustomerNotFound();
+            var customer = await _customerBusinessRules.CheckByCustomerId(id);
 
-            return await _customerRepository.DeleteAsync(customer);
+            await _customerRepository.DeleteAsync(customer);
+
+            return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IEnumerable<GetCustomerDTO>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetCustomerDTO>>> GetAllAsync()
         {
             var result = await _customerRepository.GetAllAsync();
 
-            return _mapper.Map<List<GetCustomerDTO>>(result);
+            return new SuccessDataResult<IEnumerable<GetCustomerDTO>>(
+                _mapper.Map<List<GetCustomerDTO>>(result));
         }
         #endregion
         #region Search
-        public async Task<GetCustomerDTO> GetByIdAsync(Guid id)
+        public async Task<IDataResult<GetCustomerDTO>> GetByIdAsync(Guid id)
         {
-            Customer customer = await _customerRepository.FindAsync(id);
-            if (customer is null)
-                _customerExceptionHelper.ThrowCustomerNotFound();
+            var customer = await _customerBusinessRules.CheckByCustomerId(id);
 
-            return _mapper.Map<GetCustomerDTO>(customer);
+            return new SuccessDataResult<GetCustomerDTO>(
+                _mapper.Map<GetCustomerDTO>(customer));
         }
         #endregion
     }

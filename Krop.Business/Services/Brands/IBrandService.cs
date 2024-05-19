@@ -1,18 +1,19 @@
 ﻿using Krop.Business.Features.Brands.Dtos;
+using Krop.Common.Utilits.Result;
 
 namespace Krop.Business.Services.Brands
 {
     public interface IBrandService
     {
-        Task<bool> AddAsync(CreateBrandDTO createBrandDTO);
-        Task<bool> AddRangeAsync(List<CreateBrandDTO> createBrandDTOs);
-        Task<bool> UpdateAsync(UpdateBrandDTO updateBrandDTO);
-        Task<bool> UpdateRangeAsync(List<UpdateBrandDTO> updateBrandDTOs);
-        Task<bool> DeleteAsync(Guid id);
-        Task<bool> DeleteRangeAsync(List<Guid> ids);
+        Task<IResult> AddAsync(CreateBrandDTO createBrandDTO);
+        Task<IResult> AddRangeAsync(List<CreateBrandDTO> createBrandDTOs);
+        Task<IResult> UpdateAsync(UpdateBrandDTO updateBrandDTO);
+        Task<IResult> UpdateRangeAsync(List<UpdateBrandDTO> updateBrandDTOs);
+        Task<IResult> DeleteAsync(Guid id);
+        Task<IResult> DeleteRangeAsync(List<Guid> ids);
 
-        Task<IEnumerable<GetBrandDTO>> GetAllAsync();
-        Task<GetBrandDTO> GetByIdAsync(Guid id);
+        Task<IDataResult<IEnumerable<GetBrandDTO>>> GetAllAsync();
+        Task<IDataResult<GetBrandDTO>> GetByIdAsync(Guid id);
 
     }
 }

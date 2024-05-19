@@ -1,4 +1,5 @@
-﻿using Krop.Business.Exceptions.Extensions;
+﻿using FluentValidation;
+using Krop.Business.Exceptions.Extensions;
 using Krop.Business.Exceptions.HttpProblemDetails;
 using Krop.Business.Exceptions.Types;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +22,7 @@ namespace Krop.Business.Exceptions.Handlers
 
             return Response.WriteAsync(details);
         }
-        protected override Task HandleValidationException(NotFoundException notFoundException)
+        protected override Task HandleException(NotFoundException notFoundException)
         {
             Response.StatusCode = StatusCodes.Status404NotFound;
             string details = new NotFoundProblemDetails(notFoundException.Message).AsJson();
@@ -39,7 +40,7 @@ namespace Krop.Business.Exceptions.Handlers
         protected override Task HandleException(ValidationException validationException)
         {
             Response.StatusCode = StatusCodes.Status400BadRequest;
-            string details = new ValidationProblemDetails(validationException.Message).AsJson();
+            string details = new FluentValidationProblemDetails(validationException.Message).AsJson();
 
             return Response.WriteAsync(details);
         }

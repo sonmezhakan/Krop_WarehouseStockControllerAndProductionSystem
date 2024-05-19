@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using Krop.Business.Features.Categories.Constants;
 using Krop.Business.Features.Categories.Dtos;
 using Krop.Business.Features.Categories.ExceptionHelpers;
 using Krop.Business.Features.Categories.Rules;
+using Krop.Business.Features.Categories.Validations;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Services.Categories
 {
@@ -24,17 +28,19 @@ namespace Krop.Business.Services.Categories
         }
 
         #region Add
-        public async Task<bool> AddAsync(CreateCategoryDTO createCategoryDTO)
+        [ValidationAspect(typeof(CreateCategoryValidator))]
+        public async Task<IResult> AddAsync(CreateCategoryDTO createCategoryDTO)
         {
             //Rule
             await _categoryBusinessRules.CategoryNameCannotBeDuplicatedWhenInserted(createCategoryDTO.CategoryName);
 
             Category category = _mapper.Map<Category>(createCategoryDTO);
 
-            return await _categoryRepository.AddAsync(category);
+            await _categoryRepository.AddAsync(category);
+            return new SuccessResult();
         }
-
-        public async Task<bool> AddRangeAsync(List<CreateCategoryDTO> createCategoryDTOs)
+        [ValidationAspect(typeof(CreateCategoryValidator))]
+        public async Task<IResult> AddRangeAsync(List<CreateCategoryDTO> createCategoryDTOs)
         {
             //Rule
             createCategoryDTOs.ForEach(async c =>
@@ -43,90 +49,88 @@ namespace Krop.Business.Services.Categories
             });
 
             List<Category> categories = _mapper.Map<List<Category>>(createCategoryDTOs);
+            await _categoryRepository.AddRangeAsync(categories);
 
-            return await _categoryRepository.AddRangeAsync(categories);
+            return new SuccessResult();
         }
         #endregion
         #region Update
-        public async Task<bool> UpdateAsync(UpdateCategoryDTO updateCategoryDTO)
+        [ValidationAspect(typeof(UpdateCategoryValidator))]
+        public async Task<IResult> UpdateAsync(UpdateCategoryDTO updateCategoryDTO)
         {
-            Category category = await _categoryRepository.FindAsync(updateCategoryDTO.Id);
-            if (category is null)
-                _categoryExceptionHelper.ThrowCategoryNotFoundException();//Eğer kategori yok ise hata fırlat
+            var category =await _categoryBusinessRules.CheckByCategoryId(updateCategoryDTO.Id);//Category Rule
 
-            await _categoryBusinessRules.CategoryNameCannotBeDuplicatedWhenUpdated(category.CategoryName, updateCategoryDTO.CategoryName);//Rule
+            await _categoryBusinessRules.CategoryNameCannotBeDuplicatedWhenUpdated(category.CategoryName, updateCategoryDTO.CategoryName);//CategoryName Rule
 
             category = _mapper.Map(updateCategoryDTO, category);
+            await _categoryRepository.UpdateAsync(category);
 
-            return await _categoryRepository.UpdateAsync(category);
+            return new SuccessResult();
         }
 
-        public async Task<bool> UpdateRangeAsync(List<UpdateCategoryDTO> updatCategoryDTOs)
+        [ValidationAspect(typeof(UpdateCategoryValidator))]
+        public async Task<IResult> UpdateRangeAsync(List<UpdateCategoryDTO> updatCategoryDTOs)
         {
-            foreach (UpdateCategoryDTO item in updatCategoryDTOs)
+            updatCategoryDTOs.ForEach(async c =>
             {
-                Category category = await _categoryRepository.FindAsync(item.Id);
-                if (category is null)
-                    _categoryExceptionHelper.ThrowCategoryNotFoundException();//Eğer kategori yok ise hata fırlat
+                var category = await _categoryBusinessRules.CheckByCategoryId(c.Id);//Category Rule
 
-                await _categoryBusinessRules.CategoryNameCannotBeDuplicatedWhenUpdated(category.CategoryName, item.CategoryName);//Rule
-
-            }
+                await _categoryBusinessRules.CategoryNameCannotBeDuplicatedWhenUpdated(category.CategoryName, c.CategoryName);//Rule
+            });
 
             List<Category> categories = _mapper.Map<List<Category>>(updatCategoryDTOs);
+            await _categoryRepository.UpdateRangeAsync(categories);
 
-            return await _categoryRepository.UpdateRangeAsync(categories);
+            return new SuccessResult();
         }
         #endregion
         #region Delete
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<IResult> DeleteAsync(Guid id)
         {
-            Category category = _categoryRepository.Find(id);
-            if (category is null)
-                _categoryExceptionHelper.ThrowCategoryNotFoundException();//Eğer kategori yok ise hata fırlat
+            var category = await _categoryBusinessRules.CheckByCategoryId(id);//Category Rule
 
-            return await _categoryRepository.DeleteAsync(category);
+            await _categoryRepository.DeleteAsync(category);
+            return new SuccessResult();
         }
 
-        public async Task<bool> DeleteRangeAsync(List<Guid> ids)
+        public async Task<IResult> DeleteRangeAsync(List<Guid> ids)
         {
             List<Category> categories = new();
             ids.ForEach(async c =>
             {
-                Category category = await _categoryRepository.FindAsync(c);
-                 if(category is null)
-                    _categoryExceptionHelper.ThrowCategoryNotFoundException();//Eğer kategori yok ise hata fırlat
+                var category = await _categoryBusinessRules.CheckByCategoryId(c);//Category Rule
 
                 categories.Add(category);
             });
 
-            return await _categoryRepository.DeleteRangeAsync(categories);
+            await _categoryRepository.DeleteRangeAsync(categories);
+            return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IEnumerable<GetCategoryDTO>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetCategoryDTO>>> GetAllAsync()
         {
             var result = await _categoryRepository.GetAllAsync();
-            return _mapper.Map<List<GetCategoryDTO>>(result);
+
+            return new SuccessDataResult<IEnumerable<GetCategoryDTO>>(
+                _mapper.Map<IEnumerable<GetCategoryDTO>>(result));
         }
         #endregion
         #region Search
-        public async Task<GetCategoryDTO> GetByCategoryNameAsync(string categoryName)
+        public async Task<IDataResult<GetCategoryDTO>> GetByCategoryNameAsync(string categoryName)
         {
-            Category category = await _categoryRepository.GetAsync(c => c.CategoryName == categoryName);
-            if (category is null)
-                _categoryExceptionHelper.ThrowCategoryNotFoundException();//Eğer kategori yok ise hata fırlat
+            var category = await _categoryBusinessRules.CheckByCategoryName(categoryName);//Category Rule
 
-            return _mapper.Map<GetCategoryDTO>(category);
+            return new SuccessDataResult<GetCategoryDTO>(
+                _mapper.Map<GetCategoryDTO>(category));
         }
 
-        public async Task<GetCategoryDTO> GetByIdAsync(Guid id)
+        public async Task<IDataResult<GetCategoryDTO>> GetByIdAsync(Guid id)
         {
-            Category category = await _categoryRepository.FindAsync(id);
-            if (category is null)
-                _categoryExceptionHelper.ThrowCategoryNotFoundException();//Eğer kategori yok ise hata fırlat
+            var category = await _categoryBusinessRules.CheckByCategoryId(id);//Category Rule
 
-            return _mapper.Map<GetCategoryDTO>(category);
+            return new SuccessDataResult<GetCategoryDTO>(
+               _mapper.Map<GetCategoryDTO>(category));
         }
         #endregion
     }
