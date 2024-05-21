@@ -33,6 +33,7 @@
             bttnProductDelete = new Button();
             cmbBoxProductSelect = new ComboBox();
             label10 = new Label();
+            bttnSelect = new Button();
             panelBottom.SuspendLayout();
             SuspendLayout();
             // 
@@ -44,7 +45,7 @@
             panelBottom.Location = new Point(0, 62);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 15, 0);
-            panelBottom.Size = new Size(245, 41);
+            panelBottom.Size = new Size(274, 41);
             panelBottom.TabIndex = 21;
             // 
             // bttnProductDelete
@@ -52,7 +53,7 @@
             bttnProductDelete.Dock = DockStyle.Right;
             bttnProductDelete.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnProductDelete.Image = (Image)resources.GetObject("bttnProductDelete.Image");
-            bttnProductDelete.Location = new Point(136, 0);
+            bttnProductDelete.Location = new Point(165, 0);
             bttnProductDelete.Name = "bttnProductDelete";
             bttnProductDelete.Size = new Size(92, 39);
             bttnProductDelete.TabIndex = 0;
@@ -73,15 +74,25 @@
             label10.AutoSize = true;
             label10.Location = new Point(12, 9);
             label10.Name = "label10";
-            label10.Size = new Size(140, 15);
+            label10.Size = new Size(109, 15);
             label10.TabIndex = 36;
-            label10.Text = "Güncellenecek Ürün Adı :";
+            label10.Text = "Silinecek Ürün Adı :";
+            // 
+            // bttnSelect
+            // 
+            bttnSelect.Location = new Point(235, 27);
+            bttnSelect.Name = "bttnSelect";
+            bttnSelect.Size = new Size(31, 23);
+            bttnSelect.TabIndex = 38;
+            bttnSelect.Text = "...";
+            bttnSelect.UseVisualStyleBackColor = true;
             // 
             // frmProductDelete
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(245, 103);
+            ClientSize = new Size(274, 103);
+            Controls.Add(bttnSelect);
             Controls.Add(cmbBoxProductSelect);
             Controls.Add(label10);
             Controls.Add(panelBottom);
@@ -101,5 +112,6 @@
         private Button bttnProductDelete;
         private ComboBox cmbBoxProductSelect;
         private Label label10;
+        private Button bttnSelect;
     }
 }

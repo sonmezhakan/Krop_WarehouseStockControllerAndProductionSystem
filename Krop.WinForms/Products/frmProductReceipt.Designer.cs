@@ -46,6 +46,7 @@
             txtSearch = new TextBox();
             bttnSearch = new Button();
             panelMidLeft = new System.Windows.Forms.Panel();
+            bttnSelect = new Button();
             label6 = new Label();
             label5 = new Label();
             txtQuantity = new TextBox();
@@ -132,10 +133,10 @@
             // 
             panelMidMid.Controls.Add(dgwProductReceiptList);
             panelMidMid.Dock = DockStyle.Fill;
-            panelMidMid.Location = new Point(221, 43);
+            panelMidMid.Location = new Point(256, 43);
             panelMidMid.Name = "panelMidMid";
             panelMidMid.Padding = new Padding(5);
-            panelMidMid.Size = new Size(869, 454);
+            panelMidMid.Size = new Size(834, 454);
             panelMidMid.TabIndex = 7;
             // 
             // dgwProductReceiptList
@@ -158,7 +159,7 @@
             dgwProductReceiptList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwProductReceiptList.RowTemplate.Height = 25;
             dgwProductReceiptList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwProductReceiptList.Size = new Size(859, 444);
+            dgwProductReceiptList.Size = new Size(824, 444);
             dgwProductReceiptList.TabIndex = 9;
             // 
             // Column1
@@ -196,10 +197,10 @@
             panelTop.Controls.Add(txtSearch);
             panelTop.Controls.Add(bttnSearch);
             panelTop.Dock = DockStyle.Top;
-            panelTop.Location = new Point(221, 5);
+            panelTop.Location = new Point(256, 5);
             panelTop.Name = "panelTop";
             panelTop.Padding = new Padding(5);
-            panelTop.Size = new Size(869, 38);
+            panelTop.Size = new Size(834, 38);
             panelTop.TabIndex = 6;
             // 
             // txtSearch
@@ -208,14 +209,14 @@
             txtSearch.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             txtSearch.Location = new Point(5, 5);
             txtSearch.Name = "txtSearch";
-            txtSearch.Size = new Size(784, 27);
+            txtSearch.Size = new Size(749, 27);
             txtSearch.TabIndex = 2;
             txtSearch.Text = "Arama....";
             // 
             // bttnSearch
             // 
             bttnSearch.Dock = DockStyle.Right;
-            bttnSearch.Location = new Point(789, 5);
+            bttnSearch.Location = new Point(754, 5);
             bttnSearch.Name = "bttnSearch";
             bttnSearch.Size = new Size(75, 28);
             bttnSearch.TabIndex = 1;
@@ -224,6 +225,7 @@
             // 
             // panelMidLeft
             // 
+            panelMidLeft.Controls.Add(bttnSelect);
             panelMidLeft.Controls.Add(label6);
             panelMidLeft.Controls.Add(label5);
             panelMidLeft.Controls.Add(txtQuantity);
@@ -239,8 +241,17 @@
             panelMidLeft.Location = new Point(5, 5);
             panelMidLeft.Name = "panelMidLeft";
             panelMidLeft.Padding = new Padding(10);
-            panelMidLeft.Size = new Size(216, 492);
+            panelMidLeft.Size = new Size(251, 492);
             panelMidLeft.TabIndex = 0;
+            // 
+            // bttnSelect
+            // 
+            bttnSelect.Location = new Point(208, 38);
+            bttnSelect.Name = "bttnSelect";
+            bttnSelect.Size = new Size(31, 23);
+            bttnSelect.TabIndex = 22;
+            bttnSelect.Text = "...";
+            bttnSelect.UseVisualStyleBackColor = true;
             // 
             // label6
             // 
@@ -384,5 +395,6 @@
         private DataGridViewTextBoxColumn Column3;
         private DataGridViewTextBoxColumn Column4;
         private DataGridViewTextBoxColumn Column5;
+        private Button bttnSelect;
     }
 }

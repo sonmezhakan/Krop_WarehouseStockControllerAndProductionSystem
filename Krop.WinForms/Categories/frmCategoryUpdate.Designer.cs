@@ -36,12 +36,14 @@
             label1 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
             bttnCategoryUpdate = new Button();
+            bttnSelect = new Button();
             panelMid.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
             // 
             // panelMid
             // 
+            panelMid.Controls.Add(bttnSelect);
             panelMid.Controls.Add(cmbBoxCategorySelected);
             panelMid.Controls.Add(label2);
             panelMid.Controls.Add(txtCategoryName);
@@ -49,7 +51,7 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(274, 135);
+            panelMid.Size = new Size(309, 135);
             panelMid.TabIndex = 3;
             // 
             // cmbBoxCategorySelected
@@ -93,7 +95,7 @@
             panelBottom.Location = new Point(0, 135);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 15, 0);
-            panelBottom.Size = new Size(274, 41);
+            panelBottom.Size = new Size(309, 41);
             panelBottom.TabIndex = 2;
             // 
             // bttnCategoryUpdate
@@ -101,7 +103,7 @@
             bttnCategoryUpdate.Dock = DockStyle.Right;
             bttnCategoryUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnCategoryUpdate.Image = (Image)resources.GetObject("bttnCategoryUpdate.Image");
-            bttnCategoryUpdate.Location = new Point(150, 0);
+            bttnCategoryUpdate.Location = new Point(185, 0);
             bttnCategoryUpdate.Name = "bttnCategoryUpdate";
             bttnCategoryUpdate.Size = new Size(107, 39);
             bttnCategoryUpdate.TabIndex = 1;
@@ -109,11 +111,20 @@
             bttnCategoryUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnCategoryUpdate.UseVisualStyleBackColor = true;
             // 
+            // bttnSelect
+            // 
+            bttnSelect.Location = new Point(267, 37);
+            bttnSelect.Name = "bttnSelect";
+            bttnSelect.Size = new Size(31, 23);
+            bttnSelect.TabIndex = 21;
+            bttnSelect.Text = "...";
+            bttnSelect.UseVisualStyleBackColor = true;
+            // 
             // frmCategoryUpdate
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(274, 176);
+            ClientSize = new Size(309, 176);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -136,5 +147,6 @@
         private Label label1;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnCategoryUpdate;
+        private Button bttnSelect;
     }
 }

@@ -26,7 +26,7 @@ namespace Krop.WinForms.Categories
         {
             CreateCategoryDTO createCategoryDTO = new CreateCategoryDTO
             {
-                CategoryName = txtCategoryName.Text
+                CategoryName = txtAppUserRoleName.Text
             };
 
             HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("category/add", createCategoryDTO);

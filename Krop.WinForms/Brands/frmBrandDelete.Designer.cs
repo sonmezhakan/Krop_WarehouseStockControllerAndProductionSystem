@@ -34,18 +34,20 @@
             label4 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
             bttnBrandDelete = new Button();
+            bttnSelect = new Button();
             panelMid.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
             // 
             // panelMid
             // 
+            panelMid.Controls.Add(bttnSelect);
             panelMid.Controls.Add(cmbBoxBrandSelect);
             panelMid.Controls.Add(label4);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(230, 83);
+            panelMid.Size = new Size(270, 83);
             panelMid.TabIndex = 5;
             // 
             // cmbBoxBrandSelect
@@ -61,9 +63,9 @@
             label4.AutoSize = true;
             label4.Location = new Point(12, 18);
             label4.Name = "label4";
-            label4.Size = new Size(126, 15);
+            label4.Size = new Size(95, 15);
             label4.TabIndex = 6;
-            label4.Text = "Güncellenecek Marka :";
+            label4.Text = "Silinecek Marka :";
             // 
             // panelBottom
             // 
@@ -72,7 +74,7 @@
             panelBottom.Location = new Point(0, 83);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(230, 41);
+            panelBottom.Size = new Size(270, 41);
             panelBottom.TabIndex = 4;
             // 
             // bttnBrandDelete
@@ -80,7 +82,7 @@
             bttnBrandDelete.Dock = DockStyle.Right;
             bttnBrandDelete.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnBrandDelete.Image = (Image)resources.GetObject("bttnBrandDelete.Image");
-            bttnBrandDelete.Location = new Point(115, 0);
+            bttnBrandDelete.Location = new Point(155, 0);
             bttnBrandDelete.Name = "bttnBrandDelete";
             bttnBrandDelete.Size = new Size(105, 41);
             bttnBrandDelete.TabIndex = 1;
@@ -88,11 +90,20 @@
             bttnBrandDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnBrandDelete.UseVisualStyleBackColor = true;
             // 
+            // bttnSelect
+            // 
+            bttnSelect.Location = new Point(224, 36);
+            bttnSelect.Name = "bttnSelect";
+            bttnSelect.Size = new Size(31, 23);
+            bttnSelect.TabIndex = 21;
+            bttnSelect.Text = "...";
+            bttnSelect.UseVisualStyleBackColor = true;
+            // 
             // frmBrandDelete
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(230, 124);
+            ClientSize = new Size(270, 124);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -113,5 +124,6 @@
         private Label label4;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnBrandDelete;
+        private Button bttnSelect;
     }
 }

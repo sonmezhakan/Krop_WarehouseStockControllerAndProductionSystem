@@ -38,6 +38,8 @@
             label7 = new Label();
             panelMid = new System.Windows.Forms.Panel();
             panelMidMid = new System.Windows.Forms.Panel();
+            cmbBoxProductSelect = new ComboBox();
+            label10 = new Label();
             label6 = new Label();
             label5 = new Label();
             label4 = new Label();
@@ -51,8 +53,7 @@
             panelMidLeft = new System.Windows.Forms.Panel();
             bttnProductUpdate = new Button();
             panelBottom = new System.Windows.Forms.Panel();
-            label10 = new Label();
-            cmbBoxProductSelect = new ComboBox();
+            bttnSelect = new Button();
             ((System.ComponentModel.ISupportInitialize)pBoxProductImage).BeginInit();
             panelMid.SuspendLayout();
             panelMidMid.SuspendLayout();
@@ -129,11 +130,12 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(478, 503);
+            panelMid.Size = new Size(504, 503);
             panelMid.TabIndex = 3;
             // 
             // panelMidMid
             // 
+            panelMidMid.Controls.Add(bttnSelect);
             panelMidMid.Controls.Add(cmbBoxProductSelect);
             panelMidMid.Controls.Add(label10);
             panelMidMid.Controls.Add(label9);
@@ -155,8 +157,25 @@
             panelMidMid.Dock = DockStyle.Fill;
             panelMidMid.Location = new Point(221, 0);
             panelMidMid.Name = "panelMidMid";
-            panelMidMid.Size = new Size(257, 503);
+            panelMidMid.Size = new Size(283, 503);
             panelMidMid.TabIndex = 1;
+            // 
+            // cmbBoxProductSelect
+            // 
+            cmbBoxProductSelect.FormattingEnabled = true;
+            cmbBoxProductSelect.Location = new Point(17, 38);
+            cmbBoxProductSelect.Name = "cmbBoxProductSelect";
+            cmbBoxProductSelect.Size = new Size(217, 23);
+            cmbBoxProductSelect.TabIndex = 35;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(17, 20);
+            label10.Name = "label10";
+            label10.Size = new Size(140, 15);
+            label10.TabIndex = 34;
+            label10.Text = "Güncellenecek Ürün Adı :";
             // 
             // label6
             // 
@@ -255,7 +274,7 @@
             bttnProductUpdate.Dock = DockStyle.Right;
             bttnProductUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnProductUpdate.Image = (Image)resources.GetObject("bttnProductUpdate.Image");
-            bttnProductUpdate.Location = new Point(359, 0);
+            bttnProductUpdate.Location = new Point(385, 0);
             bttnProductUpdate.Name = "bttnProductUpdate";
             bttnProductUpdate.Size = new Size(102, 39);
             bttnProductUpdate.TabIndex = 0;
@@ -271,31 +290,23 @@
             panelBottom.Location = new Point(0, 503);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 15, 0);
-            panelBottom.Size = new Size(478, 41);
+            panelBottom.Size = new Size(504, 41);
             panelBottom.TabIndex = 2;
             // 
-            // label10
+            // bttnSelect
             // 
-            label10.AutoSize = true;
-            label10.Location = new Point(17, 20);
-            label10.Name = "label10";
-            label10.Size = new Size(140, 15);
-            label10.TabIndex = 34;
-            label10.Text = "Güncellenecek Ürün Adı :";
-            // 
-            // cmbBoxProductSelect
-            // 
-            cmbBoxProductSelect.FormattingEnabled = true;
-            cmbBoxProductSelect.Location = new Point(17, 38);
-            cmbBoxProductSelect.Name = "cmbBoxProductSelect";
-            cmbBoxProductSelect.Size = new Size(217, 23);
-            cmbBoxProductSelect.TabIndex = 35;
+            bttnSelect.Location = new Point(240, 37);
+            bttnSelect.Name = "bttnSelect";
+            bttnSelect.Size = new Size(31, 24);
+            bttnSelect.TabIndex = 36;
+            bttnSelect.Text = "...";
+            bttnSelect.UseVisualStyleBackColor = true;
             // 
             // frmProductUpdate
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(478, 544);
+            ClientSize = new Size(504, 544);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -337,5 +348,6 @@
         private System.Windows.Forms.Panel panelBottom;
         private ComboBox cmbBoxProductSelect;
         private Label label10;
+        private Button bttnSelect;
     }
 }

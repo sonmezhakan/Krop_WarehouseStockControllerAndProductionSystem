@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBrandUpdate));
             panelMid = new System.Windows.Forms.Panel();
+            cmbBoxBrandSelect = new ComboBox();
+            label4 = new Label();
             txtEmail = new TextBox();
             txtPhoneNumber = new TextBox();
             txtBrandName = new TextBox();
@@ -38,14 +40,14 @@
             label1 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
             bttnBrandUpdate = new Button();
-            label4 = new Label();
-            cmbBoxBrandSelect = new ComboBox();
+            bttnSelect = new Button();
             panelMid.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
             // 
             // panelMid
             // 
+            panelMid.Controls.Add(bttnSelect);
             panelMid.Controls.Add(cmbBoxBrandSelect);
             panelMid.Controls.Add(label4);
             panelMid.Controls.Add(txtEmail);
@@ -57,8 +59,25 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(231, 218);
+            panelMid.Size = new Size(267, 218);
             panelMid.TabIndex = 3;
+            // 
+            // cmbBoxBrandSelect
+            // 
+            cmbBoxBrandSelect.FormattingEnabled = true;
+            cmbBoxBrandSelect.Location = new Point(12, 41);
+            cmbBoxBrandSelect.Name = "cmbBoxBrandSelect";
+            cmbBoxBrandSelect.Size = new Size(206, 23);
+            cmbBoxBrandSelect.TabIndex = 7;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(12, 23);
+            label4.Name = "label4";
+            label4.Size = new Size(126, 15);
+            label4.TabIndex = 6;
+            label4.Text = "Güncellenecek Marka :";
             // 
             // txtEmail
             // 
@@ -115,7 +134,7 @@
             panelBottom.Location = new Point(0, 218);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(231, 41);
+            panelBottom.Size = new Size(267, 41);
             panelBottom.TabIndex = 2;
             // 
             // bttnBrandUpdate
@@ -123,7 +142,7 @@
             bttnBrandUpdate.Dock = DockStyle.Right;
             bttnBrandUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnBrandUpdate.Image = (Image)resources.GetObject("bttnBrandUpdate.Image");
-            bttnBrandUpdate.Location = new Point(116, 0);
+            bttnBrandUpdate.Location = new Point(152, 0);
             bttnBrandUpdate.Name = "bttnBrandUpdate";
             bttnBrandUpdate.Size = new Size(105, 41);
             bttnBrandUpdate.TabIndex = 1;
@@ -131,28 +150,20 @@
             bttnBrandUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnBrandUpdate.UseVisualStyleBackColor = true;
             // 
-            // label4
+            // bttnSelect
             // 
-            label4.AutoSize = true;
-            label4.Location = new Point(12, 23);
-            label4.Name = "label4";
-            label4.Size = new Size(126, 15);
-            label4.TabIndex = 6;
-            label4.Text = "Güncellenecek Marka :";
-            // 
-            // cmbBoxBrandSelect
-            // 
-            cmbBoxBrandSelect.FormattingEnabled = true;
-            cmbBoxBrandSelect.Location = new Point(12, 41);
-            cmbBoxBrandSelect.Name = "cmbBoxBrandSelect";
-            cmbBoxBrandSelect.Size = new Size(206, 23);
-            cmbBoxBrandSelect.TabIndex = 7;
+            bttnSelect.Location = new Point(224, 41);
+            bttnSelect.Name = "bttnSelect";
+            bttnSelect.Size = new Size(31, 23);
+            bttnSelect.TabIndex = 21;
+            bttnSelect.Text = "...";
+            bttnSelect.UseVisualStyleBackColor = true;
             // 
             // frmBrandUpdate
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(231, 259);
+            ClientSize = new Size(267, 259);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -179,5 +190,6 @@
         private Label label1;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnBrandUpdate;
+        private Button bttnSelect;
     }
 }

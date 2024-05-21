@@ -33,4 +33,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Employees\" />
+    <Folder Include="AppUsers\" />
+  </ItemGroup>
+
 </Project>
