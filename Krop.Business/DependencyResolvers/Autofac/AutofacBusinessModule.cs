@@ -11,6 +11,7 @@ using Krop.Business.Services.Deparments;
 using Krop.Business.Services.Employees;
 using Krop.Business.Services.Products;
 using Krop.Business.Services.Stocks;
+using Krop.Common.Helpers.WebApiService;
 using Krop.Common.Utilits.Interceptors;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DataAccess.Repositories.Abstracts.BaseRepository;
@@ -25,6 +26,8 @@ namespace Krop.Business.DependencyResolvers.Autofac
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<WebApiService>().As<IWebApiService>().SingleInstance();
+            
             builder.RegisterType<UserManager<AppUser>>().SingleInstance();
             builder.RegisterType<SignInManager<AppUser>>().SingleInstance();
             builder.RegisterType<RoleManager<AppUserRole>>().SingleInstance();

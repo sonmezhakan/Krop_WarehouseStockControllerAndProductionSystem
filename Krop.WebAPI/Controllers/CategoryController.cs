@@ -1,12 +1,10 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Krop.Business.Features.Categories.Dtos;
+﻿using Krop.Business.Features.Categories.Dtos;
 using Krop.Business.Services.Categories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
