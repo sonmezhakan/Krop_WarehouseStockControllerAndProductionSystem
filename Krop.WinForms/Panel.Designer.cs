@@ -53,6 +53,12 @@
             categoryBttnAdd = new Button();
             categoryBttnCard = new Button();
             categoryBttnList = new Button();
+            BrandPage = new TabPage();
+            bttnBrandDelete = new Button();
+            bttnBrandUpdate = new Button();
+            bttnBrandAdd = new Button();
+            bttnBrandCart = new Button();
+            bttnBrandList = new Button();
             CustomersTabPage = new TabPage();
             customerBttnOrders = new Button();
             customerBttnDelete = new Button();
@@ -78,6 +84,12 @@
             userBttnAdd = new Button();
             userBttnCard = new Button();
             userBttnList = new Button();
+            AppUserRolePage = new TabPage();
+            bttnAppUserRoleDelete = new Button();
+            bttnAppUserRoleUpdate = new Button();
+            bttnAppUserRoleAdd = new Button();
+            bttnAppUserRoleCart = new Button();
+            bttnAppUserRoleList = new Button();
             SettingsTabPage = new TabPage();
             ExitPageTab = new TabPage();
             panelBottom = new System.Windows.Forms.Panel();
@@ -88,31 +100,19 @@
             lblServerName = new Label();
             lblCompanyName = new Label();
             panel1 = new System.Windows.Forms.Panel();
-            BrandPage = new TabPage();
-            bttnBrandDelete = new Button();
-            bttnBrandUpdate = new Button();
-            bttnBrandAdd = new Button();
-            bttnBrandCart = new Button();
-            bttnBrandList = new Button();
-            AppUserRolePage = new TabPage();
-            bttnAppUserRoleDelete = new Button();
-            bttnAppUserRoleUpdate = new Button();
-            bttnAppUserRoleAdd = new Button();
-            bttnAppUserRoleCart = new Button();
-            bttnAppUserRoleList = new Button();
             tabControl1.SuspendLayout();
             HomeTabPage.SuspendLayout();
             StocksTabPage.SuspendLayout();
             ProductionTabPage.SuspendLayout();
             ProductsTabPage.SuspendLayout();
             CategoriesTabPage.SuspendLayout();
+            BrandPage.SuspendLayout();
             CustomersTabPage.SuspendLayout();
             SuppliersTabPage.SuspendLayout();
             EmployeesTabPage.SuspendLayout();
             UsersTabPage.SuspendLayout();
-            panelBottom.SuspendLayout();
-            BrandPage.SuspendLayout();
             AppUserRolePage.SuspendLayout();
+            panelBottom.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -143,10 +143,10 @@
             HomeTabPage.BackColor = Color.Transparent;
             HomeTabPage.Controls.Add(homeBttnExit);
             HomeTabPage.Controls.Add(button1);
-            HomeTabPage.Location = new Point(4, 24);
+            HomeTabPage.Location = new Point(4, 26);
             HomeTabPage.Name = "HomeTabPage";
             HomeTabPage.Padding = new Padding(3);
-            HomeTabPage.Size = new Size(1876, 67);
+            HomeTabPage.Size = new Size(1876, 65);
             HomeTabPage.TabIndex = 0;
             HomeTabPage.Text = "Ana Sayfa";
             // 
@@ -162,7 +162,7 @@
             homeBttnExit.Image = (Image)resources.GetObject("homeBttnExit.Image");
             homeBttnExit.Location = new Point(1803, 3);
             homeBttnExit.Name = "homeBttnExit";
-            homeBttnExit.Size = new Size(70, 61);
+            homeBttnExit.Size = new Size(70, 59);
             homeBttnExit.TabIndex = 1;
             homeBttnExit.Text = "Çıkış";
             homeBttnExit.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -181,7 +181,7 @@
             button1.Image = (Image)resources.GetObject("button1.Image");
             button1.Location = new Point(3, 3);
             button1.Name = "button1";
-            button1.Size = new Size(70, 61);
+            button1.Size = new Size(70, 59);
             button1.TabIndex = 0;
             button1.Text = "Liste";
             button1.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -191,9 +191,9 @@
             // 
             StocksTabPage.Controls.Add(stockBttnTransfer);
             StocksTabPage.Controls.Add(stockBttnReceipt);
-            StocksTabPage.Location = new Point(4, 24);
+            StocksTabPage.Location = new Point(4, 26);
             StocksTabPage.Name = "StocksTabPage";
-            StocksTabPage.Size = new Size(1876, 67);
+            StocksTabPage.Size = new Size(1876, 65);
             StocksTabPage.TabIndex = 2;
             StocksTabPage.Text = "Stoklar";
             StocksTabPage.UseVisualStyleBackColor = true;
@@ -210,7 +210,7 @@
             stockBttnTransfer.Image = (Image)resources.GetObject("stockBttnTransfer.Image");
             stockBttnTransfer.Location = new Point(84, 0);
             stockBttnTransfer.Name = "stockBttnTransfer";
-            stockBttnTransfer.Size = new Size(70, 67);
+            stockBttnTransfer.Size = new Size(70, 65);
             stockBttnTransfer.TabIndex = 12;
             stockBttnTransfer.Text = "Transfer";
             stockBttnTransfer.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -228,7 +228,7 @@
             stockBttnReceipt.Image = (Image)resources.GetObject("stockBttnReceipt.Image");
             stockBttnReceipt.Location = new Point(0, 0);
             stockBttnReceipt.Name = "stockBttnReceipt";
-            stockBttnReceipt.Size = new Size(84, 67);
+            stockBttnReceipt.Size = new Size(84, 65);
             stockBttnReceipt.TabIndex = 11;
             stockBttnReceipt.Text = "Giriş";
             stockBttnReceipt.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -238,9 +238,9 @@
             // 
             ProductionTabPage.Controls.Add(productionBttnProduce);
             ProductionTabPage.Controls.Add(productionBttnList);
-            ProductionTabPage.Location = new Point(4, 24);
+            ProductionTabPage.Location = new Point(4, 26);
             ProductionTabPage.Name = "ProductionTabPage";
-            ProductionTabPage.Size = new Size(1876, 67);
+            ProductionTabPage.Size = new Size(1876, 65);
             ProductionTabPage.TabIndex = 9;
             ProductionTabPage.Text = "Üretim";
             ProductionTabPage.UseVisualStyleBackColor = true;
@@ -257,7 +257,7 @@
             productionBttnProduce.Image = (Image)resources.GetObject("productionBttnProduce.Image");
             productionBttnProduce.Location = new Point(70, 0);
             productionBttnProduce.Name = "productionBttnProduce";
-            productionBttnProduce.Size = new Size(80, 67);
+            productionBttnProduce.Size = new Size(80, 65);
             productionBttnProduce.TabIndex = 10;
             productionBttnProduce.Text = "Ürün Üret";
             productionBttnProduce.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -275,7 +275,7 @@
             productionBttnList.Image = (Image)resources.GetObject("productionBttnList.Image");
             productionBttnList.Location = new Point(0, 0);
             productionBttnList.Name = "productionBttnList";
-            productionBttnList.Size = new Size(70, 67);
+            productionBttnList.Size = new Size(70, 65);
             productionBttnList.TabIndex = 9;
             productionBttnList.Text = "Liste";
             productionBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -290,10 +290,10 @@
             ProductsTabPage.Controls.Add(productBttnAdd);
             ProductsTabPage.Controls.Add(productBttnCard);
             ProductsTabPage.Controls.Add(productBttnList);
-            ProductsTabPage.Location = new Point(4, 24);
+            ProductsTabPage.Location = new Point(4, 26);
             ProductsTabPage.Name = "ProductsTabPage";
             ProductsTabPage.Padding = new Padding(3);
-            ProductsTabPage.Size = new Size(1876, 67);
+            ProductsTabPage.Size = new Size(1876, 65);
             ProductsTabPage.TabIndex = 1;
             ProductsTabPage.Text = "Ürünler";
             ProductsTabPage.UseVisualStyleBackColor = true;
@@ -310,7 +310,7 @@
             productBttnRecipe.Image = (Image)resources.GetObject("productBttnRecipe.Image");
             productBttnRecipe.Location = new Point(517, 3);
             productBttnRecipe.Name = "productBttnRecipe";
-            productBttnRecipe.Size = new Size(117, 61);
+            productBttnRecipe.Size = new Size(117, 59);
             productBttnRecipe.TabIndex = 10;
             productBttnRecipe.Text = "Ürün Reçetesi";
             productBttnRecipe.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -328,7 +328,7 @@
             productBttnCategoryAdd.Image = (Image)resources.GetObject("productBttnCategoryAdd.Image");
             productBttnCategoryAdd.Location = new Point(400, 3);
             productBttnCategoryAdd.Name = "productBttnCategoryAdd";
-            productBttnCategoryAdd.Size = new Size(117, 61);
+            productBttnCategoryAdd.Size = new Size(117, 59);
             productBttnCategoryAdd.TabIndex = 9;
             productBttnCategoryAdd.Text = "Kategori Ataması";
             productBttnCategoryAdd.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -346,7 +346,7 @@
             productBttnDelete.Image = (Image)resources.GetObject("productBttnDelete.Image");
             productBttnDelete.Location = new Point(330, 3);
             productBttnDelete.Name = "productBttnDelete";
-            productBttnDelete.Size = new Size(70, 61);
+            productBttnDelete.Size = new Size(70, 59);
             productBttnDelete.TabIndex = 8;
             productBttnDelete.Text = "Sil";
             productBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -364,7 +364,7 @@
             productBttnUpdate.Image = (Image)resources.GetObject("productBttnUpdate.Image");
             productBttnUpdate.Location = new Point(260, 3);
             productBttnUpdate.Name = "productBttnUpdate";
-            productBttnUpdate.Size = new Size(70, 61);
+            productBttnUpdate.Size = new Size(70, 59);
             productBttnUpdate.TabIndex = 7;
             productBttnUpdate.Text = "Güncelle";
             productBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -382,7 +382,7 @@
             productBttnAdd.Image = (Image)resources.GetObject("productBttnAdd.Image");
             productBttnAdd.Location = new Point(190, 3);
             productBttnAdd.Name = "productBttnAdd";
-            productBttnAdd.Size = new Size(70, 61);
+            productBttnAdd.Size = new Size(70, 59);
             productBttnAdd.TabIndex = 6;
             productBttnAdd.Text = "Ekle";
             productBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -400,7 +400,7 @@
             productBttnCard.Image = (Image)resources.GetObject("productBttnCard.Image");
             productBttnCard.Location = new Point(73, 3);
             productBttnCard.Name = "productBttnCard";
-            productBttnCard.Size = new Size(117, 61);
+            productBttnCard.Size = new Size(117, 59);
             productBttnCard.TabIndex = 11;
             productBttnCard.Text = "Ürün Kartı";
             productBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -418,7 +418,7 @@
             productBttnList.Image = (Image)resources.GetObject("productBttnList.Image");
             productBttnList.Location = new Point(3, 3);
             productBttnList.Name = "productBttnList";
-            productBttnList.Size = new Size(70, 61);
+            productBttnList.Size = new Size(70, 59);
             productBttnList.TabIndex = 5;
             productBttnList.Text = "Liste";
             productBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -432,9 +432,9 @@
             CategoriesTabPage.Controls.Add(categoryBttnAdd);
             CategoriesTabPage.Controls.Add(categoryBttnCard);
             CategoriesTabPage.Controls.Add(categoryBttnList);
-            CategoriesTabPage.Location = new Point(4, 24);
+            CategoriesTabPage.Location = new Point(4, 26);
             CategoriesTabPage.Name = "CategoriesTabPage";
-            CategoriesTabPage.Size = new Size(1876, 67);
+            CategoriesTabPage.Size = new Size(1876, 65);
             CategoriesTabPage.TabIndex = 3;
             CategoriesTabPage.Text = "Kategoriler";
             CategoriesTabPage.UseVisualStyleBackColor = true;
@@ -451,11 +451,12 @@
             categoryBttnDelete.Image = (Image)resources.GetObject("categoryBttnDelete.Image");
             categoryBttnDelete.Location = new Point(327, 0);
             categoryBttnDelete.Name = "categoryBttnDelete";
-            categoryBttnDelete.Size = new Size(70, 67);
+            categoryBttnDelete.Size = new Size(70, 65);
             categoryBttnDelete.TabIndex = 15;
             categoryBttnDelete.Text = "Sil";
             categoryBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
             categoryBttnDelete.UseVisualStyleBackColor = false;
+            categoryBttnDelete.Click += categoryBttnDelete_Click;
             // 
             // categoryBttnUpdate
             // 
@@ -469,11 +470,12 @@
             categoryBttnUpdate.Image = (Image)resources.GetObject("categoryBttnUpdate.Image");
             categoryBttnUpdate.Location = new Point(257, 0);
             categoryBttnUpdate.Name = "categoryBttnUpdate";
-            categoryBttnUpdate.Size = new Size(70, 67);
+            categoryBttnUpdate.Size = new Size(70, 65);
             categoryBttnUpdate.TabIndex = 14;
             categoryBttnUpdate.Text = "Güncelle";
             categoryBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
             categoryBttnUpdate.UseVisualStyleBackColor = false;
+            categoryBttnUpdate.Click += categoryBttnUpdate_Click;
             // 
             // categoryBttnAdd
             // 
@@ -487,7 +489,7 @@
             categoryBttnAdd.Image = (Image)resources.GetObject("categoryBttnAdd.Image");
             categoryBttnAdd.Location = new Point(187, 0);
             categoryBttnAdd.Name = "categoryBttnAdd";
-            categoryBttnAdd.Size = new Size(70, 67);
+            categoryBttnAdd.Size = new Size(70, 65);
             categoryBttnAdd.TabIndex = 13;
             categoryBttnAdd.Text = "Ekle";
             categoryBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -506,11 +508,12 @@
             categoryBttnCard.Image = (Image)resources.GetObject("categoryBttnCard.Image");
             categoryBttnCard.Location = new Point(70, 0);
             categoryBttnCard.Name = "categoryBttnCard";
-            categoryBttnCard.Size = new Size(117, 67);
+            categoryBttnCard.Size = new Size(117, 65);
             categoryBttnCard.TabIndex = 16;
             categoryBttnCard.Text = "Kategori Kartı";
             categoryBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
             categoryBttnCard.UseVisualStyleBackColor = false;
+            categoryBttnCard.Click += categoryBttnCard_Click;
             // 
             // categoryBttnList
             // 
@@ -524,565 +527,12 @@
             categoryBttnList.Image = (Image)resources.GetObject("categoryBttnList.Image");
             categoryBttnList.Location = new Point(0, 0);
             categoryBttnList.Name = "categoryBttnList";
-            categoryBttnList.Size = new Size(70, 67);
+            categoryBttnList.Size = new Size(70, 65);
             categoryBttnList.TabIndex = 12;
             categoryBttnList.Text = "Liste";
             categoryBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
             categoryBttnList.UseVisualStyleBackColor = false;
-            // 
-            // CustomersTabPage
-            // 
-            CustomersTabPage.Controls.Add(customerBttnOrders);
-            CustomersTabPage.Controls.Add(customerBttnDelete);
-            CustomersTabPage.Controls.Add(customerBttnUpdate);
-            CustomersTabPage.Controls.Add(customerBttnAdd);
-            CustomersTabPage.Controls.Add(customerBttnCard);
-            CustomersTabPage.Controls.Add(customerBttnList);
-            CustomersTabPage.Location = new Point(4, 24);
-            CustomersTabPage.Name = "CustomersTabPage";
-            CustomersTabPage.Size = new Size(1876, 67);
-            CustomersTabPage.TabIndex = 4;
-            CustomersTabPage.Text = "Müşteriler";
-            CustomersTabPage.UseVisualStyleBackColor = true;
-            // 
-            // customerBttnOrders
-            // 
-            customerBttnOrders.BackColor = Color.Transparent;
-            customerBttnOrders.Dock = DockStyle.Left;
-            customerBttnOrders.FlatAppearance.BorderColor = Color.White;
-            customerBttnOrders.FlatAppearance.BorderSize = 0;
-            customerBttnOrders.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            customerBttnOrders.FlatStyle = FlatStyle.Flat;
-            customerBttnOrders.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            customerBttnOrders.Image = (Image)resources.GetObject("customerBttnOrders.Image");
-            customerBttnOrders.Location = new Point(397, 0);
-            customerBttnOrders.Name = "customerBttnOrders";
-            customerBttnOrders.Size = new Size(123, 67);
-            customerBttnOrders.TabIndex = 17;
-            customerBttnOrders.Text = "Müşteri Siparişleri";
-            customerBttnOrders.TextImageRelation = TextImageRelation.ImageAboveText;
-            customerBttnOrders.UseVisualStyleBackColor = false;
-            // 
-            // customerBttnDelete
-            // 
-            customerBttnDelete.BackColor = Color.Transparent;
-            customerBttnDelete.Dock = DockStyle.Left;
-            customerBttnDelete.FlatAppearance.BorderColor = Color.White;
-            customerBttnDelete.FlatAppearance.BorderSize = 0;
-            customerBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            customerBttnDelete.FlatStyle = FlatStyle.Flat;
-            customerBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            customerBttnDelete.Image = (Image)resources.GetObject("customerBttnDelete.Image");
-            customerBttnDelete.Location = new Point(327, 0);
-            customerBttnDelete.Name = "customerBttnDelete";
-            customerBttnDelete.Size = new Size(70, 67);
-            customerBttnDelete.TabIndex = 15;
-            customerBttnDelete.Text = "Sil";
-            customerBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
-            customerBttnDelete.UseVisualStyleBackColor = false;
-            // 
-            // customerBttnUpdate
-            // 
-            customerBttnUpdate.BackColor = Color.Transparent;
-            customerBttnUpdate.Dock = DockStyle.Left;
-            customerBttnUpdate.FlatAppearance.BorderColor = Color.White;
-            customerBttnUpdate.FlatAppearance.BorderSize = 0;
-            customerBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            customerBttnUpdate.FlatStyle = FlatStyle.Flat;
-            customerBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            customerBttnUpdate.Image = (Image)resources.GetObject("customerBttnUpdate.Image");
-            customerBttnUpdate.Location = new Point(257, 0);
-            customerBttnUpdate.Name = "customerBttnUpdate";
-            customerBttnUpdate.Size = new Size(70, 67);
-            customerBttnUpdate.TabIndex = 14;
-            customerBttnUpdate.Text = "Güncelle";
-            customerBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
-            customerBttnUpdate.UseVisualStyleBackColor = false;
-            // 
-            // customerBttnAdd
-            // 
-            customerBttnAdd.BackColor = Color.Transparent;
-            customerBttnAdd.Dock = DockStyle.Left;
-            customerBttnAdd.FlatAppearance.BorderColor = Color.White;
-            customerBttnAdd.FlatAppearance.BorderSize = 0;
-            customerBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            customerBttnAdd.FlatStyle = FlatStyle.Flat;
-            customerBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            customerBttnAdd.Image = (Image)resources.GetObject("customerBttnAdd.Image");
-            customerBttnAdd.Location = new Point(187, 0);
-            customerBttnAdd.Name = "customerBttnAdd";
-            customerBttnAdd.Size = new Size(70, 67);
-            customerBttnAdd.TabIndex = 13;
-            customerBttnAdd.Text = "Ekle";
-            customerBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
-            customerBttnAdd.UseVisualStyleBackColor = false;
-            // 
-            // customerBttnCard
-            // 
-            customerBttnCard.BackColor = Color.Transparent;
-            customerBttnCard.Dock = DockStyle.Left;
-            customerBttnCard.FlatAppearance.BorderColor = Color.White;
-            customerBttnCard.FlatAppearance.BorderSize = 0;
-            customerBttnCard.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            customerBttnCard.FlatStyle = FlatStyle.Flat;
-            customerBttnCard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            customerBttnCard.Image = (Image)resources.GetObject("customerBttnCard.Image");
-            customerBttnCard.Location = new Point(70, 0);
-            customerBttnCard.Name = "customerBttnCard";
-            customerBttnCard.Size = new Size(117, 67);
-            customerBttnCard.TabIndex = 16;
-            customerBttnCard.Text = "Müşteri Kartı";
-            customerBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
-            customerBttnCard.UseVisualStyleBackColor = false;
-            // 
-            // customerBttnList
-            // 
-            customerBttnList.BackColor = Color.Transparent;
-            customerBttnList.Dock = DockStyle.Left;
-            customerBttnList.FlatAppearance.BorderColor = Color.White;
-            customerBttnList.FlatAppearance.BorderSize = 0;
-            customerBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            customerBttnList.FlatStyle = FlatStyle.Flat;
-            customerBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            customerBttnList.Image = (Image)resources.GetObject("customerBttnList.Image");
-            customerBttnList.Location = new Point(0, 0);
-            customerBttnList.Name = "customerBttnList";
-            customerBttnList.Size = new Size(70, 67);
-            customerBttnList.TabIndex = 12;
-            customerBttnList.Text = "Liste";
-            customerBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
-            customerBttnList.UseVisualStyleBackColor = false;
-            // 
-            // SuppliersTabPage
-            // 
-            SuppliersTabPage.Controls.Add(supplierBttnSupplierHistory);
-            SuppliersTabPage.Controls.Add(supplierBttnDelete);
-            SuppliersTabPage.Controls.Add(supplierBttnUpdate);
-            SuppliersTabPage.Controls.Add(supplierBttnAdd);
-            SuppliersTabPage.Controls.Add(supplierBttnCard);
-            SuppliersTabPage.Controls.Add(supplierBttnList);
-            SuppliersTabPage.Location = new Point(4, 24);
-            SuppliersTabPage.Name = "SuppliersTabPage";
-            SuppliersTabPage.Size = new Size(1876, 67);
-            SuppliersTabPage.TabIndex = 5;
-            SuppliersTabPage.Text = "Tedarikçiler";
-            SuppliersTabPage.UseVisualStyleBackColor = true;
-            // 
-            // supplierBttnSupplierHistory
-            // 
-            supplierBttnSupplierHistory.BackColor = Color.Transparent;
-            supplierBttnSupplierHistory.Dock = DockStyle.Left;
-            supplierBttnSupplierHistory.FlatAppearance.BorderColor = Color.White;
-            supplierBttnSupplierHistory.FlatAppearance.BorderSize = 0;
-            supplierBttnSupplierHistory.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            supplierBttnSupplierHistory.FlatStyle = FlatStyle.Flat;
-            supplierBttnSupplierHistory.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            supplierBttnSupplierHistory.Image = (Image)resources.GetObject("supplierBttnSupplierHistory.Image");
-            supplierBttnSupplierHistory.Location = new Point(397, 0);
-            supplierBttnSupplierHistory.Name = "supplierBttnSupplierHistory";
-            supplierBttnSupplierHistory.Size = new Size(123, 67);
-            supplierBttnSupplierHistory.TabIndex = 23;
-            supplierBttnSupplierHistory.Text = "Tedarikçi Geçmişi";
-            supplierBttnSupplierHistory.TextImageRelation = TextImageRelation.ImageAboveText;
-            supplierBttnSupplierHistory.UseVisualStyleBackColor = false;
-            // 
-            // supplierBttnDelete
-            // 
-            supplierBttnDelete.BackColor = Color.Transparent;
-            supplierBttnDelete.Dock = DockStyle.Left;
-            supplierBttnDelete.FlatAppearance.BorderColor = Color.White;
-            supplierBttnDelete.FlatAppearance.BorderSize = 0;
-            supplierBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            supplierBttnDelete.FlatStyle = FlatStyle.Flat;
-            supplierBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            supplierBttnDelete.Image = (Image)resources.GetObject("supplierBttnDelete.Image");
-            supplierBttnDelete.Location = new Point(327, 0);
-            supplierBttnDelete.Name = "supplierBttnDelete";
-            supplierBttnDelete.Size = new Size(70, 67);
-            supplierBttnDelete.TabIndex = 21;
-            supplierBttnDelete.Text = "Sil";
-            supplierBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
-            supplierBttnDelete.UseVisualStyleBackColor = false;
-            // 
-            // supplierBttnUpdate
-            // 
-            supplierBttnUpdate.BackColor = Color.Transparent;
-            supplierBttnUpdate.Dock = DockStyle.Left;
-            supplierBttnUpdate.FlatAppearance.BorderColor = Color.White;
-            supplierBttnUpdate.FlatAppearance.BorderSize = 0;
-            supplierBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            supplierBttnUpdate.FlatStyle = FlatStyle.Flat;
-            supplierBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            supplierBttnUpdate.Image = (Image)resources.GetObject("supplierBttnUpdate.Image");
-            supplierBttnUpdate.Location = new Point(257, 0);
-            supplierBttnUpdate.Name = "supplierBttnUpdate";
-            supplierBttnUpdate.Size = new Size(70, 67);
-            supplierBttnUpdate.TabIndex = 20;
-            supplierBttnUpdate.Text = "Güncelle";
-            supplierBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
-            supplierBttnUpdate.UseVisualStyleBackColor = false;
-            // 
-            // supplierBttnAdd
-            // 
-            supplierBttnAdd.BackColor = Color.Transparent;
-            supplierBttnAdd.Dock = DockStyle.Left;
-            supplierBttnAdd.FlatAppearance.BorderColor = Color.White;
-            supplierBttnAdd.FlatAppearance.BorderSize = 0;
-            supplierBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            supplierBttnAdd.FlatStyle = FlatStyle.Flat;
-            supplierBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            supplierBttnAdd.Image = (Image)resources.GetObject("supplierBttnAdd.Image");
-            supplierBttnAdd.Location = new Point(187, 0);
-            supplierBttnAdd.Name = "supplierBttnAdd";
-            supplierBttnAdd.Size = new Size(70, 67);
-            supplierBttnAdd.TabIndex = 19;
-            supplierBttnAdd.Text = "Ekle";
-            supplierBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
-            supplierBttnAdd.UseVisualStyleBackColor = false;
-            // 
-            // supplierBttnCard
-            // 
-            supplierBttnCard.BackColor = Color.Transparent;
-            supplierBttnCard.Dock = DockStyle.Left;
-            supplierBttnCard.FlatAppearance.BorderColor = Color.White;
-            supplierBttnCard.FlatAppearance.BorderSize = 0;
-            supplierBttnCard.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            supplierBttnCard.FlatStyle = FlatStyle.Flat;
-            supplierBttnCard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            supplierBttnCard.Image = (Image)resources.GetObject("supplierBttnCard.Image");
-            supplierBttnCard.Location = new Point(70, 0);
-            supplierBttnCard.Name = "supplierBttnCard";
-            supplierBttnCard.Size = new Size(117, 67);
-            supplierBttnCard.TabIndex = 22;
-            supplierBttnCard.Text = "Tedarikçi Kartı";
-            supplierBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
-            supplierBttnCard.UseVisualStyleBackColor = false;
-            // 
-            // supplierBttnList
-            // 
-            supplierBttnList.BackColor = Color.Transparent;
-            supplierBttnList.Dock = DockStyle.Left;
-            supplierBttnList.FlatAppearance.BorderColor = Color.White;
-            supplierBttnList.FlatAppearance.BorderSize = 0;
-            supplierBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            supplierBttnList.FlatStyle = FlatStyle.Flat;
-            supplierBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            supplierBttnList.Image = (Image)resources.GetObject("supplierBttnList.Image");
-            supplierBttnList.Location = new Point(0, 0);
-            supplierBttnList.Name = "supplierBttnList";
-            supplierBttnList.Size = new Size(70, 67);
-            supplierBttnList.TabIndex = 18;
-            supplierBttnList.Text = "Liste";
-            supplierBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
-            supplierBttnList.UseVisualStyleBackColor = false;
-            // 
-            // EmployeesTabPage
-            // 
-            EmployeesTabPage.Controls.Add(employeeBttnDelete);
-            EmployeesTabPage.Controls.Add(employeeBttnUpdate);
-            EmployeesTabPage.Controls.Add(employeeBttnAdd);
-            EmployeesTabPage.Controls.Add(employeeBttnCard);
-            EmployeesTabPage.Controls.Add(employeeBttnList);
-            EmployeesTabPage.Location = new Point(4, 24);
-            EmployeesTabPage.Name = "EmployeesTabPage";
-            EmployeesTabPage.Size = new Size(1876, 67);
-            EmployeesTabPage.TabIndex = 10;
-            EmployeesTabPage.Text = "Çalışanlar";
-            EmployeesTabPage.UseVisualStyleBackColor = true;
-            // 
-            // employeeBttnDelete
-            // 
-            employeeBttnDelete.BackColor = Color.Transparent;
-            employeeBttnDelete.Dock = DockStyle.Left;
-            employeeBttnDelete.FlatAppearance.BorderColor = Color.White;
-            employeeBttnDelete.FlatAppearance.BorderSize = 0;
-            employeeBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            employeeBttnDelete.FlatStyle = FlatStyle.Flat;
-            employeeBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            employeeBttnDelete.Image = (Image)resources.GetObject("employeeBttnDelete.Image");
-            employeeBttnDelete.Location = new Point(327, 0);
-            employeeBttnDelete.Name = "employeeBttnDelete";
-            employeeBttnDelete.Size = new Size(70, 67);
-            employeeBttnDelete.TabIndex = 26;
-            employeeBttnDelete.Text = "Sil";
-            employeeBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
-            employeeBttnDelete.UseVisualStyleBackColor = false;
-            // 
-            // employeeBttnUpdate
-            // 
-            employeeBttnUpdate.BackColor = Color.Transparent;
-            employeeBttnUpdate.Dock = DockStyle.Left;
-            employeeBttnUpdate.FlatAppearance.BorderColor = Color.White;
-            employeeBttnUpdate.FlatAppearance.BorderSize = 0;
-            employeeBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            employeeBttnUpdate.FlatStyle = FlatStyle.Flat;
-            employeeBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            employeeBttnUpdate.Image = (Image)resources.GetObject("employeeBttnUpdate.Image");
-            employeeBttnUpdate.Location = new Point(257, 0);
-            employeeBttnUpdate.Name = "employeeBttnUpdate";
-            employeeBttnUpdate.Size = new Size(70, 67);
-            employeeBttnUpdate.TabIndex = 25;
-            employeeBttnUpdate.Text = "Güncelle";
-            employeeBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
-            employeeBttnUpdate.UseVisualStyleBackColor = false;
-            // 
-            // employeeBttnAdd
-            // 
-            employeeBttnAdd.BackColor = Color.Transparent;
-            employeeBttnAdd.Dock = DockStyle.Left;
-            employeeBttnAdd.FlatAppearance.BorderColor = Color.White;
-            employeeBttnAdd.FlatAppearance.BorderSize = 0;
-            employeeBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            employeeBttnAdd.FlatStyle = FlatStyle.Flat;
-            employeeBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            employeeBttnAdd.Image = (Image)resources.GetObject("employeeBttnAdd.Image");
-            employeeBttnAdd.Location = new Point(187, 0);
-            employeeBttnAdd.Name = "employeeBttnAdd";
-            employeeBttnAdd.Size = new Size(70, 67);
-            employeeBttnAdd.TabIndex = 24;
-            employeeBttnAdd.Text = "Ekle";
-            employeeBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
-            employeeBttnAdd.UseVisualStyleBackColor = false;
-            // 
-            // employeeBttnCard
-            // 
-            employeeBttnCard.BackColor = Color.Transparent;
-            employeeBttnCard.Dock = DockStyle.Left;
-            employeeBttnCard.FlatAppearance.BorderColor = Color.White;
-            employeeBttnCard.FlatAppearance.BorderSize = 0;
-            employeeBttnCard.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            employeeBttnCard.FlatStyle = FlatStyle.Flat;
-            employeeBttnCard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            employeeBttnCard.Image = (Image)resources.GetObject("employeeBttnCard.Image");
-            employeeBttnCard.Location = new Point(70, 0);
-            employeeBttnCard.Name = "employeeBttnCard";
-            employeeBttnCard.Size = new Size(117, 67);
-            employeeBttnCard.TabIndex = 27;
-            employeeBttnCard.Text = "Çalışan Kartı";
-            employeeBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
-            employeeBttnCard.UseVisualStyleBackColor = false;
-            // 
-            // employeeBttnList
-            // 
-            employeeBttnList.BackColor = Color.Transparent;
-            employeeBttnList.Dock = DockStyle.Left;
-            employeeBttnList.FlatAppearance.BorderColor = Color.White;
-            employeeBttnList.FlatAppearance.BorderSize = 0;
-            employeeBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            employeeBttnList.FlatStyle = FlatStyle.Flat;
-            employeeBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            employeeBttnList.Image = (Image)resources.GetObject("employeeBttnList.Image");
-            employeeBttnList.Location = new Point(0, 0);
-            employeeBttnList.Name = "employeeBttnList";
-            employeeBttnList.Size = new Size(70, 67);
-            employeeBttnList.TabIndex = 23;
-            employeeBttnList.Text = "Liste";
-            employeeBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
-            employeeBttnList.UseVisualStyleBackColor = false;
-            // 
-            // UsersTabPage
-            // 
-            UsersTabPage.Controls.Add(userBttnUpdate);
-            UsersTabPage.Controls.Add(userBttnAdd);
-            UsersTabPage.Controls.Add(userBttnCard);
-            UsersTabPage.Controls.Add(userBttnList);
-            UsersTabPage.Location = new Point(4, 24);
-            UsersTabPage.Name = "UsersTabPage";
-            UsersTabPage.Size = new Size(1876, 67);
-            UsersTabPage.TabIndex = 7;
-            UsersTabPage.Text = "Kullanıcılar";
-            UsersTabPage.UseVisualStyleBackColor = true;
-            // 
-            // userBttnUpdate
-            // 
-            userBttnUpdate.BackColor = Color.Transparent;
-            userBttnUpdate.Dock = DockStyle.Left;
-            userBttnUpdate.FlatAppearance.BorderColor = Color.White;
-            userBttnUpdate.FlatAppearance.BorderSize = 0;
-            userBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            userBttnUpdate.FlatStyle = FlatStyle.Flat;
-            userBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            userBttnUpdate.Image = (Image)resources.GetObject("userBttnUpdate.Image");
-            userBttnUpdate.Location = new Point(257, 0);
-            userBttnUpdate.Name = "userBttnUpdate";
-            userBttnUpdate.Size = new Size(70, 67);
-            userBttnUpdate.TabIndex = 25;
-            userBttnUpdate.Text = "Güncelle";
-            userBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
-            userBttnUpdate.UseVisualStyleBackColor = false;
-            // 
-            // userBttnAdd
-            // 
-            userBttnAdd.BackColor = Color.Transparent;
-            userBttnAdd.Dock = DockStyle.Left;
-            userBttnAdd.FlatAppearance.BorderColor = Color.White;
-            userBttnAdd.FlatAppearance.BorderSize = 0;
-            userBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            userBttnAdd.FlatStyle = FlatStyle.Flat;
-            userBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            userBttnAdd.Image = (Image)resources.GetObject("userBttnAdd.Image");
-            userBttnAdd.Location = new Point(187, 0);
-            userBttnAdd.Name = "userBttnAdd";
-            userBttnAdd.Size = new Size(70, 67);
-            userBttnAdd.TabIndex = 24;
-            userBttnAdd.Text = "Ekle";
-            userBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
-            userBttnAdd.UseVisualStyleBackColor = false;
-            // 
-            // userBttnCard
-            // 
-            userBttnCard.BackColor = Color.Transparent;
-            userBttnCard.Dock = DockStyle.Left;
-            userBttnCard.FlatAppearance.BorderColor = Color.White;
-            userBttnCard.FlatAppearance.BorderSize = 0;
-            userBttnCard.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            userBttnCard.FlatStyle = FlatStyle.Flat;
-            userBttnCard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            userBttnCard.Image = (Image)resources.GetObject("userBttnCard.Image");
-            userBttnCard.Location = new Point(70, 0);
-            userBttnCard.Name = "userBttnCard";
-            userBttnCard.Size = new Size(117, 67);
-            userBttnCard.TabIndex = 27;
-            userBttnCard.Text = "Tedarikçi Kartı";
-            userBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
-            userBttnCard.UseVisualStyleBackColor = false;
-            // 
-            // userBttnList
-            // 
-            userBttnList.BackColor = Color.Transparent;
-            userBttnList.Dock = DockStyle.Left;
-            userBttnList.FlatAppearance.BorderColor = Color.White;
-            userBttnList.FlatAppearance.BorderSize = 0;
-            userBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            userBttnList.FlatStyle = FlatStyle.Flat;
-            userBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            userBttnList.Image = (Image)resources.GetObject("userBttnList.Image");
-            userBttnList.Location = new Point(0, 0);
-            userBttnList.Name = "userBttnList";
-            userBttnList.Size = new Size(70, 67);
-            userBttnList.TabIndex = 23;
-            userBttnList.Text = "Liste";
-            userBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
-            userBttnList.UseVisualStyleBackColor = false;
-            // 
-            // SettingsTabPage
-            // 
-            SettingsTabPage.Location = new Point(4, 24);
-            SettingsTabPage.Name = "SettingsTabPage";
-            SettingsTabPage.Size = new Size(1876, 67);
-            SettingsTabPage.TabIndex = 6;
-            SettingsTabPage.Text = "Ayarlar";
-            SettingsTabPage.UseVisualStyleBackColor = true;
-            // 
-            // ExitPageTab
-            // 
-            ExitPageTab.Location = new Point(4, 24);
-            ExitPageTab.Name = "ExitPageTab";
-            ExitPageTab.Size = new Size(1876, 67);
-            ExitPageTab.TabIndex = 8;
-            ExitPageTab.Text = "Çıkış";
-            ExitPageTab.UseVisualStyleBackColor = true;
-            // 
-            // panelBottom
-            // 
-            panelBottom.BackColor = SystemColors.Highlight;
-            panelBottom.Controls.Add(lblDate);
-            panelBottom.Controls.Add(lblUserName);
-            panelBottom.Controls.Add(lblWarehoseName);
-            panelBottom.Controls.Add(lblDatabaseName);
-            panelBottom.Controls.Add(lblServerName);
-            panelBottom.Controls.Add(lblCompanyName);
-            panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 991);
-            panelBottom.Name = "panelBottom";
-            panelBottom.Size = new Size(1884, 30);
-            panelBottom.TabIndex = 1;
-            // 
-            // lblDate
-            // 
-            lblDate.Dock = DockStyle.Right;
-            lblDate.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblDate.ForeColor = Color.White;
-            lblDate.Location = new Point(1739, 0);
-            lblDate.Name = "lblDate";
-            lblDate.Padding = new Padding(5, 0, 5, 0);
-            lblDate.Size = new Size(145, 30);
-            lblDate.TabIndex = 5;
-            lblDate.Text = "Tarih";
-            lblDate.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // lblUserName
-            // 
-            lblUserName.Dock = DockStyle.Left;
-            lblUserName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblUserName.ForeColor = Color.White;
-            lblUserName.Location = new Point(893, 0);
-            lblUserName.Name = "lblUserName";
-            lblUserName.Padding = new Padding(5, 0, 0, 0);
-            lblUserName.Size = new Size(189, 30);
-            lblUserName.TabIndex = 4;
-            lblUserName.Text = "Kullanıcı Adı :";
-            lblUserName.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblWarehoseName
-            // 
-            lblWarehoseName.Dock = DockStyle.Left;
-            lblWarehoseName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblWarehoseName.ForeColor = Color.White;
-            lblWarehoseName.Location = new Point(704, 0);
-            lblWarehoseName.Name = "lblWarehoseName";
-            lblWarehoseName.Padding = new Padding(5, 0, 0, 0);
-            lblWarehoseName.Size = new Size(189, 30);
-            lblWarehoseName.TabIndex = 3;
-            lblWarehoseName.Text = "Şube Adı :";
-            lblWarehoseName.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblDatabaseName
-            // 
-            lblDatabaseName.Dock = DockStyle.Left;
-            lblDatabaseName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblDatabaseName.ForeColor = Color.White;
-            lblDatabaseName.Location = new Point(515, 0);
-            lblDatabaseName.Name = "lblDatabaseName";
-            lblDatabaseName.Padding = new Padding(5, 0, 0, 0);
-            lblDatabaseName.Size = new Size(189, 30);
-            lblDatabaseName.TabIndex = 2;
-            lblDatabaseName.Text = "Veritabanı Adı :";
-            lblDatabaseName.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblServerName
-            // 
-            lblServerName.Dock = DockStyle.Left;
-            lblServerName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblServerName.ForeColor = Color.White;
-            lblServerName.Location = new Point(326, 0);
-            lblServerName.Name = "lblServerName";
-            lblServerName.Padding = new Padding(5, 0, 0, 0);
-            lblServerName.Size = new Size(189, 30);
-            lblServerName.TabIndex = 1;
-            lblServerName.Text = "Sunucu Adı :";
-            lblServerName.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblCompanyName
-            // 
-            lblCompanyName.Dock = DockStyle.Left;
-            lblCompanyName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblCompanyName.ForeColor = Color.White;
-            lblCompanyName.Location = new Point(0, 0);
-            lblCompanyName.Name = "lblCompanyName";
-            lblCompanyName.Padding = new Padding(5, 0, 0, 0);
-            lblCompanyName.Size = new Size(326, 30);
-            lblCompanyName.TabIndex = 0;
-            lblCompanyName.Text = "Firma Adı : ";
-            lblCompanyName.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // panel1
-            // 
-            panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(0, 95);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(1884, 896);
-            panel1.TabIndex = 2;
+            categoryBttnList.Click += categoryBttnList_Click;
             // 
             // BrandPage
             // 
@@ -1091,9 +541,9 @@
             BrandPage.Controls.Add(bttnBrandAdd);
             BrandPage.Controls.Add(bttnBrandCart);
             BrandPage.Controls.Add(bttnBrandList);
-            BrandPage.Location = new Point(4, 24);
+            BrandPage.Location = new Point(4, 26);
             BrandPage.Name = "BrandPage";
-            BrandPage.Size = new Size(1876, 67);
+            BrandPage.Size = new Size(1876, 65);
             BrandPage.TabIndex = 11;
             BrandPage.Text = "Markalar";
             BrandPage.UseVisualStyleBackColor = true;
@@ -1110,7 +560,7 @@
             bttnBrandDelete.Image = (Image)resources.GetObject("bttnBrandDelete.Image");
             bttnBrandDelete.Location = new Point(327, 0);
             bttnBrandDelete.Name = "bttnBrandDelete";
-            bttnBrandDelete.Size = new Size(70, 67);
+            bttnBrandDelete.Size = new Size(70, 65);
             bttnBrandDelete.TabIndex = 20;
             bttnBrandDelete.Text = "Sil";
             bttnBrandDelete.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -1128,7 +578,7 @@
             bttnBrandUpdate.Image = (Image)resources.GetObject("bttnBrandUpdate.Image");
             bttnBrandUpdate.Location = new Point(257, 0);
             bttnBrandUpdate.Name = "bttnBrandUpdate";
-            bttnBrandUpdate.Size = new Size(70, 67);
+            bttnBrandUpdate.Size = new Size(70, 65);
             bttnBrandUpdate.TabIndex = 19;
             bttnBrandUpdate.Text = "Güncelle";
             bttnBrandUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -1146,7 +596,7 @@
             bttnBrandAdd.Image = (Image)resources.GetObject("bttnBrandAdd.Image");
             bttnBrandAdd.Location = new Point(187, 0);
             bttnBrandAdd.Name = "bttnBrandAdd";
-            bttnBrandAdd.Size = new Size(70, 67);
+            bttnBrandAdd.Size = new Size(70, 65);
             bttnBrandAdd.TabIndex = 18;
             bttnBrandAdd.Text = "Ekle";
             bttnBrandAdd.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -1164,7 +614,7 @@
             bttnBrandCart.Image = (Image)resources.GetObject("bttnBrandCart.Image");
             bttnBrandCart.Location = new Point(70, 0);
             bttnBrandCart.Name = "bttnBrandCart";
-            bttnBrandCart.Size = new Size(117, 67);
+            bttnBrandCart.Size = new Size(117, 65);
             bttnBrandCart.TabIndex = 21;
             bttnBrandCart.Text = "Marka Kartı";
             bttnBrandCart.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -1182,11 +632,446 @@
             bttnBrandList.Image = (Image)resources.GetObject("bttnBrandList.Image");
             bttnBrandList.Location = new Point(0, 0);
             bttnBrandList.Name = "bttnBrandList";
-            bttnBrandList.Size = new Size(70, 67);
+            bttnBrandList.Size = new Size(70, 65);
             bttnBrandList.TabIndex = 17;
             bttnBrandList.Text = "Liste";
             bttnBrandList.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnBrandList.UseVisualStyleBackColor = false;
+            // 
+            // CustomersTabPage
+            // 
+            CustomersTabPage.Controls.Add(customerBttnOrders);
+            CustomersTabPage.Controls.Add(customerBttnDelete);
+            CustomersTabPage.Controls.Add(customerBttnUpdate);
+            CustomersTabPage.Controls.Add(customerBttnAdd);
+            CustomersTabPage.Controls.Add(customerBttnCard);
+            CustomersTabPage.Controls.Add(customerBttnList);
+            CustomersTabPage.Location = new Point(4, 26);
+            CustomersTabPage.Name = "CustomersTabPage";
+            CustomersTabPage.Size = new Size(1876, 65);
+            CustomersTabPage.TabIndex = 4;
+            CustomersTabPage.Text = "Müşteriler";
+            CustomersTabPage.UseVisualStyleBackColor = true;
+            // 
+            // customerBttnOrders
+            // 
+            customerBttnOrders.BackColor = Color.Transparent;
+            customerBttnOrders.Dock = DockStyle.Left;
+            customerBttnOrders.FlatAppearance.BorderColor = Color.White;
+            customerBttnOrders.FlatAppearance.BorderSize = 0;
+            customerBttnOrders.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            customerBttnOrders.FlatStyle = FlatStyle.Flat;
+            customerBttnOrders.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            customerBttnOrders.Image = (Image)resources.GetObject("customerBttnOrders.Image");
+            customerBttnOrders.Location = new Point(397, 0);
+            customerBttnOrders.Name = "customerBttnOrders";
+            customerBttnOrders.Size = new Size(123, 65);
+            customerBttnOrders.TabIndex = 17;
+            customerBttnOrders.Text = "Müşteri Siparişleri";
+            customerBttnOrders.TextImageRelation = TextImageRelation.ImageAboveText;
+            customerBttnOrders.UseVisualStyleBackColor = false;
+            // 
+            // customerBttnDelete
+            // 
+            customerBttnDelete.BackColor = Color.Transparent;
+            customerBttnDelete.Dock = DockStyle.Left;
+            customerBttnDelete.FlatAppearance.BorderColor = Color.White;
+            customerBttnDelete.FlatAppearance.BorderSize = 0;
+            customerBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            customerBttnDelete.FlatStyle = FlatStyle.Flat;
+            customerBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            customerBttnDelete.Image = (Image)resources.GetObject("customerBttnDelete.Image");
+            customerBttnDelete.Location = new Point(327, 0);
+            customerBttnDelete.Name = "customerBttnDelete";
+            customerBttnDelete.Size = new Size(70, 65);
+            customerBttnDelete.TabIndex = 15;
+            customerBttnDelete.Text = "Sil";
+            customerBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
+            customerBttnDelete.UseVisualStyleBackColor = false;
+            // 
+            // customerBttnUpdate
+            // 
+            customerBttnUpdate.BackColor = Color.Transparent;
+            customerBttnUpdate.Dock = DockStyle.Left;
+            customerBttnUpdate.FlatAppearance.BorderColor = Color.White;
+            customerBttnUpdate.FlatAppearance.BorderSize = 0;
+            customerBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            customerBttnUpdate.FlatStyle = FlatStyle.Flat;
+            customerBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            customerBttnUpdate.Image = (Image)resources.GetObject("customerBttnUpdate.Image");
+            customerBttnUpdate.Location = new Point(257, 0);
+            customerBttnUpdate.Name = "customerBttnUpdate";
+            customerBttnUpdate.Size = new Size(70, 65);
+            customerBttnUpdate.TabIndex = 14;
+            customerBttnUpdate.Text = "Güncelle";
+            customerBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
+            customerBttnUpdate.UseVisualStyleBackColor = false;
+            // 
+            // customerBttnAdd
+            // 
+            customerBttnAdd.BackColor = Color.Transparent;
+            customerBttnAdd.Dock = DockStyle.Left;
+            customerBttnAdd.FlatAppearance.BorderColor = Color.White;
+            customerBttnAdd.FlatAppearance.BorderSize = 0;
+            customerBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            customerBttnAdd.FlatStyle = FlatStyle.Flat;
+            customerBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            customerBttnAdd.Image = (Image)resources.GetObject("customerBttnAdd.Image");
+            customerBttnAdd.Location = new Point(187, 0);
+            customerBttnAdd.Name = "customerBttnAdd";
+            customerBttnAdd.Size = new Size(70, 65);
+            customerBttnAdd.TabIndex = 13;
+            customerBttnAdd.Text = "Ekle";
+            customerBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
+            customerBttnAdd.UseVisualStyleBackColor = false;
+            // 
+            // customerBttnCard
+            // 
+            customerBttnCard.BackColor = Color.Transparent;
+            customerBttnCard.Dock = DockStyle.Left;
+            customerBttnCard.FlatAppearance.BorderColor = Color.White;
+            customerBttnCard.FlatAppearance.BorderSize = 0;
+            customerBttnCard.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            customerBttnCard.FlatStyle = FlatStyle.Flat;
+            customerBttnCard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            customerBttnCard.Image = (Image)resources.GetObject("customerBttnCard.Image");
+            customerBttnCard.Location = new Point(70, 0);
+            customerBttnCard.Name = "customerBttnCard";
+            customerBttnCard.Size = new Size(117, 65);
+            customerBttnCard.TabIndex = 16;
+            customerBttnCard.Text = "Müşteri Kartı";
+            customerBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
+            customerBttnCard.UseVisualStyleBackColor = false;
+            // 
+            // customerBttnList
+            // 
+            customerBttnList.BackColor = Color.Transparent;
+            customerBttnList.Dock = DockStyle.Left;
+            customerBttnList.FlatAppearance.BorderColor = Color.White;
+            customerBttnList.FlatAppearance.BorderSize = 0;
+            customerBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            customerBttnList.FlatStyle = FlatStyle.Flat;
+            customerBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            customerBttnList.Image = (Image)resources.GetObject("customerBttnList.Image");
+            customerBttnList.Location = new Point(0, 0);
+            customerBttnList.Name = "customerBttnList";
+            customerBttnList.Size = new Size(70, 65);
+            customerBttnList.TabIndex = 12;
+            customerBttnList.Text = "Liste";
+            customerBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
+            customerBttnList.UseVisualStyleBackColor = false;
+            // 
+            // SuppliersTabPage
+            // 
+            SuppliersTabPage.Controls.Add(supplierBttnSupplierHistory);
+            SuppliersTabPage.Controls.Add(supplierBttnDelete);
+            SuppliersTabPage.Controls.Add(supplierBttnUpdate);
+            SuppliersTabPage.Controls.Add(supplierBttnAdd);
+            SuppliersTabPage.Controls.Add(supplierBttnCard);
+            SuppliersTabPage.Controls.Add(supplierBttnList);
+            SuppliersTabPage.Location = new Point(4, 26);
+            SuppliersTabPage.Name = "SuppliersTabPage";
+            SuppliersTabPage.Size = new Size(1876, 65);
+            SuppliersTabPage.TabIndex = 5;
+            SuppliersTabPage.Text = "Tedarikçiler";
+            SuppliersTabPage.UseVisualStyleBackColor = true;
+            // 
+            // supplierBttnSupplierHistory
+            // 
+            supplierBttnSupplierHistory.BackColor = Color.Transparent;
+            supplierBttnSupplierHistory.Dock = DockStyle.Left;
+            supplierBttnSupplierHistory.FlatAppearance.BorderColor = Color.White;
+            supplierBttnSupplierHistory.FlatAppearance.BorderSize = 0;
+            supplierBttnSupplierHistory.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            supplierBttnSupplierHistory.FlatStyle = FlatStyle.Flat;
+            supplierBttnSupplierHistory.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            supplierBttnSupplierHistory.Image = (Image)resources.GetObject("supplierBttnSupplierHistory.Image");
+            supplierBttnSupplierHistory.Location = new Point(397, 0);
+            supplierBttnSupplierHistory.Name = "supplierBttnSupplierHistory";
+            supplierBttnSupplierHistory.Size = new Size(123, 65);
+            supplierBttnSupplierHistory.TabIndex = 23;
+            supplierBttnSupplierHistory.Text = "Tedarikçi Geçmişi";
+            supplierBttnSupplierHistory.TextImageRelation = TextImageRelation.ImageAboveText;
+            supplierBttnSupplierHistory.UseVisualStyleBackColor = false;
+            // 
+            // supplierBttnDelete
+            // 
+            supplierBttnDelete.BackColor = Color.Transparent;
+            supplierBttnDelete.Dock = DockStyle.Left;
+            supplierBttnDelete.FlatAppearance.BorderColor = Color.White;
+            supplierBttnDelete.FlatAppearance.BorderSize = 0;
+            supplierBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            supplierBttnDelete.FlatStyle = FlatStyle.Flat;
+            supplierBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            supplierBttnDelete.Image = (Image)resources.GetObject("supplierBttnDelete.Image");
+            supplierBttnDelete.Location = new Point(327, 0);
+            supplierBttnDelete.Name = "supplierBttnDelete";
+            supplierBttnDelete.Size = new Size(70, 65);
+            supplierBttnDelete.TabIndex = 21;
+            supplierBttnDelete.Text = "Sil";
+            supplierBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
+            supplierBttnDelete.UseVisualStyleBackColor = false;
+            // 
+            // supplierBttnUpdate
+            // 
+            supplierBttnUpdate.BackColor = Color.Transparent;
+            supplierBttnUpdate.Dock = DockStyle.Left;
+            supplierBttnUpdate.FlatAppearance.BorderColor = Color.White;
+            supplierBttnUpdate.FlatAppearance.BorderSize = 0;
+            supplierBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            supplierBttnUpdate.FlatStyle = FlatStyle.Flat;
+            supplierBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            supplierBttnUpdate.Image = (Image)resources.GetObject("supplierBttnUpdate.Image");
+            supplierBttnUpdate.Location = new Point(257, 0);
+            supplierBttnUpdate.Name = "supplierBttnUpdate";
+            supplierBttnUpdate.Size = new Size(70, 65);
+            supplierBttnUpdate.TabIndex = 20;
+            supplierBttnUpdate.Text = "Güncelle";
+            supplierBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
+            supplierBttnUpdate.UseVisualStyleBackColor = false;
+            // 
+            // supplierBttnAdd
+            // 
+            supplierBttnAdd.BackColor = Color.Transparent;
+            supplierBttnAdd.Dock = DockStyle.Left;
+            supplierBttnAdd.FlatAppearance.BorderColor = Color.White;
+            supplierBttnAdd.FlatAppearance.BorderSize = 0;
+            supplierBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            supplierBttnAdd.FlatStyle = FlatStyle.Flat;
+            supplierBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            supplierBttnAdd.Image = (Image)resources.GetObject("supplierBttnAdd.Image");
+            supplierBttnAdd.Location = new Point(187, 0);
+            supplierBttnAdd.Name = "supplierBttnAdd";
+            supplierBttnAdd.Size = new Size(70, 65);
+            supplierBttnAdd.TabIndex = 19;
+            supplierBttnAdd.Text = "Ekle";
+            supplierBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
+            supplierBttnAdd.UseVisualStyleBackColor = false;
+            // 
+            // supplierBttnCard
+            // 
+            supplierBttnCard.BackColor = Color.Transparent;
+            supplierBttnCard.Dock = DockStyle.Left;
+            supplierBttnCard.FlatAppearance.BorderColor = Color.White;
+            supplierBttnCard.FlatAppearance.BorderSize = 0;
+            supplierBttnCard.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            supplierBttnCard.FlatStyle = FlatStyle.Flat;
+            supplierBttnCard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            supplierBttnCard.Image = (Image)resources.GetObject("supplierBttnCard.Image");
+            supplierBttnCard.Location = new Point(70, 0);
+            supplierBttnCard.Name = "supplierBttnCard";
+            supplierBttnCard.Size = new Size(117, 65);
+            supplierBttnCard.TabIndex = 22;
+            supplierBttnCard.Text = "Tedarikçi Kartı";
+            supplierBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
+            supplierBttnCard.UseVisualStyleBackColor = false;
+            // 
+            // supplierBttnList
+            // 
+            supplierBttnList.BackColor = Color.Transparent;
+            supplierBttnList.Dock = DockStyle.Left;
+            supplierBttnList.FlatAppearance.BorderColor = Color.White;
+            supplierBttnList.FlatAppearance.BorderSize = 0;
+            supplierBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            supplierBttnList.FlatStyle = FlatStyle.Flat;
+            supplierBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            supplierBttnList.Image = (Image)resources.GetObject("supplierBttnList.Image");
+            supplierBttnList.Location = new Point(0, 0);
+            supplierBttnList.Name = "supplierBttnList";
+            supplierBttnList.Size = new Size(70, 65);
+            supplierBttnList.TabIndex = 18;
+            supplierBttnList.Text = "Liste";
+            supplierBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
+            supplierBttnList.UseVisualStyleBackColor = false;
+            // 
+            // EmployeesTabPage
+            // 
+            EmployeesTabPage.Controls.Add(employeeBttnDelete);
+            EmployeesTabPage.Controls.Add(employeeBttnUpdate);
+            EmployeesTabPage.Controls.Add(employeeBttnAdd);
+            EmployeesTabPage.Controls.Add(employeeBttnCard);
+            EmployeesTabPage.Controls.Add(employeeBttnList);
+            EmployeesTabPage.Location = new Point(4, 26);
+            EmployeesTabPage.Name = "EmployeesTabPage";
+            EmployeesTabPage.Size = new Size(1876, 65);
+            EmployeesTabPage.TabIndex = 10;
+            EmployeesTabPage.Text = "Çalışanlar";
+            EmployeesTabPage.UseVisualStyleBackColor = true;
+            // 
+            // employeeBttnDelete
+            // 
+            employeeBttnDelete.BackColor = Color.Transparent;
+            employeeBttnDelete.Dock = DockStyle.Left;
+            employeeBttnDelete.FlatAppearance.BorderColor = Color.White;
+            employeeBttnDelete.FlatAppearance.BorderSize = 0;
+            employeeBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            employeeBttnDelete.FlatStyle = FlatStyle.Flat;
+            employeeBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            employeeBttnDelete.Image = (Image)resources.GetObject("employeeBttnDelete.Image");
+            employeeBttnDelete.Location = new Point(327, 0);
+            employeeBttnDelete.Name = "employeeBttnDelete";
+            employeeBttnDelete.Size = new Size(70, 65);
+            employeeBttnDelete.TabIndex = 26;
+            employeeBttnDelete.Text = "Sil";
+            employeeBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
+            employeeBttnDelete.UseVisualStyleBackColor = false;
+            // 
+            // employeeBttnUpdate
+            // 
+            employeeBttnUpdate.BackColor = Color.Transparent;
+            employeeBttnUpdate.Dock = DockStyle.Left;
+            employeeBttnUpdate.FlatAppearance.BorderColor = Color.White;
+            employeeBttnUpdate.FlatAppearance.BorderSize = 0;
+            employeeBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            employeeBttnUpdate.FlatStyle = FlatStyle.Flat;
+            employeeBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            employeeBttnUpdate.Image = (Image)resources.GetObject("employeeBttnUpdate.Image");
+            employeeBttnUpdate.Location = new Point(257, 0);
+            employeeBttnUpdate.Name = "employeeBttnUpdate";
+            employeeBttnUpdate.Size = new Size(70, 65);
+            employeeBttnUpdate.TabIndex = 25;
+            employeeBttnUpdate.Text = "Güncelle";
+            employeeBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
+            employeeBttnUpdate.UseVisualStyleBackColor = false;
+            // 
+            // employeeBttnAdd
+            // 
+            employeeBttnAdd.BackColor = Color.Transparent;
+            employeeBttnAdd.Dock = DockStyle.Left;
+            employeeBttnAdd.FlatAppearance.BorderColor = Color.White;
+            employeeBttnAdd.FlatAppearance.BorderSize = 0;
+            employeeBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            employeeBttnAdd.FlatStyle = FlatStyle.Flat;
+            employeeBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            employeeBttnAdd.Image = (Image)resources.GetObject("employeeBttnAdd.Image");
+            employeeBttnAdd.Location = new Point(187, 0);
+            employeeBttnAdd.Name = "employeeBttnAdd";
+            employeeBttnAdd.Size = new Size(70, 65);
+            employeeBttnAdd.TabIndex = 24;
+            employeeBttnAdd.Text = "Ekle";
+            employeeBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
+            employeeBttnAdd.UseVisualStyleBackColor = false;
+            // 
+            // employeeBttnCard
+            // 
+            employeeBttnCard.BackColor = Color.Transparent;
+            employeeBttnCard.Dock = DockStyle.Left;
+            employeeBttnCard.FlatAppearance.BorderColor = Color.White;
+            employeeBttnCard.FlatAppearance.BorderSize = 0;
+            employeeBttnCard.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            employeeBttnCard.FlatStyle = FlatStyle.Flat;
+            employeeBttnCard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            employeeBttnCard.Image = (Image)resources.GetObject("employeeBttnCard.Image");
+            employeeBttnCard.Location = new Point(70, 0);
+            employeeBttnCard.Name = "employeeBttnCard";
+            employeeBttnCard.Size = new Size(117, 65);
+            employeeBttnCard.TabIndex = 27;
+            employeeBttnCard.Text = "Çalışan Kartı";
+            employeeBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
+            employeeBttnCard.UseVisualStyleBackColor = false;
+            // 
+            // employeeBttnList
+            // 
+            employeeBttnList.BackColor = Color.Transparent;
+            employeeBttnList.Dock = DockStyle.Left;
+            employeeBttnList.FlatAppearance.BorderColor = Color.White;
+            employeeBttnList.FlatAppearance.BorderSize = 0;
+            employeeBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            employeeBttnList.FlatStyle = FlatStyle.Flat;
+            employeeBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            employeeBttnList.Image = (Image)resources.GetObject("employeeBttnList.Image");
+            employeeBttnList.Location = new Point(0, 0);
+            employeeBttnList.Name = "employeeBttnList";
+            employeeBttnList.Size = new Size(70, 65);
+            employeeBttnList.TabIndex = 23;
+            employeeBttnList.Text = "Liste";
+            employeeBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
+            employeeBttnList.UseVisualStyleBackColor = false;
+            // 
+            // UsersTabPage
+            // 
+            UsersTabPage.Controls.Add(userBttnUpdate);
+            UsersTabPage.Controls.Add(userBttnAdd);
+            UsersTabPage.Controls.Add(userBttnCard);
+            UsersTabPage.Controls.Add(userBttnList);
+            UsersTabPage.Location = new Point(4, 26);
+            UsersTabPage.Name = "UsersTabPage";
+            UsersTabPage.Size = new Size(1876, 65);
+            UsersTabPage.TabIndex = 7;
+            UsersTabPage.Text = "Kullanıcılar";
+            UsersTabPage.UseVisualStyleBackColor = true;
+            // 
+            // userBttnUpdate
+            // 
+            userBttnUpdate.BackColor = Color.Transparent;
+            userBttnUpdate.Dock = DockStyle.Left;
+            userBttnUpdate.FlatAppearance.BorderColor = Color.White;
+            userBttnUpdate.FlatAppearance.BorderSize = 0;
+            userBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            userBttnUpdate.FlatStyle = FlatStyle.Flat;
+            userBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            userBttnUpdate.Image = (Image)resources.GetObject("userBttnUpdate.Image");
+            userBttnUpdate.Location = new Point(257, 0);
+            userBttnUpdate.Name = "userBttnUpdate";
+            userBttnUpdate.Size = new Size(70, 65);
+            userBttnUpdate.TabIndex = 25;
+            userBttnUpdate.Text = "Güncelle";
+            userBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
+            userBttnUpdate.UseVisualStyleBackColor = false;
+            // 
+            // userBttnAdd
+            // 
+            userBttnAdd.BackColor = Color.Transparent;
+            userBttnAdd.Dock = DockStyle.Left;
+            userBttnAdd.FlatAppearance.BorderColor = Color.White;
+            userBttnAdd.FlatAppearance.BorderSize = 0;
+            userBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            userBttnAdd.FlatStyle = FlatStyle.Flat;
+            userBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            userBttnAdd.Image = (Image)resources.GetObject("userBttnAdd.Image");
+            userBttnAdd.Location = new Point(187, 0);
+            userBttnAdd.Name = "userBttnAdd";
+            userBttnAdd.Size = new Size(70, 65);
+            userBttnAdd.TabIndex = 24;
+            userBttnAdd.Text = "Ekle";
+            userBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
+            userBttnAdd.UseVisualStyleBackColor = false;
+            // 
+            // userBttnCard
+            // 
+            userBttnCard.BackColor = Color.Transparent;
+            userBttnCard.Dock = DockStyle.Left;
+            userBttnCard.FlatAppearance.BorderColor = Color.White;
+            userBttnCard.FlatAppearance.BorderSize = 0;
+            userBttnCard.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            userBttnCard.FlatStyle = FlatStyle.Flat;
+            userBttnCard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            userBttnCard.Image = (Image)resources.GetObject("userBttnCard.Image");
+            userBttnCard.Location = new Point(70, 0);
+            userBttnCard.Name = "userBttnCard";
+            userBttnCard.Size = new Size(117, 65);
+            userBttnCard.TabIndex = 27;
+            userBttnCard.Text = "Tedarikçi Kartı";
+            userBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
+            userBttnCard.UseVisualStyleBackColor = false;
+            // 
+            // userBttnList
+            // 
+            userBttnList.BackColor = Color.Transparent;
+            userBttnList.Dock = DockStyle.Left;
+            userBttnList.FlatAppearance.BorderColor = Color.White;
+            userBttnList.FlatAppearance.BorderSize = 0;
+            userBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            userBttnList.FlatStyle = FlatStyle.Flat;
+            userBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            userBttnList.Image = (Image)resources.GetObject("userBttnList.Image");
+            userBttnList.Location = new Point(0, 0);
+            userBttnList.Name = "userBttnList";
+            userBttnList.Size = new Size(70, 65);
+            userBttnList.TabIndex = 23;
+            userBttnList.Text = "Liste";
+            userBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
+            userBttnList.UseVisualStyleBackColor = false;
             // 
             // AppUserRolePage
             // 
@@ -1292,6 +1177,125 @@
             bttnAppUserRoleList.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnAppUserRoleList.UseVisualStyleBackColor = false;
             // 
+            // SettingsTabPage
+            // 
+            SettingsTabPage.Location = new Point(4, 26);
+            SettingsTabPage.Name = "SettingsTabPage";
+            SettingsTabPage.Size = new Size(1876, 65);
+            SettingsTabPage.TabIndex = 6;
+            SettingsTabPage.Text = "Ayarlar";
+            SettingsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // ExitPageTab
+            // 
+            ExitPageTab.Location = new Point(4, 26);
+            ExitPageTab.Name = "ExitPageTab";
+            ExitPageTab.Size = new Size(1876, 65);
+            ExitPageTab.TabIndex = 8;
+            ExitPageTab.Text = "Çıkış";
+            ExitPageTab.UseVisualStyleBackColor = true;
+            // 
+            // panelBottom
+            // 
+            panelBottom.BackColor = SystemColors.Highlight;
+            panelBottom.Controls.Add(lblDate);
+            panelBottom.Controls.Add(lblUserName);
+            panelBottom.Controls.Add(lblWarehoseName);
+            panelBottom.Controls.Add(lblDatabaseName);
+            panelBottom.Controls.Add(lblServerName);
+            panelBottom.Controls.Add(lblCompanyName);
+            panelBottom.Dock = DockStyle.Bottom;
+            panelBottom.Location = new Point(0, 991);
+            panelBottom.Name = "panelBottom";
+            panelBottom.Size = new Size(1884, 30);
+            panelBottom.TabIndex = 1;
+            // 
+            // lblDate
+            // 
+            lblDate.Dock = DockStyle.Right;
+            lblDate.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblDate.ForeColor = Color.White;
+            lblDate.Location = new Point(1739, 0);
+            lblDate.Name = "lblDate";
+            lblDate.Padding = new Padding(5, 0, 5, 0);
+            lblDate.Size = new Size(145, 30);
+            lblDate.TabIndex = 5;
+            lblDate.Text = "Tarih";
+            lblDate.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // lblUserName
+            // 
+            lblUserName.Dock = DockStyle.Left;
+            lblUserName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblUserName.ForeColor = Color.White;
+            lblUserName.Location = new Point(893, 0);
+            lblUserName.Name = "lblUserName";
+            lblUserName.Padding = new Padding(5, 0, 0, 0);
+            lblUserName.Size = new Size(189, 30);
+            lblUserName.TabIndex = 4;
+            lblUserName.Text = "Kullanıcı Adı :";
+            lblUserName.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblWarehoseName
+            // 
+            lblWarehoseName.Dock = DockStyle.Left;
+            lblWarehoseName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblWarehoseName.ForeColor = Color.White;
+            lblWarehoseName.Location = new Point(704, 0);
+            lblWarehoseName.Name = "lblWarehoseName";
+            lblWarehoseName.Padding = new Padding(5, 0, 0, 0);
+            lblWarehoseName.Size = new Size(189, 30);
+            lblWarehoseName.TabIndex = 3;
+            lblWarehoseName.Text = "Şube Adı :";
+            lblWarehoseName.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblDatabaseName
+            // 
+            lblDatabaseName.Dock = DockStyle.Left;
+            lblDatabaseName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblDatabaseName.ForeColor = Color.White;
+            lblDatabaseName.Location = new Point(515, 0);
+            lblDatabaseName.Name = "lblDatabaseName";
+            lblDatabaseName.Padding = new Padding(5, 0, 0, 0);
+            lblDatabaseName.Size = new Size(189, 30);
+            lblDatabaseName.TabIndex = 2;
+            lblDatabaseName.Text = "Veritabanı Adı :";
+            lblDatabaseName.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblServerName
+            // 
+            lblServerName.Dock = DockStyle.Left;
+            lblServerName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblServerName.ForeColor = Color.White;
+            lblServerName.Location = new Point(326, 0);
+            lblServerName.Name = "lblServerName";
+            lblServerName.Padding = new Padding(5, 0, 0, 0);
+            lblServerName.Size = new Size(189, 30);
+            lblServerName.TabIndex = 1;
+            lblServerName.Text = "Sunucu Adı :";
+            lblServerName.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblCompanyName
+            // 
+            lblCompanyName.Dock = DockStyle.Left;
+            lblCompanyName.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblCompanyName.ForeColor = Color.White;
+            lblCompanyName.Location = new Point(0, 0);
+            lblCompanyName.Name = "lblCompanyName";
+            lblCompanyName.Padding = new Padding(5, 0, 0, 0);
+            lblCompanyName.Size = new Size(326, 30);
+            lblCompanyName.TabIndex = 0;
+            lblCompanyName.Text = "Firma Adı : ";
+            lblCompanyName.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // panel1
+            // 
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 95);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1884, 896);
+            panel1.TabIndex = 2;
+            // 
             // Panel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1303,19 +1307,20 @@
             Name = "Panel";
             Text = "Panel";
             WindowState = FormWindowState.Maximized;
+            Load += Panel_Load;
             tabControl1.ResumeLayout(false);
             HomeTabPage.ResumeLayout(false);
             StocksTabPage.ResumeLayout(false);
             ProductionTabPage.ResumeLayout(false);
             ProductsTabPage.ResumeLayout(false);
             CategoriesTabPage.ResumeLayout(false);
+            BrandPage.ResumeLayout(false);
             CustomersTabPage.ResumeLayout(false);
             SuppliersTabPage.ResumeLayout(false);
             EmployeesTabPage.ResumeLayout(false);
             UsersTabPage.ResumeLayout(false);
-            panelBottom.ResumeLayout(false);
-            BrandPage.ResumeLayout(false);
             AppUserRolePage.ResumeLayout(false);
+            panelBottom.ResumeLayout(false);
             ResumeLayout(false);
         }
 

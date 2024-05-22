@@ -11,6 +11,8 @@ namespace Krop.Business.Features.Categories.Profiles
             CreateMap<Category, CreateCategoryDTO>().ReverseMap();
             CreateMap<Category, UpdateCategoryDTO>().ReverseMap();
             CreateMap<Category, GetCategoryDTO>().ReverseMap();
+
+            CreateMap<Category, GetCategoryComboBoxDTO>().ReverseMap();
         }
     }
 }

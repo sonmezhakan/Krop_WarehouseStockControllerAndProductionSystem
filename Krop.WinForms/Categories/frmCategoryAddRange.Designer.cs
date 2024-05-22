@@ -310,6 +310,7 @@
             // 
             txtCategoryName20.Location = new Point(40, 588);
             txtCategoryName20.Name = "txtCategoryName20";
+            txtCategoryName20.PlaceholderText = "Kategori Adı...";
             txtCategoryName20.Size = new Size(246, 23);
             txtCategoryName20.TabIndex = 22;
             // 
@@ -317,6 +318,7 @@
             // 
             txtCategoryName19.Location = new Point(40, 559);
             txtCategoryName19.Name = "txtCategoryName19";
+            txtCategoryName19.PlaceholderText = "Kategori Adı...";
             txtCategoryName19.Size = new Size(246, 23);
             txtCategoryName19.TabIndex = 21;
             // 
@@ -324,6 +326,7 @@
             // 
             txtCategoryName18.Location = new Point(40, 530);
             txtCategoryName18.Name = "txtCategoryName18";
+            txtCategoryName18.PlaceholderText = "Kategori Adı...";
             txtCategoryName18.Size = new Size(246, 23);
             txtCategoryName18.TabIndex = 20;
             // 
@@ -331,6 +334,7 @@
             // 
             txtCategoryName17.Location = new Point(40, 501);
             txtCategoryName17.Name = "txtCategoryName17";
+            txtCategoryName17.PlaceholderText = "Kategori Adı...";
             txtCategoryName17.Size = new Size(246, 23);
             txtCategoryName17.TabIndex = 19;
             // 
@@ -338,6 +342,7 @@
             // 
             txtCategoryName16.Location = new Point(40, 472);
             txtCategoryName16.Name = "txtCategoryName16";
+            txtCategoryName16.PlaceholderText = "Kategori Adı...";
             txtCategoryName16.Size = new Size(246, 23);
             txtCategoryName16.TabIndex = 18;
             // 
@@ -345,6 +350,7 @@
             // 
             txtCategoryName15.Location = new Point(40, 443);
             txtCategoryName15.Name = "txtCategoryName15";
+            txtCategoryName15.PlaceholderText = "Kategori Adı...";
             txtCategoryName15.Size = new Size(246, 23);
             txtCategoryName15.TabIndex = 17;
             // 
@@ -352,6 +358,7 @@
             // 
             txtCategoryName14.Location = new Point(40, 414);
             txtCategoryName14.Name = "txtCategoryName14";
+            txtCategoryName14.PlaceholderText = "Kategori Adı...";
             txtCategoryName14.Size = new Size(246, 23);
             txtCategoryName14.TabIndex = 16;
             // 
@@ -359,6 +366,7 @@
             // 
             txtCategoryName13.Location = new Point(40, 385);
             txtCategoryName13.Name = "txtCategoryName13";
+            txtCategoryName13.PlaceholderText = "Kategori Adı...";
             txtCategoryName13.Size = new Size(246, 23);
             txtCategoryName13.TabIndex = 15;
             // 
@@ -366,6 +374,7 @@
             // 
             txtCategoryName12.Location = new Point(40, 356);
             txtCategoryName12.Name = "txtCategoryName12";
+            txtCategoryName12.PlaceholderText = "Kategori Adı...";
             txtCategoryName12.Size = new Size(246, 23);
             txtCategoryName12.TabIndex = 14;
             // 
@@ -373,6 +382,7 @@
             // 
             txtCategoryName11.Location = new Point(40, 327);
             txtCategoryName11.Name = "txtCategoryName11";
+            txtCategoryName11.PlaceholderText = "Kategori Adı...";
             txtCategoryName11.Size = new Size(246, 23);
             txtCategoryName11.TabIndex = 13;
             // 
@@ -380,6 +390,7 @@
             // 
             txtCategoryName10.Location = new Point(40, 298);
             txtCategoryName10.Name = "txtCategoryName10";
+            txtCategoryName10.PlaceholderText = "Kategori Adı...";
             txtCategoryName10.Size = new Size(246, 23);
             txtCategoryName10.TabIndex = 12;
             // 
@@ -387,6 +398,7 @@
             // 
             txtCategoryName9.Location = new Point(40, 269);
             txtCategoryName9.Name = "txtCategoryName9";
+            txtCategoryName9.PlaceholderText = "Kategori Adı...";
             txtCategoryName9.Size = new Size(246, 23);
             txtCategoryName9.TabIndex = 11;
             // 
@@ -394,6 +406,7 @@
             // 
             txtCategoryName8.Location = new Point(40, 240);
             txtCategoryName8.Name = "txtCategoryName8";
+            txtCategoryName8.PlaceholderText = "Kategori Adı...";
             txtCategoryName8.Size = new Size(246, 23);
             txtCategoryName8.TabIndex = 10;
             // 
@@ -401,6 +414,7 @@
             // 
             txtCategoryName7.Location = new Point(40, 211);
             txtCategoryName7.Name = "txtCategoryName7";
+            txtCategoryName7.PlaceholderText = "Kategori Adı...";
             txtCategoryName7.Size = new Size(246, 23);
             txtCategoryName7.TabIndex = 9;
             // 
@@ -408,6 +422,7 @@
             // 
             txtCategoryName6.Location = new Point(40, 182);
             txtCategoryName6.Name = "txtCategoryName6";
+            txtCategoryName6.PlaceholderText = "Kategori Adı...";
             txtCategoryName6.Size = new Size(246, 23);
             txtCategoryName6.TabIndex = 8;
             // 
@@ -415,6 +430,7 @@
             // 
             txtCategoryName5.Location = new Point(40, 153);
             txtCategoryName5.Name = "txtCategoryName5";
+            txtCategoryName5.PlaceholderText = "Kategori Adı...";
             txtCategoryName5.Size = new Size(246, 23);
             txtCategoryName5.TabIndex = 7;
             // 
@@ -422,6 +438,7 @@
             // 
             txtCategoryName4.Location = new Point(40, 124);
             txtCategoryName4.Name = "txtCategoryName4";
+            txtCategoryName4.PlaceholderText = "Kategori Adı...";
             txtCategoryName4.Size = new Size(246, 23);
             txtCategoryName4.TabIndex = 6;
             // 
@@ -429,6 +446,7 @@
             // 
             txtCategoryName3.Location = new Point(40, 95);
             txtCategoryName3.Name = "txtCategoryName3";
+            txtCategoryName3.PlaceholderText = "Kategori Adı...";
             txtCategoryName3.Size = new Size(246, 23);
             txtCategoryName3.TabIndex = 5;
             // 
@@ -436,6 +454,7 @@
             // 
             txtCategoryName2.Location = new Point(40, 66);
             txtCategoryName2.Name = "txtCategoryName2";
+            txtCategoryName2.PlaceholderText = "Kategori Adı...";
             txtCategoryName2.Size = new Size(246, 23);
             txtCategoryName2.TabIndex = 3;
             // 
@@ -443,6 +462,7 @@
             // 
             txtCategoryName1.Location = new Point(40, 37);
             txtCategoryName1.Name = "txtCategoryName1";
+            txtCategoryName1.PlaceholderText = "Kategori Adı...";
             txtCategoryName1.Size = new Size(246, 23);
             txtCategoryName1.TabIndex = 1;
             // 
@@ -492,6 +512,7 @@
             Name = "frmCategoryAddRange";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Toplu Kategori Ekle";
+            Load += frmCategoryAddRange_Load;
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
             panelBottom.ResumeLayout(false);

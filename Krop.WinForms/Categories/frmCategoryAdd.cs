@@ -37,5 +37,11 @@ namespace Krop.WinForms.Categories
                 MessageBox.Show($"{errorResponseViewModel.Detail}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void bttnCategoryAddRange_Click(object sender, EventArgs e)
+        {
+            frmCategoryAddRange frmCategoryAddRange = new frmCategoryAddRange(_webApiService);
+            frmCategoryAddRange.ShowDialog();
+        }
     }
 }

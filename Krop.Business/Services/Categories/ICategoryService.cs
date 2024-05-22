@@ -9,7 +9,7 @@ namespace Krop.Business.Services.Categories
         Task<IResult> AddRangeAsync(List<CreateCategoryDTO> createCategoryDTOs);
 
         Task<IResult> UpdateAsync(UpdateCategoryDTO updateCategoryDTO);
-        Task<IResult> UpdateRangeAsync(List<UpdateCategoryDTO> updateCategoryDTOs);
+        //Task<IResult> UpdateRangeAsync(List<UpdateCategoryDTO> updateCategoryDTOs);
 
         Task<IResult> DeleteAsync(Guid id);
         Task<IResult> DeleteRangeAsync(List<Guid> ids);
@@ -18,5 +18,7 @@ namespace Krop.Business.Services.Categories
         Task<IDataResult<GetCategoryDTO>> GetByIdAsync(Guid id);
         Task<IDataResult<GetCategoryDTO>> GetByCategoryNameAsync(string categoryName);
 
+
+        Task<IDataResult<IEnumerable<GetCategoryComboBoxDTO>>> GetAllComboBoxAsync();
     }
 }

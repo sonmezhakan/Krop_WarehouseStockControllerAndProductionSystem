@@ -6,7 +6,7 @@ namespace Krop.DataAccess.Repositories.Abstracts.BaseRepository
 {
     public interface IBaseRepository<T> where T : class, IEntity<Guid>, new()
     {
-        IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate = null,
+        IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate = null, 
             params Expression<Func<T, object>>[] includeProperties);
         T Get(Expression<Func<T,bool>> predicate = null);
         T Find(Guid id);

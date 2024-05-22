@@ -30,11 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCategoryDelete));
             panelMid = new System.Windows.Forms.Panel();
+            bttnSelect = new Button();
             cmbBoxCategorySelected = new ComboBox();
             label2 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
-            bttnCategoryUpdate = new Button();
-            bttnSelect = new Button();
+            bttnCategoryDelete = new Button();
             panelMid.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
@@ -50,8 +50,20 @@
             panelMid.Size = new Size(306, 90);
             panelMid.TabIndex = 5;
             // 
+            // bttnSelect
+            // 
+            bttnSelect.Location = new Point(264, 37);
+            bttnSelect.Name = "bttnSelect";
+            bttnSelect.Size = new Size(31, 23);
+            bttnSelect.TabIndex = 21;
+            bttnSelect.Text = "...";
+            bttnSelect.UseVisualStyleBackColor = true;
+            bttnSelect.Visible = false;
+            // 
             // cmbBoxCategorySelected
             // 
+            cmbBoxCategorySelected.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbBoxCategorySelected.AutoCompleteSource = AutoCompleteSource.ListItems;
             cmbBoxCategorySelected.FormattingEnabled = true;
             cmbBoxCategorySelected.Location = new Point(12, 37);
             cmbBoxCategorySelected.Name = "cmbBoxCategorySelected";
@@ -70,7 +82,7 @@
             // panelBottom
             // 
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
-            panelBottom.Controls.Add(bttnCategoryUpdate);
+            panelBottom.Controls.Add(bttnCategoryDelete);
             panelBottom.Dock = DockStyle.Bottom;
             panelBottom.Location = new Point(0, 90);
             panelBottom.Name = "panelBottom";
@@ -78,27 +90,19 @@
             panelBottom.Size = new Size(306, 41);
             panelBottom.TabIndex = 4;
             // 
-            // bttnCategoryUpdate
+            // bttnCategoryDelete
             // 
-            bttnCategoryUpdate.Dock = DockStyle.Right;
-            bttnCategoryUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bttnCategoryUpdate.Image = (Image)resources.GetObject("bttnCategoryUpdate.Image");
-            bttnCategoryUpdate.Location = new Point(182, 0);
-            bttnCategoryUpdate.Name = "bttnCategoryUpdate";
-            bttnCategoryUpdate.Size = new Size(107, 39);
-            bttnCategoryUpdate.TabIndex = 1;
-            bttnCategoryUpdate.Text = "Sil";
-            bttnCategoryUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
-            bttnCategoryUpdate.UseVisualStyleBackColor = true;
-            // 
-            // bttnSelect
-            // 
-            bttnSelect.Location = new Point(264, 37);
-            bttnSelect.Name = "bttnSelect";
-            bttnSelect.Size = new Size(31, 23);
-            bttnSelect.TabIndex = 21;
-            bttnSelect.Text = "...";
-            bttnSelect.UseVisualStyleBackColor = true;
+            bttnCategoryDelete.Dock = DockStyle.Right;
+            bttnCategoryDelete.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            bttnCategoryDelete.Image = (Image)resources.GetObject("bttnCategoryDelete.Image");
+            bttnCategoryDelete.Location = new Point(182, 0);
+            bttnCategoryDelete.Name = "bttnCategoryDelete";
+            bttnCategoryDelete.Size = new Size(107, 39);
+            bttnCategoryDelete.TabIndex = 1;
+            bttnCategoryDelete.Text = "Sil";
+            bttnCategoryDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
+            bttnCategoryDelete.UseVisualStyleBackColor = true;
+            bttnCategoryDelete.Click += bttnCategoryDelete_Click;
             // 
             // frmCategoryDelete
             // 
@@ -110,7 +114,9 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "frmCategoryDelete";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Kategori Sil";
+            Load += frmCategoryDelete_Load;
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
             panelBottom.ResumeLayout(false);
@@ -123,7 +129,7 @@
         private ComboBox cmbBoxCategorySelected;
         private Label label2;
         private System.Windows.Forms.Panel panelBottom;
-        private Button bttnCategoryUpdate;
+        private Button bttnCategoryDelete;
         private Button bttnSelect;
     }
 }

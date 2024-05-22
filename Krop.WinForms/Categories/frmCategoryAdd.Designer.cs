@@ -34,6 +34,7 @@
             panelMid = new System.Windows.Forms.Panel();
             txtAppUserRoleName = new TextBox();
             label1 = new Label();
+            bttnCategoryAddRange = new Button();
             panelBottom.SuspendLayout();
             panelMid.SuspendLayout();
             SuspendLayout();
@@ -41,11 +42,12 @@
             // panelBottom
             // 
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
+            panelBottom.Controls.Add(bttnCategoryAddRange);
             panelBottom.Controls.Add(bttnAppUserRoleAdd);
             panelBottom.Dock = DockStyle.Bottom;
             panelBottom.Location = new Point(0, 93);
             panelBottom.Name = "panelBottom";
-            panelBottom.Padding = new Padding(0, 0, 10, 0);
+            panelBottom.Padding = new Padding(10, 0, 10, 0);
             panelBottom.Size = new Size(270, 41);
             panelBottom.TabIndex = 0;
             // 
@@ -77,6 +79,7 @@
             // 
             txtAppUserRoleName.Location = new Point(12, 37);
             txtAppUserRoleName.Name = "txtAppUserRoleName";
+            txtAppUserRoleName.PlaceholderText = "Kategori Adı...";
             txtAppUserRoleName.Size = new Size(246, 23);
             txtAppUserRoleName.TabIndex = 1;
             // 
@@ -88,6 +91,19 @@
             label1.Size = new Size(75, 15);
             label1.TabIndex = 0;
             label1.Text = "Kategori Adı:";
+            // 
+            // bttnCategoryAddRange
+            // 
+            bttnCategoryAddRange.Dock = DockStyle.Left;
+            bttnCategoryAddRange.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            bttnCategoryAddRange.Location = new Point(10, 0);
+            bttnCategoryAddRange.Name = "bttnCategoryAddRange";
+            bttnCategoryAddRange.Size = new Size(87, 39);
+            bttnCategoryAddRange.TabIndex = 2;
+            bttnCategoryAddRange.Text = "Çoklu Ekle";
+            bttnCategoryAddRange.TextImageRelation = TextImageRelation.ImageBeforeText;
+            bttnCategoryAddRange.UseVisualStyleBackColor = true;
+            bttnCategoryAddRange.Click += bttnCategoryAddRange_Click;
             // 
             // frmCategoryAdd
             // 
@@ -115,5 +131,6 @@
         private Label label1;
         private TextBox txtAppUserRoleName;
         private Button bttnAppUserRoleAdd;
+        private Button bttnCategoryAddRange;
     }
 }

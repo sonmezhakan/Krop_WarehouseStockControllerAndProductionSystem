@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Categories.Constants;
 using Krop.Business.Features.Categories.Dtos;
-using Krop.Business.Features.Categories.ExceptionHelpers;
 using Krop.Business.Features.Categories.Rules;
 using Krop.Business.Features.Categories.Validations;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
-using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Services.Categories
 {
@@ -17,14 +14,12 @@ namespace Krop.Business.Services.Categories
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
         private readonly CategoryBusinessRules _categoryBusinessRules;
-        private readonly CategoryExceptionHelper _categoryExceptionHelper;
 
-        public CategoryManager(ICategoryRepository categoryRepository, IMapper mapper,CategoryBusinessRules categoryBusinessRules,CategoryExceptionHelper categoryExceptionHelper)
+        public CategoryManager(ICategoryRepository categoryRepository, IMapper mapper,CategoryBusinessRules categoryBusinessRules)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
             _categoryBusinessRules = categoryBusinessRules;
-            _categoryExceptionHelper = categoryExceptionHelper;
         }
 
         #region Add
@@ -39,16 +34,14 @@ namespace Krop.Business.Services.Categories
             await _categoryRepository.AddAsync(category);
             return new SuccessResult();
         }
-        [ValidationAspect(typeof(CreateCategoryValidator))]
+        [ValidationAspect(typeof(CreateCategoryListValidator))]
         public async Task<IResult> AddRangeAsync(List<CreateCategoryDTO> createCategoryDTOs)
         {
+            List<string> stringList = createCategoryDTOs.Select(c => c.CategoryName).ToList();
             //Rule
-            createCategoryDTOs.ForEach(async c =>
-            {
-                await _categoryBusinessRules.CategoryNameCannotBeDuplicatedWhenInserted(c.CategoryName);
-            });
+            await _categoryBusinessRules.CategoryNameRangeCannotBeDuplicatedWhenInserted(stringList);
 
-            List<Category> categories = _mapper.Map<List<Category>>(createCategoryDTOs);
+            List <Category> categories = _mapper.Map<List<Category>>(createCategoryDTOs);
             await _categoryRepository.AddRangeAsync(categories);
 
             return new SuccessResult();
@@ -68,7 +61,7 @@ namespace Krop.Business.Services.Categories
             return new SuccessResult();
         }
 
-        [ValidationAspect(typeof(UpdateCategoryValidator))]
+        /*[ValidationAspect(typeof(UpdateCategoryValidator))]
         public async Task<IResult> UpdateRangeAsync(List<UpdateCategoryDTO> updatCategoryDTOs)
         {
             updatCategoryDTOs.ForEach(async c =>
@@ -82,7 +75,7 @@ namespace Krop.Business.Services.Categories
             await _categoryRepository.UpdateRangeAsync(categories);
 
             return new SuccessResult();
-        }
+        }*/
         #endregion
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id)
@@ -115,6 +108,13 @@ namespace Krop.Business.Services.Categories
             return new SuccessDataResult<IEnumerable<GetCategoryDTO>>(
                 _mapper.Map<IEnumerable<GetCategoryDTO>>(result));
         }
+        public async Task<IDataResult<IEnumerable<GetCategoryComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            var result = await _categoryRepository.GetAllComboBoxAsync();
+
+            return new SuccessDataResult<IEnumerable<GetCategoryComboBoxDTO>>(
+                _mapper.Map<IEnumerable<GetCategoryComboBoxDTO>>(result));
+        }
         #endregion
         #region Search
         public async Task<IDataResult<GetCategoryDTO>> GetByCategoryNameAsync(string categoryName)
@@ -132,6 +132,7 @@ namespace Krop.Business.Services.Categories
             return new SuccessDataResult<GetCategoryDTO>(
                _mapper.Map<GetCategoryDTO>(category));
         }
+ 
         #endregion
     }
 

@@ -30,13 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCategoryUpdate));
             panelMid = new System.Windows.Forms.Panel();
+            bttnSelect = new Button();
             cmbBoxCategorySelected = new ComboBox();
             label2 = new Label();
             txtCategoryName = new TextBox();
             label1 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
             bttnCategoryUpdate = new Button();
-            bttnSelect = new Button();
             panelMid.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
@@ -53,6 +53,16 @@
             panelMid.Name = "panelMid";
             panelMid.Size = new Size(309, 135);
             panelMid.TabIndex = 3;
+            // 
+            // bttnSelect
+            // 
+            bttnSelect.Location = new Point(267, 37);
+            bttnSelect.Name = "bttnSelect";
+            bttnSelect.Size = new Size(31, 23);
+            bttnSelect.TabIndex = 21;
+            bttnSelect.Text = "...";
+            bttnSelect.UseVisualStyleBackColor = true;
+            bttnSelect.Visible = false;
             // 
             // cmbBoxCategorySelected
             // 
@@ -110,15 +120,7 @@
             bttnCategoryUpdate.Text = "Güncelle";
             bttnCategoryUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnCategoryUpdate.UseVisualStyleBackColor = true;
-            // 
-            // bttnSelect
-            // 
-            bttnSelect.Location = new Point(267, 37);
-            bttnSelect.Name = "bttnSelect";
-            bttnSelect.Size = new Size(31, 23);
-            bttnSelect.TabIndex = 21;
-            bttnSelect.Text = "...";
-            bttnSelect.UseVisualStyleBackColor = true;
+            bttnCategoryUpdate.Click += bttnCategoryUpdate_Click;
             // 
             // frmCategoryUpdate
             // 
@@ -130,8 +132,9 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "frmCategoryUpdate";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Kategori Güncelle";
+            Load += frmCategoryUpdate_Load;
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
             panelBottom.ResumeLayout(false);
@@ -141,12 +144,12 @@
         #endregion
 
         private System.Windows.Forms.Panel panelMid;
-        private ComboBox cmbBoxCategorySelected;
         private Label label2;
         private TextBox txtCategoryName;
         private Label label1;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnCategoryUpdate;
         private Button bttnSelect;
+        private ComboBox cmbBoxCategorySelected;
     }
 }

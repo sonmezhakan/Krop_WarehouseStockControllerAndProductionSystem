@@ -39,6 +39,19 @@ namespace Krop.Business.Features.Categories.Rules
             if (result)
                 _categoryExceptionHelper.ThrowCategoryNameExistsdException();
         }
+        public async Task CategoryNameRangeCannotBeDuplicatedWhenInserted(List<string> categoryNames)//CategoryNameRange
+        {
+            bool result = false;
+            foreach (var categoryName in categoryNames)
+            {
+                if(categoryNames.Where(x=>x == categoryName).Count() > 1)//Çoklu olarak ekleme yapılacak liste içerisinde aynı isim olup olmadığı kontrol ediliyor.
+                    _categoryExceptionHelper.ThrowCategoryNameExistsdException();
+
+                result = await _categoryRepository.AnyAsync(c => c.CategoryName == categoryName);//Çoklu olarak ekleme yapılacak kategori isimlerinin veritabanında olup olmadığı kontrol ediliyor.
+                if (result)
+                    _categoryExceptionHelper.ThrowCategoryNameExistsdException();
+            }  
+        }
         public async Task CategoryNameCannotBeDuplicatedWhenUpdated(string oldCategoryName, string newCategoryName)
         {
            if(oldCategoryName != newCategoryName)

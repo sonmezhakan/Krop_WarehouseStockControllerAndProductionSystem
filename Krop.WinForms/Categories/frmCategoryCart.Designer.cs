@@ -28,16 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            txtCategoryName = new TextBox();
             label1 = new Label();
+            cmbCategorySelect = new ComboBox();
             SuspendLayout();
-            // 
-            // txtCategoryName
-            // 
-            txtCategoryName.Location = new Point(12, 34);
-            txtCategoryName.Name = "txtCategoryName";
-            txtCategoryName.Size = new Size(246, 23);
-            txtCategoryName.TabIndex = 3;
             // 
             // label1
             // 
@@ -48,25 +41,35 @@
             label1.TabIndex = 2;
             label1.Text = "Kategori Adı:";
             // 
+            // cmbCategorySelect
+            // 
+            cmbCategorySelect.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbCategorySelect.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cmbCategorySelect.FormattingEnabled = true;
+            cmbCategorySelect.Location = new Point(12, 34);
+            cmbCategorySelect.Name = "cmbCategorySelect";
+            cmbCategorySelect.Size = new Size(251, 23);
+            cmbCategorySelect.TabIndex = 3;
+            // 
             // frmCategoryCart
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(275, 84);
-            Controls.Add(txtCategoryName);
+            Controls.Add(cmbCategorySelect);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "frmCategoryCart";
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "Kategori Kart";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Kategori Kartı";
+            Load += frmCategoryCart_Load;
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private TextBox txtCategoryName;
         private Label label1;
+        private ComboBox cmbCategorySelect;
     }
 }

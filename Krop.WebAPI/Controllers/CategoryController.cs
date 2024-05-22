@@ -22,6 +22,13 @@ namespace Krop.WebAPI.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
+        [HttpPost]
+        public async Task<IActionResult> AddRange([FromBody] List<CreateCategoryDTO> createCategoryDTOs, CancellationToken cancellationToken)
+        {
+            var result = await _categoryService.AddRangeAsync(createCategoryDTOs);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCategoryDTO updateCategoryDTO, CancellationToken cancellationToken)
         {
@@ -36,8 +43,15 @@ namespace Krop.WebAPI.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        [HttpGet]
+        [HttpGet]//Genel Liste
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            var result = await _categoryService.GetAllAsync();
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet]//ComboBox için oluşturulmuş liste
+        public async Task<IActionResult> GetAllComboBox(CancellationToken cancellationToken)
         {
             var result = await _categoryService.GetAllAsync();
 
