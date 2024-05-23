@@ -1,12 +1,10 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Krop.Business.Features.Brands.Dtos;
+﻿using Krop.Business.Features.Brands.Dtos;
 using Krop.Business.Services.Brands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class BrandController : ControllerBase
     {
@@ -41,7 +39,14 @@ namespace Krop.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var result = await _brandService.GetAllAsync();;
+            var result = await _brandService.GetAllAsync();
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllComboBox(CancellationToken cancellationToken)
+        {
+            var result = await _brandService.GetAllComboBoxAsync();
 
             return result.Success ? Ok(result) : BadRequest(result);
         }

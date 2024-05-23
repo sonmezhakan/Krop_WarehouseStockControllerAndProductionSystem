@@ -15,13 +15,10 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             _context = context;
         }
 
-        public async Task<IEnumerable<Category>> GetAllComboBoxAsync(Expression<Func<Category, bool>> predicate = null, params Expression<Func<Category, object>>[] includeProperties)
+        public async Task<IEnumerable<Category>> GetAllComboBoxAsync(Expression<Func<Category, bool>> predicate = null)
         {
             IQueryable<Category> query = _context.Categories;
-            foreach (var includeProperty in includeProperties)
-            {
-                query = query.Include(includeProperty);
-            }
+
             if (predicate is not null)
                 query = query.Where(predicate);
 

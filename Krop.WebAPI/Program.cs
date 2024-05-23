@@ -27,8 +27,14 @@ namespace Krop.WebAPI
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
-			builder.Services.AddServiceRegistration();
-            
+            builder.Services.AddDbContextRegistration();//DbContext
+            builder.Services.AddAutoMapperRegistration();//AutoMapper
+			builder.Services.AddBusinessRuleRegistration();//BusinessRules
+			builder.Services.AddExceptionRegistration();//Exception
+			builder.Services.AddFluentValidationRegistration();//Fluent Validation
+			builder.Services.AddIdentityServiceRegistration();//Identity Service
+			builder.Services.AddWebApiRegistration();//WebApi Service
+
             var app = builder.Build();
 
 			// Configure the HTTP request pipeline.

@@ -15,5 +15,7 @@ namespace Krop.Business.Services.Brands
         Task<IDataResult<IEnumerable<GetBrandDTO>>> GetAllAsync();
         Task<IDataResult<GetBrandDTO>> GetByIdAsync(Guid id);
 
+
+        Task<IDataResult<IEnumerable<GetBrandComboBoxDTO>>> GetAllComboBoxAsync();
     }
 }

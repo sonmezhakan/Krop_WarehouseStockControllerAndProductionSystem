@@ -1,5 +1,5 @@
-using Krop.Common.Helpers.WebApiService;
-using Microsoft.Extensions.Configuration;
+using Krop.IOC.DependencyResolvers;
+using Krop.WinForms.DependencyResolvers;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -7,12 +7,18 @@ namespace Krop.WinForms
 {
     internal static class Program
 	{
-		/// <summary>
-		///  The main entry point for the application.
-		/// </summary>
-		[STAThread]
+        public static IServiceProvider ServiceProvider { get; private set; }
+
+        [STAThread]
         static void Main()
         {
+            // AutoMapper konfigürasyonunu baþlatma
+            /*var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingProfile>();
+            });
+            Mapper = config.CreateMapper();*/
+
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -30,10 +36,16 @@ namespace Krop.WinForms
         {
             // HttpClient ve WebApiService'i kaydet
             services.AddHttpClient();
-            services.AddTransient<IWebApiService, WebApiService>();
 
-            // MainForm'u kaydet
-            services.AddTransient<Panel>();
+            services.AddAutoMapperRegistration();//AutoMapper
+            services.AddWebApiRegistration();//WebApi Service
+
+            // Forms
+            services.AddFormRegistration();
+
+            //Helpers
+            services.AddHelperRegistration();
+            
         }
 
     }

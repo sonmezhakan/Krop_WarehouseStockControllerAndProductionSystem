@@ -565,6 +565,7 @@
             bttnBrandDelete.Text = "Sil";
             bttnBrandDelete.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnBrandDelete.UseVisualStyleBackColor = false;
+            bttnBrandDelete.Click += bttnBrandDelete_Click;
             // 
             // bttnBrandUpdate
             // 
@@ -583,6 +584,7 @@
             bttnBrandUpdate.Text = "Güncelle";
             bttnBrandUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnBrandUpdate.UseVisualStyleBackColor = false;
+            bttnBrandUpdate.Click += bttnBrandUpdate_Click;
             // 
             // bttnBrandAdd
             // 
@@ -601,6 +603,7 @@
             bttnBrandAdd.Text = "Ekle";
             bttnBrandAdd.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnBrandAdd.UseVisualStyleBackColor = false;
+            bttnBrandAdd.Click += bttnBrandAdd_Click;
             // 
             // bttnBrandCart
             // 
@@ -619,6 +622,7 @@
             bttnBrandCart.Text = "Marka Kartı";
             bttnBrandCart.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnBrandCart.UseVisualStyleBackColor = false;
+            bttnBrandCart.Click += bttnBrandCart_Click;
             // 
             // bttnBrandList
             // 
@@ -637,6 +641,7 @@
             bttnBrandList.Text = "Liste";
             bttnBrandList.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnBrandList.UseVisualStyleBackColor = false;
+            bttnBrandList.Click += bttnBrandList_Click;
             // 
             // CustomersTabPage
             // 

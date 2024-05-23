@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Brands.Dtos;
-using Krop.Business.Features.Brands.ExceptionHelpers;
 using Krop.Business.Features.Brands.Rules;
 using Krop.Business.Features.Brands.Validations;
 using Krop.Common.Aspects.Autofac.Validation;
@@ -15,14 +14,12 @@ namespace Krop.Business.Services.Brands
         private readonly IBrandRepository _brandRepository;
         private readonly IMapper _mapper;
         private readonly BrandBusinessRules _brandBusinessRules;
-        private readonly BrandExceptionHelper _brandExceptionHelper;
 
-        public BrandManager(IBrandRepository brandRepository,IMapper mapper,BrandBusinessRules brandBusinessRules,BrandExceptionHelper brandExceptionHelper)
+        public BrandManager(IBrandRepository brandRepository,IMapper mapper,BrandBusinessRules brandBusinessRules)
         {
             _brandRepository = brandRepository;
             _mapper = mapper;
             _brandBusinessRules = brandBusinessRules;
-            _brandExceptionHelper = brandExceptionHelper;
         }
 
         #region Add
@@ -59,7 +56,8 @@ namespace Krop.Business.Services.Brands
 
             await _brandBusinessRules.BrandNameCannotBeDuplicatedWhenUpdated(brand.BrandName,updateBrandDTO.BrandName);//BrandName Rule
 
-            await _brandRepository.UpdateAsync(_mapper.Map(updateBrandDTO, brand));
+            brand = _mapper.Map(updateBrandDTO, brand);
+            await _brandRepository.UpdateAsync(brand);
 
             return new SuccessResult();
         }
@@ -111,6 +109,13 @@ namespace Krop.Business.Services.Brands
             return new SuccessDataResult<IEnumerable<GetBrandDTO>>(
                 _mapper.Map<List<GetBrandDTO>>(result));
         }
+        public async Task<IDataResult<IEnumerable<GetBrandComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            var result = await _brandRepository.GetAllComboBoxAsync();
+
+            return new SuccessDataResult<IEnumerable<GetBrandComboBoxDTO>>(
+                _mapper.Map<IEnumerable<GetBrandComboBoxDTO>>(result));
+        }
         #endregion
         #region Search
         public async Task<IDataResult<GetBrandDTO>> GetByIdAsync(Guid id)
@@ -120,6 +125,8 @@ namespace Krop.Business.Services.Brands
             return new SuccessDataResult<GetBrandDTO>(
                 _mapper.Map<GetBrandDTO>(brand));
         }
+
+        
         #endregion
     }
 }
