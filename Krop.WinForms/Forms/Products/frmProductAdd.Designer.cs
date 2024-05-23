@@ -66,7 +66,7 @@
             panelBottom.Location = new Point(0, 446);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 15, 0);
-            panelBottom.Size = new Size(472, 41);
+            panelBottom.Size = new Size(476, 41);
             panelBottom.TabIndex = 0;
             // 
             // bttnProductAdd
@@ -74,13 +74,14 @@
             bttnProductAdd.Dock = DockStyle.Right;
             bttnProductAdd.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnProductAdd.Image = (Image)resources.GetObject("bttnProductAdd.Image");
-            bttnProductAdd.Location = new Point(363, 0);
+            bttnProductAdd.Location = new Point(367, 0);
             bttnProductAdd.Name = "bttnProductAdd";
             bttnProductAdd.Size = new Size(92, 39);
             bttnProductAdd.TabIndex = 0;
             bttnProductAdd.Text = "Ekle";
             bttnProductAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnProductAdd.UseVisualStyleBackColor = true;
+            bttnProductAdd.Click += bttnProductAdd_Click;
             // 
             // panelMid
             // 
@@ -89,7 +90,7 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(472, 446);
+            panelMid.Size = new Size(476, 446);
             panelMid.TabIndex = 1;
             // 
             // panelMidMid
@@ -113,7 +114,7 @@
             panelMidMid.Dock = DockStyle.Fill;
             panelMidMid.Location = new Point(221, 0);
             panelMidMid.Name = "panelMidMid";
-            panelMidMid.Size = new Size(251, 446);
+            panelMidMid.Size = new Size(255, 446);
             panelMidMid.TabIndex = 1;
             // 
             // label9
@@ -136,25 +137,32 @@
             // 
             // cmbBoxBrand
             // 
+            cmbBoxBrand.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbBoxBrand.AutoCompleteSource = AutoCompleteSource.ListItems;
             cmbBoxBrand.FormattingEnabled = true;
             cmbBoxBrand.Location = new Point(17, 172);
             cmbBoxBrand.Name = "cmbBoxBrand";
             cmbBoxBrand.Size = new Size(217, 23);
             cmbBoxBrand.TabIndex = 31;
+            cmbBoxBrand.SelectedIndexChanged += cmbBoxBrand_SelectedIndexChanged;
             // 
             // cmbBoxCategory
             // 
+            cmbBoxCategory.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbBoxCategory.AutoCompleteSource = AutoCompleteSource.ListItems;
             cmbBoxCategory.FormattingEnabled = true;
             cmbBoxCategory.Location = new Point(17, 126);
             cmbBoxCategory.Name = "cmbBoxCategory";
             cmbBoxCategory.Size = new Size(217, 23);
             cmbBoxCategory.TabIndex = 30;
+            cmbBoxCategory.SelectedIndexChanged += cmbBoxCategory_SelectedIndexChanged;
             // 
             // txtDescription
             // 
             txtDescription.Location = new Point(17, 304);
             txtDescription.Multiline = true;
             txtDescription.Name = "txtDescription";
+            txtDescription.PlaceholderText = "Açıklama...";
             txtDescription.Size = new Size(217, 136);
             txtDescription.TabIndex = 29;
             // 
@@ -225,20 +233,29 @@
             // 
             txtCriticalQuantity.Location = new Point(17, 260);
             txtCriticalQuantity.Name = "txtCriticalQuantity";
+            txtCriticalQuantity.PlaceholderText = "0";
             txtCriticalQuantity.Size = new Size(182, 23);
             txtCriticalQuantity.TabIndex = 19;
+            txtCriticalQuantity.Text = "0";
+            txtCriticalQuantity.KeyPress += txtCriticalQuantity_KeyPress;
+            txtCriticalQuantity.Validating += txtCriticalQuantity_Validating;
             // 
             // txtUnitPrice
             // 
             txtUnitPrice.Location = new Point(17, 216);
             txtUnitPrice.Name = "txtUnitPrice";
+            txtUnitPrice.PlaceholderText = "0.00";
             txtUnitPrice.Size = new Size(182, 23);
             txtUnitPrice.TabIndex = 18;
+            txtUnitPrice.Text = "0";
+            txtUnitPrice.KeyPress += txtUnitPrice_KeyPress;
+            txtUnitPrice.Validating += txtUnitPrice_Validating;
             // 
             // txtProductCode
             // 
             txtProductCode.Location = new Point(17, 80);
             txtProductCode.Name = "txtProductCode";
+            txtProductCode.PlaceholderText = "Ürün Kodu...";
             txtProductCode.Size = new Size(217, 23);
             txtProductCode.TabIndex = 15;
             // 
@@ -246,6 +263,7 @@
             // 
             txtProductName.Location = new Point(17, 36);
             txtProductName.Name = "txtProductName";
+            txtProductName.PlaceholderText = "Ürün Adı...";
             txtProductName.Size = new Size(217, 23);
             txtProductName.TabIndex = 14;
             // 
@@ -274,7 +292,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(472, 487);
+            ClientSize = new Size(476, 487);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -282,6 +300,7 @@
             Name = "frmProductAdd";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Ürün Ekle";
+            Load += frmProductAdd_Load;
             panelBottom.ResumeLayout(false);
             panelMid.ResumeLayout(false);
             panelMidMid.ResumeLayout(false);

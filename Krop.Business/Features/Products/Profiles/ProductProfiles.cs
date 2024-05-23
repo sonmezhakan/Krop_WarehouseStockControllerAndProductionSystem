@@ -14,6 +14,8 @@ namespace Krop.Business.Features.Products.Profiles
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
                 .ForMember(dest=>dest.BrandName, opt=>opt.MapFrom(src=>src.Brand.BrandName))
                 .ReverseMap();
+
+            CreateMap<Product, GetProductComboBoxDTO>().ReverseMap();
         }
     }
 }

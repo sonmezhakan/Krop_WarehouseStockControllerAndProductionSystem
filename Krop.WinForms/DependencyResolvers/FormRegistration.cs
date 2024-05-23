@@ -26,6 +26,15 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmCategoryCart>();
             services.AddTransient<frmCategoryAssigmentProducts>();
 
+            services.AddTransient<frmProductAdd>();
+            services.AddTransient<frmProductUpdate>();
+            services.AddTransient<frmProductDelete>();
+            services.AddTransient<frmProductList>();
+            services.AddTransient<frmProductCart>();
+            services.AddTransient<frmProductReceipt>();
+            services.AddTransient<frmCategoryAssigmentProducts>();
+
+
             return services;
         }
     }

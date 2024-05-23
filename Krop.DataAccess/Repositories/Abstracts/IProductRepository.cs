@@ -6,5 +6,6 @@ namespace Krop.DataAccess.Repositories.Abstracts
     public interface IProductRepository : IBaseRepository<Product>, IBaseRepositoryAsync<Product>
     {
         Task<List<Guid>> GetAllProductIdAsync();
+        Task<List<Product>> GetAllComboBoxAsync();
     }
 }

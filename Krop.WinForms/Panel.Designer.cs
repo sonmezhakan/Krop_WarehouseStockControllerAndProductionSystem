@@ -351,6 +351,7 @@
             productBttnDelete.Text = "Sil";
             productBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
             productBttnDelete.UseVisualStyleBackColor = false;
+            productBttnDelete.Click += productBttnDelete_Click;
             // 
             // productBttnUpdate
             // 
@@ -369,6 +370,7 @@
             productBttnUpdate.Text = "Güncelle";
             productBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
             productBttnUpdate.UseVisualStyleBackColor = false;
+            productBttnUpdate.Click += productBttnUpdate_Click;
             // 
             // productBttnAdd
             // 
@@ -387,6 +389,7 @@
             productBttnAdd.Text = "Ekle";
             productBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
             productBttnAdd.UseVisualStyleBackColor = false;
+            productBttnAdd.Click += productBttnAdd_Click;
             // 
             // productBttnCard
             // 
@@ -405,6 +408,7 @@
             productBttnCard.Text = "Ürün Kartı";
             productBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
             productBttnCard.UseVisualStyleBackColor = false;
+            productBttnCard.Click += productBttnCard_Click;
             // 
             // productBttnList
             // 

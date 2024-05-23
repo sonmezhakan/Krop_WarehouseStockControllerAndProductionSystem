@@ -7,6 +7,6 @@ namespace Krop.Business.Features.Products.ExceptionHelpers
     {
         public void ThrowProductNotFound() => throw new NotFoundException(ProductMessages.ProductNotFound);
         public void ThrowProductNameExists() => throw new BusinessException(ProductMessages.ProductNameExists);
-        public void ThrowProductCodeExists() => throw new BusinessException(ProductMessages.ProductNameExists);
+        public void ThrowProductCodeExists() => throw new BusinessException(ProductMessages.ProductCodeExists);
     }
 }

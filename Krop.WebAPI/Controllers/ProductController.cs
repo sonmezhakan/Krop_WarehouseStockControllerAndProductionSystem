@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Krop.Business.Features.Products.Dtos;
+﻿using Krop.Business.Features.Products.Dtos;
 using Krop.Business.Services.Products;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,6 +40,13 @@ namespace Krop.WebAPI.Controllers
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await _productService.GetAllAsync();
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllComboBox(CancellationToken cancellationToken)
+        {
+            var result = await _productService.GetAllComboBoxAsync();
 
             return result.Success ? Ok(result) : BadRequest(result);
         }

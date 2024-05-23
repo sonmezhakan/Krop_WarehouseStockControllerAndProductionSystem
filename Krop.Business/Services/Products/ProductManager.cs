@@ -132,6 +132,14 @@ namespace Krop.Business.Services.Products
             return new SuccessDataResult<IEnumerable<GetProductDTO>>(
                 _mapper.Map<IEnumerable<GetProductDTO>>(result));
         }
+
+        public async Task<IDataResult<IEnumerable<GetProductComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            var result = await _productRepository.GetAllComboBoxAsync();
+
+            return new SuccessDataResult<IEnumerable<GetProductComboBoxDTO>>(
+                _mapper.Map<IEnumerable<GetProductComboBoxDTO>>(result));
+        }
         #endregion
         #region Search
         public async Task<IDataResult<GetProductDTO>> GetByIdAsync(Guid id)
@@ -141,6 +149,6 @@ namespace Krop.Business.Services.Products
             return new SuccessDataResult<GetProductDTO>(
                 _mapper.Map<GetProductDTO>(product));
         }
-        #endregion    
+        #endregion
     }
 }

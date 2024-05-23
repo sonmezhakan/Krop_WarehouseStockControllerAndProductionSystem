@@ -2,6 +2,7 @@
 using Krop.Common.Helpers.WebApiService;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.CategoryHelpers;
+using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using System.Net.Http.Json;
 
 namespace Krop.WinForms.Categories

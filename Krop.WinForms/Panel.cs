@@ -2,6 +2,7 @@
 using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
 using Krop.WinForms.HelpersClass;
+using Krop.WinForms.Products;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Krop.WinForms
@@ -25,11 +26,8 @@ namespace Krop.WinForms
 
         private void productBttnList_Click(object sender, EventArgs e)
         {
-            /*frmProductList frmProductList = new frmProductList();
-            frmProductList.TopLevel = false;
-            panel1.Controls.Add(frmProductList);
-            frmProductList.Show();*/
-
+            frmProductList frmProductList = _serviceProvider.GetRequiredService<frmProductList>();
+            FormController.FormOpenController(frmProductList);
         }
 
         private void categoryBttnAdd_Click(object sender, EventArgs e)
@@ -55,7 +53,7 @@ namespace Krop.WinForms
             frmCategoryUpdate frmCategoryUpdate = _serviceProvider.GetRequiredService<frmCategoryUpdate>();
             FormController.FormOpenController(frmCategoryUpdate);
         }
-        
+
         private void categoryBttnList_Click(object sender, EventArgs e)
         {
             frmCategoryList frmCategoryList = _serviceProvider.GetRequiredService<frmCategoryList>();
@@ -95,6 +93,30 @@ namespace Krop.WinForms
         {
             frmBrandCart frmBrandCart = _serviceProvider.GetRequiredService<frmBrandCart>();
             FormController.FormOpenController(frmBrandCart);
+        }
+
+        private void productBttnAdd_Click(object sender, EventArgs e)
+        {
+            frmProductAdd frmProductAdd = _serviceProvider.GetRequiredService<frmProductAdd>();
+            FormController.FormOpenController(frmProductAdd);
+        }
+
+        private void productBttnDelete_Click(object sender, EventArgs e)
+        {
+            frmProductDelete frmProductDelete = _serviceProvider.GetRequiredService<frmProductDelete>();
+            FormController.FormOpenController(frmProductDelete);
+        }
+
+        private void productBttnUpdate_Click(object sender, EventArgs e)
+        {
+            frmProductUpdate frmProductUpdate = _serviceProvider.GetRequiredService<frmProductUpdate>();
+            FormController.FormOpenController(frmProductUpdate);
+        }
+
+        private void productBttnCard_Click(object sender, EventArgs e)
+        {
+            frmProductCart frmProductCart = _serviceProvider.GetRequiredService<frmProductCart>();
+            FormController.FormOpenController(frmProductCart);
         }
     }
 }
