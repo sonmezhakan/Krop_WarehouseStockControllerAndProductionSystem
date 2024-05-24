@@ -2,7 +2,7 @@
 {
     public enum InvoiceEnum
     {
-        Person = 0,
-        Company = 1
+        Bireysel = 0,
+        Kurumsal = 1
     }
 }

@@ -39,7 +39,7 @@ namespace Krop.Business.Features.Customers.Valdiations
             RuleFor(x => x.City)
                 .MaximumLength(64).WithMessage(CustomerMessages.CustomerCityMaxLenght);
 
-            RuleFor(x => x.Address)
+            RuleFor(x => x.Addres)
                 .MaximumLength(255).WithMessage(CustomerMessages.CustomerAddressMaxLenght);
         }
     }

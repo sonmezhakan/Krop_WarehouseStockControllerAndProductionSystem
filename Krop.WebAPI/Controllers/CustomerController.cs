@@ -1,12 +1,10 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Krop.Business.Features.Customers.Dtos;
+﻿using Krop.Business.Features.Customers.Dtos;
 using Krop.Business.Services.Customers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CustomerController : ControllerBase
     {
@@ -43,7 +41,14 @@ namespace Krop.WebAPI.Controllers
         {
             var result = await _customerService.GetAllAsync();
 
-            return result.Success? Ok(result) : BadRequest(result);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllComboBox(CancellationToken cancellationToken)
+        {
+            var result = await _customerService.GetAllComboBoxAsync();
+
+            return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)

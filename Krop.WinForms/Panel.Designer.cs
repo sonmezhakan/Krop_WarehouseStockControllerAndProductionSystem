@@ -678,6 +678,7 @@
             customerBttnDelete.Text = "Sil";
             customerBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
             customerBttnDelete.UseVisualStyleBackColor = false;
+            customerBttnDelete.Click += customerBttnDelete_Click;
             // 
             // customerBttnUpdate
             // 
@@ -696,6 +697,7 @@
             customerBttnUpdate.Text = "Güncelle";
             customerBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
             customerBttnUpdate.UseVisualStyleBackColor = false;
+            customerBttnUpdate.Click += customerBttnUpdate_Click;
             // 
             // customerBttnAdd
             // 
@@ -714,6 +716,7 @@
             customerBttnAdd.Text = "Ekle";
             customerBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
             customerBttnAdd.UseVisualStyleBackColor = false;
+            customerBttnAdd.Click += customerBttnAdd_Click;
             // 
             // customerBttnCard
             // 
@@ -732,6 +735,7 @@
             customerBttnCard.Text = "Müşteri Kartı";
             customerBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
             customerBttnCard.UseVisualStyleBackColor = false;
+            customerBttnCard.Click += customerBttnCard_Click;
             // 
             // customerBttnList
             // 
@@ -750,6 +754,7 @@
             customerBttnList.Text = "Liste";
             customerBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
             customerBttnList.UseVisualStyleBackColor = false;
+            customerBttnList.Click += customerBttnList_Click;
             // 
             // SuppliersTabPage
             // 

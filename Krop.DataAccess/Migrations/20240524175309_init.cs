@@ -143,6 +143,7 @@ namespace Krop.DataAccess.Migrations
                 name: "Customers",
                 columns: table => new
                 {
+                    Invoice = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     ContactName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
@@ -151,8 +152,7 @@ namespace Krop.DataAccess.Migrations
                     Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     Country = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     City = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Invoice = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    Addres = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     CreatedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedIpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -204,7 +204,7 @@ namespace Krop.DataAccess.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     City = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Addres = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     WebSite = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     CreatedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),

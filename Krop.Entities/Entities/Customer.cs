@@ -12,6 +12,6 @@ namespace Krop.Entities.Entities
         public Contact? Contact { get; set; }
         public Address? Address { get; set; }
 
-        public InvoiceEnum Invoice { get; set; } = InvoiceEnum.Person;
+        public InvoiceEnum Invoice { get; set; } = InvoiceEnum.Bireysel;
     }
 }

@@ -88,26 +88,26 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { supplierCartToolStripMenuItem, toolStripSeparator1, supplierAddToolStripMenuItem, supplierUpdateToolStripMenuItem, supplierDeleteToolStripMenuItem, toolStripSeparator2, supplierListRefreshToolStripMenuItem, toolStripSeparator4 });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(121, 132);
+            contextMenuStrip1.Size = new Size(181, 154);
             // 
             // supplierCartToolStripMenuItem
             // 
             supplierCartToolStripMenuItem.Image = (Image)resources.GetObject("supplierCartToolStripMenuItem.Image");
             supplierCartToolStripMenuItem.Name = "supplierCartToolStripMenuItem";
-            supplierCartToolStripMenuItem.Size = new Size(120, 22);
+            supplierCartToolStripMenuItem.Size = new Size(180, 22);
             supplierCartToolStripMenuItem.Text = "Kart";
             supplierCartToolStripMenuItem.Click += supplierCartToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(117, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // supplierAddToolStripMenuItem
             // 
             supplierAddToolStripMenuItem.Image = (Image)resources.GetObject("supplierAddToolStripMenuItem.Image");
             supplierAddToolStripMenuItem.Name = "supplierAddToolStripMenuItem";
-            supplierAddToolStripMenuItem.Size = new Size(120, 22);
+            supplierAddToolStripMenuItem.Size = new Size(180, 22);
             supplierAddToolStripMenuItem.Text = "Ekle";
             supplierAddToolStripMenuItem.Click += supplierAddToolStripMenuItem_Click;
             // 
@@ -115,7 +115,7 @@
             // 
             supplierUpdateToolStripMenuItem.Image = (Image)resources.GetObject("supplierUpdateToolStripMenuItem.Image");
             supplierUpdateToolStripMenuItem.Name = "supplierUpdateToolStripMenuItem";
-            supplierUpdateToolStripMenuItem.Size = new Size(120, 22);
+            supplierUpdateToolStripMenuItem.Size = new Size(180, 22);
             supplierUpdateToolStripMenuItem.Text = "Güncelle";
             supplierUpdateToolStripMenuItem.Click += supplierUpdateToolStripMenuItem_Click;
             // 
@@ -123,26 +123,26 @@
             // 
             supplierDeleteToolStripMenuItem.Image = (Image)resources.GetObject("supplierDeleteToolStripMenuItem.Image");
             supplierDeleteToolStripMenuItem.Name = "supplierDeleteToolStripMenuItem";
-            supplierDeleteToolStripMenuItem.Size = new Size(120, 22);
+            supplierDeleteToolStripMenuItem.Size = new Size(180, 22);
             supplierDeleteToolStripMenuItem.Text = "Sil";
             supplierDeleteToolStripMenuItem.Click += supplierDeleteToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(117, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // supplierListRefreshToolStripMenuItem
             // 
             supplierListRefreshToolStripMenuItem.Name = "supplierListRefreshToolStripMenuItem";
-            supplierListRefreshToolStripMenuItem.Size = new Size(120, 22);
+            supplierListRefreshToolStripMenuItem.Size = new Size(180, 22);
             supplierListRefreshToolStripMenuItem.Text = "Yenile";
             supplierListRefreshToolStripMenuItem.Click += supplierListRefreshToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(117, 6);
+            toolStripSeparator4.Size = new Size(177, 6);
             // 
             // panelDgwFooter
             // 

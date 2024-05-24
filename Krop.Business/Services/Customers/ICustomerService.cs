@@ -10,5 +10,7 @@ namespace Krop.Business.Services.Customers
         Task<IResult> DeleteAsync(Guid id);
         Task<IDataResult<IEnumerable<GetCustomerDTO>>> GetAllAsync();
         Task<IDataResult<GetCustomerDTO>> GetByIdAsync(Guid id);
+
+        Task<IDataResult<IEnumerable<GetCustomerComboBoxDTO>>> GetAllComboBoxAsync();
     }
 }

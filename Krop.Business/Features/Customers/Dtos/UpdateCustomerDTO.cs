@@ -12,7 +12,7 @@ namespace Krop.Business.Features.Customers.Dtos
         public string? Email { get; set; }
         public string? Country { get; init; }
         public string? City { get; init; }
-        public string? Address { get; init; }
+        public string? Addres { get; init; }
         public InvoiceEnum Invoice { get; init; }
     }
 }

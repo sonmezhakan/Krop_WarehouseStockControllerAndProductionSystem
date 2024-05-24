@@ -10,7 +10,8 @@ namespace Krop.DataAccess.Configurations
         public override void Configure(EntityTypeBuilder<Customer> builder)
         {
             builder.Property(x => x.Invoice)
-                .HasDefaultValue(InvoiceEnum.Person);
+                .HasDefaultValue(InvoiceEnum.Bireysel)
+                .HasColumnOrder(2);
 
             #region Company
             builder.OwnsOne(x => x.Company,
@@ -57,7 +58,7 @@ namespace Krop.DataAccess.Configurations
 
                 address.Property(a => a.Addres)
                 .HasMaxLength(255)
-                .HasColumnName("Address");
+                .HasColumnName("Addres");
             });
 
             #endregion

@@ -47,12 +47,11 @@
             label3 = new Label();
             label2 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
-            bttnCustomerAdd = new Button();
+            bttnCustomerUpdate = new Button();
             panelMid = new System.Windows.Forms.Panel();
-            label1 = new Label();
-            label9 = new Label();
             cmbBoxCustomerSelect = new ComboBox();
-            bttnSelect = new Button();
+            label9 = new Label();
+            label1 = new Label();
             panelBottom.SuspendLayout();
             panelMid.SuspendLayout();
             SuspendLayout();
@@ -64,13 +63,13 @@
             radioBttnCompany.Name = "radioBttnCompany";
             radioBttnCompany.Size = new Size(75, 19);
             radioBttnCompany.TabIndex = 17;
-            radioBttnCompany.TabStop = true;
             radioBttnCompany.Text = "Kurumsal";
             radioBttnCompany.UseVisualStyleBackColor = true;
             // 
             // radioBttnPerson
             // 
             radioBttnPerson.AutoSize = true;
+            radioBttnPerson.Checked = true;
             radioBttnPerson.Location = new Point(32, 67);
             radioBttnPerson.Name = "radioBttnPerson";
             radioBttnPerson.Size = new Size(65, 19);
@@ -150,6 +149,7 @@
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.Size = new Size(245, 23);
             txtPhoneNumber.TabIndex = 7;
+            txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
             // 
             // label4
             // 
@@ -202,30 +202,30 @@
             // panelBottom
             // 
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
-            panelBottom.Controls.Add(bttnCustomerAdd);
+            panelBottom.Controls.Add(bttnCustomerUpdate);
             panelBottom.Dock = DockStyle.Bottom;
             panelBottom.Location = new Point(0, 544);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(318, 41);
+            panelBottom.Size = new Size(283, 41);
             panelBottom.TabIndex = 4;
             // 
-            // bttnCustomerAdd
+            // bttnCustomerUpdate
             // 
-            bttnCustomerAdd.Dock = DockStyle.Right;
-            bttnCustomerAdd.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bttnCustomerAdd.Image = (Image)resources.GetObject("bttnCustomerAdd.Image");
-            bttnCustomerAdd.Location = new Point(197, 0);
-            bttnCustomerAdd.Name = "bttnCustomerAdd";
-            bttnCustomerAdd.Size = new Size(109, 39);
-            bttnCustomerAdd.TabIndex = 1;
-            bttnCustomerAdd.Text = "Güncelle";
-            bttnCustomerAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
-            bttnCustomerAdd.UseVisualStyleBackColor = true;
+            bttnCustomerUpdate.Dock = DockStyle.Right;
+            bttnCustomerUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            bttnCustomerUpdate.Image = (Image)resources.GetObject("bttnCustomerUpdate.Image");
+            bttnCustomerUpdate.Location = new Point(162, 0);
+            bttnCustomerUpdate.Name = "bttnCustomerUpdate";
+            bttnCustomerUpdate.Size = new Size(109, 39);
+            bttnCustomerUpdate.TabIndex = 1;
+            bttnCustomerUpdate.Text = "Güncelle";
+            bttnCustomerUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
+            bttnCustomerUpdate.UseVisualStyleBackColor = true;
+            bttnCustomerUpdate.Click += bttnCustomerUpdate_Click;
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(bttnSelect);
             panelMid.Controls.Add(cmbBoxCustomerSelect);
             panelMid.Controls.Add(label9);
             panelMid.Controls.Add(radioBttnCompany);
@@ -249,17 +249,16 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(318, 585);
+            panelMid.Size = new Size(283, 585);
             panelMid.TabIndex = 5;
             // 
-            // label1
+            // cmbBoxCustomerSelect
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(23, 96);
-            label1.Name = "label1";
-            label1.Size = new Size(74, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Müşteri Adı :";
+            cmbBoxCustomerSelect.FormattingEnabled = true;
+            cmbBoxCustomerSelect.Location = new Point(21, 38);
+            cmbBoxCustomerSelect.Name = "cmbBoxCustomerSelect";
+            cmbBoxCustomerSelect.Size = new Size(245, 23);
+            cmbBoxCustomerSelect.TabIndex = 19;
             // 
             // label9
             // 
@@ -270,28 +269,20 @@
             label9.TabIndex = 18;
             label9.Text = "Güncellenecek Müşterinin Telefon Numarası :";
             // 
-            // cmbBoxCustomerSelect
+            // label1
             // 
-            cmbBoxCustomerSelect.FormattingEnabled = true;
-            cmbBoxCustomerSelect.Location = new Point(21, 38);
-            cmbBoxCustomerSelect.Name = "cmbBoxCustomerSelect";
-            cmbBoxCustomerSelect.Size = new Size(245, 23);
-            cmbBoxCustomerSelect.TabIndex = 19;
-            // 
-            // bttnSelect
-            // 
-            bttnSelect.Location = new Point(272, 38);
-            bttnSelect.Name = "bttnSelect";
-            bttnSelect.Size = new Size(31, 23);
-            bttnSelect.TabIndex = 21;
-            bttnSelect.Text = "...";
-            bttnSelect.UseVisualStyleBackColor = true;
+            label1.AutoSize = true;
+            label1.Location = new Point(23, 96);
+            label1.Name = "label1";
+            label1.Size = new Size(74, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Müşteri Adı :";
             // 
             // frmCustomerUpdate
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(318, 585);
+            ClientSize = new Size(283, 585);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -299,6 +290,7 @@
             Name = "frmCustomerUpdate";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Müşteri Güncelle";
+            Load += frmCustomerUpdate_Load;
             panelBottom.ResumeLayout(false);
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
@@ -325,11 +317,10 @@
         private Label label3;
         private Label label2;
         private System.Windows.Forms.Panel panelBottom;
-        private Button bttnCustomerAdd;
+        private Button bttnCustomerUpdate;
         private System.Windows.Forms.Panel panelMid;
         private ComboBox cmbBoxCustomerSelect;
         private Label label9;
         private Label label1;
-        private Button bttnSelect;
     }
 }

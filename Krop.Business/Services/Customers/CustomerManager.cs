@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Customers.Dtos;
-using Krop.Business.Features.Customers.ExceptionHelpers;
 using Krop.Business.Features.Customers.Rules;
 using Krop.Business.Features.Customers.Valdiations;
 using Krop.Common.Aspects.Autofac.Validation;
@@ -65,6 +64,13 @@ namespace Krop.Business.Services.Customers
             return new SuccessDataResult<IEnumerable<GetCustomerDTO>>(
                 _mapper.Map<List<GetCustomerDTO>>(result));
         }
+        public async Task<IDataResult<IEnumerable<GetCustomerComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            var result =await _customerRepository.GetAllComboBoxAsync();
+
+            return new SuccessDataResult<IEnumerable<GetCustomerComboBoxDTO>>(
+                _mapper.Map<List<GetCustomerComboBoxDTO>>(result));
+        }
         #endregion
         #region Search
         public async Task<IDataResult<GetCustomerDTO>> GetByIdAsync(Guid id)
@@ -74,6 +80,7 @@ namespace Krop.Business.Services.Customers
             return new SuccessDataResult<GetCustomerDTO>(
                 _mapper.Map<GetCustomerDTO>(customer));
         }
+
         #endregion
     }
 }

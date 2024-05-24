@@ -1,6 +1,7 @@
 ﻿using Krop.Common.Helpers.WebApiService;
 using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
+using Krop.WinForms.Customers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
@@ -154,6 +155,36 @@ namespace Krop.WinForms
         {
             frmSupplierList frmSupplierList = _serviceProvider.GetRequiredService<frmSupplierList>();
             FormController.FormOpenController(frmSupplierList);
+        }
+
+        private void customerBttnList_Click(object sender, EventArgs e)
+        {
+            frmCustomerList frmCustomerList = _serviceProvider.GetRequiredService<frmCustomerList>();
+            FormController.FormOpenController(frmCustomerList);
+        }
+
+        private void customerBttnCard_Click(object sender, EventArgs e)
+        {
+            frmCustomerCart frmCustomerCart = _serviceProvider.GetRequiredService<frmCustomerCart>();
+            FormController.FormOpenController(frmCustomerCart);
+        }
+
+        private void customerBttnAdd_Click(object sender, EventArgs e)
+        {
+            frmCustomerAdd frmCustomerAdd = _serviceProvider.GetRequiredService<frmCustomerAdd>();
+            FormController.FormOpenController(frmCustomerAdd);
+        }
+
+        private void customerBttnUpdate_Click(object sender, EventArgs e)
+        {
+            frmCustomerUpdate frmCustomerUpdate = _serviceProvider.GetRequiredService<frmCustomerUpdate>();
+            FormController.FormOpenController(frmCustomerUpdate);
+        }
+
+        private void customerBttnDelete_Click(object sender, EventArgs e)
+        {
+            frmCustomerDelete frmCustomerDelete = _serviceProvider.GetRequiredService<frmCustomerDelete>();
+            FormController.FormOpenController(frmCustomerDelete);
         }
     }
 }

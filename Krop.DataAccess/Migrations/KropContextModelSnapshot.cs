@@ -314,7 +314,8 @@ namespace Krop.DataAccess.Migrations
                     b.Property<int>("Invoice")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasDefaultValue(0)
+                        .HasColumnOrder(2);
 
                     b.Property<string>("UpdatedComputerName")
                         .HasColumnType("nvarchar(max)");
@@ -891,7 +892,7 @@ namespace Krop.DataAccess.Migrations
                             b1.Property<string>("Addres")
                                 .HasMaxLength(255)
                                 .HasColumnType("nvarchar(255)")
-                                .HasColumnName("Address");
+                                .HasColumnName("Addres");
 
                             b1.Property<string>("City")
                                 .HasMaxLength(64)

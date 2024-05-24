@@ -32,14 +32,8 @@
             panelBottom = new System.Windows.Forms.Panel();
             bttnCustomerAdd = new Button();
             panelMid = new System.Windows.Forms.Panel();
-            txtContactTitle = new TextBox();
-            txtContactName = new TextBox();
-            txtCompanyName = new TextBox();
-            label3 = new Label();
-            label2 = new Label();
-            label1 = new Label();
-            txtPhoneNumber = new TextBox();
-            label4 = new Label();
+            radioBttnCompany = new RadioButton();
+            radioBttnPerson = new RadioButton();
             txtAddress = new TextBox();
             label5 = new Label();
             txtCity = new TextBox();
@@ -48,8 +42,14 @@
             label6 = new Label();
             label7 = new Label();
             label8 = new Label();
-            radioBttnPerson = new RadioButton();
-            radioBttnCompany = new RadioButton();
+            txtPhoneNumber = new TextBox();
+            label4 = new Label();
+            txtContactTitle = new TextBox();
+            txtContactName = new TextBox();
+            txtCompanyName = new TextBox();
+            label3 = new Label();
+            label2 = new Label();
+            label1 = new Label();
             panelBottom.SuspendLayout();
             panelMid.SuspendLayout();
             SuspendLayout();
@@ -77,6 +77,7 @@
             bttnCustomerAdd.Text = "Ekle";
             bttnCustomerAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnCustomerAdd.UseVisualStyleBackColor = true;
+            bttnCustomerAdd.Click += bttnCustomerAdd_Click;
             // 
             // panelMid
             // 
@@ -104,69 +105,27 @@
             panelMid.Size = new Size(251, 513);
             panelMid.TabIndex = 3;
             // 
-            // txtContactTitle
+            // radioBttnCompany
             // 
-            txtContactTitle.Location = new Point(23, 147);
-            txtContactTitle.Name = "txtContactTitle";
-            txtContactTitle.Size = new Size(206, 23);
-            txtContactTitle.TabIndex = 5;
+            radioBttnCompany.AutoSize = true;
+            radioBttnCompany.Location = new Point(154, 12);
+            radioBttnCompany.Name = "radioBttnCompany";
+            radioBttnCompany.Size = new Size(75, 19);
+            radioBttnCompany.TabIndex = 17;
+            radioBttnCompany.Text = "Kurumsal";
+            radioBttnCompany.UseVisualStyleBackColor = true;
             // 
-            // txtContactName
+            // radioBttnPerson
             // 
-            txtContactName.Location = new Point(23, 103);
-            txtContactName.Name = "txtContactName";
-            txtContactName.Size = new Size(206, 23);
-            txtContactName.TabIndex = 4;
-            // 
-            // txtCompanyName
-            // 
-            txtCompanyName.Location = new Point(23, 59);
-            txtCompanyName.Name = "txtCompanyName";
-            txtCompanyName.Size = new Size(206, 23);
-            txtCompanyName.TabIndex = 3;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(23, 129);
-            label3.Name = "label3";
-            label3.Size = new Size(213, 15);
-            label3.TabIndex = 2;
-            label3.Text = "İletişime Geçilecek Kişinin Departmanı :";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(23, 85);
-            label2.Name = "label2";
-            label2.Size = new Size(131, 15);
-            label2.TabIndex = 1;
-            label2.Text = "İletişime Geçilecek Kişi :";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(23, 41);
-            label1.Name = "label1";
-            label1.Size = new Size(74, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Müşteri Adı :";
-            // 
-            // txtPhoneNumber
-            // 
-            txtPhoneNumber.Location = new Point(23, 191);
-            txtPhoneNumber.Name = "txtPhoneNumber";
-            txtPhoneNumber.Size = new Size(206, 23);
-            txtPhoneNumber.TabIndex = 7;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(23, 173);
-            label4.Name = "label4";
-            label4.Size = new Size(105, 15);
-            label4.TabIndex = 6;
-            label4.Text = "Telefon Numarası :";
+            radioBttnPerson.AutoSize = true;
+            radioBttnPerson.Checked = true;
+            radioBttnPerson.Location = new Point(23, 12);
+            radioBttnPerson.Name = "radioBttnPerson";
+            radioBttnPerson.Size = new Size(65, 19);
+            radioBttnPerson.TabIndex = 16;
+            radioBttnPerson.TabStop = true;
+            radioBttnPerson.Text = "Bireysel";
+            radioBttnPerson.UseVisualStyleBackColor = true;
             // 
             // txtAddress
             // 
@@ -233,27 +192,70 @@
             label8.TabIndex = 8;
             label8.Text = "Email :";
             // 
-            // radioBttnPerson
+            // txtPhoneNumber
             // 
-            radioBttnPerson.AutoSize = true;
-            radioBttnPerson.Location = new Point(23, 12);
-            radioBttnPerson.Name = "radioBttnPerson";
-            radioBttnPerson.Size = new Size(65, 19);
-            radioBttnPerson.TabIndex = 16;
-            radioBttnPerson.TabStop = true;
-            radioBttnPerson.Text = "Bireysel";
-            radioBttnPerson.UseVisualStyleBackColor = true;
+            txtPhoneNumber.Location = new Point(23, 191);
+            txtPhoneNumber.Name = "txtPhoneNumber";
+            txtPhoneNumber.Size = new Size(206, 23);
+            txtPhoneNumber.TabIndex = 7;
+            txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
             // 
-            // radioBttnCompany
+            // label4
             // 
-            radioBttnCompany.AutoSize = true;
-            radioBttnCompany.Location = new Point(154, 12);
-            radioBttnCompany.Name = "radioBttnCompany";
-            radioBttnCompany.Size = new Size(75, 19);
-            radioBttnCompany.TabIndex = 17;
-            radioBttnCompany.TabStop = true;
-            radioBttnCompany.Text = "Kurumsal";
-            radioBttnCompany.UseVisualStyleBackColor = true;
+            label4.AutoSize = true;
+            label4.Location = new Point(23, 173);
+            label4.Name = "label4";
+            label4.Size = new Size(105, 15);
+            label4.TabIndex = 6;
+            label4.Text = "Telefon Numarası :";
+            // 
+            // txtContactTitle
+            // 
+            txtContactTitle.Location = new Point(23, 147);
+            txtContactTitle.Name = "txtContactTitle";
+            txtContactTitle.Size = new Size(206, 23);
+            txtContactTitle.TabIndex = 5;
+            // 
+            // txtContactName
+            // 
+            txtContactName.Location = new Point(23, 103);
+            txtContactName.Name = "txtContactName";
+            txtContactName.Size = new Size(206, 23);
+            txtContactName.TabIndex = 4;
+            // 
+            // txtCompanyName
+            // 
+            txtCompanyName.Location = new Point(23, 59);
+            txtCompanyName.Name = "txtCompanyName";
+            txtCompanyName.Size = new Size(206, 23);
+            txtCompanyName.TabIndex = 3;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(23, 129);
+            label3.Name = "label3";
+            label3.Size = new Size(213, 15);
+            label3.TabIndex = 2;
+            label3.Text = "İletişime Geçilecek Kişinin Departmanı :";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(23, 85);
+            label2.Name = "label2";
+            label2.Size = new Size(131, 15);
+            label2.TabIndex = 1;
+            label2.Text = "İletişime Geçilecek Kişi :";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(23, 41);
+            label1.Name = "label1";
+            label1.Size = new Size(74, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Müşteri Adı :";
             // 
             // frmCustomerAdd
             // 
@@ -267,6 +269,7 @@
             Name = "frmCustomerAdd";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Müşteri Ekle";
+            Load += frmCustomerAdd_Load;
             panelBottom.ResumeLayout(false);
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();

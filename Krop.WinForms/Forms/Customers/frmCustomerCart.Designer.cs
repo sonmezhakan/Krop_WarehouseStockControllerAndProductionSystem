@@ -42,11 +42,11 @@
             label4 = new Label();
             txtContactTitle = new TextBox();
             txtContactName = new TextBox();
-            txtCompanyName = new TextBox();
             label3 = new Label();
             label2 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
             panelMid = new System.Windows.Forms.Panel();
+            cmbBoxCustomerSelect = new ComboBox();
             label1 = new Label();
             panelMid.SuspendLayout();
             SuspendLayout();
@@ -58,13 +58,13 @@
             radioBttnCompany.Name = "radioBttnCompany";
             radioBttnCompany.Size = new Size(75, 19);
             radioBttnCompany.TabIndex = 17;
-            radioBttnCompany.TabStop = true;
             radioBttnCompany.Text = "Kurumsal";
             radioBttnCompany.UseVisualStyleBackColor = true;
             // 
             // radioBttnPerson
             // 
             radioBttnPerson.AutoSize = true;
+            radioBttnPerson.Checked = true;
             radioBttnPerson.Location = new Point(23, 12);
             radioBttnPerson.Name = "radioBttnPerson";
             radioBttnPerson.Size = new Size(65, 19);
@@ -144,6 +144,7 @@
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.Size = new Size(206, 23);
             txtPhoneNumber.TabIndex = 7;
+            txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
             // 
             // label4
             // 
@@ -167,13 +168,6 @@
             txtContactName.Name = "txtContactName";
             txtContactName.Size = new Size(206, 23);
             txtContactName.TabIndex = 4;
-            // 
-            // txtCompanyName
-            // 
-            txtCompanyName.Location = new Point(23, 59);
-            txtCompanyName.Name = "txtCompanyName";
-            txtCompanyName.Size = new Size(206, 23);
-            txtCompanyName.TabIndex = 3;
             // 
             // label3
             // 
@@ -205,6 +199,7 @@
             // 
             // panelMid
             // 
+            panelMid.Controls.Add(cmbBoxCustomerSelect);
             panelMid.Controls.Add(radioBttnCompany);
             panelMid.Controls.Add(radioBttnPerson);
             panelMid.Controls.Add(txtAddress);
@@ -219,7 +214,6 @@
             panelMid.Controls.Add(label4);
             panelMid.Controls.Add(txtContactTitle);
             panelMid.Controls.Add(txtContactName);
-            panelMid.Controls.Add(txtCompanyName);
             panelMid.Controls.Add(label3);
             panelMid.Controls.Add(label2);
             panelMid.Controls.Add(label1);
@@ -228,6 +222,16 @@
             panelMid.Name = "panelMid";
             panelMid.Size = new Size(259, 531);
             panelMid.TabIndex = 5;
+            // 
+            // cmbBoxCustomerSelect
+            // 
+            cmbBoxCustomerSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbBoxCustomerSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cmbBoxCustomerSelect.FormattingEnabled = true;
+            cmbBoxCustomerSelect.Location = new Point(23, 59);
+            cmbBoxCustomerSelect.Name = "cmbBoxCustomerSelect";
+            cmbBoxCustomerSelect.Size = new Size(206, 23);
+            cmbBoxCustomerSelect.TabIndex = 20;
             // 
             // label1
             // 
@@ -245,8 +249,12 @@
             ClientSize = new Size(259, 531);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmCustomerCart";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Müşteri Kartı";
+            Load += frmCustomerCart_Load;
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
             ResumeLayout(false);
@@ -268,11 +276,11 @@
         private Label label4;
         private TextBox txtContactTitle;
         private TextBox txtContactName;
-        private TextBox txtCompanyName;
         private Label label3;
         private Label label2;
         private System.Windows.Forms.Panel panelBottom;
         private System.Windows.Forms.Panel panelMid;
         private Label label1;
+        private ComboBox cmbBoxCustomerSelect;
     }
 }

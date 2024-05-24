@@ -1,5 +1,6 @@
 ﻿using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
+using Krop.WinForms.Customers;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,13 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmSupplierDelete>();
             services.AddTransient<frmSupplierList>();
             services.AddTransient<frmSupplierCart>();
+
+            services.AddTransient<frmCustomerAdd>();
+            services.AddTransient<frmCustomerUpdate>();
+            services.AddTransient<frmCustomerDelete>();
+            services.AddTransient<frmCustomerList>();
+            services.AddTransient<frmCustomerCart>();
+
 
             return services;
         }

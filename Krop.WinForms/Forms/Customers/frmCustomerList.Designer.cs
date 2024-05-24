@@ -29,36 +29,27 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerList));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerList));
             bttnSearch = new Button();
             panel1 = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
-            Column5 = new DataGridViewTextBoxColumn();
-            Column4 = new DataGridViewTextBoxColumn();
-            Column3 = new DataGridViewTextBoxColumn();
-            Column2 = new DataGridViewTextBoxColumn();
-            Column1 = new DataGridViewTextBoxColumn();
-            stockNotificationToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator4 = new ToolStripSeparator();
-            stockTransferToolStripMenuItem = new ToolStripMenuItem();
-            stockReceiptToolStripMenuItem = new ToolStripMenuItem();
-            productionListToolStripMenuItem = new ToolStripMenuItem();
-            produuctListRefreshToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
-            productDeleteToolStripMenuItem = new ToolStripMenuItem();
-            productUpdateToolStripMenuItem = new ToolStripMenuItem();
-            productAddToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
-            productCartToolStripMenuItem = new ToolStripMenuItem();
-            contextMenuStrip1 = new ContextMenuStrip(components);
-            toolStripSeparator3 = new ToolStripSeparator();
             panelDgwFooter = new System.Windows.Forms.Panel();
             panelBottom = new System.Windows.Forms.Panel();
             dgwCustomerList = new DataGridView();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            customerCartToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
+            customerAddToolStripMenuItem = new ToolStripMenuItem();
+            customerUpdateToolStripMenuItem = new ToolStripMenuItem();
+            customerDeleteToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator4 = new ToolStripSeparator();
+            customerRefreshToolStripMenuItem = new ToolStripMenuItem();
             panel1.SuspendLayout();
-            contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgwCustomerList).BeginInit();
+            contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // bttnSearch
@@ -70,6 +61,7 @@
             bttnSearch.TabIndex = 1;
             bttnSearch.Text = "Ara...";
             bttnSearch.UseVisualStyleBackColor = true;
+            bttnSearch.Click += bttnSearch_Click;
             // 
             // panel1
             // 
@@ -88,126 +80,20 @@
             txtSearch.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             txtSearch.Location = new Point(5, 5);
             txtSearch.Name = "txtSearch";
+            txtSearch.PlaceholderText = "Arama....";
             txtSearch.Size = new Size(940, 27);
             txtSearch.TabIndex = 2;
-            txtSearch.Text = "Arama....";
-            // 
-            // Column5
-            // 
-            Column5.HeaderText = "Column5";
-            Column5.Name = "Column5";
-            Column5.ReadOnly = true;
-            // 
-            // Column4
-            // 
-            Column4.HeaderText = "Column4";
-            Column4.Name = "Column4";
-            Column4.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            Column3.HeaderText = "Column3";
-            Column3.Name = "Column3";
-            Column3.ReadOnly = true;
-            // 
-            // Column2
-            // 
-            Column2.HeaderText = "Column2";
-            Column2.Name = "Column2";
-            Column2.ReadOnly = true;
-            // 
-            // Column1
-            // 
-            Column1.HeaderText = "Column1";
-            Column1.Name = "Column1";
-            Column1.ReadOnly = true;
-            // 
-            // stockNotificationToolStripMenuItem
-            // 
-            stockNotificationToolStripMenuItem.Name = "stockNotificationToolStripMenuItem";
-            stockNotificationToolStripMenuItem.Size = new Size(157, 22);
-            stockNotificationToolStripMenuItem.Text = "Stok Bildirimi";
-            // 
-            // toolStripSeparator4
-            // 
-            toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(154, 6);
-            // 
-            // stockTransferToolStripMenuItem
-            // 
-            stockTransferToolStripMenuItem.Image = (Image)resources.GetObject("stockTransferToolStripMenuItem.Image");
-            stockTransferToolStripMenuItem.Name = "stockTransferToolStripMenuItem";
-            stockTransferToolStripMenuItem.Size = new Size(157, 22);
-            stockTransferToolStripMenuItem.Text = "Stok Transferleri";
-            // 
-            // stockReceiptToolStripMenuItem
-            // 
-            stockReceiptToolStripMenuItem.Image = (Image)resources.GetObject("stockReceiptToolStripMenuItem.Image");
-            stockReceiptToolStripMenuItem.Name = "stockReceiptToolStripMenuItem";
-            stockReceiptToolStripMenuItem.Size = new Size(157, 22);
-            stockReceiptToolStripMenuItem.Text = "Stock Girişleri";
-            // 
-            // productionListToolStripMenuItem
-            // 
-            productionListToolStripMenuItem.Image = (Image)resources.GetObject("productionListToolStripMenuItem.Image");
-            productionListToolStripMenuItem.Name = "productionListToolStripMenuItem";
-            productionListToolStripMenuItem.Size = new Size(157, 22);
-            productionListToolStripMenuItem.Text = "Üretim Listesi";
-            // 
-            // produuctListRefreshToolStripMenuItem
-            // 
-            produuctListRefreshToolStripMenuItem.Name = "produuctListRefreshToolStripMenuItem";
-            produuctListRefreshToolStripMenuItem.Size = new Size(157, 22);
-            produuctListRefreshToolStripMenuItem.Text = "Yenile";
+            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(154, 6);
-            // 
-            // productDeleteToolStripMenuItem
-            // 
-            productDeleteToolStripMenuItem.Image = (Image)resources.GetObject("productDeleteToolStripMenuItem.Image");
-            productDeleteToolStripMenuItem.Name = "productDeleteToolStripMenuItem";
-            productDeleteToolStripMenuItem.Size = new Size(157, 22);
-            productDeleteToolStripMenuItem.Text = "Sil";
-            // 
-            // productUpdateToolStripMenuItem
-            // 
-            productUpdateToolStripMenuItem.Image = (Image)resources.GetObject("productUpdateToolStripMenuItem.Image");
-            productUpdateToolStripMenuItem.Name = "productUpdateToolStripMenuItem";
-            productUpdateToolStripMenuItem.Size = new Size(157, 22);
-            productUpdateToolStripMenuItem.Text = "Güncelle";
-            // 
-            // productAddToolStripMenuItem
-            // 
-            productAddToolStripMenuItem.Image = (Image)resources.GetObject("productAddToolStripMenuItem.Image");
-            productAddToolStripMenuItem.Name = "productAddToolStripMenuItem";
-            productAddToolStripMenuItem.Size = new Size(157, 22);
-            productAddToolStripMenuItem.Text = "Ekle";
+            toolStripSeparator2.Size = new Size(6, 6);
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(154, 6);
-            // 
-            // productCartToolStripMenuItem
-            // 
-            productCartToolStripMenuItem.Image = (Image)resources.GetObject("productCartToolStripMenuItem.Image");
-            productCartToolStripMenuItem.Name = "productCartToolStripMenuItem";
-            productCartToolStripMenuItem.Size = new Size(157, 22);
-            productCartToolStripMenuItem.Text = "Kart";
-            // 
-            // contextMenuStrip1
-            // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { productCartToolStripMenuItem, toolStripSeparator1, productAddToolStripMenuItem, productUpdateToolStripMenuItem, productDeleteToolStripMenuItem, toolStripSeparator2, produuctListRefreshToolStripMenuItem, toolStripSeparator3, productionListToolStripMenuItem, stockReceiptToolStripMenuItem, stockTransferToolStripMenuItem, toolStripSeparator4, stockNotificationToolStripMenuItem });
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(158, 226);
-            // 
-            // toolStripSeparator3
-            // 
-            toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(154, 6);
+            toolStripSeparator1.Size = new Size(6, 6);
             // 
             // panelDgwFooter
             // 
@@ -237,36 +123,89 @@
             dgwCustomerList.BorderStyle = BorderStyle.None;
             dgwCustomerList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwCustomerList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwCustomerList.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5 });
             dgwCustomerList.ContextMenuStrip = contextMenuStrip1;
             dgwCustomerList.Dock = DockStyle.Fill;
-            dgwCustomerList.Location = new Point(0, 0);
+            dgwCustomerList.Location = new Point(0, 38);
             dgwCustomerList.Name = "dgwCustomerList";
             dgwCustomerList.ReadOnly = true;
             dgwCustomerList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwCustomerList.RowTemplate.Height = 25;
             dgwCustomerList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwCustomerList.Size = new Size(1025, 523);
-            dgwCustomerList.TabIndex = 11;
+            dgwCustomerList.Size = new Size(1025, 427);
+            dgwCustomerList.TabIndex = 13;
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { customerCartToolStripMenuItem, toolStripSeparator3, customerAddToolStripMenuItem, customerUpdateToolStripMenuItem, customerDeleteToolStripMenuItem, toolStripSeparator4, customerRefreshToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(121, 126);
+            // 
+            // customerCartToolStripMenuItem
+            // 
+            customerCartToolStripMenuItem.Image = (Image)resources.GetObject("customerCartToolStripMenuItem.Image");
+            customerCartToolStripMenuItem.Name = "customerCartToolStripMenuItem";
+            customerCartToolStripMenuItem.Size = new Size(120, 22);
+            customerCartToolStripMenuItem.Text = "Kart";
+            customerCartToolStripMenuItem.Click += customerCartToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(117, 6);
+            // 
+            // customerAddToolStripMenuItem
+            // 
+            customerAddToolStripMenuItem.Image = (Image)resources.GetObject("customerAddToolStripMenuItem.Image");
+            customerAddToolStripMenuItem.Name = "customerAddToolStripMenuItem";
+            customerAddToolStripMenuItem.Size = new Size(120, 22);
+            customerAddToolStripMenuItem.Text = "Ekle";
+            customerAddToolStripMenuItem.Click += customerAddToolStripMenuItem_Click;
+            // 
+            // customerUpdateToolStripMenuItem
+            // 
+            customerUpdateToolStripMenuItem.Image = (Image)resources.GetObject("customerUpdateToolStripMenuItem.Image");
+            customerUpdateToolStripMenuItem.Name = "customerUpdateToolStripMenuItem";
+            customerUpdateToolStripMenuItem.Size = new Size(120, 22);
+            customerUpdateToolStripMenuItem.Text = "Güncelle";
+            customerUpdateToolStripMenuItem.Click += customerUpdateToolStripMenuItem_Click;
+            // 
+            // customerDeleteToolStripMenuItem
+            // 
+            customerDeleteToolStripMenuItem.Image = (Image)resources.GetObject("customerDeleteToolStripMenuItem.Image");
+            customerDeleteToolStripMenuItem.Name = "customerDeleteToolStripMenuItem";
+            customerDeleteToolStripMenuItem.Size = new Size(120, 22);
+            customerDeleteToolStripMenuItem.Text = "Sil";
+            customerDeleteToolStripMenuItem.Click += customerDeleteToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator4
+            // 
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(117, 6);
+            // 
+            // customerRefreshToolStripMenuItem
+            // 
+            customerRefreshToolStripMenuItem.Name = "customerRefreshToolStripMenuItem";
+            customerRefreshToolStripMenuItem.Size = new Size(120, 22);
+            customerRefreshToolStripMenuItem.Text = "Yenile";
+            customerRefreshToolStripMenuItem.Click += customerRefreshToolStripMenuItem_Click;
             // 
             // frmCustomerList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1025, 523);
+            Controls.Add(dgwCustomerList);
             Controls.Add(panel1);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelBottom);
-            Controls.Add(dgwCustomerList);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            MaximizeBox = false;
             Name = "frmCustomerList";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Müşteri Listesi";
+            Load += frmCustomerList_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgwCustomerList).EndInit();
+            contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -275,11 +214,6 @@
         private Button bttnSearch;
         private System.Windows.Forms.Panel panel1;
         private TextBox txtSearch;
-        private DataGridViewTextBoxColumn Column5;
-        private DataGridViewTextBoxColumn Column4;
-        private DataGridViewTextBoxColumn Column3;
-        private DataGridViewTextBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column1;
         private ToolStripMenuItem stockNotificationToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem stockTransferToolStripMenuItem;
@@ -291,11 +225,15 @@
         private ToolStripMenuItem productUpdateToolStripMenuItem;
         private ToolStripMenuItem productAddToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem productCartToolStripMenuItem;
-        private ContextMenuStrip contextMenuStrip1;
         private ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Panel panelDgwFooter;
         private System.Windows.Forms.Panel panelBottom;
         private DataGridView dgwCustomerList;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem customerCartToolStripMenuItem;
+        private ToolStripMenuItem customerAddToolStripMenuItem;
+        private ToolStripMenuItem customerUpdateToolStripMenuItem;
+        private ToolStripMenuItem customerDeleteToolStripMenuItem;
+        private ToolStripMenuItem customerRefreshToolStripMenuItem;
     }
 }
