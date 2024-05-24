@@ -48,11 +48,6 @@
             toolStripSeparator4 = new ToolStripSeparator();
             stockNotificationToolStripMenuItem = new ToolStripMenuItem();
             dgwProductList = new DataGridView();
-            Column1 = new DataGridViewTextBoxColumn();
-            Column2 = new DataGridViewTextBoxColumn();
-            Column3 = new DataGridViewTextBoxColumn();
-            Column4 = new DataGridViewTextBoxColumn();
-            Column5 = new DataGridViewTextBoxColumn();
             panel1 = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
             bttnSearch = new Button();
@@ -89,6 +84,7 @@
             productCartToolStripMenuItem.Name = "productCartToolStripMenuItem";
             productCartToolStripMenuItem.Size = new Size(157, 22);
             productCartToolStripMenuItem.Text = "Kart";
+            productCartToolStripMenuItem.Click += productCartToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -101,6 +97,7 @@
             productAddToolStripMenuItem.Name = "productAddToolStripMenuItem";
             productAddToolStripMenuItem.Size = new Size(157, 22);
             productAddToolStripMenuItem.Text = "Ekle";
+            productAddToolStripMenuItem.Click += productAddToolStripMenuItem_Click;
             // 
             // productUpdateToolStripMenuItem
             // 
@@ -108,6 +105,7 @@
             productUpdateToolStripMenuItem.Name = "productUpdateToolStripMenuItem";
             productUpdateToolStripMenuItem.Size = new Size(157, 22);
             productUpdateToolStripMenuItem.Text = "Güncelle";
+            productUpdateToolStripMenuItem.Click += productUpdateToolStripMenuItem_Click;
             // 
             // productDeleteToolStripMenuItem
             // 
@@ -115,6 +113,7 @@
             productDeleteToolStripMenuItem.Name = "productDeleteToolStripMenuItem";
             productDeleteToolStripMenuItem.Size = new Size(157, 22);
             productDeleteToolStripMenuItem.Text = "Sil";
+            productDeleteToolStripMenuItem.Click += productDeleteToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
@@ -126,6 +125,7 @@
             produuctListRefreshToolStripMenuItem.Name = "produuctListRefreshToolStripMenuItem";
             produuctListRefreshToolStripMenuItem.Size = new Size(157, 22);
             produuctListRefreshToolStripMenuItem.Text = "Yenile";
+            produuctListRefreshToolStripMenuItem.Click += produuctListRefreshToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
@@ -176,10 +176,10 @@
             dgwProductList.BorderStyle = BorderStyle.None;
             dgwProductList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwProductList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwProductList.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5 });
             dgwProductList.ContextMenuStrip = contextMenuStrip1;
             dgwProductList.Dock = DockStyle.Fill;
             dgwProductList.Location = new Point(0, 38);
+            dgwProductList.MultiSelect = false;
             dgwProductList.Name = "dgwProductList";
             dgwProductList.ReadOnly = true;
             dgwProductList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
@@ -187,36 +187,6 @@
             dgwProductList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgwProductList.Size = new Size(1254, 585);
             dgwProductList.TabIndex = 7;
-            // 
-            // Column1
-            // 
-            Column1.HeaderText = "Column1";
-            Column1.Name = "Column1";
-            Column1.ReadOnly = true;
-            // 
-            // Column2
-            // 
-            Column2.HeaderText = "Column2";
-            Column2.Name = "Column2";
-            Column2.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            Column3.HeaderText = "Column3";
-            Column3.Name = "Column3";
-            Column3.ReadOnly = true;
-            // 
-            // Column4
-            // 
-            Column4.HeaderText = "Column4";
-            Column4.Name = "Column4";
-            Column4.ReadOnly = true;
-            // 
-            // Column5
-            // 
-            Column5.HeaderText = "Column5";
-            Column5.Name = "Column5";
-            Column5.ReadOnly = true;
             // 
             // panel1
             // 
@@ -235,9 +205,10 @@
             txtSearch.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             txtSearch.Location = new Point(5, 5);
             txtSearch.Name = "txtSearch";
+            txtSearch.PlaceholderText = "Arama....";
             txtSearch.Size = new Size(1169, 27);
             txtSearch.TabIndex = 2;
-            txtSearch.Text = "Arama....";
+            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // bttnSearch
             // 
@@ -248,6 +219,7 @@
             bttnSearch.TabIndex = 1;
             bttnSearch.Text = "Ara...";
             bttnSearch.UseVisualStyleBackColor = true;
+            bttnSearch.Click += bttnSearch_Click;
             // 
             // frmProductList
             // 
@@ -288,11 +260,6 @@
         private ToolStripMenuItem stockTransferToolStripMenuItem;
         private ToolStripMenuItem stockNotificationToolStripMenuItem;
         private DataGridView dgwProductList;
-        private DataGridViewTextBoxColumn Column1;
-        private DataGridViewTextBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column3;
-        private DataGridViewTextBoxColumn Column4;
-        private DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.Panel panel1;
         private TextBox txtSearch;
         private Button bttnSearch;

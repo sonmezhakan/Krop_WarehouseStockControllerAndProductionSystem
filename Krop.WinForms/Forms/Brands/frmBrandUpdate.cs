@@ -23,7 +23,8 @@ namespace Krop.WinForms.Brands
         private async void frmBrandUpdate_Load(object sender, EventArgs e)
         {
             await ComboBoxList();
-            cmbBoxBrandSelect.SelectedValue = Id;
+            if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
+                cmbBoxBrandSelect.SelectedValue = Id;
         }
 
         private async void bttnBrandUpdate_Click(object sender, EventArgs e)
@@ -58,13 +59,14 @@ namespace Krop.WinForms.Brands
             List<GetBrandComboBoxDTO> result = await _brandHelpers.GetAllComboBoxAsync();//Listeyi alıyor
 
             cmbBoxBrandSelect.DataSource = null;
-            cmbBoxBrandSelect.SelectedIndexChanged -= cmbBoxBrandSelect_SelectedIndexChanged;//SelectedIndexChanged Pasif
-
-            cmbBoxBrandSelect.DataSource = result;//liste aktarılıyor
-
+            
             cmbBoxBrandSelect.DisplayMember = "BrandName";
             cmbBoxBrandSelect.ValueMember = "Id";
 
+            cmbBoxBrandSelect.SelectedIndexChanged -= cmbBoxBrandSelect_SelectedIndexChanged;//SelectedIndexChanged Pasif
+
+            cmbBoxBrandSelect.DataSource = result;//liste aktarılıyor
+            cmbBoxBrandSelect.SelectedIndex = -1;
             cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;//SelectedIndexChanged Aktif
         }
         private async void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)

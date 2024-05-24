@@ -24,7 +24,6 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmCategoryDelete>();
             services.AddTransient<frmCategoryList>();
             services.AddTransient<frmCategoryCart>();
-            services.AddTransient<frmCategoryAssigmentProducts>();
 
             services.AddTransient<frmProductAdd>();
             services.AddTransient<frmProductUpdate>();
@@ -32,7 +31,6 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmProductList>();
             services.AddTransient<frmProductCart>();
             services.AddTransient<frmProductReceipt>();
-            services.AddTransient<frmCategoryAssigmentProducts>();
 
 
             return services;

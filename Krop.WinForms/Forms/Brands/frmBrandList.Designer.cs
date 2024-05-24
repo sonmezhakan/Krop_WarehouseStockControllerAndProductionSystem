@@ -181,7 +181,7 @@
             txtSearch.PlaceholderText = "Arama....";
             txtSearch.Size = new Size(790, 27);
             txtSearch.TabIndex = 2;
-            txtSearch.KeyPress += txtSearch_KeyPress;
+            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // frmBrandList
             // 

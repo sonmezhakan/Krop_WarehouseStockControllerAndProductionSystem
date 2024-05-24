@@ -14,7 +14,7 @@ namespace Krop.Business.Services.Products
         Task<IResult> DeleteAsync(Guid id);
         Task<IResult> DeleteRangeAsync(List<Guid> ids);
 
-        Task<IDataResult<IEnumerable<GetProductDTO>>> GetAllAsync();
+        Task<IDataResult<IEnumerable<GetProductListDTO>>> GetAllAsync();
 
         Task<IDataResult<GetProductDTO>> GetByIdAsync(Guid id);
         Task<IDataResult<IEnumerable<GetProductComboBoxDTO>>> GetAllComboBoxAsync();

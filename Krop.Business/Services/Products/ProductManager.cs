@@ -121,7 +121,7 @@ namespace Krop.Business.Services.Products
         }
         #endregion
         #region Listed
-        public async Task<IDataResult<IEnumerable<GetProductDTO>>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetProductListDTO>>> GetAllAsync()
         {
             var result = await _productRepository.GetAllAsync(includeProperties:new Expression<Func<Product, object>>[]
             {
@@ -129,8 +129,8 @@ namespace Krop.Business.Services.Products
                 b=>b.Brand//Include
             });
 
-            return new SuccessDataResult<IEnumerable<GetProductDTO>>(
-                _mapper.Map<IEnumerable<GetProductDTO>>(result));
+            return new SuccessDataResult<IEnumerable<GetProductListDTO>>(
+                _mapper.Map<IEnumerable<GetProductListDTO>>(result));
         }
 
         public async Task<IDataResult<IEnumerable<GetProductComboBoxDTO>>> GetAllComboBoxAsync()

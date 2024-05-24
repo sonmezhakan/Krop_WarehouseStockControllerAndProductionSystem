@@ -60,6 +60,7 @@
             cmbBoxBrandSelect.Name = "cmbBoxBrandSelect";
             cmbBoxBrandSelect.Size = new Size(206, 23);
             cmbBoxBrandSelect.TabIndex = 7;
+            cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
             // 
             // label4
             // 

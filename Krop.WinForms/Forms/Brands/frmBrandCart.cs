@@ -16,34 +16,37 @@ namespace Krop.WinForms.Brands
 
         private async void frmBrandCart_Load(object sender, EventArgs e)
         {
-           await BrandList();
-            cmbBoxBrandSelect.SelectedValue = Id;
+            await BrandList();
+            if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
+                cmbBoxBrandSelect.SelectedValue = Id;
         }
 
         private async Task BrandList()
         {
             List<GetBrandComboBoxDTO> result = await _brandHelper.GetAllComboBoxAsync();
 
-            cmbBoxBrandSelect.SelectedIndexChanged -= CmbBoxBrandSelect_SelectedIndexChanged;
-
             cmbBoxBrandSelect.DataSource = null;
-            cmbBoxBrandSelect.DataSource = result;
 
             cmbBoxBrandSelect.DisplayMember = "BrandName";
             cmbBoxBrandSelect.ValueMember = "Id";
 
-            cmbBoxBrandSelect.SelectedIndexChanged += CmbBoxBrandSelect_SelectedIndexChanged;
+            cmbBoxBrandSelect.SelectedIndexChanged -= cmbBoxBrandSelect_SelectedIndexChanged;
+            cmbBoxBrandSelect.DataSource = result;
+            cmbBoxBrandSelect.SelectedIndex = -1;
+            cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
         }
 
-        private async void CmbBoxBrandSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbBoxBrandSelect.SelectedValue is not null)
+
+            if (cmbBoxBrandSelect.SelectedValue is not null)
             {
-               GetBrandDTO result = await _brandHelper.GetByBrandIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
+                GetBrandDTO result = await _brandHelper.GetByBrandIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
 
                 txtPhoneNumber.Text = result.PhoneNumber;
                 txtEmail.Text = result.Email;
             }
+
         }
     }
 }

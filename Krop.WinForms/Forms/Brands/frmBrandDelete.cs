@@ -22,7 +22,8 @@ namespace Krop.WinForms.Brands
         private async void frmBrandDelete_Load(object sender, EventArgs e)
         {
             await CategoryList();
-            cmbBoxBrandSelect.SelectedValue = Id;
+            if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
+                cmbBoxBrandSelect.SelectedValue = Id;
         }
 
         private async void bttnBrandDelete_Click(object sender, EventArgs e)
@@ -49,10 +50,12 @@ namespace Krop.WinForms.Brands
             List<GetBrandComboBoxDTO> result = await _brandHelpers.GetAllComboBoxAsync();
 
             cmbBoxBrandSelect.DataSource = null;
-            cmbBoxBrandSelect.DataSource = result;
 
             cmbBoxBrandSelect.DisplayMember = "BrandName";
             cmbBoxBrandSelect.ValueMember = "Id";
+
+            cmbBoxBrandSelect.DataSource = result;
+            cmbBoxBrandSelect.SelectedIndex = -1;
         }
     }
 }

@@ -10,9 +10,10 @@ namespace Krop.Business.Features.Products.Profiles
         {
             CreateMap<Product, CreateProductDTO>().ReverseMap();
             CreateMap<Product, UpdateProductDTO>().ReverseMap();
-            CreateMap<Product, GetProductDTO>()
+            CreateMap<Product, GetProductDTO>().ReverseMap();
+            CreateMap<Product, GetProductListDTO>()
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
-                .ForMember(dest=>dest.BrandName, opt=>opt.MapFrom(src=>src.Brand.BrandName))
+                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand.BrandName))
                 .ReverseMap();
 
             CreateMap<Product, GetProductComboBoxDTO>().ReverseMap();

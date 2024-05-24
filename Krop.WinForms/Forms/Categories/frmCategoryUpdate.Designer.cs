@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCategoryUpdate));
             panelMid = new System.Windows.Forms.Panel();
-            bttnSelect = new Button();
             cmbBoxCategorySelect = new ComboBox();
             label2 = new Label();
             txtCategoryName = new TextBox();
@@ -43,7 +42,6 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(bttnSelect);
             panelMid.Controls.Add(cmbBoxCategorySelect);
             panelMid.Controls.Add(label2);
             panelMid.Controls.Add(txtCategoryName);
@@ -51,18 +49,8 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(309, 135);
+            panelMid.Size = new Size(273, 135);
             panelMid.TabIndex = 3;
-            // 
-            // bttnSelect
-            // 
-            bttnSelect.Location = new Point(267, 37);
-            bttnSelect.Name = "bttnSelect";
-            bttnSelect.Size = new Size(31, 23);
-            bttnSelect.TabIndex = 21;
-            bttnSelect.Text = "...";
-            bttnSelect.UseVisualStyleBackColor = true;
-            bttnSelect.Visible = false;
             // 
             // cmbBoxCategorySelect
             // 
@@ -106,7 +94,7 @@
             panelBottom.Location = new Point(0, 135);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 15, 0);
-            panelBottom.Size = new Size(309, 41);
+            panelBottom.Size = new Size(273, 41);
             panelBottom.TabIndex = 2;
             // 
             // bttnCategoryUpdate
@@ -114,7 +102,7 @@
             bttnCategoryUpdate.Dock = DockStyle.Right;
             bttnCategoryUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnCategoryUpdate.Image = (Image)resources.GetObject("bttnCategoryUpdate.Image");
-            bttnCategoryUpdate.Location = new Point(185, 0);
+            bttnCategoryUpdate.Location = new Point(149, 0);
             bttnCategoryUpdate.Name = "bttnCategoryUpdate";
             bttnCategoryUpdate.Size = new Size(107, 39);
             bttnCategoryUpdate.TabIndex = 1;
@@ -127,7 +115,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(309, 176);
+            ClientSize = new Size(273, 176);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -150,7 +138,6 @@
         private Label label1;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnCategoryUpdate;
-        private Button bttnSelect;
         private ComboBox cmbBoxCategorySelect;
     }
 }

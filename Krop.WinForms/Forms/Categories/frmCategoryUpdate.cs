@@ -14,7 +14,7 @@ namespace Krop.WinForms.Categories
         public Guid Id;
 
 
-        public frmCategoryUpdate(ICategoryHelper categoryHelper,IWebApiService webApiService)
+        public frmCategoryUpdate(ICategoryHelper categoryHelper, IWebApiService webApiService)
         {
             InitializeComponent();
             _categoryHelper = categoryHelper;
@@ -23,20 +23,21 @@ namespace Krop.WinForms.Categories
         private async void frmCategoryUpdate_Load(object sender, EventArgs e)
         {
             await CategoryList();
-            cmbBoxCategorySelect.SelectedValue = Id;
+            if (cmbBoxCategorySelect.DataSource != null && Id != Guid.Empty)
+                cmbBoxCategorySelect.SelectedValue = Id;
         }
         private async Task CategoryList()
         {
             List<GetCategoryComboBoxDTO> result = await _categoryHelper.GetAllComboBoxAsync();
 
-            cmbBoxCategorySelect.SelectedIndexChanged -= cmbBoxCategorySelect_SelectedIndexChanged;
             cmbBoxCategorySelect.DataSource = null;
-
-            cmbBoxCategorySelect.DataSource = result;
 
             cmbBoxCategorySelect.DisplayMember = "CategoryName";
             cmbBoxCategorySelect.ValueMember = "Id";
 
+            cmbBoxCategorySelect.SelectedIndexChanged -= cmbBoxCategorySelect_SelectedIndexChanged; 
+            cmbBoxCategorySelect.DataSource = result;
+            cmbBoxCategorySelect.SelectedIndex = -1;
             cmbBoxCategorySelect.SelectedIndexChanged += cmbBoxCategorySelect_SelectedIndexChanged;
         }
 
@@ -67,7 +68,7 @@ namespace Krop.WinForms.Categories
 
         private async void cmbBoxCategorySelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbBoxCategorySelect.SelectedValue is not null)
+            if (cmbBoxCategorySelect.SelectedValue is not null)
             {
                 GetCategoryDTO result = await _categoryHelper.GetByCategoryIdAsync((Guid)cmbBoxCategorySelect.SelectedValue);
 

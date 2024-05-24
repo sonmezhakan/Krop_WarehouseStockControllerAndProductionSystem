@@ -37,20 +37,22 @@ namespace Krop.WinForms.Products
             List<GetCategoryComboBoxDTO> result = await _categoryHelper.GetAllComboBoxAsync();
 
             cmbBoxCategory.DataSource = null;
-            cmbBoxCategory.DataSource = result;
 
             cmbBoxCategory.DisplayMember = "CategoryName";
             cmbBoxCategory.ValueMember = "Id";
+
+            cmbBoxCategory.DataSource = result;
         }
         private async Task BrandList()
         {
             List<GetBrandComboBoxDTO> result = await _brandHelper.GetAllComboBoxAsync();
 
             cmbBoxBrand.DataSource = null;
-            cmbBoxBrand.DataSource = result;
-
+            
             cmbBoxBrand.DisplayMember = "BrandName";
             cmbBoxBrand.ValueMember = "Id";
+
+            cmbBoxBrand.DataSource = result;
         }
 
         private void cmbBoxCategory_SelectedIndexChanged(object sender, EventArgs e)

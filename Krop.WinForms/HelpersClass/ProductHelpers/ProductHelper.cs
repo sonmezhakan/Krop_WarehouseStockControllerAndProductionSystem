@@ -11,6 +11,18 @@ namespace Krop.WinForms.HelpersClass.ProductHelpers
         {
             _webApiService = webApiService;
         }
+
+        public async Task<List<GetProductListDTO>> GetAllAsync()
+        {
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAll");
+
+            await ResponseController.ErrorResponseController(response);
+
+            var result = await ResponseController.SuccessDataListResponseController<GetProductListDTO>(response);
+
+            return result.Data;
+        }
+
         public async Task<List<GetProductComboBoxDTO>> GetAllComboBoxAsync()
         {
             HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");

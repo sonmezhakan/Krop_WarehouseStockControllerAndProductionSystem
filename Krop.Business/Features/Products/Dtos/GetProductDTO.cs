@@ -6,9 +6,7 @@
         public string ProductName { get; init; }
         public string ProductCode { get; init; }
         public Guid CategoryId { get; set; }
-        public string CategoryName { get; init; }
         public Guid BrandId { get; set; }
-        public string BrandName { get; init; }
         public decimal UnitPrice { get; init; }
         public Guid Image { get; init; }
         public int CriticalStock { get; init; }

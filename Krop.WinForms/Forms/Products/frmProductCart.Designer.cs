@@ -39,15 +39,15 @@
             label6 = new Label();
             panelMid = new System.Windows.Forms.Panel();
             panelMidMid = new System.Windows.Forms.Panel();
+            cmbBoxProductCodeSelect = new ComboBox();
+            label11 = new Label();
+            cmbBoxProductNameSelect = new ComboBox();
+            label10 = new Label();
             label5 = new Label();
             label4 = new Label();
-            label3 = new Label();
             label2 = new Label();
-            label1 = new Label();
             txtCriticalQuantity = new TextBox();
             txtUnitPrice = new TextBox();
-            txtProductCode = new TextBox();
-            txtProductName = new TextBox();
             panelBottom = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)pBoxProductImage).BeginInit();
             panelMidLeft.SuspendLayout();
@@ -73,7 +73,7 @@
             panelMidLeft.Location = new Point(0, 0);
             panelMidLeft.Name = "panelMidLeft";
             panelMidLeft.Padding = new Padding(5, 20, 5, 5);
-            panelMidLeft.Size = new Size(221, 450);
+            panelMidLeft.Size = new Size(221, 460);
             panelMidLeft.TabIndex = 0;
             // 
             // label9
@@ -143,11 +143,15 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(474, 450);
+            panelMid.Size = new Size(474, 460);
             panelMid.TabIndex = 3;
             // 
             // panelMidMid
             // 
+            panelMidMid.Controls.Add(cmbBoxProductCodeSelect);
+            panelMidMid.Controls.Add(label11);
+            panelMidMid.Controls.Add(cmbBoxProductNameSelect);
+            panelMidMid.Controls.Add(label10);
             panelMidMid.Controls.Add(label9);
             panelMidMid.Controls.Add(label8);
             panelMidMid.Controls.Add(cmbBoxBrand);
@@ -157,18 +161,54 @@
             panelMidMid.Controls.Add(label6);
             panelMidMid.Controls.Add(label5);
             panelMidMid.Controls.Add(label4);
-            panelMidMid.Controls.Add(label3);
             panelMidMid.Controls.Add(label2);
-            panelMidMid.Controls.Add(label1);
             panelMidMid.Controls.Add(txtCriticalQuantity);
             panelMidMid.Controls.Add(txtUnitPrice);
-            panelMidMid.Controls.Add(txtProductCode);
-            panelMidMid.Controls.Add(txtProductName);
             panelMidMid.Dock = DockStyle.Fill;
             panelMidMid.Location = new Point(221, 0);
             panelMidMid.Name = "panelMidMid";
-            panelMidMid.Size = new Size(253, 450);
+            panelMidMid.Size = new Size(253, 460);
             panelMidMid.TabIndex = 1;
+            // 
+            // cmbBoxProductCodeSelect
+            // 
+            cmbBoxProductCodeSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbBoxProductCodeSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cmbBoxProductCodeSelect.FormattingEnabled = true;
+            cmbBoxProductCodeSelect.Location = new Point(17, 83);
+            cmbBoxProductCodeSelect.Name = "cmbBoxProductCodeSelect";
+            cmbBoxProductCodeSelect.Size = new Size(217, 23);
+            cmbBoxProductCodeSelect.TabIndex = 41;
+            cmbBoxProductCodeSelect.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(17, 65);
+            label11.Name = "label11";
+            label11.Size = new Size(70, 15);
+            label11.TabIndex = 40;
+            label11.Text = "Ürün Kodu :";
+            // 
+            // cmbBoxProductNameSelect
+            // 
+            cmbBoxProductNameSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbBoxProductNameSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cmbBoxProductNameSelect.FormattingEnabled = true;
+            cmbBoxProductNameSelect.Location = new Point(17, 38);
+            cmbBoxProductNameSelect.Name = "cmbBoxProductNameSelect";
+            cmbBoxProductNameSelect.Size = new Size(217, 23);
+            cmbBoxProductNameSelect.TabIndex = 39;
+            cmbBoxProductNameSelect.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(17, 20);
+            label10.Name = "label10";
+            label10.Size = new Size(60, 15);
+            label10.TabIndex = 38;
+            label10.Text = "Ürün Adı :";
             // 
             // label5
             // 
@@ -188,15 +228,6 @@
             label4.TabIndex = 23;
             label4.Text = "Marka :";
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(17, 62);
-            label3.Name = "label3";
-            label3.Size = new Size(70, 15);
-            label3.TabIndex = 22;
-            label3.Text = "Ürün Kodu :";
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -206,21 +237,15 @@
             label2.TabIndex = 21;
             label2.Text = "Kategori :";
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(17, 18);
-            label1.Name = "label1";
-            label1.Size = new Size(60, 15);
-            label1.TabIndex = 20;
-            label1.Text = "Ürün Adı :";
-            // 
             // txtCriticalQuantity
             // 
             txtCriticalQuantity.Location = new Point(17, 260);
             txtCriticalQuantity.Name = "txtCriticalQuantity";
             txtCriticalQuantity.Size = new Size(182, 23);
             txtCriticalQuantity.TabIndex = 19;
+            txtCriticalQuantity.Text = "0";
+            txtCriticalQuantity.KeyPress += txtCriticalQuantity_KeyPress;
+            txtCriticalQuantity.Validating += txtCriticalQuantity_Validating;
             // 
             // txtUnitPrice
             // 
@@ -228,26 +253,15 @@
             txtUnitPrice.Name = "txtUnitPrice";
             txtUnitPrice.Size = new Size(182, 23);
             txtUnitPrice.TabIndex = 18;
-            // 
-            // txtProductCode
-            // 
-            txtProductCode.Location = new Point(17, 80);
-            txtProductCode.Name = "txtProductCode";
-            txtProductCode.Size = new Size(217, 23);
-            txtProductCode.TabIndex = 15;
-            // 
-            // txtProductName
-            // 
-            txtProductName.Location = new Point(17, 36);
-            txtProductName.Name = "txtProductName";
-            txtProductName.Size = new Size(217, 23);
-            txtProductName.TabIndex = 14;
+            txtUnitPrice.Text = "0";
+            txtUnitPrice.KeyPress += txtUnitPrice_KeyPress;
+            txtUnitPrice.Validating += txtUnitPrice_Validating;
             // 
             // panelBottom
             // 
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 450);
+            panelBottom.Location = new Point(0, 460);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 15, 0);
             panelBottom.Size = new Size(474, 41);
@@ -257,7 +271,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(474, 491);
+            ClientSize = new Size(474, 501);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -265,6 +279,7 @@
             Name = "frmProductCart";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Ürün Kartı";
+            Load += frmProductCart_Load;
             ((System.ComponentModel.ISupportInitialize)pBoxProductImage).EndInit();
             panelMidLeft.ResumeLayout(false);
             panelMid.ResumeLayout(false);
@@ -288,13 +303,13 @@
         private System.Windows.Forms.Panel panelMidMid;
         private Label label5;
         private Label label4;
-        private Label label3;
         private Label label2;
-        private Label label1;
         private TextBox txtCriticalQuantity;
         private TextBox txtUnitPrice;
-        private TextBox txtProductCode;
-        private TextBox txtProductName;
         private System.Windows.Forms.Panel panelBottom;
+        private ComboBox cmbBoxProductCodeSelect;
+        private Label label11;
+        private ComboBox cmbBoxProductNameSelect;
+        private Label label10;
     }
 }

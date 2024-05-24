@@ -118,5 +118,11 @@ namespace Krop.WinForms
             frmProductCart frmProductCart = _serviceProvider.GetRequiredService<frmProductCart>();
             FormController.FormOpenController(frmProductCart);
         }
+
+        private void productBttnRecipe_Click(object sender, EventArgs e)
+        {
+            frmProductReceipt frmProductReceipt = _serviceProvider.GetRequiredService<frmProductReceipt>();
+            FormController.FormOpenController(frmProductReceipt);
+        }
     }
 }

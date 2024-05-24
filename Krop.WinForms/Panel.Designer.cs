@@ -41,7 +41,6 @@
             productionBttnList = new Button();
             ProductsTabPage = new TabPage();
             productBttnRecipe = new Button();
-            productBttnCategoryAdd = new Button();
             productBttnDelete = new Button();
             productBttnUpdate = new Button();
             productBttnAdd = new Button();
@@ -284,7 +283,6 @@
             // ProductsTabPage
             // 
             ProductsTabPage.Controls.Add(productBttnRecipe);
-            ProductsTabPage.Controls.Add(productBttnCategoryAdd);
             ProductsTabPage.Controls.Add(productBttnDelete);
             ProductsTabPage.Controls.Add(productBttnUpdate);
             ProductsTabPage.Controls.Add(productBttnAdd);
@@ -308,31 +306,14 @@
             productBttnRecipe.FlatStyle = FlatStyle.Flat;
             productBttnRecipe.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             productBttnRecipe.Image = (Image)resources.GetObject("productBttnRecipe.Image");
-            productBttnRecipe.Location = new Point(517, 3);
+            productBttnRecipe.Location = new Point(400, 3);
             productBttnRecipe.Name = "productBttnRecipe";
             productBttnRecipe.Size = new Size(117, 59);
             productBttnRecipe.TabIndex = 10;
             productBttnRecipe.Text = "Ürün Reçetesi";
             productBttnRecipe.TextImageRelation = TextImageRelation.ImageAboveText;
             productBttnRecipe.UseVisualStyleBackColor = false;
-            // 
-            // productBttnCategoryAdd
-            // 
-            productBttnCategoryAdd.BackColor = Color.Transparent;
-            productBttnCategoryAdd.Dock = DockStyle.Left;
-            productBttnCategoryAdd.FlatAppearance.BorderColor = Color.White;
-            productBttnCategoryAdd.FlatAppearance.BorderSize = 0;
-            productBttnCategoryAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            productBttnCategoryAdd.FlatStyle = FlatStyle.Flat;
-            productBttnCategoryAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            productBttnCategoryAdd.Image = (Image)resources.GetObject("productBttnCategoryAdd.Image");
-            productBttnCategoryAdd.Location = new Point(400, 3);
-            productBttnCategoryAdd.Name = "productBttnCategoryAdd";
-            productBttnCategoryAdd.Size = new Size(117, 59);
-            productBttnCategoryAdd.TabIndex = 9;
-            productBttnCategoryAdd.Text = "Kategori Ataması";
-            productBttnCategoryAdd.TextImageRelation = TextImageRelation.ImageAboveText;
-            productBttnCategoryAdd.UseVisualStyleBackColor = false;
+            productBttnRecipe.Click += productBttnRecipe_Click;
             // 
             // productBttnDelete
             // 
@@ -1349,7 +1330,6 @@
         private Button button1;
         private Button productBttnCard;
         private Button productBttnRecipe;
-        private Button productBttnCategoryAdd;
         private Button productBttnDelete;
         private Button productBttnUpdate;
         private Button productBttnAdd;

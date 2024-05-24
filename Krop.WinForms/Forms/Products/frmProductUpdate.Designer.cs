@@ -266,6 +266,7 @@
             txtCriticalQuantity.Name = "txtCriticalQuantity";
             txtCriticalQuantity.Size = new Size(182, 23);
             txtCriticalQuantity.TabIndex = 19;
+            txtCriticalQuantity.Text = "0";
             txtCriticalQuantity.KeyPress += txtCriticalQuantity_KeyPress;
             txtCriticalQuantity.Validating += txtCriticalQuantity_Validating;
             // 
@@ -275,6 +276,7 @@
             txtUnitPrice.Name = "txtUnitPrice";
             txtUnitPrice.Size = new Size(182, 23);
             txtUnitPrice.TabIndex = 18;
+            txtUnitPrice.Text = "0";
             txtUnitPrice.KeyPress += txtUnitPrice_KeyPress;
             txtUnitPrice.Validating += txtUnitPrice_Validating;
             // 
