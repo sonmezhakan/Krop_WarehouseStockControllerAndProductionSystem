@@ -11,5 +11,7 @@ namespace Krop.Business.Services.Suppliers
 
         Task<IDataResult<IEnumerable<GetSupplierDTO>>> GetAllAsync();
         Task<IDataResult<GetSupplierDTO>> GetByIdAsync(Guid id);
+
+        Task<IDataResult<IEnumerable<GetSupplierComboBoxDTO>>> GetAllComboBoxAsync();
     }
 }

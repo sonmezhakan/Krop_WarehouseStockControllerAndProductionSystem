@@ -45,11 +45,11 @@
             label3 = new Label();
             label2 = new Label();
             panelMid = new System.Windows.Forms.Panel();
+            txtWebSiteUrl = new TextBox();
+            label9 = new Label();
             label1 = new Label();
             bttnSupplierAdd = new Button();
             panelBottom = new System.Windows.Forms.Panel();
-            txtWebSiteUrl = new TextBox();
-            label9 = new Label();
             panelMid.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
@@ -125,6 +125,7 @@
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.Size = new Size(206, 23);
             txtPhoneNumber.TabIndex = 7;
+            txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
             // 
             // label4
             // 
@@ -200,6 +201,22 @@
             panelMid.Size = new Size(233, 490);
             panelMid.TabIndex = 5;
             // 
+            // txtWebSiteUrl
+            // 
+            txtWebSiteUrl.Location = new Point(12, 459);
+            txtWebSiteUrl.Name = "txtWebSiteUrl";
+            txtWebSiteUrl.Size = new Size(206, 23);
+            txtWebSiteUrl.TabIndex = 17;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(12, 441);
+            label9.Name = "label9";
+            label9.Size = new Size(79, 15);
+            label9.TabIndex = 16;
+            label9.Text = "Website URL :";
+            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -221,6 +238,7 @@
             bttnSupplierAdd.Text = "Ekle";
             bttnSupplierAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnSupplierAdd.UseVisualStyleBackColor = true;
+            bttnSupplierAdd.Click += bttnSupplierAdd_Click;
             // 
             // panelBottom
             // 
@@ -232,22 +250,6 @@
             panelBottom.Padding = new Padding(0, 0, 10, 0);
             panelBottom.Size = new Size(233, 41);
             panelBottom.TabIndex = 4;
-            // 
-            // txtWebSiteUrl
-            // 
-            txtWebSiteUrl.Location = new Point(12, 459);
-            txtWebSiteUrl.Name = "txtWebSiteUrl";
-            txtWebSiteUrl.Size = new Size(206, 23);
-            txtWebSiteUrl.TabIndex = 17;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(12, 441);
-            label9.Name = "label9";
-            label9.Size = new Size(79, 15);
-            label9.TabIndex = 16;
-            label9.Text = "Website URL :";
             // 
             // frmSupplierAdd
             // 
@@ -261,6 +263,7 @@
             Name = "frmSupplierAdd";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Tedarikçi Ekle";
+            Load += frmSupplierAdd_Load;
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
             panelBottom.ResumeLayout(false);

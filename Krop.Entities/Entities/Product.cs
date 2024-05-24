@@ -11,8 +11,8 @@ namespace Krop.Entities.Entities
     /// </summary>
 	public class Product:BaseEntity
 	{
-        public Guid CategoryId { get; set; }
-        public Guid BrandId { get; set; }
+        public Guid? CategoryId { get; set; }
+        public Guid? BrandId { get; set; }
         public string ProductName { get; set; }
         public string ProductCode { get; set; }
         public decimal UnitPrice { get; set; }

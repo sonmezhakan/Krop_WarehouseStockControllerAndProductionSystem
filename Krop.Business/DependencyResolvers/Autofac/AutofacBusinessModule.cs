@@ -11,6 +11,7 @@ using Krop.Business.Services.Deparments;
 using Krop.Business.Services.Employees;
 using Krop.Business.Services.Products;
 using Krop.Business.Services.Stocks;
+using Krop.Business.Services.Suppliers;
 using Krop.Common.Helpers.WebApiService;
 using Krop.Common.Utilits.Interceptors;
 using Krop.DataAccess.Repositories.Abstracts;
@@ -58,6 +59,9 @@ namespace Krop.Business.DependencyResolvers.Autofac
 
             builder.RegisterType<CustomerManager>().As<ICustomerService>().SingleInstance();
             builder.RegisterType<EfCustomerRepository>().As<ICustomerRepository>().SingleInstance();
+
+            builder.RegisterType<SupplierManager>().As<ISupplierService>().SingleInstance();
+            builder.RegisterType<EfSupplierRepository>().As<ISupplierRepository>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

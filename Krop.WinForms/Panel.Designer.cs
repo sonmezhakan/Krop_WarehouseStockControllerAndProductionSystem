@@ -801,6 +801,7 @@
             supplierBttnDelete.Text = "Sil";
             supplierBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
             supplierBttnDelete.UseVisualStyleBackColor = false;
+            supplierBttnDelete.Click += supplierBttnDelete_Click;
             // 
             // supplierBttnUpdate
             // 
@@ -819,6 +820,7 @@
             supplierBttnUpdate.Text = "Güncelle";
             supplierBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
             supplierBttnUpdate.UseVisualStyleBackColor = false;
+            supplierBttnUpdate.Click += supplierBttnUpdate_Click;
             // 
             // supplierBttnAdd
             // 
@@ -837,6 +839,7 @@
             supplierBttnAdd.Text = "Ekle";
             supplierBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
             supplierBttnAdd.UseVisualStyleBackColor = false;
+            supplierBttnAdd.Click += supplierBttnAdd_Click;
             // 
             // supplierBttnCard
             // 
@@ -855,6 +858,7 @@
             supplierBttnCard.Text = "Tedarikçi Kartı";
             supplierBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
             supplierBttnCard.UseVisualStyleBackColor = false;
+            supplierBttnCard.Click += supplierBttnCard_Click;
             // 
             // supplierBttnList
             // 
@@ -873,6 +877,7 @@
             supplierBttnList.Text = "Liste";
             supplierBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
             supplierBttnList.UseVisualStyleBackColor = false;
+            supplierBttnList.Click += supplierBttnList_Click;
             // 
             // EmployeesTabPage
             // 

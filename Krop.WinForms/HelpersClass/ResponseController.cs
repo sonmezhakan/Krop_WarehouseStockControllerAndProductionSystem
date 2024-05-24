@@ -12,6 +12,7 @@ namespace Krop.WinForms.HelpersClass
             {
                 ErrorResponseViewModel errorResponseViewModel = await JsonHelper.DeserializeAsync<ErrorResponseViewModel>(response);
                 MessageBox.Show(errorResponseViewModel.Detail, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
 

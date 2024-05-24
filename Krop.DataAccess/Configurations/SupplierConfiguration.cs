@@ -55,7 +55,7 @@ namespace Krop.DataAccess.Configurations
 
                 address.Property(a => a.Addres)
                 .HasMaxLength(255)
-                .HasColumnName("Address");
+                .HasColumnName("Addres");
             });
                 
             #endregion

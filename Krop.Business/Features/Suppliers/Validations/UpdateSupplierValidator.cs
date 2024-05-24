@@ -16,11 +16,11 @@ namespace Krop.Business.Features.Suppliers.Validations
             RuleFor(x => x.CompanyName)
                 .NotEmpty().WithMessage(SupplierMessages.SupplierCompanyNameNotNull)
                 .NotNull().WithMessage(SupplierMessages.SupplierCompanyNameNotNull)
-                .MinimumLength(3).WithMessage(SupplierMessages.SupplierCompanyNameNotNull)
-                .MaximumLength(255).WithMessage(SupplierMessages.SupplierCompanyNameNotNull);
+                .MinimumLength(3).WithMessage(SupplierMessages.SupplierCompanyNameMinAndMaxLenght)
+                .MaximumLength(255).WithMessage(SupplierMessages.SupplierCompanyNameMinAndMaxLenght);
 
             RuleFor(x => x.ContactName)
-                .MaximumLength(255).WithMessage(SupplierMessages.SupplierCompanyNameMinAndMaxLenght);
+                .MaximumLength(255).WithMessage(SupplierMessages.SupplierContactNameMaxLenght);
 
             RuleFor(x => x.ContactTitle)
                 .MaximumLength(64).WithMessage(SupplierMessages.SupplierContactTitleMaxLenght);
@@ -39,7 +39,7 @@ namespace Krop.Business.Features.Suppliers.Validations
             RuleFor(x => x.City)
                 .MaximumLength(64).WithMessage(SupplierMessages.SupplierCityMaxLenght);
 
-            RuleFor(x => x.Address)
+            RuleFor(x => x.Addres)
                 .MaximumLength(255).WithMessage(SupplierMessages.SupplierAddressMaxLenght);
 
         }

@@ -3,6 +3,7 @@ using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.Products;
+using Krop.WinForms.Suppliers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Krop.WinForms
@@ -123,6 +124,36 @@ namespace Krop.WinForms
         {
             frmProductReceipt frmProductReceipt = _serviceProvider.GetRequiredService<frmProductReceipt>();
             FormController.FormOpenController(frmProductReceipt);
+        }
+
+        private void supplierBttnAdd_Click(object sender, EventArgs e)
+        {
+            frmSupplierAdd frmSupplierAdd = _serviceProvider.GetRequiredService<frmSupplierAdd>();
+            FormController.FormOpenController(frmSupplierAdd);
+        }
+
+        private void supplierBttnUpdate_Click(object sender, EventArgs e)
+        {
+            frmSupplierUpdate frmSupplierUpdate = _serviceProvider.GetRequiredService<frmSupplierUpdate>();
+            FormController.FormOpenController(frmSupplierUpdate);
+        }
+
+        private void supplierBttnDelete_Click(object sender, EventArgs e)
+        {
+            frmSupplierDelete frmSupplierDelete = _serviceProvider.GetRequiredService<frmSupplierDelete>();
+            FormController.FormOpenController(frmSupplierDelete);
+        }
+
+        private void supplierBttnCard_Click(object sender, EventArgs e)
+        {
+            frmSupplierCart frmSupplierCart = _serviceProvider.GetRequiredService<frmSupplierCart>();
+            FormController.FormOpenController(frmSupplierCart);
+        }
+
+        private void supplierBttnList_Click(object sender, EventArgs e)
+        {
+            frmSupplierList frmSupplierList = _serviceProvider.GetRequiredService<frmSupplierList>();
+            FormController.FormOpenController(frmSupplierList);
         }
     }
 }

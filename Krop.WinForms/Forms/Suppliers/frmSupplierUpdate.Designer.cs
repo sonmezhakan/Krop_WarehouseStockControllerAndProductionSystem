@@ -30,8 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSupplierUpdate));
             txtWebSiteUrl = new TextBox();
-            bttnSupplierAdd = new Button();
+            bttnSupplierUpdate = new Button();
             panelMid = new System.Windows.Forms.Panel();
+            cmbBoxSupplierSelect = new ComboBox();
+            label10 = new Label();
             label9 = new Label();
             txtAddress = new TextBox();
             label5 = new Label();
@@ -50,9 +52,6 @@
             label2 = new Label();
             label1 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
-            label10 = new Label();
-            cmbBoxSupplierSelect = new ComboBox();
-            bttnSelect = new Button();
             panelMid.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
@@ -64,22 +63,22 @@
             txtWebSiteUrl.Size = new Size(234, 23);
             txtWebSiteUrl.TabIndex = 17;
             // 
-            // bttnSupplierAdd
+            // bttnSupplierUpdate
             // 
-            bttnSupplierAdd.Dock = DockStyle.Right;
-            bttnSupplierAdd.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bttnSupplierAdd.Image = (Image)resources.GetObject("bttnSupplierAdd.Image");
-            bttnSupplierAdd.Location = new Point(192, 0);
-            bttnSupplierAdd.Name = "bttnSupplierAdd";
-            bttnSupplierAdd.Size = new Size(99, 39);
-            bttnSupplierAdd.TabIndex = 1;
-            bttnSupplierAdd.Text = "Güncelle";
-            bttnSupplierAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
-            bttnSupplierAdd.UseVisualStyleBackColor = true;
+            bttnSupplierUpdate.Dock = DockStyle.Right;
+            bttnSupplierUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            bttnSupplierUpdate.Image = (Image)resources.GetObject("bttnSupplierUpdate.Image");
+            bttnSupplierUpdate.Location = new Point(164, 0);
+            bttnSupplierUpdate.Name = "bttnSupplierUpdate";
+            bttnSupplierUpdate.Size = new Size(99, 39);
+            bttnSupplierUpdate.TabIndex = 1;
+            bttnSupplierUpdate.Text = "Güncelle";
+            bttnSupplierUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
+            bttnSupplierUpdate.UseVisualStyleBackColor = true;
+            bttnSupplierUpdate.Click += bttnSupplierUpdate_Click;
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(bttnSelect);
             panelMid.Controls.Add(cmbBoxSupplierSelect);
             panelMid.Controls.Add(label10);
             panelMid.Controls.Add(txtWebSiteUrl);
@@ -103,8 +102,28 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(303, 572);
+            panelMid.Size = new Size(275, 572);
             panelMid.TabIndex = 7;
+            // 
+            // cmbBoxSupplierSelect
+            // 
+            cmbBoxSupplierSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbBoxSupplierSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cmbBoxSupplierSelect.FormattingEnabled = true;
+            cmbBoxSupplierSelect.Location = new Point(21, 37);
+            cmbBoxSupplierSelect.Name = "cmbBoxSupplierSelect";
+            cmbBoxSupplierSelect.Size = new Size(234, 23);
+            cmbBoxSupplierSelect.TabIndex = 19;
+            cmbBoxSupplierSelect.SelectedIndexChanged += CmbBoxSupplierSelect_SelectedIndexChanged;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(21, 19);
+            label10.Name = "label10";
+            label10.Size = new Size(160, 15);
+            label10.TabIndex = 18;
+            label10.Text = "Güncellenecek Tedarikçi Adı :";
             // 
             // label9
             // 
@@ -165,7 +184,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(12, 276);
+            label7.Location = new Point(21, 285);
             label7.Name = "label7";
             label7.Size = new Size(36, 15);
             label7.TabIndex = 9;
@@ -186,6 +205,7 @@
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.Size = new Size(234, 23);
             txtPhoneNumber.TabIndex = 7;
+            txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
             // 
             // label4
             // 
@@ -247,51 +267,26 @@
             // panelBottom
             // 
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
-            panelBottom.Controls.Add(bttnSupplierAdd);
+            panelBottom.Controls.Add(bttnSupplierUpdate);
             panelBottom.Dock = DockStyle.Bottom;
             panelBottom.Location = new Point(0, 572);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(303, 41);
+            panelBottom.Size = new Size(275, 41);
             panelBottom.TabIndex = 6;
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(21, 19);
-            label10.Name = "label10";
-            label10.Size = new Size(234, 15);
-            label10.TabIndex = 18;
-            label10.Text = "Güncellenecek Tedarikçi Telefon Numarası :";
-            // 
-            // cmbBoxSupplierSelect
-            // 
-            cmbBoxSupplierSelect.FormattingEnabled = true;
-            cmbBoxSupplierSelect.Location = new Point(21, 37);
-            cmbBoxSupplierSelect.Name = "cmbBoxSupplierSelect";
-            cmbBoxSupplierSelect.Size = new Size(234, 23);
-            cmbBoxSupplierSelect.TabIndex = 19;
-            // 
-            // bttnSelect
-            // 
-            bttnSelect.Location = new Point(261, 37);
-            bttnSelect.Name = "bttnSelect";
-            bttnSelect.Size = new Size(31, 23);
-            bttnSelect.TabIndex = 21;
-            bttnSelect.Text = "...";
-            bttnSelect.UseVisualStyleBackColor = true;
             // 
             // frmSupplierUpdate
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(303, 613);
+            ClientSize = new Size(275, 613);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             MaximizeBox = false;
             Name = "frmSupplierUpdate";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Tedarikçi Güncelle";
+            Load += frmSupplierUpdate_Load;
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
             panelBottom.ResumeLayout(false);
@@ -301,7 +296,7 @@
         #endregion
 
         private TextBox txtWebSiteUrl;
-        private Button bttnSupplierAdd;
+        private Button bttnSupplierUpdate;
         private System.Windows.Forms.Panel panelMid;
         private Label label9;
         private TextBox txtAddress;
@@ -323,6 +318,5 @@
         private System.Windows.Forms.Panel panelBottom;
         private ComboBox cmbBoxSupplierSelect;
         private Label label10;
-        private Button bttnSelect;
     }
 }

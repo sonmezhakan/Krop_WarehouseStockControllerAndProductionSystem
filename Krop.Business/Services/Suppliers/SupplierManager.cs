@@ -25,8 +25,8 @@ namespace Krop.Business.Services.Suppliers
         [ValidationAspect(typeof(CreateSupplierValidation))]
         public async Task<IResult> AddAsync(CreateSupplierDTO createSupplierDTO)
         {
-            await _supplierRepository.AddAsync(
-                _mapper.Map<Supplier>(createSupplierDTO));
+            Supplier result = _mapper.Map<Supplier>(createSupplierDTO);
+            await _supplierRepository.AddAsync(result);
 
             return new SuccessResult();
         }
@@ -60,6 +60,13 @@ namespace Krop.Business.Services.Suppliers
             return new SuccessDataResult<IEnumerable<GetSupplierDTO>>(
                 _mapper.Map<List<GetSupplierDTO>>(result));
         }
+
+        public async Task<IDataResult<IEnumerable<GetSupplierComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            var result = await _supplierRepository.GetAllComboBoxAsync();
+            return new SuccessDataResult<IEnumerable<GetSupplierComboBoxDTO>>(
+                _mapper.Map<List<GetSupplierComboBoxDTO>>(result));
+        }
         #endregion
         #region Search
         public async Task<IDataResult<GetSupplierDTO>> GetByIdAsync(Guid id)
@@ -69,6 +76,7 @@ namespace Krop.Business.Services.Suppliers
             return new SuccessDataResult<GetSupplierDTO>(
                 _mapper.Map<GetSupplierDTO>(supplier));
         }
+   
         #endregion
     }
 }

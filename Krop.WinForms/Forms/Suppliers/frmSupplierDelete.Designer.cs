@@ -31,10 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSupplierDelete));
             label10 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
-            bttnSupplierAdd = new Button();
+            bttnSupplierDelete = new Button();
             cmbBoxSupplierSelect = new ComboBox();
             panelMid = new System.Windows.Forms.Panel();
-            bttnSelect = new Button();
             panelBottom.SuspendLayout();
             panelMid.SuspendLayout();
             SuspendLayout();
@@ -44,36 +43,39 @@
             label10.AutoSize = true;
             label10.Location = new Point(21, 19);
             label10.Name = "label10";
-            label10.Size = new Size(203, 15);
+            label10.Size = new Size(146, 15);
             label10.TabIndex = 18;
-            label10.Text = "Silinecek Tedarikçi Telefon Numarası :";
+            label10.Text = "Silinecek Tedarikçinin Adı :";
             // 
             // panelBottom
             // 
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
-            panelBottom.Controls.Add(bttnSupplierAdd);
+            panelBottom.Controls.Add(bttnSupplierDelete);
             panelBottom.Dock = DockStyle.Bottom;
             panelBottom.Location = new Point(0, 79);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(302, 41);
+            panelBottom.Size = new Size(269, 41);
             panelBottom.TabIndex = 8;
             // 
-            // bttnSupplierAdd
+            // bttnSupplierDelete
             // 
-            bttnSupplierAdd.Dock = DockStyle.Right;
-            bttnSupplierAdd.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            bttnSupplierAdd.Image = (Image)resources.GetObject("bttnSupplierAdd.Image");
-            bttnSupplierAdd.Location = new Point(191, 0);
-            bttnSupplierAdd.Name = "bttnSupplierAdd";
-            bttnSupplierAdd.Size = new Size(99, 39);
-            bttnSupplierAdd.TabIndex = 1;
-            bttnSupplierAdd.Text = "Sil";
-            bttnSupplierAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
-            bttnSupplierAdd.UseVisualStyleBackColor = true;
+            bttnSupplierDelete.Dock = DockStyle.Right;
+            bttnSupplierDelete.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            bttnSupplierDelete.Image = (Image)resources.GetObject("bttnSupplierDelete.Image");
+            bttnSupplierDelete.Location = new Point(158, 0);
+            bttnSupplierDelete.Name = "bttnSupplierDelete";
+            bttnSupplierDelete.Size = new Size(99, 39);
+            bttnSupplierDelete.TabIndex = 1;
+            bttnSupplierDelete.Text = "Sil";
+            bttnSupplierDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
+            bttnSupplierDelete.UseVisualStyleBackColor = true;
+            bttnSupplierDelete.Click += bttnSupplierDelete_Click;
             // 
             // cmbBoxSupplierSelect
             // 
+            cmbBoxSupplierSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cmbBoxSupplierSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
             cmbBoxSupplierSelect.FormattingEnabled = true;
             cmbBoxSupplierSelect.Location = new Point(21, 37);
             cmbBoxSupplierSelect.Name = "cmbBoxSupplierSelect";
@@ -82,29 +84,19 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(bttnSelect);
             panelMid.Controls.Add(cmbBoxSupplierSelect);
             panelMid.Controls.Add(label10);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(302, 120);
+            panelMid.Size = new Size(269, 120);
             panelMid.TabIndex = 9;
-            // 
-            // bttnSelect
-            // 
-            bttnSelect.Location = new Point(261, 37);
-            bttnSelect.Name = "bttnSelect";
-            bttnSelect.Size = new Size(31, 23);
-            bttnSelect.TabIndex = 20;
-            bttnSelect.Text = "...";
-            bttnSelect.UseVisualStyleBackColor = true;
             // 
             // frmSupplierDelete
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(302, 120);
+            ClientSize = new Size(269, 120);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -112,6 +104,7 @@
             Name = "frmSupplierDelete";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Tedarikçi Sil";
+            Load += frmSupplierDelete_Load;
             panelBottom.ResumeLayout(false);
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
@@ -122,9 +115,8 @@
 
         private Label label10;
         private System.Windows.Forms.Panel panelBottom;
-        private Button bttnSupplierAdd;
+        private Button bttnSupplierDelete;
         private ComboBox cmbBoxSupplierSelect;
         private System.Windows.Forms.Panel panelMid;
-        private Button bttnSelect;
     }
 }
