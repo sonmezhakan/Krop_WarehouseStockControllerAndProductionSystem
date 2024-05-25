@@ -32,7 +32,7 @@
             panelBottom = new System.Windows.Forms.Panel();
             bttnAppUserRoleAdd = new Button();
             panelMid = new System.Windows.Forms.Panel();
-            txtCategoryName = new TextBox();
+            txtAppUserRoleName = new TextBox();
             label1 = new Label();
             panelBottom.SuspendLayout();
             panelMid.SuspendLayout();
@@ -46,7 +46,7 @@
             panelBottom.Location = new Point(0, 76);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(278, 41);
+            panelBottom.Size = new Size(270, 41);
             panelBottom.TabIndex = 2;
             // 
             // bttnAppUserRoleAdd
@@ -54,30 +54,31 @@
             bttnAppUserRoleAdd.Dock = DockStyle.Right;
             bttnAppUserRoleAdd.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnAppUserRoleAdd.Image = (Image)resources.GetObject("bttnAppUserRoleAdd.Image");
-            bttnAppUserRoleAdd.Location = new Point(174, 0);
+            bttnAppUserRoleAdd.Location = new Point(166, 0);
             bttnAppUserRoleAdd.Name = "bttnAppUserRoleAdd";
             bttnAppUserRoleAdd.Size = new Size(92, 39);
             bttnAppUserRoleAdd.TabIndex = 1;
             bttnAppUserRoleAdd.Text = "Ekle";
             bttnAppUserRoleAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnAppUserRoleAdd.UseVisualStyleBackColor = true;
+            bttnAppUserRoleAdd.Click += bttnAppUserRoleAdd_Click;
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(txtCategoryName);
+            panelMid.Controls.Add(txtAppUserRoleName);
             panelMid.Controls.Add(label1);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(278, 117);
+            panelMid.Size = new Size(270, 117);
             panelMid.TabIndex = 3;
             // 
-            // txtCategoryName
+            // txtAppUserRoleName
             // 
-            txtCategoryName.Location = new Point(12, 37);
-            txtCategoryName.Name = "txtCategoryName";
-            txtCategoryName.Size = new Size(246, 23);
-            txtCategoryName.TabIndex = 1;
+            txtAppUserRoleName.Location = new Point(12, 37);
+            txtAppUserRoleName.Name = "txtAppUserRoleName";
+            txtAppUserRoleName.Size = new Size(246, 23);
+            txtAppUserRoleName.TabIndex = 1;
             // 
             // label1
             // 
@@ -92,7 +93,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(278, 117);
+            ClientSize = new Size(270, 117);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -100,6 +101,7 @@
             Name = "frmAppUserRoleAdd";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Yetki Ekle";
+            Load += frmAppUserRoleAdd_Load;
             panelBottom.ResumeLayout(false);
             panelMid.ResumeLayout(false);
             panelMid.PerformLayout();
@@ -111,7 +113,7 @@
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnAppUserRoleAdd;
         private System.Windows.Forms.Panel panelMid;
-        private TextBox txtCategoryName;
+        private TextBox txtAppUserRoleName;
         private Label label1;
     }
 }

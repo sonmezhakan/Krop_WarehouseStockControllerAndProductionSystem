@@ -3,6 +3,6 @@
     public record class GetAppUserRoleDTO
     {
         public Guid Id { get; init; }
-        public string RoleName { get; init; }
+        public string Name { get; init; }
     }
 }

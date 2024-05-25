@@ -37,7 +37,7 @@ namespace Krop.Business.Features.AppUserRoles.Rules
         public async Task AppUserRoleNameCannotBeDuplicatedWhenInserted(string roleName)
         {
             AppUserRole appUserRole = await _roleManager.FindByNameAsync(roleName);
-            if (appUserRole is null)
+            if (appUserRole is not null)
                 _appUserRoleExceptionHelper.ThrowAppUserRoleNameExists();
         }
         public async Task AppUserRoleNameCannotBeDuplicatedWhenUpdated(string oldRoleName, string newRoleName)
@@ -45,7 +45,7 @@ namespace Krop.Business.Features.AppUserRoles.Rules
             if(oldRoleName != newRoleName)
             {
                 AppUserRole appUserRole = await _roleManager.FindByNameAsync(newRoleName);
-                if (appUserRole is null)
+                if (appUserRole is not null)
                     _appUserRoleExceptionHelper.ThrowAppUserRoleNameExists();
             }
         }

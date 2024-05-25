@@ -93,7 +93,6 @@
             bttnAppUserRoleDelete = new Button();
             bttnAppUserRoleUpdate = new Button();
             bttnAppUserRoleAdd = new Button();
-            bttnAppUserRoleCart = new Button();
             bttnAppUserRoleList = new Button();
             SettingsTabPage = new TabPage();
             ExitPageTab = new TabPage();
@@ -1195,7 +1194,6 @@
             AppUserRolePage.Controls.Add(bttnAppUserRoleDelete);
             AppUserRolePage.Controls.Add(bttnAppUserRoleUpdate);
             AppUserRolePage.Controls.Add(bttnAppUserRoleAdd);
-            AppUserRolePage.Controls.Add(bttnAppUserRoleCart);
             AppUserRolePage.Controls.Add(bttnAppUserRoleList);
             AppUserRolePage.Location = new Point(4, 26);
             AppUserRolePage.Name = "AppUserRolePage";
@@ -1214,13 +1212,14 @@
             bttnAppUserRoleDelete.FlatStyle = FlatStyle.Flat;
             bttnAppUserRoleDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             bttnAppUserRoleDelete.Image = (Image)resources.GetObject("bttnAppUserRoleDelete.Image");
-            bttnAppUserRoleDelete.Location = new Point(327, 0);
+            bttnAppUserRoleDelete.Location = new Point(210, 0);
             bttnAppUserRoleDelete.Name = "bttnAppUserRoleDelete";
             bttnAppUserRoleDelete.Size = new Size(70, 65);
             bttnAppUserRoleDelete.TabIndex = 31;
             bttnAppUserRoleDelete.Text = "Sil";
             bttnAppUserRoleDelete.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnAppUserRoleDelete.UseVisualStyleBackColor = false;
+            bttnAppUserRoleDelete.Click += bttnAppUserRoleDelete_Click;
             // 
             // bttnAppUserRoleUpdate
             // 
@@ -1232,13 +1231,14 @@
             bttnAppUserRoleUpdate.FlatStyle = FlatStyle.Flat;
             bttnAppUserRoleUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             bttnAppUserRoleUpdate.Image = (Image)resources.GetObject("bttnAppUserRoleUpdate.Image");
-            bttnAppUserRoleUpdate.Location = new Point(257, 0);
+            bttnAppUserRoleUpdate.Location = new Point(140, 0);
             bttnAppUserRoleUpdate.Name = "bttnAppUserRoleUpdate";
             bttnAppUserRoleUpdate.Size = new Size(70, 65);
             bttnAppUserRoleUpdate.TabIndex = 30;
             bttnAppUserRoleUpdate.Text = "Güncelle";
             bttnAppUserRoleUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnAppUserRoleUpdate.UseVisualStyleBackColor = false;
+            bttnAppUserRoleUpdate.Click += bttnAppUserRoleUpdate_Click;
             // 
             // bttnAppUserRoleAdd
             // 
@@ -1250,31 +1250,14 @@
             bttnAppUserRoleAdd.FlatStyle = FlatStyle.Flat;
             bttnAppUserRoleAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             bttnAppUserRoleAdd.Image = (Image)resources.GetObject("bttnAppUserRoleAdd.Image");
-            bttnAppUserRoleAdd.Location = new Point(187, 0);
+            bttnAppUserRoleAdd.Location = new Point(70, 0);
             bttnAppUserRoleAdd.Name = "bttnAppUserRoleAdd";
             bttnAppUserRoleAdd.Size = new Size(70, 65);
             bttnAppUserRoleAdd.TabIndex = 29;
             bttnAppUserRoleAdd.Text = "Ekle";
             bttnAppUserRoleAdd.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnAppUserRoleAdd.UseVisualStyleBackColor = false;
-            // 
-            // bttnAppUserRoleCart
-            // 
-            bttnAppUserRoleCart.BackColor = Color.Transparent;
-            bttnAppUserRoleCart.Dock = DockStyle.Left;
-            bttnAppUserRoleCart.FlatAppearance.BorderColor = Color.White;
-            bttnAppUserRoleCart.FlatAppearance.BorderSize = 0;
-            bttnAppUserRoleCart.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            bttnAppUserRoleCart.FlatStyle = FlatStyle.Flat;
-            bttnAppUserRoleCart.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            bttnAppUserRoleCart.Image = (Image)resources.GetObject("bttnAppUserRoleCart.Image");
-            bttnAppUserRoleCart.Location = new Point(70, 0);
-            bttnAppUserRoleCart.Name = "bttnAppUserRoleCart";
-            bttnAppUserRoleCart.Size = new Size(117, 65);
-            bttnAppUserRoleCart.TabIndex = 32;
-            bttnAppUserRoleCart.Text = "Çalışan Kartı";
-            bttnAppUserRoleCart.TextImageRelation = TextImageRelation.ImageAboveText;
-            bttnAppUserRoleCart.UseVisualStyleBackColor = false;
+            bttnAppUserRoleAdd.Click += bttnAppUserRoleAdd_Click;
             // 
             // bttnAppUserRoleList
             // 
@@ -1293,6 +1276,7 @@
             bttnAppUserRoleList.Text = "Liste";
             bttnAppUserRoleList.TextImageRelation = TextImageRelation.ImageAboveText;
             bttnAppUserRoleList.UseVisualStyleBackColor = false;
+            bttnAppUserRoleList.Click += bttnAppUserRoleList_Click;
             // 
             // SettingsTabPage
             // 
@@ -1512,7 +1496,6 @@
         private Button bttnAppUserRoleDelete;
         private Button bttnAppUserRoleUpdate;
         private Button bttnAppUserRoleAdd;
-        private Button bttnAppUserRoleCart;
         private Button bttnAppUserRoleList;
         private TabPage BranchPage;
         private Button branchBttnDelete;

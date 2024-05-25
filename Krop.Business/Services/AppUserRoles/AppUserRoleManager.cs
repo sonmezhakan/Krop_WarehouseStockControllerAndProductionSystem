@@ -28,7 +28,7 @@ namespace Krop.Business.Services.AppUserRoles
         [ValidationAspect(typeof(CreateAppUserRoleValidator))]
         public async Task<IResult> AddAsync(CreateAppUserRoleDTO createAppUserRoleDTO)
         {
-            await _appUserRoleBusinessRules.AppUserRoleNameCannotBeDuplicatedWhenInserted(createAppUserRoleDTO.RoleName);//RoleName rule
+            await _appUserRoleBusinessRules.AppUserRoleNameCannotBeDuplicatedWhenInserted(createAppUserRoleDTO.Name);//RoleName rule
 
             AppUserRole appUserRole = _mapper.Map<AppUserRole>(createAppUserRoleDTO);
             await _roleManager.CreateAsync(appUserRole);

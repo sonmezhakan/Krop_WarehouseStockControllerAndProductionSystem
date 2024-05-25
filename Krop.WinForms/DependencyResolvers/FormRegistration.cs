@@ -1,4 +1,5 @@
-﻿using Krop.WinForms.Brands;
+﻿using Krop.WinForms.AppUserRoles;
+using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
 using Krop.WinForms.Customers;
 using Krop.WinForms.Forms.Branches;
@@ -53,6 +54,10 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmBranchList>();
             services.AddTransient<frmBranchCart>();
 
+            services.AddTransient<frmAppUserRoleAdd>();
+            services.AddTransient<frmAppUserRoleUpdate>();
+            services.AddTransient<frmAppUserRoleDelete>();
+            services.AddTransient<frmAppUserRoleList>();
 
             return services;
         }

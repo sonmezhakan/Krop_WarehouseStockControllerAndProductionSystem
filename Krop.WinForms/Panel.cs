@@ -1,4 +1,5 @@
 ﻿using Krop.Common.Helpers.WebApiService;
+using Krop.WinForms.AppUserRoles;
 using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
 using Krop.WinForms.Customers;
@@ -216,6 +217,30 @@ namespace Krop.WinForms
         {
             frmBranchDelete frmBranchDelete = _serviceProvider.GetRequiredService<frmBranchDelete>();
             FormController.FormOpenController(frmBranchDelete);
+        }
+
+        private void bttnAppUserRoleList_Click(object sender, EventArgs e)
+        {
+            frmAppUserRoleList frmAppUserRoleList = _serviceProvider.GetRequiredService<frmAppUserRoleList>();
+            FormController.FormOpenController(frmAppUserRoleList);
+        }
+
+        private void bttnAppUserRoleAdd_Click(object sender, EventArgs e)
+        {
+            frmAppUserRoleAdd frmAppUserRoleAdd = _serviceProvider.GetRequiredService<frmAppUserRoleAdd>();
+            FormController.FormOpenController(frmAppUserRoleAdd);
+        }
+
+        private void bttnAppUserRoleUpdate_Click(object sender, EventArgs e)
+        {
+            frmAppUserRoleUpdate frmAppUserRoleUpdate = _serviceProvider.GetRequiredService<frmAppUserRoleUpdate>();
+            FormController.FormOpenController(frmAppUserRoleUpdate);
+        }
+
+        private void bttnAppUserRoleDelete_Click(object sender, EventArgs e)
+        {
+            frmAppUserRoleDelete frmAppUserRoleDelete = _serviceProvider.GetRequiredService<frmAppUserRoleDelete>();
+            FormController.FormOpenController(frmAppUserRoleDelete);
         }
     }
 }

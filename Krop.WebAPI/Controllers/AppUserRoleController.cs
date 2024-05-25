@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Krop.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AppUserRoleController : ControllerBase
     {
@@ -41,7 +41,7 @@ namespace Krop.WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await _appUserRoleService.GetAllAsync();
 

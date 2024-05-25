@@ -31,26 +31,13 @@
             components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAppUserRoleList));
-            Column5 = new DataGridViewTextBoxColumn();
-            Column3 = new DataGridViewTextBoxColumn();
-            Column2 = new DataGridViewTextBoxColumn();
-            Column1 = new DataGridViewTextBoxColumn();
             dgwAppUserRoleList = new DataGridView();
-            Column4 = new DataGridViewTextBoxColumn();
             contextMenuStrip1 = new ContextMenuStrip(components);
-            productCartToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator1 = new ToolStripSeparator();
-            productAddToolStripMenuItem = new ToolStripMenuItem();
-            productUpdateToolStripMenuItem = new ToolStripMenuItem();
-            productDeleteToolStripMenuItem = new ToolStripMenuItem();
+            appUserRoleAddToolStripMenuItem = new ToolStripMenuItem();
+            appUserRoleUpdateToolStripMenuItem = new ToolStripMenuItem();
+            appUserRoleDeleteToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
-            produuctListRefreshToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator3 = new ToolStripSeparator();
-            productionListToolStripMenuItem = new ToolStripMenuItem();
-            stockReceiptToolStripMenuItem = new ToolStripMenuItem();
-            stockTransferToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator4 = new ToolStripSeparator();
-            stockNotificationToolStripMenuItem = new ToolStripMenuItem();
+            appUserRoleListRefreshToolStripMenuItem = new ToolStripMenuItem();
             panelBottom = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
             bttnSearch = new Button();
@@ -60,30 +47,6 @@
             contextMenuStrip1.SuspendLayout();
             panelTop.SuspendLayout();
             SuspendLayout();
-            // 
-            // Column5
-            // 
-            Column5.HeaderText = "Column5";
-            Column5.Name = "Column5";
-            Column5.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            Column3.HeaderText = "Column3";
-            Column3.Name = "Column3";
-            Column3.ReadOnly = true;
-            // 
-            // Column2
-            // 
-            Column2.HeaderText = "Column2";
-            Column2.Name = "Column2";
-            Column2.ReadOnly = true;
-            // 
-            // Column1
-            // 
-            Column1.HeaderText = "Column1";
-            Column1.Name = "Column1";
-            Column1.ReadOnly = true;
             // 
             // dgwAppUserRoleList
             // 
@@ -97,7 +60,6 @@
             dgwAppUserRoleList.BorderStyle = BorderStyle.None;
             dgwAppUserRoleList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwAppUserRoleList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwAppUserRoleList.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5 });
             dgwAppUserRoleList.ContextMenuStrip = contextMenuStrip1;
             dgwAppUserRoleList.Dock = DockStyle.Fill;
             dgwAppUserRoleList.Location = new Point(0, 38);
@@ -109,98 +71,47 @@
             dgwAppUserRoleList.Size = new Size(920, 399);
             dgwAppUserRoleList.TabIndex = 12;
             // 
-            // Column4
-            // 
-            Column4.HeaderText = "Column4";
-            Column4.Name = "Column4";
-            Column4.ReadOnly = true;
-            // 
             // contextMenuStrip1
             // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { productCartToolStripMenuItem, toolStripSeparator1, productAddToolStripMenuItem, productUpdateToolStripMenuItem, productDeleteToolStripMenuItem, toolStripSeparator2, produuctListRefreshToolStripMenuItem, toolStripSeparator3, productionListToolStripMenuItem, stockReceiptToolStripMenuItem, stockTransferToolStripMenuItem, toolStripSeparator4, stockNotificationToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { appUserRoleAddToolStripMenuItem, appUserRoleUpdateToolStripMenuItem, appUserRoleDeleteToolStripMenuItem, toolStripSeparator2, appUserRoleListRefreshToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(158, 226);
+            contextMenuStrip1.Size = new Size(121, 98);
             // 
-            // productCartToolStripMenuItem
+            // appUserRoleAddToolStripMenuItem
             // 
-            productCartToolStripMenuItem.Image = (Image)resources.GetObject("productCartToolStripMenuItem.Image");
-            productCartToolStripMenuItem.Name = "productCartToolStripMenuItem";
-            productCartToolStripMenuItem.Size = new Size(157, 22);
-            productCartToolStripMenuItem.Text = "Kart";
+            appUserRoleAddToolStripMenuItem.Image = (Image)resources.GetObject("appUserRoleAddToolStripMenuItem.Image");
+            appUserRoleAddToolStripMenuItem.Name = "appUserRoleAddToolStripMenuItem";
+            appUserRoleAddToolStripMenuItem.Size = new Size(120, 22);
+            appUserRoleAddToolStripMenuItem.Text = "Ekle";
+            appUserRoleAddToolStripMenuItem.Click += appUserRoleAddToolStripMenuItem_Click;
             // 
-            // toolStripSeparator1
+            // appUserRoleUpdateToolStripMenuItem
             // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(154, 6);
+            appUserRoleUpdateToolStripMenuItem.Image = (Image)resources.GetObject("appUserRoleUpdateToolStripMenuItem.Image");
+            appUserRoleUpdateToolStripMenuItem.Name = "appUserRoleUpdateToolStripMenuItem";
+            appUserRoleUpdateToolStripMenuItem.Size = new Size(120, 22);
+            appUserRoleUpdateToolStripMenuItem.Text = "Güncelle";
+            appUserRoleUpdateToolStripMenuItem.Click += appUserRoleUpdateToolStripMenuItem_Click;
             // 
-            // productAddToolStripMenuItem
+            // appUserRoleDeleteToolStripMenuItem
             // 
-            productAddToolStripMenuItem.Image = (Image)resources.GetObject("productAddToolStripMenuItem.Image");
-            productAddToolStripMenuItem.Name = "productAddToolStripMenuItem";
-            productAddToolStripMenuItem.Size = new Size(157, 22);
-            productAddToolStripMenuItem.Text = "Ekle";
-            // 
-            // productUpdateToolStripMenuItem
-            // 
-            productUpdateToolStripMenuItem.Image = (Image)resources.GetObject("productUpdateToolStripMenuItem.Image");
-            productUpdateToolStripMenuItem.Name = "productUpdateToolStripMenuItem";
-            productUpdateToolStripMenuItem.Size = new Size(157, 22);
-            productUpdateToolStripMenuItem.Text = "Güncelle";
-            // 
-            // productDeleteToolStripMenuItem
-            // 
-            productDeleteToolStripMenuItem.Image = (Image)resources.GetObject("productDeleteToolStripMenuItem.Image");
-            productDeleteToolStripMenuItem.Name = "productDeleteToolStripMenuItem";
-            productDeleteToolStripMenuItem.Size = new Size(157, 22);
-            productDeleteToolStripMenuItem.Text = "Sil";
+            appUserRoleDeleteToolStripMenuItem.Image = (Image)resources.GetObject("appUserRoleDeleteToolStripMenuItem.Image");
+            appUserRoleDeleteToolStripMenuItem.Name = "appUserRoleDeleteToolStripMenuItem";
+            appUserRoleDeleteToolStripMenuItem.Size = new Size(120, 22);
+            appUserRoleDeleteToolStripMenuItem.Text = "Sil";
+            appUserRoleDeleteToolStripMenuItem.Click += appUserRoleDeleteToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(154, 6);
+            toolStripSeparator2.Size = new Size(117, 6);
             // 
-            // produuctListRefreshToolStripMenuItem
+            // appUserRoleListRefreshToolStripMenuItem
             // 
-            produuctListRefreshToolStripMenuItem.Name = "produuctListRefreshToolStripMenuItem";
-            produuctListRefreshToolStripMenuItem.Size = new Size(157, 22);
-            produuctListRefreshToolStripMenuItem.Text = "Yenile";
-            // 
-            // toolStripSeparator3
-            // 
-            toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(154, 6);
-            // 
-            // productionListToolStripMenuItem
-            // 
-            productionListToolStripMenuItem.Image = (Image)resources.GetObject("productionListToolStripMenuItem.Image");
-            productionListToolStripMenuItem.Name = "productionListToolStripMenuItem";
-            productionListToolStripMenuItem.Size = new Size(157, 22);
-            productionListToolStripMenuItem.Text = "Üretim Listesi";
-            // 
-            // stockReceiptToolStripMenuItem
-            // 
-            stockReceiptToolStripMenuItem.Image = (Image)resources.GetObject("stockReceiptToolStripMenuItem.Image");
-            stockReceiptToolStripMenuItem.Name = "stockReceiptToolStripMenuItem";
-            stockReceiptToolStripMenuItem.Size = new Size(157, 22);
-            stockReceiptToolStripMenuItem.Text = "Stock Girişleri";
-            // 
-            // stockTransferToolStripMenuItem
-            // 
-            stockTransferToolStripMenuItem.Image = (Image)resources.GetObject("stockTransferToolStripMenuItem.Image");
-            stockTransferToolStripMenuItem.Name = "stockTransferToolStripMenuItem";
-            stockTransferToolStripMenuItem.Size = new Size(157, 22);
-            stockTransferToolStripMenuItem.Text = "Stok Transferleri";
-            // 
-            // toolStripSeparator4
-            // 
-            toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(154, 6);
-            // 
-            // stockNotificationToolStripMenuItem
-            // 
-            stockNotificationToolStripMenuItem.Name = "stockNotificationToolStripMenuItem";
-            stockNotificationToolStripMenuItem.Size = new Size(157, 22);
-            stockNotificationToolStripMenuItem.Text = "Stok Bildirimi";
+            appUserRoleListRefreshToolStripMenuItem.Name = "appUserRoleListRefreshToolStripMenuItem";
+            appUserRoleListRefreshToolStripMenuItem.Size = new Size(120, 22);
+            appUserRoleListRefreshToolStripMenuItem.Text = "Yenile";
+            appUserRoleListRefreshToolStripMenuItem.Click += appUserRoleListRefreshToolStripMenuItem_Click;
             // 
             // panelBottom
             // 
@@ -219,6 +130,7 @@
             txtSearch.Size = new Size(835, 27);
             txtSearch.TabIndex = 2;
             txtSearch.Text = "Arama....";
+            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // bttnSearch
             // 
@@ -229,6 +141,7 @@
             bttnSearch.TabIndex = 1;
             bttnSearch.Text = "Ara...";
             bttnSearch.UseVisualStyleBackColor = true;
+            bttnSearch.Click += bttnSearch_Click;
             // 
             // panelDgwFooter
             // 
@@ -261,6 +174,7 @@
             Name = "frmAppUserRoleList";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Yetki Listesi";
+            Load += frmAppUserRoleList_Load;
             ((System.ComponentModel.ISupportInitialize)dgwAppUserRoleList).EndInit();
             contextMenuStrip1.ResumeLayout(false);
             panelTop.ResumeLayout(false);
@@ -269,27 +183,13 @@
         }
 
         #endregion
-
-        private DataGridViewTextBoxColumn Column5;
-        private DataGridViewTextBoxColumn Column3;
-        private DataGridViewTextBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column1;
         private DataGridView dgwAppUserRoleList;
-        private DataGridViewTextBoxColumn Column4;
         private ContextMenuStrip contextMenuStrip1;
-        private ToolStripMenuItem productCartToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem productAddToolStripMenuItem;
-        private ToolStripMenuItem productUpdateToolStripMenuItem;
-        private ToolStripMenuItem productDeleteToolStripMenuItem;
+        private ToolStripMenuItem appUserRoleAddToolStripMenuItem;
+        private ToolStripMenuItem appUserRoleUpdateToolStripMenuItem;
+        private ToolStripMenuItem appUserRoleDeleteToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem produuctListRefreshToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator3;
-        private ToolStripMenuItem productionListToolStripMenuItem;
-        private ToolStripMenuItem stockReceiptToolStripMenuItem;
-        private ToolStripMenuItem stockTransferToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator4;
-        private ToolStripMenuItem stockNotificationToolStripMenuItem;
+        private ToolStripMenuItem appUserRoleListRefreshToolStripMenuItem;
         private System.Windows.Forms.Panel panelBottom;
         private TextBox txtSearch;
         private Button bttnSearch;

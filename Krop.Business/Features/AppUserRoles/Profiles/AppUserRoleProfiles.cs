@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Krop.Business.Features.AppUserRoles.Dtos;
 using Krop.Business.Features.AppUsers.Dtos;
 using Krop.Entities.Entities;
 
@@ -8,9 +9,9 @@ namespace Krop.Business.Features.AppUserRoles.Profiles
     {
         public AppUserRoleProfiles()
         {
-            CreateMap<AppUserRole, CreateAppUserDTO>().ReverseMap();
-            CreateMap<AppUserRole, UpdateAppUserDTO>().ReverseMap();
-            CreateMap<AppUserRole, GetAppUserDTO>().ReverseMap();
+            CreateMap<AppUserRole, CreateAppUserRoleDTO>().ReverseMap();
+            CreateMap<AppUserRole, UpdateAppUserRoleDTO>().ReverseMap();
+            CreateMap<AppUserRole, GetAppUserRoleDTO>().ReverseMap();
         }
     }
 }

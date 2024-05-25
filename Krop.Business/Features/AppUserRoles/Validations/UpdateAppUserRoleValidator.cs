@@ -12,12 +12,12 @@ namespace Krop.Business.Features.AppUserRoles.Validations
                 .NotEmpty().WithMessage(AppUserRoleMessages.AppUserRoleIdNotEmptyAndNull)
                 .NotNull().WithMessage(AppUserRoleMessages.AppUserRoleIdNotEmptyAndNull);
 
-            RuleFor(x => x.RoleName)
+            RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(AppUserRoleMessages.AppUserRoleNameNotNull)
                 .NotNull().WithMessage(AppUserRoleMessages.AppUserRoleNameNotNull);
 
 
-            RuleFor(x => x.RoleName)
+            RuleFor(x => x.Name)
                 .MinimumLength(3).WithMessage(AppUserRoleMessages.AppUserRoleNameMinAndMaxLenght)
                 .MaximumLength(64).WithMessage(AppUserRoleMessages.AppUserRoleNameMinAndMaxLenght);
         }
