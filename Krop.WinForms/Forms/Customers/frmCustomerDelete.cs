@@ -2,6 +2,7 @@
 using Krop.Common.Helpers.WebApiService;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.CustomerHelpers;
+using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Customers
 {
@@ -48,11 +49,18 @@ namespace Krop.WinForms.Customers
         {
             if(cmbBoxCustomerSelect.SelectedValue != null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"customer/delete/{cmbBoxCustomerSelect.SelectedValue}");
+                if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
+                {
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"customer/delete/{cmbBoxCustomerSelect.SelectedValue}");
 
-                await ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
 
-                await CustomerList();
+                    await CustomerList();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçin Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

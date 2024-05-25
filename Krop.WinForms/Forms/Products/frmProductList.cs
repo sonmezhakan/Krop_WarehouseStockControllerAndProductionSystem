@@ -34,7 +34,7 @@ namespace Krop.WinForms.Products
             dgwProductList.Columns[5].HeaderText = "Fiyat";
             dgwProductList.Columns[6].HeaderText = "Resim";
             dgwProductList.Columns[7].HeaderText = "Kritik Stok";
-            dgwProductList.Columns[8].HeaderText = "Description";
+            dgwProductList.Columns[8].HeaderText = "Açıklama";
 
             dgwProductList.Columns[0].Visible = false;
             dgwProductList.Columns[6].Visible = false;

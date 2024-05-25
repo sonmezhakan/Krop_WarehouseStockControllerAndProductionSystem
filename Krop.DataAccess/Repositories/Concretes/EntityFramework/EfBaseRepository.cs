@@ -80,7 +80,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         {
             ShadowPropertyDeleted(entity); //ShadowPropertylerin değerleri atanıyor.
 
-            _entities.Remove(entity);
+            _entities.Update(entity);
             _context.SaveChanges();
         }
 
@@ -92,7 +92,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         {
             entities.ForEach(e=> { ShadowPropertyDeleted(e); }); //ShadowPropertylerin değerleri atanıyor.
 
-            _entities.RemoveRange(entities);
+            _entities.UpdateRange(entities);
             _context.SaveChanges();
         }
         #endregion

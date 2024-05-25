@@ -1,4 +1,5 @@
-﻿using Krop.WinForms.HelpersClass.BrandHelpers;
+﻿using Krop.WinForms.HelpersClass.BranchHelpers;
+using Krop.WinForms.HelpersClass.BrandHelpers;
 using Krop.WinForms.HelpersClass.CategoryHelpers;
 using Krop.WinForms.HelpersClass.CustomerHelpers;
 using Krop.WinForms.HelpersClass.ProductHelpers;
@@ -16,6 +17,7 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddScoped<IProductHelper, ProductHelper>();
             services.AddScoped<ISupplierHelper,SupplierHelper>();
             services.AddScoped<ICustomerHelper, CustomerHelper>();
+            services.AddScoped<IBranchHelper, BranchHelper>();
 
             return services;
         }

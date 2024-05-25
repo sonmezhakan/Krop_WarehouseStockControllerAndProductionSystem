@@ -8,5 +8,11 @@
 
             return result;
         }
+        internal static DialogResult DeleteDialogResult()
+        {
+            DialogResult result = MessageBox.Show("Silmek İstediğinize Emin Misiniz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            return result;
+        }
     }
 }

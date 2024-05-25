@@ -8,9 +8,28 @@ namespace Krop.Business.Features.Branches.Profiles
     {
         public BranchProfiles()
         {
-            CreateMap<Branch, CreateBranchDTO>().ReverseMap();
-            CreateMap<Branch, UpdateBranchDTO>().ReverseMap();
-            CreateMap<Branch, GetBranchDTO>().ReverseMap();
+            CreateMap<Branch, CreateBranchDTO>()
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Contact.PhoneNumber))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Contact.Email))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Address.Country))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForMember(dest => dest.Addres, opt => opt.MapFrom(src => src.Address.Addres))
+                .ReverseMap();
+            CreateMap<Branch, UpdateBranchDTO>()
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Contact.PhoneNumber))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Contact.Email))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Address.Country))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForMember(dest => dest.Addres, opt => opt.MapFrom(src => src.Address.Addres))
+                .ReverseMap();
+            CreateMap<Branch, GetBranchDTO>()
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Contact.PhoneNumber))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Contact.Email))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Address.Country))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForMember(dest => dest.Addres, opt => opt.MapFrom(src => src.Address.Addres))
+                .ReverseMap();
+            CreateMap<Branch, GetBranchComboBoxDTO>().ReverseMap();
         }
     }
 }

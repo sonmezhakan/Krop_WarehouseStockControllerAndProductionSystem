@@ -143,23 +143,26 @@ namespace Krop.WinForms.Products
                     return;
                 }
 
-                UpdateProductDTO updateProductDTO = new UpdateProductDTO
+                if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
-                    Id = (Guid)cmbBoxProductNameSelect.SelectedValue,
-                    ProductName = txtProductName.Text,
-                    ProductCode = txtProductCode.Text,
-                    UnitPrice = decimal.Parse(string.IsNullOrEmpty(txtUnitPrice.Text) ? "0" : txtUnitPrice.Text),
-                    CriticalStock = int.Parse(string.IsNullOrEmpty(txtCriticalQuantity.Text) ? "0" : txtCriticalQuantity.Text),
-                    Description = txtDescription.Text,
-                    CategoryId = (Guid)cmbBoxCategory.SelectedValue,
-                    BrandId = (Guid)cmbBoxBrand.SelectedValue
-                };
+                    UpdateProductDTO updateProductDTO = new UpdateProductDTO
+                    {
+                        Id = (Guid)cmbBoxProductNameSelect.SelectedValue,
+                        ProductName = txtProductName.Text,
+                        ProductCode = txtProductCode.Text,
+                        UnitPrice = decimal.Parse(string.IsNullOrEmpty(txtUnitPrice.Text) ? "0" : txtUnitPrice.Text),
+                        CriticalStock = int.Parse(string.IsNullOrEmpty(txtCriticalQuantity.Text) ? "0" : txtCriticalQuantity.Text),
+                        Description = txtDescription.Text,
+                        CategoryId = (Guid)cmbBoxCategory.SelectedValue,
+                        BrandId = (Guid)cmbBoxBrand.SelectedValue
+                    };
 
-                HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("product/update", updateProductDTO);
+                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("product/update", updateProductDTO);
 
-                await ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
 
-                await ProductList();
+                    await ProductList();
+                }
             }
             else
             {

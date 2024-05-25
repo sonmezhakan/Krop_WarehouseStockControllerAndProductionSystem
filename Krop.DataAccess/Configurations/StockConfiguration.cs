@@ -29,6 +29,7 @@ namespace Krop.DataAccess.Configurations
             builder.HasOne(p => p.Product)
                 .WithMany(s => s.Stocks)
                 .HasForeignKey(s => s.ProductId);
+
             base.Configure(builder);
         }
     }

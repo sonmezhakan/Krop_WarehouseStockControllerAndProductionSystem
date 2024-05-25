@@ -30,7 +30,7 @@ namespace Krop.WinForms.Brands
         {
             if(cmbBoxBrandSelect.SelectedValue is not null)
             {
-                if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
+                if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
                     HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"brand/delete/{cmbBoxBrandSelect.SelectedValue}");
 

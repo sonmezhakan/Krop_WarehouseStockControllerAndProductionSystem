@@ -1,6 +1,7 @@
 ﻿using Krop.Business.Features.Products.Dtos;
 using Krop.Common.Helpers.WebApiService;
 using Krop.WinForms.HelpersClass;
+using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using Krop.WinForms.HelpersClass.ProductHelpers;
 
 namespace Krop.WinForms.Products
@@ -69,11 +70,14 @@ namespace Krop.WinForms.Products
                 cmbBoxProductNameSelect.SelectedValue != cmbBoxProductCodeSelect.SelectedValue)
                 MessageBox.Show("Doğru Seçim Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"product/delete/{cmbBoxProductNameSelect.SelectedValue}");
+            if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
+            {
+                HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"product/delete/{cmbBoxProductNameSelect.SelectedValue}");
 
-            await ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
 
-           await ProductList();
+                await ProductList();
+            }
         }
     }
 }

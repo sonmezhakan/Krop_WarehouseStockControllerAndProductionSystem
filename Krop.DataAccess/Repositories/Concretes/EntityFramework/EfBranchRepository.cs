@@ -18,5 +18,12 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         {
            return  await _context.Branches.Select(b => b.Id).ToListAsync();
         }
+
+        public async Task<IEnumerable<Branch>> GetAllComboBoxAsync()
+        {
+            IQueryable<Branch> queries = _context.Branches;
+
+            return await queries.AsNoTracking().Select(b=> new Branch { Id = b.Id, BranchName = b.BranchName }).ToListAsync();
+        }
     }
 }

@@ -71,27 +71,30 @@ namespace Krop.WinForms.Customers
 
         private async void bttnCustomerUpdate_Click(object sender, EventArgs e)
         {
-            if(cmbBoxCustomerSelect.SelectedValue is not null)
+            if (cmbBoxCustomerSelect.SelectedValue is not null)
             {
-                UpdateCustomerDTO updateCustomerDTO = new UpdateCustomerDTO
+                if (DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
-                    Id = (Guid)cmbBoxCustomerSelect.SelectedValue,
-                    CompanyName = txtCompanyName.Text,
-                    ContactName = txtContactName.Text,
-                    ContactTitle = txtContactTitle.Text,
-                    PhoneNumber = txtPhoneNumber.Text,
-                    Email = txtEmail.Text,
-                    Country = txtCountry.Text,
-                    City = txtCity.Text,
-                    Addres = txtAddress.Text,
-                    Invoice = radioBttnPerson.Checked ? Entities.Enums.InvoiceEnum.Bireysel : Entities.Enums.InvoiceEnum.Kurumsal
-                };
+                    UpdateCustomerDTO updateCustomerDTO = new UpdateCustomerDTO
+                    {
+                        Id = (Guid)cmbBoxCustomerSelect.SelectedValue,
+                        CompanyName = txtCompanyName.Text,
+                        ContactName = txtContactName.Text,
+                        ContactTitle = txtContactTitle.Text,
+                        PhoneNumber = txtPhoneNumber.Text,
+                        Email = txtEmail.Text,
+                        Country = txtCountry.Text,
+                        City = txtCity.Text,
+                        Addres = txtAddress.Text,
+                        Invoice = radioBttnPerson.Checked ? Entities.Enums.InvoiceEnum.Bireysel : Entities.Enums.InvoiceEnum.Kurumsal
+                    };
 
-                HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("customer/update", updateCustomerDTO);
+                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("customer/update", updateCustomerDTO);
 
-                await ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
 
-                await CustomerList();
+                    await CustomerList();
+                }
             }
             else
             {

@@ -65,25 +65,35 @@ namespace Krop.WinForms.Suppliers
         }
         private async void bttnSupplierUpdate_Click(object sender, EventArgs e)
         {
-            UpdateSupplierDTO updateSupplierDTO = new UpdateSupplierDTO
+            if (cmbBoxSupplierSelect.SelectedValue is not null)
             {
-                Id = (Guid)cmbBoxSupplierSelect.SelectedValue,
-                CompanyName = txtCompanyName.Text,
-                ContactName = txtContactName.Text,
-                ContactTitle = txtContactTitle.Text,
-                PhoneNumber = txtPhoneNumber.Text,
-                Email = txtEmail.Text,
-                Country = txtCountry.Text,
-                City = txtCity.Text,
-                Addres = txtAddress.Text,
-                WebSite = txtWebSiteUrl.Text
-            };
+                if (DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
+                {
+                    UpdateSupplierDTO updateSupplierDTO = new UpdateSupplierDTO
+                    {
+                        Id = (Guid)cmbBoxSupplierSelect.SelectedValue,
+                        CompanyName = txtCompanyName.Text,
+                        ContactName = txtContactName.Text,
+                        ContactTitle = txtContactTitle.Text,
+                        PhoneNumber = txtPhoneNumber.Text,
+                        Email = txtEmail.Text,
+                        Country = txtCountry.Text,
+                        City = txtCity.Text,
+                        Addres = txtAddress.Text,
+                        WebSite = txtWebSiteUrl.Text
+                    };
 
-            HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("supplier/update", updateSupplierDTO);
+                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("supplier/update", updateSupplierDTO);
 
-            await ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
 
-            await SupplierList();
+                    await SupplierList();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçin Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

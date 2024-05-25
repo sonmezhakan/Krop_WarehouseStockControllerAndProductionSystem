@@ -33,7 +33,7 @@ namespace Krop.Business.Features.Branches.Validations
             RuleFor(x => x.City)
                 .MaximumLength(64).WithMessage(BranchMessages.BranchCityMaxLenght);
 
-            RuleFor(x => x.Address)
+            RuleFor(x => x.Addres)
                 .MaximumLength(255).WithMessage(BranchMessages.BranchAddressMaxLenght);
         }
     }

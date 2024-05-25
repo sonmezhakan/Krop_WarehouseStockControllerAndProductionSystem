@@ -65,7 +65,7 @@ namespace Krop.Business.Services.Stocks
         #region Branch Deleted Product
         public async Task<IResult> BranchDeletedProductAsync(Guid branchId)
         {
-            var stocks = await _stockRepository.GetAllAsync(b => b.BranchId == branchId);//Gelen parametre branchId'sine ait tüm stocks verileri getirilir.
+            var stocks = await _stockRepository.GetAllStockAsync(b => b.BranchId == branchId);//Gelen parametre branchId'sine ait tüm stocks verileri getirilir.
 
             if (stocks is null)
                 return new SuccessResult();//Eğer herhangi bir veri yoksa silenecek veri olmadığından true döndürülür.

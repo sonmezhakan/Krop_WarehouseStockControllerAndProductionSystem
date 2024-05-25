@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class BranchController : ControllerBase
     {
@@ -41,11 +41,18 @@ namespace Krop.WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await _branchService.GetAllAsync();
 
             return result.Success ? Ok(result): BadRequest(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllComboBox(CancellationToken cancellationToken)
+        {
+            var result = await _branchService.GetAllComboBoxAsync();
+
+            return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)

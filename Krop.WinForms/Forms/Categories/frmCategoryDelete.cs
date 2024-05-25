@@ -44,7 +44,7 @@ namespace Krop.WinForms.Categories
         {
             if (cmbBoxCategorySelect.SelectedValue is not null)
             {
-                if (DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)//Cevap evet ise silme işlemleri gerçekleştiriliyor
+                if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)//Cevap evet ise silme işlemleri gerçekleştiriliyor
                 {
                     HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"category/Delete/{cmbBoxCategorySelect.SelectedValue}");
 

@@ -119,6 +119,14 @@ namespace Krop.Business.Services.Branches
             return new SuccessDataResult<IEnumerable<GetBranchDTO>>(
                 _mapper.Map<IEnumerable<GetBranchDTO>>(result));
         }
+
+        public async Task<IDataResult<IEnumerable<GetBranchComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            var result = await _branchRepository.GetAllComboBoxAsync();
+
+            return new SuccessDataResult<IEnumerable<GetBranchComboBoxDTO>>(
+                _mapper.Map<IEnumerable<GetBranchComboBoxDTO>>(result));
+        }
         #endregion
         #region Search
         public async Task<IDataResult<GetBranchDTO>> GetByIdAsync(Guid id)

@@ -52,6 +52,12 @@
             categoryBttnAdd = new Button();
             categoryBttnCard = new Button();
             categoryBttnList = new Button();
+            BranchPage = new TabPage();
+            branchBttnDelete = new Button();
+            branchBttnUpdate = new Button();
+            branchBttnAdd = new Button();
+            branchBttnCart = new Button();
+            branchBttnList = new Button();
             BrandPage = new TabPage();
             bttnBrandDelete = new Button();
             bttnBrandUpdate = new Button();
@@ -105,6 +111,7 @@
             ProductionTabPage.SuspendLayout();
             ProductsTabPage.SuspendLayout();
             CategoriesTabPage.SuspendLayout();
+            BranchPage.SuspendLayout();
             BrandPage.SuspendLayout();
             CustomersTabPage.SuspendLayout();
             SuppliersTabPage.SuspendLayout();
@@ -121,6 +128,7 @@
             tabControl1.Controls.Add(ProductionTabPage);
             tabControl1.Controls.Add(ProductsTabPage);
             tabControl1.Controls.Add(CategoriesTabPage);
+            tabControl1.Controls.Add(BranchPage);
             tabControl1.Controls.Add(BrandPage);
             tabControl1.Controls.Add(CustomersTabPage);
             tabControl1.Controls.Add(SuppliersTabPage);
@@ -518,6 +526,115 @@
             categoryBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
             categoryBttnList.UseVisualStyleBackColor = false;
             categoryBttnList.Click += categoryBttnList_Click;
+            // 
+            // BranchPage
+            // 
+            BranchPage.Controls.Add(branchBttnDelete);
+            BranchPage.Controls.Add(branchBttnUpdate);
+            BranchPage.Controls.Add(branchBttnAdd);
+            BranchPage.Controls.Add(branchBttnCart);
+            BranchPage.Controls.Add(branchBttnList);
+            BranchPage.Location = new Point(4, 26);
+            BranchPage.Name = "BranchPage";
+            BranchPage.Size = new Size(1876, 65);
+            BranchPage.TabIndex = 13;
+            BranchPage.Text = "Şubeler";
+            BranchPage.UseVisualStyleBackColor = true;
+            // 
+            // branchBttnDelete
+            // 
+            branchBttnDelete.BackColor = Color.Transparent;
+            branchBttnDelete.Dock = DockStyle.Left;
+            branchBttnDelete.FlatAppearance.BorderColor = Color.White;
+            branchBttnDelete.FlatAppearance.BorderSize = 0;
+            branchBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            branchBttnDelete.FlatStyle = FlatStyle.Flat;
+            branchBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            branchBttnDelete.Image = (Image)resources.GetObject("branchBttnDelete.Image");
+            branchBttnDelete.Location = new Point(327, 0);
+            branchBttnDelete.Name = "branchBttnDelete";
+            branchBttnDelete.Size = new Size(70, 65);
+            branchBttnDelete.TabIndex = 20;
+            branchBttnDelete.Text = "Sil";
+            branchBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
+            branchBttnDelete.UseVisualStyleBackColor = false;
+            branchBttnDelete.Click += branchBttnDelete_Click;
+            // 
+            // branchBttnUpdate
+            // 
+            branchBttnUpdate.BackColor = Color.Transparent;
+            branchBttnUpdate.Dock = DockStyle.Left;
+            branchBttnUpdate.FlatAppearance.BorderColor = Color.White;
+            branchBttnUpdate.FlatAppearance.BorderSize = 0;
+            branchBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            branchBttnUpdate.FlatStyle = FlatStyle.Flat;
+            branchBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            branchBttnUpdate.Image = (Image)resources.GetObject("branchBttnUpdate.Image");
+            branchBttnUpdate.Location = new Point(257, 0);
+            branchBttnUpdate.Name = "branchBttnUpdate";
+            branchBttnUpdate.Size = new Size(70, 65);
+            branchBttnUpdate.TabIndex = 19;
+            branchBttnUpdate.Text = "Güncelle";
+            branchBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
+            branchBttnUpdate.UseVisualStyleBackColor = false;
+            branchBttnUpdate.Click += branchBttnUpdate_Click;
+            // 
+            // branchBttnAdd
+            // 
+            branchBttnAdd.BackColor = Color.Transparent;
+            branchBttnAdd.Dock = DockStyle.Left;
+            branchBttnAdd.FlatAppearance.BorderColor = Color.White;
+            branchBttnAdd.FlatAppearance.BorderSize = 0;
+            branchBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            branchBttnAdd.FlatStyle = FlatStyle.Flat;
+            branchBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            branchBttnAdd.Image = (Image)resources.GetObject("branchBttnAdd.Image");
+            branchBttnAdd.Location = new Point(187, 0);
+            branchBttnAdd.Name = "branchBttnAdd";
+            branchBttnAdd.Size = new Size(70, 65);
+            branchBttnAdd.TabIndex = 18;
+            branchBttnAdd.Text = "Ekle";
+            branchBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
+            branchBttnAdd.UseVisualStyleBackColor = false;
+            branchBttnAdd.Click += branchBttnAdd_Click;
+            // 
+            // branchBttnCart
+            // 
+            branchBttnCart.BackColor = Color.Transparent;
+            branchBttnCart.Dock = DockStyle.Left;
+            branchBttnCart.FlatAppearance.BorderColor = Color.White;
+            branchBttnCart.FlatAppearance.BorderSize = 0;
+            branchBttnCart.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            branchBttnCart.FlatStyle = FlatStyle.Flat;
+            branchBttnCart.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            branchBttnCart.Image = (Image)resources.GetObject("branchBttnCart.Image");
+            branchBttnCart.Location = new Point(70, 0);
+            branchBttnCart.Name = "branchBttnCart";
+            branchBttnCart.Size = new Size(117, 65);
+            branchBttnCart.TabIndex = 21;
+            branchBttnCart.Text = "Şube Kartı";
+            branchBttnCart.TextImageRelation = TextImageRelation.ImageAboveText;
+            branchBttnCart.UseVisualStyleBackColor = false;
+            branchBttnCart.Click += branchBttnCart_Click;
+            // 
+            // branchBttnList
+            // 
+            branchBttnList.BackColor = Color.Transparent;
+            branchBttnList.Dock = DockStyle.Left;
+            branchBttnList.FlatAppearance.BorderColor = Color.White;
+            branchBttnList.FlatAppearance.BorderSize = 0;
+            branchBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            branchBttnList.FlatStyle = FlatStyle.Flat;
+            branchBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            branchBttnList.Image = (Image)resources.GetObject("branchBttnList.Image");
+            branchBttnList.Location = new Point(0, 0);
+            branchBttnList.Name = "branchBttnList";
+            branchBttnList.Size = new Size(70, 65);
+            branchBttnList.TabIndex = 17;
+            branchBttnList.Text = "Liste";
+            branchBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
+            branchBttnList.UseVisualStyleBackColor = false;
+            branchBttnList.Click += branchBttnList_Click;
             // 
             // BrandPage
             // 
@@ -1314,6 +1431,7 @@
             ProductionTabPage.ResumeLayout(false);
             ProductsTabPage.ResumeLayout(false);
             CategoriesTabPage.ResumeLayout(false);
+            BranchPage.ResumeLayout(false);
             BrandPage.ResumeLayout(false);
             CustomersTabPage.ResumeLayout(false);
             SuppliersTabPage.ResumeLayout(false);
@@ -1396,5 +1514,11 @@
         private Button bttnAppUserRoleAdd;
         private Button bttnAppUserRoleCart;
         private Button bttnAppUserRoleList;
+        private TabPage BranchPage;
+        private Button branchBttnDelete;
+        private Button branchBttnUpdate;
+        private Button branchBttnAdd;
+        private Button branchBttnCart;
+        private Button branchBttnList;
     }
 }

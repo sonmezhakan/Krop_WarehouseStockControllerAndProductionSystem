@@ -67,20 +67,27 @@ namespace Krop.WinForms.Products
 
         private async void bttnProductAdd_Click(object sender, EventArgs e)
         {
-            CreateProductDTO createProductDTO = new CreateProductDTO
+            if(cmbBoxCategory.SelectedValue is not null && cmbBoxBrand.SelectedValue is not null)
             {
-                BrandId = (Guid)cmbBoxBrand.SelectedValue,
-                CategoryId = (Guid)cmbBoxCategory.SelectedValue,
-                ProductName = txtProductName.Text,
-                ProductCode = txtProductCode.Text,
-                UnitPrice = decimal.Parse(string.IsNullOrEmpty(txtUnitPrice.Text) ? "0" : txtUnitPrice.Text),
-                CriticalStock = int.Parse(string.IsNullOrEmpty(txtCriticalQuantity.Text) ? "0" : txtCriticalQuantity.Text),
-                Description = txtDescription.Text,
-            };
+                CreateProductDTO createProductDTO = new CreateProductDTO
+                {
+                    BrandId = (Guid)cmbBoxBrand.SelectedValue,
+                    CategoryId = (Guid)cmbBoxCategory.SelectedValue,
+                    ProductName = txtProductName.Text,
+                    ProductCode = txtProductCode.Text,
+                    UnitPrice = decimal.Parse(string.IsNullOrEmpty(txtUnitPrice.Text) ? "0" : txtUnitPrice.Text),
+                    CriticalStock = int.Parse(string.IsNullOrEmpty(txtCriticalQuantity.Text) ? "0" : txtCriticalQuantity.Text),
+                    Description = txtDescription.Text,
+                };
 
-            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("product/Add", createProductDTO);
+                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("product/Add", createProductDTO);
 
-            await ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
+            }
+            else
+            {
+                MessageBox.Show("Kategori ve Marka Seçiniz!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void txtUnitPrice_KeyPress(object sender, KeyPressEventArgs e)

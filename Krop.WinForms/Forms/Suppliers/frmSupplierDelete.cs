@@ -1,6 +1,7 @@
 ﻿using Krop.Business.Features.Suppliers.Dtos;
 using Krop.Common.Helpers.WebApiService;
 using Krop.WinForms.HelpersClass;
+using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using Krop.WinForms.HelpersClass.SupplierHelpers;
 
 namespace Krop.WinForms.Suppliers
@@ -48,11 +49,18 @@ namespace Krop.WinForms.Suppliers
         {
             if (cmbBoxSupplierSelect.SelectedValue != null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"supplier/delete/{cmbBoxSupplierSelect.SelectedValue}");
+               if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
+                {
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"supplier/delete/{cmbBoxSupplierSelect.SelectedValue}");
 
-                await ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
 
-                await SupplierList();
+                    await SupplierList();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçin Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -2,6 +2,7 @@
 using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
 using Krop.WinForms.Customers;
+using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
@@ -185,6 +186,36 @@ namespace Krop.WinForms
         {
             frmCustomerDelete frmCustomerDelete = _serviceProvider.GetRequiredService<frmCustomerDelete>();
             FormController.FormOpenController(frmCustomerDelete);
+        }
+
+        private void branchBttnList_Click(object sender, EventArgs e)
+        {
+            frmBranchList frmBranchList = _serviceProvider.GetRequiredService<frmBranchList>();
+            FormController.FormOpenController(frmBranchList);
+        }
+
+        private void branchBttnCart_Click(object sender, EventArgs e)
+        {
+            frmBranchCart frmBranchCart = _serviceProvider.GetRequiredService<frmBranchCart>();
+            FormController.FormOpenController(frmBranchCart);
+        }
+
+        private void branchBttnAdd_Click(object sender, EventArgs e)
+        {
+            frmBranchAdd frmBranchAdd = _serviceProvider.GetRequiredService<frmBranchAdd>();
+            FormController.FormOpenController(frmBranchAdd);
+        }
+
+        private void branchBttnUpdate_Click(object sender, EventArgs e)
+        {
+            frmBranchUpdate frmBranchUpdate = _serviceProvider.GetRequiredService<frmBranchUpdate>();
+            FormController.FormOpenController(frmBranchUpdate);
+        }
+
+        private void branchBttnDelete_Click(object sender, EventArgs e)
+        {
+            frmBranchDelete frmBranchDelete = _serviceProvider.GetRequiredService<frmBranchDelete>();
+            FormController.FormOpenController(frmBranchDelete);
         }
     }
 }
