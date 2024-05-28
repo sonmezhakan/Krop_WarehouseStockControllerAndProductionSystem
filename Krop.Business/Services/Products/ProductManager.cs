@@ -149,6 +149,19 @@ namespace Krop.Business.Services.Products
             return new SuccessDataResult<GetProductDTO>(
                 _mapper.Map<GetProductDTO>(product));
         }
+
+        public async Task<IDataResult<GetProductCartDTO>> GetByIdCartAsync(Guid Id)
+        {
+            var result = await _productRepository.GetAsync(x => x.Id == Id,
+                includeProperties: new Expression<Func<Product, object>>[]
+                {
+                    c=>c.Category,
+                    b=>b.Brand
+                });
+
+            return new SuccessDataResult<GetProductCartDTO>(
+                _mapper.Map<GetProductCartDTO>(result));
+        }
         #endregion
     }
 }

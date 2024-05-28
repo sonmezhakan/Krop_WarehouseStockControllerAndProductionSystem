@@ -14,6 +14,7 @@ namespace Krop.Business.Features.AppUsers.ExceptionHelpers
         public void ThrowAppUserNationalNumberExists() => throw new BusinessException(AppUserMessages.AppUserNationalNumberExists);
 
         public void ThrowAppUserEmailNotConfirmed() => throw new BusinessException(AppUserMessages.AppUserEmailNotConfirm);
+        public void ThrowAppUserEmailConfirmed() => throw new BusinessException(AppUserMessages.EmailConfirmed);
 
     }
 }

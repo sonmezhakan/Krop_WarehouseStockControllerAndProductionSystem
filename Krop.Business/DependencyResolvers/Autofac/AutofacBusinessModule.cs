@@ -18,7 +18,11 @@ using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DataAccess.Repositories.Abstracts.BaseRepository;
 using Krop.DataAccess.Repositories.Concretes.EntityFramework;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Krop.Business.DependencyResolvers.Autofac
 {
@@ -33,7 +37,7 @@ namespace Krop.Business.DependencyResolvers.Autofac
             builder.RegisterType<SignInManager<AppUser>>().SingleInstance();
             builder.RegisterType<RoleManager<AppUserRole>>().SingleInstance();
 
-            builder.RegisterType<AppUserManager>().As<IAppUserService>().SingleInstance();
+            builder.RegisterType<AppUserManager>().As<IAppUserService>().InstancePerLifetimeScope();
             builder.RegisterType<AppUserRoleManager>().As<IAppUserRoleService>().SingleInstance();
 
             builder.RegisterType<CategoryManager>().As<ICategoryService>().SingleInstance();
@@ -62,6 +66,11 @@ namespace Krop.Business.DependencyResolvers.Autofac
 
             builder.RegisterType<SupplierManager>().As<ISupplierService>().SingleInstance();
             builder.RegisterType<EfSupplierRepository>().As<ISupplierRepository>().SingleInstance();
+
+
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().SingleInstance();
+            builder.RegisterType<UrlHelperFactory>().As<IUrlHelperFactory>().InstancePerLifetimeScope();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

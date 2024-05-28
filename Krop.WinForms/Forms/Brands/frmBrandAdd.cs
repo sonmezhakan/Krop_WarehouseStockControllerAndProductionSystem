@@ -20,7 +20,7 @@ namespace Krop.WinForms.Brands
 
         }
 
-        private async void bttnBrandAdd_Click(object sender, EventArgs e)
+        private void bttnBrandAdd_Click(object sender, EventArgs e)
         {
             CreateBrandDTO createBrandDTO = new CreateBrandDTO
             {
@@ -29,9 +29,14 @@ namespace Krop.WinForms.Brands
                 Email = txtEmail.Text
             };
 
-            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("brand/add", createBrandDTO);
-            
-            await ResponseController.ErrorResponseController(response);//Response hata kontrolü
+            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("brand/add", createBrandDTO).Result;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
+
         }
     }
 }

@@ -20,6 +20,7 @@
         public const string UserNameMinAndMaxLenght = "Kullanıcı Adı Minimum 3, Maksimum 64 Karakter Olabilir!";
 
         public const string EmailNotNull = "Email Adresi Boş Olamaz!";
+        public const string EmailNotFormatted = "Email Formatı Uygun Değil!";
         public const string EmailMinAndMaxLenght = "Email Adresi Minimum 7, Maksimum 128 Karakter Olabilir!";
 
         public const string CountryMaxLenght = "Ülke Adı En Fazla 64 Karakter Olabilir!";
@@ -33,5 +34,7 @@
         public const string LastNameMinAndMaxLenght = "Soyad Minimum 3, Maksiumum 128 Karakter Olabilir!";
 
         public const string NationalNumberMaxLenght = "Kimlik Numarası En Fazla 11 Karakter Olabilir!";
+
+        public const string EmailConfirmed = "Email Onaylanmış!";
     }
 }

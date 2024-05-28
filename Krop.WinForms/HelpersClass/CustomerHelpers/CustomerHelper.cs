@@ -6,46 +6,56 @@ namespace Krop.WinForms.HelpersClass.CustomerHelpers
 {
     public class CustomerHelper:ICustomerHelper
     {
-        private readonly IMapper _mapper;
         private readonly IWebApiService _webApiService;
 
-        public CustomerHelper(IMapper mapper,IWebApiService webApiService)
+        public CustomerHelper(IWebApiService webApiService)
         {
-            _mapper = mapper;
             _webApiService = webApiService;
         }
 
-        public async Task<List<GetCustomerDTO>> GetAllAsync()
+        public List<GetCustomerDTO> GetAllAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("customer/getall");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync("customer/getall").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataListResponseController<GetCustomerDTO>(response) ?? null;
+            var result = ResponseController.SuccessDataListResponseController<GetCustomerDTO>(response);
 
-            return _mapper.Map<List<GetCustomerDTO>>(result.Data);
+            return result.Data;
         }
 
-        public async Task<List<GetCustomerComboBoxDTO>> GetAllComboBoxAsync()
+        public List<GetCustomerComboBoxDTO> GetAllComboBoxAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("customer/GetAllComboBox");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync("customer/GetAllComboBox").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataListResponseController<GetCustomerComboBoxDTO>(response);
+            var result = ResponseController.SuccessDataListResponseController<GetCustomerComboBoxDTO>(response);
 
-            return _mapper.Map<List<GetCustomerComboBoxDTO>>(result.Data);
+            return result.Data;
         }
 
-        public async Task<GetCustomerDTO> GetByCustomerIdAsync(Guid Id)
+        public GetCustomerDTO GetByCustomerIdAsync(Guid Id)
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"customer/GetById/{Id}");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"customer/GetById/{Id}").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataResponseController<GetCustomerDTO>(response);
+            var result = ResponseController.SuccessDataResponseController<GetCustomerDTO>(response);
 
-            return _mapper.Map<GetCustomerDTO>(result.Data);
+            return result.Data;
         }
     }
 }

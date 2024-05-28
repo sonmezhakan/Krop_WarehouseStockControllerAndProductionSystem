@@ -26,7 +26,7 @@ namespace Krop.WinForms.Forms.Branches
             TextBoxHelper.TextBoxInt32KeyPress(this, e);
         }
 
-        private async void bttnBranchAdd_Click(object sender, EventArgs e)
+        private void bttnBranchAdd_Click(object sender, EventArgs e)
         {
             CreateBranchDTO createBranchDTO = new CreateBranchDTO
             {
@@ -38,9 +38,13 @@ namespace Krop.WinForms.Forms.Branches
                 Addres = txtAddress.Text
             };
 
-            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("branch/add", createBranchDTO);
+            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("branch/add", createBranchDTO).Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
         }
     }
 }

@@ -7,7 +7,10 @@ namespace Krop.Business.Services.Employees
     {
         Task<IResult> AddAsync(CreateEmployeeDTO createEmployeeDTO);
         Task<IResult> UpdateAsync(UpdateEmployeeDTO updateEmployeeDTO);
-        Task<IDataResult<IEnumerable<GetEmployeeDTO>>> GetAllAsync();
+        Task<IDataResult<IEnumerable<GetEmployeeListDTO>>> GetAllAsync();
         Task<IDataResult<GetEmployeeDTO>> GetByIdAsync(Guid id);
+
+        Task<IDataResult<IEnumerable<GetEmployeeComboBoxDTO>>> GetAllComboBoxAsync();
+        Task<IDataResult<GetEmployeeCartDTO>> GetByIdCartAsync(Guid Id);
     }
 }

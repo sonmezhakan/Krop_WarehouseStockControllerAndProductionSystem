@@ -7,44 +7,54 @@ namespace Krop.WinForms.HelpersClass.CategoryHelpers
     internal class CategoryHelper:ICategoryHelper
     {
         private readonly IWebApiService _webApiService;
-        private readonly IMapper _mapper;
 
-        public CategoryHelper(IWebApiService webApiService,IMapper mapper)
+        public CategoryHelper(IWebApiService webApiService)
         {
             _webApiService = webApiService;
-            _mapper = mapper;
         }
-        public async Task<List<GetCategoryComboBoxDTO>> GetAllComboBoxAsync()
+        public List<GetCategoryComboBoxDTO> GetAllComboBoxAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("category/GetAllComboBox");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync("category/GetAllComboBox").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response);
+            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response);
 
-            return _mapper.Map<List<GetCategoryComboBoxDTO>>(result.Data);
-        }
-
-        public async Task<List<GetCategoryDTO>> GetAllAsync()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("category/GetAll");
-
-            await ResponseController.ErrorResponseController(response);
-
-            var result =await ResponseController.SuccessDataListResponseController<GetCategoryDTO>(response);
-
-            return _mapper.Map<List<GetCategoryDTO>>(result.Data);
+            return result.Data;
         }
 
-        public async Task<GetCategoryDTO> GetByCategoryIdAsync(Guid Id)
+        public List<GetCategoryDTO> GetAllAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"category/GetById/{Id}");
-            
-            await ResponseController.ErrorResponseController(response);
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync("category/GetAll").Result;
 
-            var result = await ResponseController.SuccessDataResponseController<GetCategoryDTO>(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            return _mapper.Map<GetCategoryDTO>(result.Data);
+            var result =ResponseController.SuccessDataListResponseController<GetCategoryDTO>(response);
+
+            return result.Data;
+        }
+
+        public GetCategoryDTO GetByCategoryIdAsync(Guid Id)
+        {
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"category/GetById/{Id}").Result;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
+
+            var result = ResponseController.SuccessDataResponseController<GetCategoryDTO>(response);
+
+            return result.Data;
         }
     }
 }

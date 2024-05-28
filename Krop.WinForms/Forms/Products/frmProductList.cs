@@ -1,4 +1,5 @@
 ﻿using Krop.Business.Features.Products.Dtos;
+using Krop.Common.Utilits.Result;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.ProductHelpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,9 +21,9 @@ namespace Krop.WinForms.Products
             _serviceProvider = serviceProvider;
         }
 
-        private async void frmProductList_Load(object sender, EventArgs e)
+        private void frmProductList_Load(object sender, EventArgs e)
         {
-            await ProductList();
+            ProductList();
         }
         private void DgwProductListSetting()
         {
@@ -40,11 +41,13 @@ namespace Krop.WinForms.Products
             dgwProductList.Columns[6].Visible = false;
         }
 
-        private async Task ProductList()
+        private void ProductList()
         {
-            List<GetProductListDTO> products = await _productHelper.GetAllAsync();
+            List<GetProductListDTO> result = _productHelper.GetAllAsync();
+            if (result is null)
+                return;
 
-            _originalData = new BindingList<GetProductListDTO>(products);
+            _originalData = new BindingList<GetProductListDTO>(result);
             _filteredData = new BindingList<GetProductListDTO>(_originalData.ToList());
             dgwProductList.DataSource = _filteredData;
 
@@ -110,9 +113,9 @@ namespace Krop.WinForms.Products
             FormController.FormOpenController(frmProductDelete);
         }
 
-        private async void produuctListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private void produuctListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await ProductList();
+            ProductList();
         }
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {

@@ -75,9 +75,11 @@
             // 
             // txtAddress
             // 
+            txtAddress.Enabled = false;
             txtAddress.Location = new Point(23, 369);
             txtAddress.Multiline = true;
             txtAddress.Name = "txtAddress";
+            txtAddress.ReadOnly = true;
             txtAddress.Size = new Size(206, 97);
             txtAddress.TabIndex = 15;
             // 
@@ -92,22 +94,28 @@
             // 
             // txtCity
             // 
+            txtCity.Enabled = false;
             txtCity.Location = new Point(23, 325);
             txtCity.Name = "txtCity";
+            txtCity.ReadOnly = true;
             txtCity.Size = new Size(206, 23);
             txtCity.TabIndex = 13;
             // 
             // txtCountry
             // 
+            txtCountry.Enabled = false;
             txtCountry.Location = new Point(23, 281);
             txtCountry.Name = "txtCountry";
+            txtCountry.ReadOnly = true;
             txtCountry.Size = new Size(206, 23);
             txtCountry.TabIndex = 12;
             // 
             // txtEmail
             // 
+            txtEmail.Enabled = false;
             txtEmail.Location = new Point(23, 237);
             txtEmail.Name = "txtEmail";
+            txtEmail.ReadOnly = true;
             txtEmail.Size = new Size(206, 23);
             txtEmail.TabIndex = 11;
             // 
@@ -140,8 +148,10 @@
             // 
             // txtPhoneNumber
             // 
+            txtPhoneNumber.Enabled = false;
             txtPhoneNumber.Location = new Point(23, 191);
             txtPhoneNumber.Name = "txtPhoneNumber";
+            txtPhoneNumber.ReadOnly = true;
             txtPhoneNumber.Size = new Size(206, 23);
             txtPhoneNumber.TabIndex = 7;
             txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
@@ -157,15 +167,19 @@
             // 
             // txtContactTitle
             // 
+            txtContactTitle.Enabled = false;
             txtContactTitle.Location = new Point(23, 147);
             txtContactTitle.Name = "txtContactTitle";
+            txtContactTitle.ReadOnly = true;
             txtContactTitle.Size = new Size(206, 23);
             txtContactTitle.TabIndex = 5;
             // 
             // txtContactName
             // 
+            txtContactName.Enabled = false;
             txtContactName.Location = new Point(23, 103);
             txtContactName.Name = "txtContactName";
+            txtContactName.ReadOnly = true;
             txtContactName.Size = new Size(206, 23);
             txtContactName.TabIndex = 4;
             // 

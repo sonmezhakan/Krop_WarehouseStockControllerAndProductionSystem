@@ -4,9 +4,9 @@ using Krop.Business.Features.AppUsers.Dtos;
 
 namespace Krop.Business.Features.AppUsers.Validations
 {
-    public class AppUserValidator:AbstractValidator<CreateAppUserDTO>
+    public class CreateAppUserValidator:AbstractValidator<CreateAppUserDTO>
     {
-        public AppUserValidator()
+        public CreateAppUserValidator()
         {
             //UserName
             RuleFor(x => x.UserName)
@@ -19,6 +19,7 @@ namespace Krop.Business.Features.AppUsers.Validations
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage(AppUserMessages.EmailNotNull)
                 .NotNull().WithMessage(AppUserMessages.EmailNotNull)
+                .EmailAddress().WithMessage(AppUserMessages.EmailNotFormatted)
                 .MinimumLength(7).WithMessage(AppUserMessages.EmailMinAndMaxLenght)
                 .MaximumLength(128).WithMessage(AppUserMessages.EmailMinAndMaxLenght);
 
@@ -29,7 +30,7 @@ namespace Krop.Business.Features.AppUsers.Validations
             RuleFor(x => x.City)
                 .MaximumLength(64).WithMessage(AppUserMessages.CityMaxLenght);
 
-            RuleFor(x => x.Address)
+            RuleFor(x => x.Addres)
                 .MaximumLength(255).WithMessage(AppUserMessages.Address);
 
             //FirstName, LastName, NationalNumber

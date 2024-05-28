@@ -105,7 +105,15 @@ namespace Krop.Business.Services.Deparments
             var departments = await _departmentRepository.GetAllAsync();
 
             return new SuccessDataResult<IEnumerable<GetDepartmentDTO>>(
-                _mapper.Map<List<GetDepartmentDTO>>(departments));
+                _mapper.Map<IEnumerable<GetDepartmentDTO>>(departments));
+        }
+
+        public async Task<IDataResult<IEnumerable<GetDepartmentComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            var result = await _departmentRepository.GetAllComboBoxAsync();
+
+            return new SuccessDataResult<IEnumerable<GetDepartmentComboBoxDTO>>(
+                _mapper.Map<IEnumerable<GetDepartmentComboBoxDTO>>(result));
         }
         #endregion
         #region Search
@@ -124,6 +132,8 @@ namespace Krop.Business.Services.Deparments
             return new SuccessDataResult<GetDepartmentDTO>(
                 _mapper.Map<GetDepartmentDTO>(department));
         }
+
+        
         #endregion
     }
 }

@@ -1,12 +1,11 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Krop.Business.Features.Employees.Dtos;
+﻿using Krop.Business.Features.Employees.Dtos;
 using Krop.Business.Services.Employees;
+using Krop.Common.Utilits.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -32,16 +31,30 @@ namespace Krop.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await _employeeService.GetAllAsync();
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        [HttpGet]
+        public async Task<IActionResult> GetAllComboBox(CancellationToken cancellationToken)
         {
-            var result = await _employeeService.GetByIdAsync(id);
+            var result = await _employeeService.GetAllComboBoxAsync();
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetById(Guid Id, CancellationToken cancellationToken)
+        {
+            var result = await _employeeService.GetByIdAsync(Id);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetByIdCart(Guid Id, CancellationToken cancellationToken)
+        {
+            var result = await _employeeService.GetByIdCartAsync(Id);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }

@@ -28,7 +28,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         public void Add(T entity)
         {
             ShadowPropertyAdd(entity); //ShadowPropertylerin değerleri atanıyor.
-            
+
             _entities.Add(entity);
             _context.SaveChanges();
         }
@@ -65,7 +65,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// <param name="entities">Güncellenecek nesneler.</param>
         public void UpdateRange(List<T> entities)
         {
-            entities.ForEach(e=> { ShadowPropertyUpdated(e); }); //ShadowPropertylerin değerleri atanıyor.
+            entities.ForEach(e => { ShadowPropertyUpdated(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
             _context.SaveChanges();
@@ -90,7 +90,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// <param name="entities">Silinecek nesneler.</param>
         public void DeleteRange(List<T> entities)
         {
-            entities.ForEach(e=> { ShadowPropertyDeleted(e); }); //ShadowPropertylerin değerleri atanıyor.
+            entities.ForEach(e => { ShadowPropertyDeleted(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
             _context.SaveChanges();
@@ -100,7 +100,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         public IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate = null,
             params Expression<Func<T, object>>[] includeProperties)
         {
-           IQueryable<T> query =  _entities;
+            IQueryable<T> query = _entities;
             foreach (var includeProperty in includeProperties)
             {
                 query = query.Include(includeProperty);
@@ -115,13 +115,23 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             => _entities.Find(id);
         #endregion
         #region Predicate Search
-        public T Get(Expression<Func<T, bool>> predicate = null)
-            => _entities.FirstOrDefault(predicate);
+        public T Get(Expression<Func<T, bool>> predicate = null,
+            params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _entities;
+
+            foreach (var item in includeProperties)
+            {
+                query = query.Include(item);
+            }
+
+            return query.FirstOrDefault(predicate);
+        }
 
         public bool Any(Expression<Func<T, bool>> predicate)
             => _entities.Any(predicate);
         #endregion
-  
+
     }
 
     //Asenkron olan BaseRepository
@@ -138,7 +148,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
 
         public async Task AddRangeAsync(List<T> entities)
         {
-            entities.ForEach(e=> { ShadowPropertyAdd(e); }); //ShadowPropertylerin değerleri atanıyor.
+            entities.ForEach(e => { ShadowPropertyAdd(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             await _entities.AddRangeAsync(entities);
             await _context.SaveChangesAsync();
@@ -163,7 +173,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// <param name="entities">Güncellenecek nesneler.</param>
         public async Task UpdateRangeAsync(List<T> entities)
         {
-            entities.ForEach(e=> { ShadowPropertyUpdated(e); });//ShadowPropertylerin değerleri atanıyor.
+            entities.ForEach(e => { ShadowPropertyUpdated(e); });//ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
             await _context.SaveChangesAsync();
@@ -188,14 +198,14 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         /// <param name="entities">Silinecek nesneler.</param>
         public async Task DeleteRangeAsync(List<T> entities)
         {
-            entities.ForEach(e=> { ShadowPropertyDeleted(e); });
+            entities.ForEach(e => { ShadowPropertyDeleted(e); });
 
             _entities.UpdateRange(entities);
             await _context.SaveChangesAsync();
         }
         #endregion
         #region GetAllAsync
-        public  async  Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null,
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null,
             params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = _entities;
@@ -210,16 +220,25 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         }
         #endregion
         #region FindAsync
-        public  async Task<T> FindAsync(Guid id)
+        public async Task<T> FindAsync(Guid id)
          => await _entities.FindAsync(id);
         #endregion
         #region Predicate Search
-        public  async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate = null)
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate = null)
             => await _entities.AnyAsync(predicate);
 
-        public  async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null)
-            => await _entities.FirstOrDefaultAsync(predicate);
+        public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null,
+            params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _entities;
 
+            foreach (var item in includeProperties)
+            {
+                query = query.Include(item);
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
+        }
         #endregion
 
     }

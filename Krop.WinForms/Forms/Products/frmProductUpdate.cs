@@ -30,18 +30,20 @@ namespace Krop.WinForms.Products
             _brandHelper = brandHelper;
         }
 
-        private async void frmProductUpdate_Load(object sender, EventArgs e)
+        private void frmProductUpdate_Load(object sender, EventArgs e)
         {
-            await ProductList();
-            await CategoryList();
-            await BrandList();
+            ProductList();
+            CategoryList();
+            BrandList();
             txtCriticalQuantity.MaxLength = 10;
             if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxProductNameSelect.SelectedValue = Id;
         }
-        private async Task ProductList()
+        private void ProductList()
         {
-            List<GetProductComboBoxDTO> result = await _productHelper.GetAllComboBoxAsync();
+            List<GetProductComboBoxDTO> result = _productHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             ProductNameList(result);
             ProductCodeList(result);
@@ -76,9 +78,11 @@ namespace Krop.WinForms.Products
 
             cmbBoxProductCodeSelect.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
         }
-        private async Task CategoryList()
+        private void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = await _categoryHelper.GetAllComboBoxAsync();
+            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxCategory.DataSource = null;
             cmbBoxCategory.DataSource = result;
@@ -86,9 +90,11 @@ namespace Krop.WinForms.Products
             cmbBoxCategory.DisplayMember = "CategoryName";
             cmbBoxCategory.ValueMember = "Id";
         }
-        private async Task BrandList()
+        private void BrandList()
         {
-            List<GetBrandComboBoxDTO> result = await _brandHelper.GetAllComboBoxAsync();
+            List<GetBrandComboBoxDTO> result = _brandHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxBrand.DataSource = null;
             cmbBoxBrand.DataSource = result;
@@ -97,13 +103,15 @@ namespace Krop.WinForms.Products
             cmbBoxBrand.ValueMember = "Id";
         }
 
-        private async void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.DataSource is not null)
             {
                 cmbBoxProductCodeSelect.SelectedValue = cmbBoxProductNameSelect.SelectedValue;
 
-                GetProductDTO result = await _productHelper.GetProductByIdAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
+                GetProductDTO result = _productHelper.GetByProductIdAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
+                if (result is null)
+                    return;
 
                 txtProductName.Text = result.ProductName;
                 txtProductCode.Text = result.ProductCode;
@@ -127,7 +135,7 @@ namespace Krop.WinForms.Products
             }
         }
 
-        private async void bttnProductUpdate_Click(object sender, EventArgs e)
+        private void bttnProductUpdate_Click(object sender, EventArgs e)
         {
             if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null &&
                 cmbBoxProductNameSelect.SelectedValue.ToString() == cmbBoxProductCodeSelect.SelectedValue.ToString())
@@ -157,11 +165,15 @@ namespace Krop.WinForms.Products
                         BrandId = (Guid)cmbBoxBrand.SelectedValue
                     };
 
-                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("product/update", updateProductDTO);
+                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("product/update", updateProductDTO).Result;
 
-                    await ResponseController.ErrorResponseController(response);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
 
-                    await ProductList();
+                    ProductList();
                 }
             }
             else

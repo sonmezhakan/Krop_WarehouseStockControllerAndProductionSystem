@@ -1,5 +1,6 @@
 ﻿using Krop.Business.Features.Suppliers.Dtos;
 using Krop.Common.Helpers.WebApiService;
+using Krop.Common.Utilits.Result;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using Krop.WinForms.HelpersClass.SupplierHelpers;
@@ -19,16 +20,18 @@ namespace Krop.WinForms.Suppliers
             _webApiService = webApiService;
         }
 
-        private async void frmSupplierDelete_Load(object sender, EventArgs e)
+        private void frmSupplierDelete_Load(object sender, EventArgs e)
         {
-            await SupplierList();
+            SupplierList();
             if (cmbBoxSupplierSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxSupplierSelect.SelectedValue = Id;
         }
 
-        private async Task SupplierList()
+        private void SupplierList()
         {
-            List<GetSupplierComboBoxDTO> suppliers = await _supplierHelper.GetAllComboBoxAsync();
+            List<GetSupplierComboBoxDTO> result = _supplierHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxSupplierSelect.DataSource = null;
 
@@ -36,7 +39,7 @@ namespace Krop.WinForms.Suppliers
             cmbBoxSupplierSelect.ValueMember = "Id";
 
             cmbBoxSupplierSelect.SelectedIndexChanged -= CmbBoxSupplierSelect_SelectedIndexChanged;
-            cmbBoxSupplierSelect.DataSource = suppliers;
+            cmbBoxSupplierSelect.DataSource = result;
             cmbBoxSupplierSelect.SelectedIndex = -1;
             cmbBoxSupplierSelect.SelectedIndexChanged += CmbBoxSupplierSelect_SelectedIndexChanged;
         }
@@ -45,17 +48,21 @@ namespace Krop.WinForms.Suppliers
         {
 
         }
-        private async void bttnSupplierDelete_Click(object sender, EventArgs e)
+        private void bttnSupplierDelete_Click(object sender, EventArgs e)
         {
             if (cmbBoxSupplierSelect.SelectedValue != null)
             {
                if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"supplier/delete/{cmbBoxSupplierSelect.SelectedValue}");
+                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"supplier/delete/{cmbBoxSupplierSelect.SelectedValue}").Result;
 
-                    await ResponseController.ErrorResponseController(response);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
 
-                    await SupplierList();
+                    SupplierList();
                 }
             }
             else

@@ -16,7 +16,7 @@ namespace Krop.WinForms.Suppliers
             _webApiService = webApiService;
         }
 
-        private async void bttnSupplierAdd_Click(object sender, EventArgs e)
+        private void bttnSupplierAdd_Click(object sender, EventArgs e)
         {
             CreateSupplierDTO createSupplierDTO = new CreateSupplierDTO
             {
@@ -31,9 +31,13 @@ namespace Krop.WinForms.Suppliers
                 WebSite = txtWebSiteUrl.Text
             };
 
-            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("supplier/Add", createSupplierDTO);
+            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("supplier/Add", createSupplierDTO).Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
 
         }
 

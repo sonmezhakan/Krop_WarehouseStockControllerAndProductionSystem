@@ -12,5 +12,11 @@ namespace Krop.Business.Services.AppUsers
         Task<IDataResult<GetAppUserDTO>> GetByIdAsync(Guid id);
         Task<IResult> AnyByIdAsync(Guid id);
         Task<IDataResult<GetAppUserDTO>> GetByUserNameAsync(string userName);
+
+        Task<IResult> ConfirmationAsync(Guid Id, string token);
+        Task<IResult> ConfirmationMailSenderAsync(Guid Id);
+        Task<IResult> ResetPasswordMailSenderAsync(Guid Id);
+
+        Task<IDataResult<IEnumerable<GetAppUserComboBoxDTO>>> GetAllComboBoxAsync();
     }
 }

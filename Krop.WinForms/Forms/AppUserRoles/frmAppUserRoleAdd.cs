@@ -20,16 +20,20 @@ namespace Krop.WinForms.AppUserRoles
 
         }
 
-        private async void bttnAppUserRoleAdd_Click(object sender, EventArgs e)
+        private void bttnAppUserRoleAdd_Click(object sender, EventArgs e)
         {
             CreateAppUserRoleDTO createAppUserRoleDTO = new CreateAppUserRoleDTO
             {
                 Name = txtAppUserRoleName.Text
             };
 
-            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("appUserRole/Add", createAppUserRoleDTO);
+            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("appUserRole/Add", createAppUserRoleDTO).Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
 
         }
     }

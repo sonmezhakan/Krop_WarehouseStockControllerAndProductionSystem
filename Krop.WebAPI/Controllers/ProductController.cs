@@ -57,5 +57,12 @@ namespace Krop.WebAPI.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByIdCart(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _productService.GetByIdCartAsync(id);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
     }
 }

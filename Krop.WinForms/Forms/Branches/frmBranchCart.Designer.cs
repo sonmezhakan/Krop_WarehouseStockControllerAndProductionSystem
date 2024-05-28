@@ -75,10 +75,12 @@
             // 
             // txtAddress
             // 
+            txtAddress.Enabled = false;
             txtAddress.Location = new Point(12, 265);
             txtAddress.Multiline = true;
             txtAddress.Name = "txtAddress";
             txtAddress.PlaceholderText = "Adres...";
+            txtAddress.ReadOnly = true;
             txtAddress.Size = new Size(228, 139);
             txtAddress.TabIndex = 22;
             // 
@@ -93,9 +95,11 @@
             // 
             // txtCity
             // 
+            txtCity.Enabled = false;
             txtCity.Location = new Point(12, 218);
             txtCity.Name = "txtCity";
             txtCity.PlaceholderText = "Şehir...";
+            txtCity.ReadOnly = true;
             txtCity.Size = new Size(228, 23);
             txtCity.TabIndex = 20;
             // 
@@ -110,9 +114,11 @@
             // 
             // txtCountry
             // 
+            txtCountry.Enabled = false;
             txtCountry.Location = new Point(12, 172);
             txtCountry.Name = "txtCountry";
             txtCountry.PlaceholderText = "Ülke...";
+            txtCountry.ReadOnly = true;
             txtCountry.Size = new Size(228, 23);
             txtCountry.TabIndex = 18;
             // 
@@ -127,9 +133,11 @@
             // 
             // txtEmail
             // 
+            txtEmail.Enabled = false;
             txtEmail.Location = new Point(12, 128);
             txtEmail.Name = "txtEmail";
             txtEmail.PlaceholderText = "Email...";
+            txtEmail.ReadOnly = true;
             txtEmail.Size = new Size(228, 23);
             txtEmail.TabIndex = 16;
             // 
@@ -144,9 +152,11 @@
             // 
             // txtPhoneNumber
             // 
+            txtPhoneNumber.Enabled = false;
             txtPhoneNumber.Location = new Point(12, 80);
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.PlaceholderText = "Telefon Numarası...";
+            txtPhoneNumber.ReadOnly = true;
             txtPhoneNumber.Size = new Size(228, 23);
             txtPhoneNumber.TabIndex = 14;
             txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;

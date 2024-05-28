@@ -20,9 +20,9 @@ namespace Krop.WinForms.Brands
             _serviceProvider = serviceProvider;
         }
 
-        private async void frmBrandList_Load(object sender, EventArgs e)
+        private void frmBrandList_Load(object sender, EventArgs e)
         {
-            await BrandList();
+             BrandList();
         }
         private void DgwBrandListSettings()
         {
@@ -33,9 +33,9 @@ namespace Krop.WinForms.Brands
 
             dgwBrandList.Columns[0].Visible = false;
         }
-        private async Task BrandList()
+        private void BrandList()
         {
-            List<GetBrandDTO> result = await _brandHelper.GetAllAsync();
+            List<GetBrandDTO> result = _brandHelper.GetAllAsync();
             _originalData = new BindingList<GetBrandDTO>(result);
             _filteredData = new BindingList<GetBrandDTO>(_originalData.ToList());
 
@@ -101,9 +101,9 @@ namespace Krop.WinForms.Brands
             FormController.FormOpenController(frmBrandDelete);
         }
 
-        private async void brandListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private void brandListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await BrandList();
+            BrandList();
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)

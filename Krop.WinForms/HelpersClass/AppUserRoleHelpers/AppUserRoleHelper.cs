@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Krop.Business.Features.AppUserRoles.Dtos;
+﻿using Krop.Business.Features.AppUserRoles.Dtos;
 using Krop.Common.Helpers.WebApiService;
 
 namespace Krop.WinForms.HelpersClass.AppUserRoleHelpers
@@ -12,24 +11,32 @@ namespace Krop.WinForms.HelpersClass.AppUserRoleHelpers
         {
             _webApiService = webApiService;
         }
-        public async Task<List<GetAppUserRoleDTO>> GetAllAsync()
+        public List<GetAppUserRoleDTO> GetAllAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("AppUserRole/GetAll");
+            HttpResponseMessage response =  _webApiService.httpClient.GetAsync("AppUserRole/GetAll").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataListResponseController<GetAppUserRoleDTO>(response);
+            var result = ResponseController.SuccessDataListResponseController<GetAppUserRoleDTO>(response);
 
             return result.Data ?? null;
         }
 
-        public async Task<GetAppUserRoleDTO> GetByAppUserRoleIdAsync(Guid Id)
+        public  GetAppUserRoleDTO GetByAppUserRoleIdAsync(Guid Id)
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"appUserRole/GetById/{Id}");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"appUserRole/GetById/{Id}").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataResponseController<GetAppUserRoleDTO>(response);
+            var result = ResponseController.SuccessDataResponseController<GetAppUserRoleDTO>(response);
 
             return result.Data ?? null;
         }

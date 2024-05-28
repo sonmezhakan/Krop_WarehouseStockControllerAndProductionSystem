@@ -1,4 +1,5 @@
 ﻿using Krop.Business.Features.Branches.Dtos;
+using Krop.Common.Utilits.Result;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.BranchHelpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,9 +21,9 @@ namespace Krop.WinForms.Forms.Branches
             _serviceProvider = serviceProvider;
         }
 
-        private async void frmBranchList_Load(object sender, EventArgs e)
+        private void frmBranchList_Load(object sender, EventArgs e)
         {
-            await BranchList();
+            BranchList();
         }
         private void DgwBranchListSettings()
         {
@@ -36,10 +37,13 @@ namespace Krop.WinForms.Forms.Branches
 
             dgwBranchList.Columns[0].Visible = false;
         }
-        private async Task BranchList()
+        private void BranchList()
         {
-            List<GetBranchDTO> branches = await _branchHelper.GetAllAsync();
-            _originalData = new BindingList<GetBranchDTO>(branches);
+            List<GetBranchDTO> result = _branchHelper.GetAllAsync();
+            if (result is null)
+                return;
+
+            _originalData = new BindingList<GetBranchDTO>(result);
             _filteredData = new BindingList<GetBranchDTO>(_originalData.ToList());
 
             dgwBranchList.DataSource = _filteredData;
@@ -113,9 +117,9 @@ namespace Krop.WinForms.Forms.Branches
             FormController.FormOpenController(frmBranchDelete);
         }
 
-        private async void branchListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private void branchListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await BranchList();
+            BranchList();
         }
     }
 }

@@ -384,7 +384,8 @@ namespace Krop.DataAccess.Migrations
             modelBuilder.Entity("Krop.Entities.Entities.Employee", b =>
                 {
                     b.Property<Guid>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Id");
 
                     b.Property<Guid?>("BranchId")
                         .IsRequired()

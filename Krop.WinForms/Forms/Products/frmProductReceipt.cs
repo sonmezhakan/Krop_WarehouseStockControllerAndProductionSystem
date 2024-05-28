@@ -20,14 +20,16 @@ namespace Krop.WinForms.Products
             _webApiService = webApiService;
         }
 
-        private async void frmProductReceipt_Load(object sender, EventArgs e)
+        private void frmProductReceipt_Load(object sender, EventArgs e)
         {
-            await ProductList();
+            ProductList();
             txtQuantity.MaxLength = 10;
         }
-        private async Task ProductList()
+        private void ProductList()
         {
-            List<GetProductComboBoxDTO> result = await _productHelper.GetAllComboBoxAsync();
+            List<GetProductComboBoxDTO> result = _productHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             ProductNameList(result);
             ProductCodeList(result);
@@ -179,6 +181,11 @@ namespace Krop.WinForms.Products
         private void bttnSearch_Click(object sender, EventArgs e)
         {
             Search();
+        }
+
+        private void bttnAdd_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

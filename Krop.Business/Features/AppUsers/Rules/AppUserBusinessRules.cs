@@ -35,14 +35,14 @@ namespace Krop.Business.Features.AppUsers.Rules
         public async Task AppUserNameCannotBeDuplicatedWhenInserted(string userName)
         {
             AppUser appUser = await _userManager.FindByNameAsync(userName);
-            if(appUser is null)
+            if(appUser is not null)
                 _appUserExceptionHelper.ThrowAppUserNameExists();
 
         }
         public async Task AppUserEmailCannotBeDuplicatedWhenInserted(string email)
         {
             AppUser appUser = await _userManager.FindByEmailAsync(email);
-            if (appUser is null)
+            if (appUser is not null)
                 _appUserExceptionHelper.ThrowAppUserEmailExists();
         }
         public async Task AppUserEmailCannotBeDuplicatedWhenUpdated(string oldEmail,string newEmail)
@@ -50,7 +50,7 @@ namespace Krop.Business.Features.AppUsers.Rules
             if(oldEmail != newEmail)
             {
                 AppUser appUser = await _userManager.FindByEmailAsync(newEmail);
-                if (appUser is null)
+                if (appUser is not null)
                     _appUserExceptionHelper.ThrowAppUserEmailExists();
             }
         }
@@ -86,6 +86,14 @@ namespace Krop.Business.Features.AppUsers.Rules
                 if (result)
                     _appUserExceptionHelper.ThrowAppUserNationalNumberExists();
             }
+        }
+
+        public async Task CheckEmailConfirmed(AppUser appUser)
+        {
+            bool result = await _userManager.IsEmailConfirmedAsync(appUser);
+
+            if (result)
+                _appUserExceptionHelper.ThrowAppUserEmailConfirmed();
         }
     }
 }

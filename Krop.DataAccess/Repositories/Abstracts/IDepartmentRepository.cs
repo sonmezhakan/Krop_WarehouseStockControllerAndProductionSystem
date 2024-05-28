@@ -5,5 +5,6 @@ namespace Krop.DataAccess.Repositories.Abstracts
 {
     public interface IDepartmentRepository:IBaseRepository<Department>,IBaseRepositoryAsync<Department>
     {
+        Task<IEnumerable<Department>> GetAllComboBoxAsync();
     }
 }

@@ -11,6 +11,7 @@ namespace Krop.Business.Features.Departments.Profiles
             CreateMap<Department, CreateDepartmentDTO>().ReverseMap();
             CreateMap<Department, UpdateDepartmentDTO>().ReverseMap();
             CreateMap<Department, GetDepartmentDTO>().ReverseMap();
+            CreateMap<Department, GetDepartmentComboBoxDTO>().ReverseMap();
         }
     }
 }

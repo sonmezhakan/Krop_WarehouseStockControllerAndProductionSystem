@@ -19,15 +19,17 @@ namespace Krop.WinForms.Forms.Branches
             _branchHelper = branchHelper;
         }
 
-        private async void frmBranchDelete_Load(object sender, EventArgs e)
+        private void frmBranchDelete_Load(object sender, EventArgs e)
         {
-            await BranchList();
+            BranchList();
             if (cmbBoxBranchSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBranchSelect.SelectedValue = Id;
         }
-        private async Task BranchList()
+        private void BranchList()
         {
-            List<GetBranchComboBoxDTO> branches = await _branchHelper.GetAllComboBoxAsync();
+            List<GetBranchComboBoxDTO> result = _branchHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxBranchSelect.DataSource = null;
 
@@ -35,7 +37,7 @@ namespace Krop.WinForms.Forms.Branches
             cmbBoxBranchSelect.ValueMember = "Id";
 
             cmbBoxBranchSelect.SelectedIndexChanged -= CmbBoxBranchSelect_SelectedIndexChanged;
-            cmbBoxBranchSelect.DataSource = branches;
+            cmbBoxBranchSelect.DataSource = result;
             cmbBoxBranchSelect.SelectedIndex = -1;
             cmbBoxBranchSelect.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
         }
@@ -45,17 +47,21 @@ namespace Krop.WinForms.Forms.Branches
 
         }
 
-        private async void bttnBranchDelete_Click(object sender, EventArgs e)
+        private void bttnBranchDelete_Click(object sender, EventArgs e)
         {
             if(cmbBoxBranchSelect.SelectedValue is not null)
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"branch/delete/{cmbBoxBranchSelect.SelectedValue}");
+                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"branch/delete/{cmbBoxBranchSelect.SelectedValue}").Result;
 
-                    await ResponseController.ErrorResponseController(response);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
 
-                    await BranchList();
+                    BranchList();
                 }
             }
             else

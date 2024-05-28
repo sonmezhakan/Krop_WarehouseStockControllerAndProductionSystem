@@ -4,8 +4,8 @@ namespace Krop.WinForms.HelpersClass.BrandHelpers
 {
     public interface IBrandHelper
     {
-        Task<List<GetBrandComboBoxDTO>> GetAllComboBoxAsync();
-        Task<List<GetBrandDTO>> GetAllAsync();
-        Task<GetBrandDTO> GetByBrandIdAsync(Guid Id);
+        List<GetBrandComboBoxDTO> GetAllComboBoxAsync();
+        List<GetBrandDTO> GetAllAsync();
+        GetBrandDTO GetByBrandIdAsync(Guid Id);
     }
 }

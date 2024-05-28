@@ -17,15 +17,15 @@ namespace Krop.Business.Features.Employees.Rules
 
         public async Task<Employee> CheckByEmployeeId(Guid id)
         {
-            var result = await _employeeRepository.GetAsync(e => e.Id == id);
+            var result = await _employeeRepository.GetAsync(e => e.AppUserId == id);
             if (result is null)
                 _employeeExceptionHelper.ThrowEmployeeNotFound();
 
             return result;
         }
-        public async Task EmployeeCannotBeDuplicatedWhenInserted(Guid id)
+        public async Task EmployeeCannotBeDuplicatedWhenInserted(Guid Id)
         {
-            bool result = await _employeeRepository.AnyAsync(x=>x.Id == id);
+            bool result = await _employeeRepository.AnyAsync(x=>x.AppUserId == Id);
             if (result)
                _employeeExceptionHelper.ThrowEmployeeExists();
         }

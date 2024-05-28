@@ -26,15 +26,17 @@ namespace Krop.WinForms.Products
             txtCriticalQuantity.MaxLength = 10;
         }
 
-        private async void frmProductAdd_Load(object sender, EventArgs e)
+        private void frmProductAdd_Load(object sender, EventArgs e)
         {
-            await CategoryList();
-            await BrandList();
+            CategoryList();
+            BrandList();
         }
 
-        private async Task CategoryList()
+        private void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = await _categoryHelper.GetAllComboBoxAsync();
+            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxCategory.DataSource = null;
 
@@ -43,9 +45,11 @@ namespace Krop.WinForms.Products
 
             cmbBoxCategory.DataSource = result;
         }
-        private async Task BrandList()
+        private void BrandList()
         {
-            List<GetBrandComboBoxDTO> result = await _brandHelper.GetAllComboBoxAsync();
+            List<GetBrandComboBoxDTO> result = _brandHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxBrand.DataSource = null;
             
@@ -65,7 +69,7 @@ namespace Krop.WinForms.Products
 
         }
 
-        private async void bttnProductAdd_Click(object sender, EventArgs e)
+        private void bttnProductAdd_Click(object sender, EventArgs e)
         {
             if(cmbBoxCategory.SelectedValue is not null && cmbBoxBrand.SelectedValue is not null)
             {
@@ -80,9 +84,13 @@ namespace Krop.WinForms.Products
                     Description = txtDescription.Text,
                 };
 
-                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("product/Add", createProductDTO);
+                HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("product/Add", createProductDTO).Result;
 
-                await ResponseController.ErrorResponseController(response);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
             }
             else
             {

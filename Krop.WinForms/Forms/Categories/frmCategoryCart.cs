@@ -14,18 +14,20 @@ namespace Krop.WinForms.Categories
             InitializeComponent();
             _categoryHelper = categoryHelper;
         }
-        private async void frmCategoryCart_Load(object sender, EventArgs e)
+        private void frmCategoryCart_Load(object sender, EventArgs e)
         {
-            await CategoryList();
+            CategoryList();
             if(cmbBoxCategorySelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCategorySelect.SelectedValue = Id;
 
         }
 
-        private async Task CategoryList()
+        private void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = await _categoryHelper.GetAllComboBoxAsync();
-      
+            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
+
             cmbBoxCategorySelect.DataSource = null;
             
             cmbBoxCategorySelect.DisplayMember = "CategoryName";

@@ -84,6 +84,7 @@
             bttnAdd.Text = "Ekle";
             bttnAdd.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnAdd.UseVisualStyleBackColor = true;
+            bttnAdd.Click += bttnAdd_Click;
             // 
             // bttnUpdate
             // 

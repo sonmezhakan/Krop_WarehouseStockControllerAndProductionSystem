@@ -7,44 +7,54 @@ namespace Krop.WinForms.HelpersClass.BranchHelpers
     public class BranchHelper : IBranchHelper
     {
         private readonly IWebApiService _webApiService;
-        private readonly IMapper _mapper;
 
-        public BranchHelper(IWebApiService webApiService,IMapper mapper)
+        public BranchHelper(IWebApiService webApiService)
         {
             _webApiService = webApiService;
-            _mapper = mapper;
         }
-        public async Task<List<GetBranchDTO>> GetAllAsync()
+        public List<GetBranchDTO> GetAllAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/getall");
+            HttpResponseMessage response =  _webApiService.httpClient.GetAsync("branch/getall").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataListResponseController<GetBranchDTO>(response);
+            var result = ResponseController.SuccessDataListResponseController<GetBranchDTO>(response);
 
-            return _mapper.Map<List<GetBranchDTO>>(result.Data);
-        }
-
-        public async Task<List<GetBranchComboBoxDTO>> GetAllComboBoxAsync()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
-
-            await ResponseController.ErrorResponseController(response);
-
-            var result = await ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response);
-
-            return _mapper.Map<List<GetBranchComboBoxDTO>>(result.Data);
+            return result.Data;
         }
 
-        public async Task<GetBranchDTO> GetByBranchIdAsync(Guid Id)
+        public List<GetBranchComboBoxDTO> GetAllComboBoxAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"branch/GetById/{Id}");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync("branch/GetAllComboBox").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataResponseController<GetBranchDTO>(response);
+            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response);
 
-            return _mapper.Map<GetBranchDTO>(result.Data);
+            return result.Data;
+        }
+
+        public GetBranchDTO GetByBranchIdAsync(Guid Id)
+        {
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"branch/GetById/{Id}").Result;
+
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
+
+            var result = ResponseController.SuccessDataResponseController<GetBranchDTO>(response);
+
+            return result.Data;
         }
     }
 }

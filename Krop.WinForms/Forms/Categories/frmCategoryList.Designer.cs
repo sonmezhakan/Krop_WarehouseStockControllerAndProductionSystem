@@ -36,7 +36,6 @@
             CategoryDeleteToolStripMenuItem = new ToolStripMenuItem();
             CategoryUpdateToolStripMenuItem = new ToolStripMenuItem();
             CategoryAddToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator4 = new ToolStripSeparator();
             toolStripSeparator1 = new ToolStripSeparator();
             contextMenuStrip1 = new ContextMenuStrip(components);
             CategoryCartToolStripMenuItem = new ToolStripMenuItem();
@@ -87,11 +86,6 @@
             CategoryAddToolStripMenuItem.Text = "Ekle";
             CategoryAddToolStripMenuItem.Click += CategoryAddToolStripMenuItem_Click;
             // 
-            // toolStripSeparator4
-            // 
-            toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(117, 6);
-            // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
@@ -99,9 +93,9 @@
             // 
             // contextMenuStrip1
             // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { CategoryCartToolStripMenuItem, toolStripSeparator1, CategoryAddToolStripMenuItem, CategoryUpdateToolStripMenuItem, CategoryDeleteToolStripMenuItem, toolStripSeparator2, CategoryListRefreshToolStripMenuItem, toolStripSeparator4 });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { CategoryCartToolStripMenuItem, toolStripSeparator1, CategoryAddToolStripMenuItem, CategoryUpdateToolStripMenuItem, CategoryDeleteToolStripMenuItem, toolStripSeparator2, CategoryListRefreshToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(121, 132);
+            contextMenuStrip1.Size = new Size(121, 126);
             // 
             // CategoryCartToolStripMenuItem
             // 
@@ -209,7 +203,6 @@
         private ToolStripMenuItem CategoryDeleteToolStripMenuItem;
         private ToolStripMenuItem CategoryUpdateToolStripMenuItem;
         private ToolStripMenuItem CategoryAddToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator4;
         private ToolStripSeparator toolStripSeparator1;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem CategoryCartToolStripMenuItem;

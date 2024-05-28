@@ -26,7 +26,7 @@ namespace Krop.WinForms.Customers
             txtPhoneNumber.MaxLength = 11;
         }
 
-        private async void bttnCustomerAdd_Click(object sender, EventArgs e)
+        private void bttnCustomerAdd_Click(object sender, EventArgs e)
         {
             CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO
             {
@@ -41,9 +41,13 @@ namespace Krop.WinForms.Customers
                 Invoice = radioBttnPerson.Checked ? Entities.Enums.InvoiceEnum.Bireysel : Entities.Enums.InvoiceEnum.Kurumsal
             };
 
-            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("customer/add", createCustomerDTO);
+            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("customer/add", createCustomerDTO).Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
         }
     }
 }

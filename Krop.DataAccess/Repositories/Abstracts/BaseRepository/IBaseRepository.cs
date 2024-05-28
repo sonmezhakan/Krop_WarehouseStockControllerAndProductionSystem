@@ -8,7 +8,8 @@ namespace Krop.DataAccess.Repositories.Abstracts.BaseRepository
     {
         IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate = null, 
             params Expression<Func<T, object>>[] includeProperties);
-        T Get(Expression<Func<T,bool>> predicate = null);
+        T Get(Expression<Func<T,bool>> predicate = null,
+            params Expression<Func<T, object>>[] includeProperties);
         T Find(Guid id);
         bool Any(Expression<Func<T,bool>> predicate = null);
 

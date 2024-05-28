@@ -17,5 +17,7 @@ namespace Krop.Business.Services.Deparments
         Task<IDataResult<IEnumerable<GetDepartmentDTO>>> GetAllAsync();
         Task<IDataResult<GetDepartmentDTO>> GetById(Guid id);
         Task<IDataResult<GetDepartmentDTO>> GetByDepartmentName(string departmentName);
+
+        Task<IDataResult<IEnumerable<GetDepartmentComboBoxDTO>>> GetAllComboBoxAsync();
     }
 }

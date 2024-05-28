@@ -4,7 +4,7 @@ namespace Krop.WinForms.HelpersClass.AppUserRoleHelpers
 {
     public interface IAppUserRoleHelper
     {
-        Task<List<GetAppUserRoleDTO>> GetAllAsync();
-        Task<GetAppUserRoleDTO> GetByAppUserRoleIdAsync(Guid id);
+        List<GetAppUserRoleDTO> GetAllAsync();
+        GetAppUserRoleDTO GetByAppUserRoleIdAsync(Guid id);
     }
 }

@@ -79,7 +79,6 @@
             supplierBttnCard = new Button();
             supplierBttnList = new Button();
             EmployeesTabPage = new TabPage();
-            employeeBttnDelete = new Button();
             employeeBttnUpdate = new Button();
             employeeBttnAdd = new Button();
             employeeBttnCard = new Button();
@@ -89,6 +88,12 @@
             userBttnAdd = new Button();
             userBttnCard = new Button();
             userBttnList = new Button();
+            DepartmentTabPage = new TabPage();
+            departmentBttnDelete = new Button();
+            departmentBttnUpdate = new Button();
+            departmentBttnAdd = new Button();
+            departmentBttnCart = new Button();
+            departmentBttnList = new Button();
             AppUserRolePage = new TabPage();
             bttnAppUserRoleDelete = new Button();
             bttnAppUserRoleUpdate = new Button();
@@ -116,6 +121,7 @@
             SuppliersTabPage.SuspendLayout();
             EmployeesTabPage.SuspendLayout();
             UsersTabPage.SuspendLayout();
+            DepartmentTabPage.SuspendLayout();
             AppUserRolePage.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
@@ -133,6 +139,7 @@
             tabControl1.Controls.Add(SuppliersTabPage);
             tabControl1.Controls.Add(EmployeesTabPage);
             tabControl1.Controls.Add(UsersTabPage);
+            tabControl1.Controls.Add(DepartmentTabPage);
             tabControl1.Controls.Add(AppUserRolePage);
             tabControl1.Controls.Add(SettingsTabPage);
             tabControl1.Controls.Add(ExitPageTab);
@@ -1002,7 +1009,6 @@
             // 
             // EmployeesTabPage
             // 
-            EmployeesTabPage.Controls.Add(employeeBttnDelete);
             EmployeesTabPage.Controls.Add(employeeBttnUpdate);
             EmployeesTabPage.Controls.Add(employeeBttnAdd);
             EmployeesTabPage.Controls.Add(employeeBttnCard);
@@ -1013,24 +1019,6 @@
             EmployeesTabPage.TabIndex = 10;
             EmployeesTabPage.Text = "Çalışanlar";
             EmployeesTabPage.UseVisualStyleBackColor = true;
-            // 
-            // employeeBttnDelete
-            // 
-            employeeBttnDelete.BackColor = Color.Transparent;
-            employeeBttnDelete.Dock = DockStyle.Left;
-            employeeBttnDelete.FlatAppearance.BorderColor = Color.White;
-            employeeBttnDelete.FlatAppearance.BorderSize = 0;
-            employeeBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            employeeBttnDelete.FlatStyle = FlatStyle.Flat;
-            employeeBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            employeeBttnDelete.Image = (Image)resources.GetObject("employeeBttnDelete.Image");
-            employeeBttnDelete.Location = new Point(327, 0);
-            employeeBttnDelete.Name = "employeeBttnDelete";
-            employeeBttnDelete.Size = new Size(70, 65);
-            employeeBttnDelete.TabIndex = 26;
-            employeeBttnDelete.Text = "Sil";
-            employeeBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
-            employeeBttnDelete.UseVisualStyleBackColor = false;
             // 
             // employeeBttnUpdate
             // 
@@ -1049,6 +1037,7 @@
             employeeBttnUpdate.Text = "Güncelle";
             employeeBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
             employeeBttnUpdate.UseVisualStyleBackColor = false;
+            employeeBttnUpdate.Click += employeeBttnUpdate_Click;
             // 
             // employeeBttnAdd
             // 
@@ -1067,6 +1056,7 @@
             employeeBttnAdd.Text = "Ekle";
             employeeBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
             employeeBttnAdd.UseVisualStyleBackColor = false;
+            employeeBttnAdd.Click += employeeBttnAdd_Click;
             // 
             // employeeBttnCard
             // 
@@ -1085,6 +1075,7 @@
             employeeBttnCard.Text = "Çalışan Kartı";
             employeeBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
             employeeBttnCard.UseVisualStyleBackColor = false;
+            employeeBttnCard.Click += employeeBttnCard_Click;
             // 
             // employeeBttnList
             // 
@@ -1103,6 +1094,7 @@
             employeeBttnList.Text = "Liste";
             employeeBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
             employeeBttnList.UseVisualStyleBackColor = false;
+            employeeBttnList.Click += employeeBttnList_Click;
             // 
             // UsersTabPage
             // 
@@ -1134,6 +1126,7 @@
             userBttnUpdate.Text = "Güncelle";
             userBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
             userBttnUpdate.UseVisualStyleBackColor = false;
+            userBttnUpdate.Click += userBttnUpdate_Click;
             // 
             // userBttnAdd
             // 
@@ -1152,6 +1145,7 @@
             userBttnAdd.Text = "Ekle";
             userBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
             userBttnAdd.UseVisualStyleBackColor = false;
+            userBttnAdd.Click += userBttnAdd_Click;
             // 
             // userBttnCard
             // 
@@ -1167,9 +1161,10 @@
             userBttnCard.Name = "userBttnCard";
             userBttnCard.Size = new Size(117, 65);
             userBttnCard.TabIndex = 27;
-            userBttnCard.Text = "Tedarikçi Kartı";
+            userBttnCard.Text = "Kullanıcı Kartı";
             userBttnCard.TextImageRelation = TextImageRelation.ImageAboveText;
             userBttnCard.UseVisualStyleBackColor = false;
+            userBttnCard.Click += userBttnCard_Click;
             // 
             // userBttnList
             // 
@@ -1188,6 +1183,116 @@
             userBttnList.Text = "Liste";
             userBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
             userBttnList.UseVisualStyleBackColor = false;
+            userBttnList.Click += userBttnList_Click;
+            // 
+            // DepartmentTabPage
+            // 
+            DepartmentTabPage.Controls.Add(departmentBttnDelete);
+            DepartmentTabPage.Controls.Add(departmentBttnUpdate);
+            DepartmentTabPage.Controls.Add(departmentBttnAdd);
+            DepartmentTabPage.Controls.Add(departmentBttnCart);
+            DepartmentTabPage.Controls.Add(departmentBttnList);
+            DepartmentTabPage.Location = new Point(4, 26);
+            DepartmentTabPage.Name = "DepartmentTabPage";
+            DepartmentTabPage.Size = new Size(1876, 65);
+            DepartmentTabPage.TabIndex = 14;
+            DepartmentTabPage.Text = "Departmanlar";
+            DepartmentTabPage.UseVisualStyleBackColor = true;
+            // 
+            // departmentBttnDelete
+            // 
+            departmentBttnDelete.BackColor = Color.Transparent;
+            departmentBttnDelete.Dock = DockStyle.Left;
+            departmentBttnDelete.FlatAppearance.BorderColor = Color.White;
+            departmentBttnDelete.FlatAppearance.BorderSize = 0;
+            departmentBttnDelete.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            departmentBttnDelete.FlatStyle = FlatStyle.Flat;
+            departmentBttnDelete.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            departmentBttnDelete.Image = (Image)resources.GetObject("departmentBttnDelete.Image");
+            departmentBttnDelete.Location = new Point(327, 0);
+            departmentBttnDelete.Name = "departmentBttnDelete";
+            departmentBttnDelete.Size = new Size(70, 65);
+            departmentBttnDelete.TabIndex = 31;
+            departmentBttnDelete.Text = "Sil";
+            departmentBttnDelete.TextImageRelation = TextImageRelation.ImageAboveText;
+            departmentBttnDelete.UseVisualStyleBackColor = false;
+            departmentBttnDelete.Click += departmentBttnDelete_Click;
+            // 
+            // departmentBttnUpdate
+            // 
+            departmentBttnUpdate.BackColor = Color.Transparent;
+            departmentBttnUpdate.Dock = DockStyle.Left;
+            departmentBttnUpdate.FlatAppearance.BorderColor = Color.White;
+            departmentBttnUpdate.FlatAppearance.BorderSize = 0;
+            departmentBttnUpdate.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            departmentBttnUpdate.FlatStyle = FlatStyle.Flat;
+            departmentBttnUpdate.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            departmentBttnUpdate.Image = (Image)resources.GetObject("departmentBttnUpdate.Image");
+            departmentBttnUpdate.Location = new Point(257, 0);
+            departmentBttnUpdate.Name = "departmentBttnUpdate";
+            departmentBttnUpdate.Size = new Size(70, 65);
+            departmentBttnUpdate.TabIndex = 30;
+            departmentBttnUpdate.Text = "Güncelle";
+            departmentBttnUpdate.TextImageRelation = TextImageRelation.ImageAboveText;
+            departmentBttnUpdate.UseVisualStyleBackColor = false;
+            departmentBttnUpdate.Click += departmentBttnUpdate_Click;
+            // 
+            // departmentBttnAdd
+            // 
+            departmentBttnAdd.BackColor = Color.Transparent;
+            departmentBttnAdd.Dock = DockStyle.Left;
+            departmentBttnAdd.FlatAppearance.BorderColor = Color.White;
+            departmentBttnAdd.FlatAppearance.BorderSize = 0;
+            departmentBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            departmentBttnAdd.FlatStyle = FlatStyle.Flat;
+            departmentBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            departmentBttnAdd.Image = (Image)resources.GetObject("departmentBttnAdd.Image");
+            departmentBttnAdd.Location = new Point(187, 0);
+            departmentBttnAdd.Name = "departmentBttnAdd";
+            departmentBttnAdd.Size = new Size(70, 65);
+            departmentBttnAdd.TabIndex = 29;
+            departmentBttnAdd.Text = "Ekle";
+            departmentBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
+            departmentBttnAdd.UseVisualStyleBackColor = false;
+            departmentBttnAdd.Click += departmentBttnAdd_Click;
+            // 
+            // departmentBttnCart
+            // 
+            departmentBttnCart.BackColor = Color.Transparent;
+            departmentBttnCart.Dock = DockStyle.Left;
+            departmentBttnCart.FlatAppearance.BorderColor = Color.White;
+            departmentBttnCart.FlatAppearance.BorderSize = 0;
+            departmentBttnCart.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            departmentBttnCart.FlatStyle = FlatStyle.Flat;
+            departmentBttnCart.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            departmentBttnCart.Image = (Image)resources.GetObject("departmentBttnCart.Image");
+            departmentBttnCart.Location = new Point(70, 0);
+            departmentBttnCart.Name = "departmentBttnCart";
+            departmentBttnCart.Size = new Size(117, 65);
+            departmentBttnCart.TabIndex = 32;
+            departmentBttnCart.Text = "Departman Kartı";
+            departmentBttnCart.TextImageRelation = TextImageRelation.ImageAboveText;
+            departmentBttnCart.UseVisualStyleBackColor = false;
+            departmentBttnCart.Click += departmentBttnCart_Click;
+            // 
+            // departmentBttnList
+            // 
+            departmentBttnList.BackColor = Color.Transparent;
+            departmentBttnList.Dock = DockStyle.Left;
+            departmentBttnList.FlatAppearance.BorderColor = Color.White;
+            departmentBttnList.FlatAppearance.BorderSize = 0;
+            departmentBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            departmentBttnList.FlatStyle = FlatStyle.Flat;
+            departmentBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            departmentBttnList.Image = (Image)resources.GetObject("departmentBttnList.Image");
+            departmentBttnList.Location = new Point(0, 0);
+            departmentBttnList.Name = "departmentBttnList";
+            departmentBttnList.Size = new Size(70, 65);
+            departmentBttnList.TabIndex = 28;
+            departmentBttnList.Text = "Liste";
+            departmentBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
+            departmentBttnList.UseVisualStyleBackColor = false;
+            departmentBttnList.Click += departmentBttnList_Click;
             // 
             // AppUserRolePage
             // 
@@ -1421,6 +1526,7 @@
             SuppliersTabPage.ResumeLayout(false);
             EmployeesTabPage.ResumeLayout(false);
             UsersTabPage.ResumeLayout(false);
+            DepartmentTabPage.ResumeLayout(false);
             AppUserRolePage.ResumeLayout(false);
             panelBottom.ResumeLayout(false);
             ResumeLayout(false);
@@ -1468,7 +1574,6 @@
         private Button userBttnCard;
         private Button userBttnList;
         private TabPage EmployeesTabPage;
-        private Button employeeBttnDelete;
         private Button employeeBttnUpdate;
         private Button employeeBttnAdd;
         private Button employeeBttnCard;
@@ -1503,5 +1608,11 @@
         private Button branchBttnAdd;
         private Button branchBttnCart;
         private Button branchBttnList;
+        private TabPage DepartmentTabPage;
+        private Button departmentBttnDelete;
+        private Button departmentBttnUpdate;
+        private Button departmentBttnAdd;
+        private Button departmentBttnCart;
+        private Button departmentBttnList;
     }
 }

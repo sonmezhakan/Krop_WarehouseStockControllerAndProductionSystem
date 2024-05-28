@@ -21,9 +21,9 @@ namespace Krop.WinForms.Customers
             _serviceProvider = serviceProvider;
         }
 
-        private async void frmCustomerList_Load(object sender, EventArgs e)
+        private void frmCustomerList_Load(object sender, EventArgs e)
         {
-            await CustomerList();
+            CustomerList();
         }
         private void DgwCustomerListSettings()
         {
@@ -40,9 +40,12 @@ namespace Krop.WinForms.Customers
 
             dgwCustomerList.Columns[0].Visible = false;
         }
-        private async Task CustomerList()
+        private void CustomerList()
         {
-            List<GetCustomerDTO> result = await _customerHelper.GetAllAsync();
+            List<GetCustomerDTO> result = _customerHelper.GetAllAsync();
+            if (result is null)
+                return;
+
             _originalData = new BindingList<GetCustomerDTO>(result);
             _filteredData = new BindingList<GetCustomerDTO>(_originalData.ToList());
 
@@ -61,12 +64,12 @@ namespace Krop.WinForms.Customers
                 (x.CompanyName != null && x.CompanyName.ToLower().Contains(searchText)) ||
                 (x.ContactName != null && x.ContactName.ToLower().Contains(searchText)) ||
                 (x.ContactTitle != null && x.ContactTitle.ToLower().Contains(searchText)) ||
-                (x.PhoneNumber != null && x.PhoneNumber.Contains(searchText) ||
+                (x.PhoneNumber != null && x.PhoneNumber.Contains(searchText)) ||
                 (x.Email != null && x.Email.ToLower().Contains(searchText)) ||
                 (x.Country != null && x.Country.ToLower().Contains(searchText)) ||
                 (x.City != null && x.City.ToLower().Contains(searchText)) ||
                 (x.Addres != null && x.Addres.ToLower().Contains(searchText))
-                ));
+                );
 
                 _filteredData.Clear();
                 foreach (var item in filteredList)
@@ -120,9 +123,9 @@ namespace Krop.WinForms.Customers
             FormController.FormOpenController(frmCustomerDelete);
         }
 
-        private async void customerRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private void customerRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await CustomerList();
+            CustomerList();
         }
     }
 }

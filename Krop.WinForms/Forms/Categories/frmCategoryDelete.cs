@@ -18,16 +18,18 @@ namespace Krop.WinForms.Categories
             _webApiService = webApiService;
             _categoryHelper = categoryHelper;
         }
-        private async void frmCategoryDelete_Load(object sender, EventArgs e)
+        private void frmCategoryDelete_Load(object sender, EventArgs e)
         {
-            await CategoryList();
+            CategoryList();
             if(cmbBoxCategorySelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCategorySelect.SelectedValue = Id;
         }
-        private async Task CategoryList()
+        private void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = await _categoryHelper.GetAllComboBoxAsync();
-
+            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
+            
             cmbBoxCategorySelect.DataSource = null;
 
             cmbBoxCategorySelect.DisplayMember = "CategoryName";
@@ -40,17 +42,21 @@ namespace Krop.WinForms.Categories
             cmbBoxCategorySelect.SelectedIndexChanged += cmbBoxCategorySelect_SelectedIndexChanged;
         }
 
-        private async void bttnCategoryDelete_Click(object sender, EventArgs e)
+        private void bttnCategoryDelete_Click(object sender, EventArgs e)
         {
             if (cmbBoxCategorySelect.SelectedValue is not null)
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)//Cevap evet ise silme işlemleri gerçekleştiriliyor
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"category/Delete/{cmbBoxCategorySelect.SelectedValue}");
+                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"category/Delete/{cmbBoxCategorySelect.SelectedValue}").Result;
 
-                    await ResponseController.ErrorResponseController(response);//response hata kontrolü
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
 
-                    await CategoryList();//ComboBox'daki listeyi yeniliyor.
+                    CategoryList();//ComboBox'daki listeyi yeniliyor.
                 }
             }
             else

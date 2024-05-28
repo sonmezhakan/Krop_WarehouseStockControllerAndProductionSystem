@@ -4,8 +4,8 @@ namespace Krop.WinForms.HelpersClass.CategoryHelpers
 {
     public interface ICategoryHelper
     {
-        Task<List<GetCategoryComboBoxDTO>> GetAllComboBoxAsync();
-        Task<List<GetCategoryDTO>> GetAllAsync();
-        Task<GetCategoryDTO> GetByCategoryIdAsync(Guid Id);
+        List<GetCategoryComboBoxDTO> GetAllComboBoxAsync();
+        List<GetCategoryDTO> GetAllAsync();
+        GetCategoryDTO GetByCategoryIdAsync(Guid Id);
     }
 }

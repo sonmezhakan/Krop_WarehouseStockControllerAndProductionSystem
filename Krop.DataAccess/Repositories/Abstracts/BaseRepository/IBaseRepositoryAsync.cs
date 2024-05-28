@@ -7,7 +7,7 @@ namespace Krop.DataAccess.Repositories.Abstracts.BaseRepository
     {
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null,
             params Expression<Func<T, object>>[] includeProperties);
-        Task<T> GetAsync(Expression<Func<T, bool>> predicate = null);
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties);
         Task<T> FindAsync(Guid id);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate = null);
 

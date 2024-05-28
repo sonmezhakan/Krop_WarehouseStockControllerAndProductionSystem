@@ -73,15 +73,19 @@
             // 
             // txtEmail
             // 
+            txtEmail.Enabled = false;
             txtEmail.Location = new Point(12, 129);
             txtEmail.Name = "txtEmail";
+            txtEmail.ReadOnly = true;
             txtEmail.Size = new Size(206, 23);
             txtEmail.TabIndex = 5;
             // 
             // txtPhoneNumber
             // 
+            txtPhoneNumber.Enabled = false;
             txtPhoneNumber.Location = new Point(12, 85);
             txtPhoneNumber.Name = "txtPhoneNumber";
+            txtPhoneNumber.ReadOnly = true;
             txtPhoneNumber.Size = new Size(206, 23);
             txtPhoneNumber.TabIndex = 4;
             // 

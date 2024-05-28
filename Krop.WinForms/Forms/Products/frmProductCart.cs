@@ -23,18 +23,18 @@ namespace Krop.WinForms.Products
             _categoryHelper = categoryHelper;
         }
 
-        private async void frmProductCart_Load(object sender, EventArgs e)
+        private void frmProductCart_Load(object sender, EventArgs e)
         {
-            await ProductList();
-            await CategoryList();
-            await BrandList();
+            ProductList();
             txtCriticalQuantity.MaxLength = 10;
             if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxProductNameSelect.SelectedValue = Id;
         }
-        private async Task ProductList()
+        private void ProductList()
         {
-            List<GetProductComboBoxDTO> result = await _productHelper.GetAllComboBoxAsync();
+            List<GetProductComboBoxDTO> result = _productHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxProductNameSelect.DataSource = null;
             cmbBoxProductCodeSelect.DataSource = null;
@@ -57,46 +57,21 @@ namespace Krop.WinForms.Products
             cmbBoxProductNameSelect.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
             cmbBoxProductCodeSelect.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
         }
-        private async Task CategoryList()
-        {
-            List<GetCategoryComboBoxDTO> result = await _categoryHelper.GetAllComboBoxAsync();
-
-            cmbBoxCategory.DataSource = null;
-            
-            cmbBoxCategory.DisplayMember = "CategoryName";
-            cmbBoxCategory.ValueMember = "Id";
-
-            cmbBoxCategory.DataSource = result;
-        }
-        private async Task BrandList()
-        {
-            List<GetBrandComboBoxDTO> result = await _brandHelper.GetAllComboBoxAsync();
-
-            cmbBoxBrand.DataSource = null;
-
-            cmbBoxBrand.DisplayMember = "BrandName";
-            cmbBoxBrand.ValueMember = "Id";
-
-            cmbBoxBrand.DataSource = result;
-        }
-
-        private async void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.DataSource is not null)
             {
                 cmbBoxProductCodeSelect.SelectedValue = cmbBoxProductNameSelect.SelectedValue;
 
-                GetProductDTO result = await _productHelper.GetProductByIdAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
+                GetProductCartDTO result = _productHelper.GetByProductIdCartAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
+                if (result is null)
+                    return;
 
                 txtUnitPrice.Text = result.UnitPrice.ToString();
                 txtCriticalQuantity.Text = result.CriticalStock.ToString();
                 txtDescription.Text = result.Description;
-
-                if (result.BrandId != null)
-                    cmbBoxBrand.SelectedValue = result.BrandId;
-
-                if (result.BrandId != null)
-                    cmbBoxCategory.SelectedValue = result.CategoryId;
+                txtBrandName.Text = result.BrandName;
+                txtCategoryName.Text = result.CategoryName;
             }
         }
 
@@ -109,22 +84,22 @@ namespace Krop.WinForms.Products
         }
         private void txtUnitPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TextBoxHelper.TextBoxDecimalKeyPress(sender, e);
+            
         }
 
         private void txtUnitPrice_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            TextBoxHelper.TextBoxDecimalValidating(txtUnitPrice, e);
+            
         }
 
         private void txtCriticalQuantity_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TextBoxHelper.TextBoxInt32KeyPress(sender, e);
+            
         }
 
         private void txtCriticalQuantity_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            TextBoxHelper.TextBoxInt32Validating(txtCriticalQuantity, e);
+            
         }
     }
 }

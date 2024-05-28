@@ -21,15 +21,17 @@ namespace Krop.WinForms.Forms.Branches
             TextBoxHelper.TextBoxInt32KeyPress(sender, e);
         }
 
-        private async void frmBranchCart_Load(object sender, EventArgs e)
+        private void frmBranchCart_Load(object sender, EventArgs e)
         {
-            await BranchList();
+            BranchList();
             if (cmbBoxBranchSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBranchSelect.SelectedValue = Id;
         }
-        private async Task BranchList()
+        private void BranchList()
         {
-            List<GetBranchComboBoxDTO> branches = await _branchHelper.GetAllComboBoxAsync();
+            List<GetBranchComboBoxDTO> result = _branchHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxBranchSelect.DataSource = null;
 
@@ -37,16 +39,16 @@ namespace Krop.WinForms.Forms.Branches
             cmbBoxBranchSelect.ValueMember = "Id";
 
             cmbBoxBranchSelect.SelectedIndexChanged -= CmbBoxBranchSelect_SelectedIndexChanged;
-            cmbBoxBranchSelect.DataSource = branches;
+            cmbBoxBranchSelect.DataSource = result;
             cmbBoxBranchSelect.SelectedIndex = -1;
             cmbBoxBranchSelect.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
         }
 
-        private async void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxBranchSelect.SelectedValue is not null)
             {
-                GetBranchDTO result = await _branchHelper.GetByBranchIdAsync((Guid)cmbBoxBranchSelect.SelectedValue);
+                GetBranchDTO result = _branchHelper.GetByBranchIdAsync((Guid)cmbBoxBranchSelect.SelectedValue);
 
                 txtPhoneNumber.Text = result.PhoneNumber;
                 txtEmail.Text = result.Email;

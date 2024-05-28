@@ -1,13 +1,10 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Krop.Business.Features.Departments.Dtos;
+﻿using Krop.Business.Features.Departments.Dtos;
 using Krop.Business.Services.Deparments;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {
@@ -39,9 +36,16 @@ namespace Krop.WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await _departmentService.GetAllAsync();
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllComboBox(CancellationToken cancellationToken)
+        {
+            var result = await _departmentService.GetAllComboBoxAsync();
 
             return result.Success ? Ok(result) : BadRequest(result);
         }

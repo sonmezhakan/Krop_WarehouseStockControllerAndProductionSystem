@@ -20,14 +20,14 @@ namespace Krop.WinForms.Brands
             _brandHelpers = brandHelpers;
         }
 
-        private async void frmBrandUpdate_Load(object sender, EventArgs e)
+        private void frmBrandUpdate_Load(object sender, EventArgs e)
         {
-            await ComboBoxList();
+            ComboBoxList();
             if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBrandSelect.SelectedValue = Id;
         }
 
-        private async void bttnBrandUpdate_Click(object sender, EventArgs e)
+        private void bttnBrandUpdate_Click(object sender, EventArgs e)
         {
             if (cmbBoxBrandSelect.SelectedValue is not null)
             {
@@ -41,11 +41,15 @@ namespace Krop.WinForms.Brands
                         Email = txtEmail.Text
                     };
 
-                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("brand/update", updateBrandDTO);
+                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("brand/update", updateBrandDTO).Result;
 
-                    await ResponseController.ErrorResponseController(response);//Response hata kontrolü
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
 
-                    await ComboBoxList();//Listele
+                    ComboBoxList();//Listele
                 }
             }
             else
@@ -54,9 +58,11 @@ namespace Krop.WinForms.Brands
             }
         }
 
-        private async Task ComboBoxList()
+        private void ComboBoxList()
         {
-            List<GetBrandComboBoxDTO> result = await _brandHelpers.GetAllComboBoxAsync();//Listeyi alıyor
+            List<GetBrandComboBoxDTO> result = _brandHelpers.GetAllComboBoxAsync();//Listeyi alıyor
+            if (result is null)
+                return;
 
             cmbBoxBrandSelect.DataSource = null;
             
@@ -69,11 +75,13 @@ namespace Krop.WinForms.Brands
             cmbBoxBrandSelect.SelectedIndex = -1;
             cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;//SelectedIndexChanged Aktif
         }
-        private async void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbBoxBrandSelect.SelectedValue is not null)
             {
-                GetBrandDTO result = await _brandHelpers.GetByBrandIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
+                GetBrandDTO result = _brandHelpers.GetByBrandIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
+                if (result is null)
+                    return;
 
                 txtBrandName.Text = result.BrandName;
                 txtEmail.Text = result.Email;

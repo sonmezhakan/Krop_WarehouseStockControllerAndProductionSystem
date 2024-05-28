@@ -2,7 +2,10 @@
 using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
 using Krop.WinForms.Customers;
+using Krop.WinForms.Forms.AppUsers;
 using Krop.WinForms.Forms.Branches;
+using Krop.WinForms.Forms.Departments;
+using Krop.WinForms.Forms.Employees;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +61,22 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmAppUserRoleUpdate>();
             services.AddTransient<frmAppUserRoleDelete>();
             services.AddTransient<frmAppUserRoleList>();
+
+            services.AddTransient<frmAppUserAdd>();
+            services.AddTransient<frmAppUserUpdate>();
+            services.AddTransient<frmAppUserList>();
+            services.AddTransient<frmAppUserCart>();
+
+            services.AddTransient<frmDepartmentAdd>();
+            services.AddTransient<frmDepartmentUpdate>();
+            services.AddTransient<frmDepartmentDelete>();
+            services.AddTransient<frmDepartmentList>();
+            services.AddTransient<frmDepartmentCart>();
+
+            services.AddTransient<frmEmployeeAdd>();
+            services.AddTransient<frmEmployeeUpdate>();
+            services.AddTransient<frmEmployeeCart>();
+            services.AddTransient<frmEmployeeList>();
 
             return services;
         }

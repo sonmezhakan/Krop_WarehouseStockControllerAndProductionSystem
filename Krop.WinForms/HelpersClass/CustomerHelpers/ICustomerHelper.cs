@@ -4,8 +4,8 @@ namespace Krop.WinForms.HelpersClass.CustomerHelpers
 {
     public interface ICustomerHelper
     {
-        Task<List<GetCustomerDTO>> GetAllAsync();
-        Task<List<GetCustomerComboBoxDTO>> GetAllComboBoxAsync();
-        Task<GetCustomerDTO> GetByCustomerIdAsync(Guid Id);
+        List<GetCustomerDTO> GetAllAsync();
+        List<GetCustomerComboBoxDTO> GetAllComboBoxAsync();
+        GetCustomerDTO GetByCustomerIdAsync(Guid Id);
     }
 }

@@ -23,16 +23,21 @@ namespace Krop.WinForms.Categories
 
         }
 
-        private async void bttnCategoryAdd_Click(object sender, EventArgs e)
+        private void bttnCategoryAdd_Click(object sender, EventArgs e)
         {
             CreateCategoryDTO createCategoryDTO = new CreateCategoryDTO
             {
                 CategoryName = txtAppUserRoleName.Text
             };
 
-            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("category/add", createCategoryDTO);
+            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("category/add", createCategoryDTO).Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
+
         }
 
         private void bttnCategoryAddRange_Click(object sender, EventArgs e)

@@ -19,16 +19,18 @@ namespace Krop.WinForms.Products
             _productHelper = productHelper;
         }
 
-        private async void frmProductDelete_Load(object sender, EventArgs e)
+        private void frmProductDelete_Load(object sender, EventArgs e)
         {
-            await ProductList();
+            ProductList();
             if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxProductNameSelect.SelectedValue = Id;
         }
 
-        private async Task ProductList()
+        private void ProductList()
         {
-            List<GetProductComboBoxDTO> result = await _productHelper.GetAllComboBoxAsync();
+            List<GetProductComboBoxDTO> result = _productHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxProductNameSelect.DataSource = null;
             cmbBoxProductCodeSelect.DataSource = null;
@@ -64,7 +66,7 @@ namespace Krop.WinForms.Products
                 cmbBoxProductNameSelect.SelectedValue = cmbBoxProductCodeSelect.SelectedValue;
         }
 
-        private async void bttnProductDelete_Click(object sender, EventArgs e)
+        private void bttnProductDelete_Click(object sender, EventArgs e)
         {
             if (cmbBoxProductNameSelect.SelectedValue is null && cmbBoxProductCodeSelect.SelectedValue is null &&
                 cmbBoxProductNameSelect.SelectedValue != cmbBoxProductCodeSelect.SelectedValue)
@@ -72,11 +74,15 @@ namespace Krop.WinForms.Products
 
             if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"product/delete/{cmbBoxProductNameSelect.SelectedValue}");
+                HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"product/delete/{cmbBoxProductNameSelect.SelectedValue}").Result;
 
-                await ResponseController.ErrorResponseController(response);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
 
-                await ProductList();
+                ProductList();
             }
         }
     }

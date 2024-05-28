@@ -6,6 +6,7 @@ using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
+using System.Linq.Expressions;
 
 namespace Krop.Business.Services.Employees
 {
@@ -46,13 +47,25 @@ namespace Krop.Business.Services.Employees
         }
         #endregion
         #region Listed
-        public async Task<IDataResult<IEnumerable<GetEmployeeDTO>>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetEmployeeListDTO>>> GetAllAsync()
         {
-            var employees = await _employeeRepository.GetAllAsync();
+            var employees = await _employeeRepository.GetAllAsync(includeProperties: new Expression<Func<Employee, object>>[]
+            {
+                a=>a.AppUser,
+                d=>d.Department,
+                b=>b.Branch
+            });
 
-            return new SuccessDataResult<IEnumerable<GetEmployeeDTO>>(
-                _mapper.Map<List<GetEmployeeDTO>>(employees));
+            return new SuccessDataResult<IEnumerable<GetEmployeeListDTO>>(
+                _mapper.Map<List<GetEmployeeListDTO>>(employees));
+        }
 
+        public async Task<IDataResult<IEnumerable<GetEmployeeComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            var employees = await _employeeRepository.GetAllComboBoxAsync();
+
+            return new SuccessDataResult<IEnumerable<GetEmployeeComboBoxDTO>>(
+                _mapper.Map<IEnumerable<GetEmployeeComboBoxDTO>>(employees));
         }
         #endregion
         #region Search
@@ -62,6 +75,19 @@ namespace Krop.Business.Services.Employees
 
             return new SuccessDataResult<GetEmployeeDTO>(
                 _mapper.Map<GetEmployeeDTO>(employee));
+        }
+
+        public async Task<IDataResult<GetEmployeeCartDTO>> GetByIdCartAsync(Guid Id)
+        {
+            var employee = await _employeeRepository.GetAsync(predicate:x=>x.AppUserId ==Id,
+                includeProperties:new Expression<Func<Employee, object>>[]
+                {
+                    d=>d.Department,
+                    b=>b.Branch
+                });
+
+            return new SuccessDataResult<GetEmployeeCartDTO>(
+                _mapper.Map<GetEmployeeCartDTO>(employee));
         }
         #endregion
     }

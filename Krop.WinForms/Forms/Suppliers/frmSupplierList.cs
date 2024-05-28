@@ -20,9 +20,9 @@ namespace Krop.WinForms.Suppliers
             _serviceProvider = serviceProvider;
         }
 
-        private async void frmSupplierList_Load(object sender, EventArgs e)
+        private void frmSupplierList_Load(object sender, EventArgs e)
         {
-            await SupplierList();
+            SupplierList();
         }
         private void DgwSupplierListSettings()
         {
@@ -38,9 +38,12 @@ namespace Krop.WinForms.Suppliers
 
             dgwSupplierList.Columns[0].Visible = false;
         }
-        private async Task SupplierList()
+        private void SupplierList()
         {
-            List<GetSupplierDTO> result = await _supplierHelper.GetAllAsync();
+            List<GetSupplierDTO> result = _supplierHelper.GetAllAsync();
+            if (result is null)
+                return;
+
             _originalData = new BindingList<GetSupplierDTO>(result);
             _filteredData = new BindingList<GetSupplierDTO>(_originalData.ToList());
 
@@ -118,7 +121,7 @@ namespace Krop.WinForms.Suppliers
 
         private async void supplierListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await SupplierList();
+            SupplierList();
         }
     }
 }

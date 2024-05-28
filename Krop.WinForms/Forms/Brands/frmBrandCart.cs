@@ -14,16 +14,18 @@ namespace Krop.WinForms.Brands
             _brandHelper = brandHelper;
         }
 
-        private async void frmBrandCart_Load(object sender, EventArgs e)
+        private void frmBrandCart_Load(object sender, EventArgs e)
         {
-            await BrandList();
+            BrandList();
             if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBrandSelect.SelectedValue = Id;
         }
 
-        private async Task BrandList()
+        private void BrandList()
         {
-            List<GetBrandComboBoxDTO> result = await _brandHelper.GetAllComboBoxAsync();
+            List<GetBrandComboBoxDTO> result = _brandHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxBrandSelect.DataSource = null;
 
@@ -36,12 +38,12 @@ namespace Krop.WinForms.Brands
             cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
         }
 
-        private async void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
 
             if (cmbBoxBrandSelect.SelectedValue is not null)
             {
-                GetBrandDTO result = await _brandHelper.GetByBrandIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
+                GetBrandDTO result = _brandHelper.GetByBrandIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
 
                 txtPhoneNumber.Text = result.PhoneNumber;
                 txtEmail.Text = result.Email;

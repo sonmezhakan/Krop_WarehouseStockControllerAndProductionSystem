@@ -15,15 +15,17 @@ namespace Krop.WinForms.Customers
             _customerHelper = customerHelper;
         }
 
-        private async void frmCustomerCart_Load(object sender, EventArgs e)
+        private void frmCustomerCart_Load(object sender, EventArgs e)
         {
-            await CustomerList();
+            CustomerList();
             if (cmbBoxCustomerSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCustomerSelect.SelectedValue = Id;
         }
-        private async Task CustomerList()
+        private void CustomerList()
         {
-            List<GetCustomerComboBoxDTO> customers = await _customerHelper.GetAllComboBoxAsync();
+            List<GetCustomerComboBoxDTO> result = _customerHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxCustomerSelect.DataSource = null;
 
@@ -31,16 +33,16 @@ namespace Krop.WinForms.Customers
             cmbBoxCustomerSelect.ValueMember = "Id";
 
             cmbBoxCustomerSelect.SelectedIndexChanged -= CmbBoxCustomerSelect_SelectedIndexChanged;
-            cmbBoxCustomerSelect.DataSource = customers;
+            cmbBoxCustomerSelect.DataSource = result;
             cmbBoxCustomerSelect.SelectedIndex = -1;
             cmbBoxCustomerSelect.SelectedIndexChanged += CmbBoxCustomerSelect_SelectedIndexChanged;
         }
 
-        private async void CmbBoxCustomerSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private void CmbBoxCustomerSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxCustomerSelect.SelectedValue is not null)
             {
-                var result = await _customerHelper.GetByCustomerIdAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
+                var result = _customerHelper.GetByCustomerIdAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
 
                 if (result.Invoice == Entities.Enums.InvoiceEnum.Bireysel)
                     radioBttnPerson.Checked = true;

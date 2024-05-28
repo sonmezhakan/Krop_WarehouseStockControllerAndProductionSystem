@@ -26,7 +26,7 @@ namespace Krop.Business.Features.AppUsers.Validations
             RuleFor(x => x.City)
                 .MaximumLength(64).WithMessage(AppUserMessages.CityMaxLenght);
 
-            RuleFor(x => x.Address)
+            RuleFor(x => x.Addres)
                 .MaximumLength(255).WithMessage(AppUserMessages.Address);
 
             //FirstName, LastName, NationalNumber

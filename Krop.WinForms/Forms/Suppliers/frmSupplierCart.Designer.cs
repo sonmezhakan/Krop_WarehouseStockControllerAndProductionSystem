@@ -84,6 +84,7 @@
             // 
             txtWebSiteUrl.Location = new Point(21, 469);
             txtWebSiteUrl.Name = "txtWebSiteUrl";
+            txtWebSiteUrl.ReadOnly = true;
             txtWebSiteUrl.Size = new Size(234, 23);
             txtWebSiteUrl.TabIndex = 17;
             // 
@@ -101,6 +102,7 @@
             txtAddress.Location = new Point(21, 347);
             txtAddress.Multiline = true;
             txtAddress.Name = "txtAddress";
+            txtAddress.ReadOnly = true;
             txtAddress.Size = new Size(234, 97);
             txtAddress.TabIndex = 15;
             // 
@@ -117,6 +119,7 @@
             // 
             txtCity.Location = new Point(21, 303);
             txtCity.Name = "txtCity";
+            txtCity.ReadOnly = true;
             txtCity.Size = new Size(234, 23);
             txtCity.TabIndex = 13;
             // 
@@ -124,6 +127,7 @@
             // 
             txtCountry.Location = new Point(21, 259);
             txtCountry.Name = "txtCountry";
+            txtCountry.ReadOnly = true;
             txtCountry.Size = new Size(234, 23);
             txtCountry.TabIndex = 12;
             // 
@@ -131,6 +135,7 @@
             // 
             txtEmail.Location = new Point(21, 215);
             txtEmail.Name = "txtEmail";
+            txtEmail.ReadOnly = true;
             txtEmail.Size = new Size(234, 23);
             txtEmail.TabIndex = 11;
             // 
@@ -191,6 +196,7 @@
             // 
             txtPhoneNumber.Location = new Point(21, 169);
             txtPhoneNumber.Name = "txtPhoneNumber";
+            txtPhoneNumber.ReadOnly = true;
             txtPhoneNumber.Size = new Size(234, 23);
             txtPhoneNumber.TabIndex = 7;
             // 
@@ -207,6 +213,7 @@
             // 
             txtContactTitle.Location = new Point(21, 125);
             txtContactTitle.Name = "txtContactTitle";
+            txtContactTitle.ReadOnly = true;
             txtContactTitle.Size = new Size(234, 23);
             txtContactTitle.TabIndex = 5;
             // 
@@ -214,6 +221,7 @@
             // 
             txtContactName.Location = new Point(21, 81);
             txtContactName.Name = "txtContactName";
+            txtContactName.ReadOnly = true;
             txtContactName.Size = new Size(234, 23);
             txtContactName.TabIndex = 4;
             // 

@@ -3,7 +3,10 @@ using Krop.WinForms.AppUserRoles;
 using Krop.WinForms.Brands;
 using Krop.WinForms.Categories;
 using Krop.WinForms.Customers;
+using Krop.WinForms.Forms.AppUsers;
 using Krop.WinForms.Forms.Branches;
+using Krop.WinForms.Forms.Departments;
+using Krop.WinForms.Forms.Employees;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
@@ -241,6 +244,84 @@ namespace Krop.WinForms
         {
             frmAppUserRoleDelete frmAppUserRoleDelete = _serviceProvider.GetRequiredService<frmAppUserRoleDelete>();
             FormController.FormOpenController(frmAppUserRoleDelete);
+        }
+
+        private void userBttnList_Click(object sender, EventArgs e)
+        {
+            frmAppUserList frmAppUserList = _serviceProvider.GetRequiredService<frmAppUserList>();
+            FormController.FormOpenController(frmAppUserList);
+        }
+
+        private void userBttnCard_Click(object sender, EventArgs e)
+        {
+            frmAppUserCart frmAppUserCart = _serviceProvider.GetRequiredService<frmAppUserCart>();
+            FormController.FormOpenController(frmAppUserCart);
+        }
+
+        private void userBttnAdd_Click(object sender, EventArgs e)
+        {
+            frmAppUserAdd frmAppUserAdd = _serviceProvider.GetRequiredService<frmAppUserAdd>();
+            FormController.FormOpenController(frmAppUserAdd);
+        }
+
+        private void userBttnUpdate_Click(object sender, EventArgs e)
+        {
+            frmAppUserUpdate frmAppUserUpdate = _serviceProvider.GetRequiredService<frmAppUserUpdate>();
+            FormController.FormOpenController(frmAppUserUpdate);
+        }
+
+        private void departmentBttnList_Click(object sender, EventArgs e)
+        {
+            frmDepartmentList frmDepartmentList = _serviceProvider.GetRequiredService<frmDepartmentList>();
+            FormController.FormOpenController(frmDepartmentList);
+        }
+
+        private void departmentBttnCart_Click(object sender, EventArgs e)
+        {
+            frmDepartmentCart frmDepartmentCart = _serviceProvider.GetRequiredService<frmDepartmentCart>();
+            FormController.FormOpenController(frmDepartmentCart);
+        }
+
+        private void departmentBttnAdd_Click(object sender, EventArgs e)
+        {
+            frmDepartmentAdd frmDepartmentAdd = _serviceProvider.GetRequiredService<frmDepartmentAdd>();
+            FormController.FormOpenController(frmDepartmentAdd);
+        }
+
+        private void departmentBttnUpdate_Click(object sender, EventArgs e)
+        {
+            frmDepartmentUpdate frmDepartmentUpdate = _serviceProvider.GetRequiredService<frmDepartmentUpdate>();
+            FormController.FormOpenController(frmDepartmentUpdate);
+        }
+
+        private void departmentBttnDelete_Click(object sender, EventArgs e)
+        {
+            frmDepartmentDelete frmDepartmentDelete = _serviceProvider.GetRequiredService<frmDepartmentDelete>();
+            FormController.FormOpenController(frmDepartmentDelete);
+        }
+
+        private void employeeBttnList_Click(object sender, EventArgs e)
+        {
+            frmEmployeeList frmEmployeeList = _serviceProvider.GetRequiredService<frmEmployeeList>();
+            FormController.FormOpenController(frmEmployeeList);
+        }
+
+        private void employeeBttnCard_Click(object sender, EventArgs e)
+        {
+            frmEmployeeCart frmEmployeeCart = _serviceProvider.GetRequiredService<frmEmployeeCart>();
+            FormController.FormOpenController(frmEmployeeCart);
+        }
+
+        private void employeeBttnAdd_Click(object sender, EventArgs e)
+        {
+            frmEmployeeAdd frmEmployeeAdd = _serviceProvider.GetRequiredService<frmEmployeeAdd>();
+            FormController.FormOpenController(frmEmployeeAdd);
+        }
+
+        private void employeeBttnUpdate_Click(object sender, EventArgs e)
+        {
+            frmEmployeeUpdate frmEmployeeUpdate = _serviceProvider.GetRequiredService<frmEmployeeUpdate>();
+            FormController.FormOpenController(frmEmployeeUpdate);
         }
     }
 }

@@ -12,35 +12,62 @@ namespace Krop.WinForms.HelpersClass.ProductHelpers
             _webApiService = webApiService;
         }
 
-        public async Task<List<GetProductListDTO>> GetAllAsync()
+        public List<GetProductListDTO> GetAllAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAll");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync("product/GetAll").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataListResponseController<GetProductListDTO>(response);
+            var result = ResponseController.SuccessDataListResponseController<GetProductListDTO>(response);
 
             return result.Data;
         }
 
-        public async Task<List<GetProductComboBoxDTO>> GetAllComboBoxAsync()
+        public List<GetProductComboBoxDTO> GetAllComboBoxAsync()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync("product/GetAllComboBox").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response);
+            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response);
 
             return result.Data;
         }
 
-        public async Task<GetProductDTO> GetProductByIdAsync(Guid Id)
+        public GetProductDTO GetByProductIdAsync(Guid Id)
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"product/GetById/{Id}");
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"product/GetById/{Id}").Result;
 
-            await ResponseController.ErrorResponseController(response);
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
 
-            var result = await ResponseController.SuccessDataResponseController<GetProductDTO>(response);
+            var result = ResponseController.SuccessDataResponseController<GetProductDTO>(response);
+
+            return result.Data;
+        }
+
+        public GetProductCartDTO GetByProductIdCartAsync(Guid Id)
+        {
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"product/GetByIdCart/{Id}").Result;
+
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return null;
+            }
+
+            var result = ResponseController.SuccessDataResponseController<GetProductCartDTO>(response);
 
             return result.Data;
         }

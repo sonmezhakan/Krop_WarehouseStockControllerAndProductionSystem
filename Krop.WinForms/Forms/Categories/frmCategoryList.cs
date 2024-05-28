@@ -27,9 +27,12 @@ namespace Krop.WinForms.Categories
 
             dgwCategoryList.Columns[0].Visible = false;
         }
-        private async Task CategoryList()
+        private void CategoryList()
         {
-            List<GetCategoryDTO> result = await _categoryHelper.GetAllAsync();
+            List<GetCategoryDTO> result = _categoryHelper.GetAllAsync();
+            if (result is null)
+                return;
+
             _originalData = new BindingList<GetCategoryDTO>(result);
             _filteredData = new BindingList<GetCategoryDTO>(_originalData.ToList());
 
@@ -61,9 +64,9 @@ namespace Krop.WinForms.Categories
             }
         }
 
-        private async void frmCategoryList_Load(object sender, EventArgs e)
+        private void frmCategoryList_Load(object sender, EventArgs e)
         {
-            await CategoryList();
+            CategoryList();
         }
 
         private void bttnSearch_Click(object sender, EventArgs e)
@@ -98,9 +101,9 @@ namespace Krop.WinForms.Categories
             FormController.FormOpenController(frmCategoryDelete);
         }
 
-        private async void CategoryListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CategoryListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await CategoryList();
+            CategoryList();
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)

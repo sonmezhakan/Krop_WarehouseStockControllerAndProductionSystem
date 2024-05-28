@@ -1,5 +1,6 @@
 ﻿using Krop.Business.Features.Branches.Dtos;
 using Krop.Common.Helpers.WebApiService;
+using Krop.Common.Utilits.Result;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.BranchHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -20,16 +21,18 @@ namespace Krop.WinForms.Forms.Branches
             _branchHelper = branchHelper;
         }
 
-        private async void frmBranchUpdate_Load(object sender, EventArgs e)
+        private void frmBranchUpdate_Load(object sender, EventArgs e)
         {
-            await BranchList();
+            BranchList();
             txtPhoneNumber.MaxLength = 11;
             if (cmbBoxBranchSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBranchSelect.SelectedValue = Id;
         }
-        private async Task BranchList()
+        private void BranchList()
         {
-            List<GetBranchComboBoxDTO> branches = await _branchHelper.GetAllComboBoxAsync();
+            List<GetBranchComboBoxDTO> result = _branchHelper.GetAllComboBoxAsync();
+            if (result is null)
+                return;
 
             cmbBoxBranchSelect.DataSource = null;
 
@@ -37,16 +40,18 @@ namespace Krop.WinForms.Forms.Branches
             cmbBoxBranchSelect.ValueMember = "Id";
 
             cmbBoxBranchSelect.SelectedIndexChanged -= CmbBoxBranchSelect_SelectedIndexChanged;
-            cmbBoxBranchSelect.DataSource = branches;
+            cmbBoxBranchSelect.DataSource = result;
             cmbBoxBranchSelect.SelectedIndex = -1;
             cmbBoxBranchSelect.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
         }
 
-        private async void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxBranchSelect.SelectedValue is not null)
             {
-                GetBranchDTO result = await _branchHelper.GetByBranchIdAsync((Guid)cmbBoxBranchSelect.SelectedValue);
+                GetBranchDTO result = _branchHelper.GetByBranchIdAsync((Guid)cmbBoxBranchSelect.SelectedValue);
+                if (result is null)
+                    return;
 
                 txtBranchName.Text = result.BranchName;
                 txtPhoneNumber.Text = result.PhoneNumber;
@@ -62,11 +67,11 @@ namespace Krop.WinForms.Forms.Branches
             TextBoxHelper.TextBoxInt32KeyPress(sender, e);
         }
 
-        private async void bttnBranchUpdate_Click(object sender, EventArgs e)
+        private void bttnBranchUpdate_Click(object sender, EventArgs e)
         {
-            if(cmbBoxBranchSelect.SelectedValue is not null)
+            if (cmbBoxBranchSelect.SelectedValue is not null)
             {
-                if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
+                if (DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
                     UpdateBranchDTO updateBranchDTO = new UpdateBranchDTO
                     {
@@ -78,11 +83,16 @@ namespace Krop.WinForms.Forms.Branches
                         City = txtCity.Text,
                         Addres = txtAddress.Text
                     };
-                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("branch/update", updateBranchDTO);
+                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("branch/update", updateBranchDTO).Result;
 
-                    await ResponseController.ErrorResponseController(response);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
 
-                    await BranchList();
+
+                    BranchList();
                 }
             }
             else

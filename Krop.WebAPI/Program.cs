@@ -1,10 +1,14 @@
 using Autofac;
+using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using FluentValidation;
 using Krop.Business.DependencyResolvers.Autofac;
 using Krop.Business.Exceptions.Extensions;
 using Krop.Business.Features.Categories.Validations;
 using Krop.IOC.DependencyResolvers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Krop.WebAPI
 {
@@ -34,6 +38,11 @@ namespace Krop.WebAPI
 			builder.Services.AddFluentValidationRegistration();//Fluent Validation
 			builder.Services.AddIdentityServiceRegistration();//Identity Service
 			builder.Services.AddWebApiRegistration();//WebApi Service
+			builder.Services.AddEmailRegistration();//EmailService
+
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            builder.Services.AddScoped<IUrlHelperFactory, UrlHelperFactory>();
 
             var app = builder.Build();
 

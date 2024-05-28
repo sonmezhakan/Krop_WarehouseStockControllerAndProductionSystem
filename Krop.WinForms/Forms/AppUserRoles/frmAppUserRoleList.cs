@@ -20,9 +20,9 @@ namespace Krop.WinForms.AppUserRoles
             _serviceProvider = serviceProvider;
         }
 
-        private async void frmAppUserRoleList_Load(object sender, EventArgs e)
+        private void frmAppUserRoleList_Load(object sender, EventArgs e)
         {
-            await AppUserRoleList();
+            AppUserRoleList();
         }
         private void DgwAppUserRoleListSettings()
         {
@@ -31,9 +31,12 @@ namespace Krop.WinForms.AppUserRoles
 
             dgwAppUserRoleList.Columns[0].Visible = false;
         }
-        private async Task AppUserRoleList()
+        private void AppUserRoleList()
         {
-            List<GetAppUserRoleDTO> result = await _appUserRoleHelper.GetAllAsync();
+            List<GetAppUserRoleDTO> result = _appUserRoleHelper.GetAllAsync();
+            if (result is null)
+                return;
+
             _originalData = new BindingList<GetAppUserRoleDTO>(result);
             _filteredData = new BindingList<GetAppUserRoleDTO>(_originalData.ToList());
 
@@ -96,9 +99,9 @@ namespace Krop.WinForms.AppUserRoles
             FormController.FormOpenController(frmAppUserRoleDelete);
         }
 
-        private async void appUserRoleListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private void appUserRoleListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await AppUserRoleList();
+            AppUserRoleList();
         }
     }
 }

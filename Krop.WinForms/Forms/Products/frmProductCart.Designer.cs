@@ -32,8 +32,6 @@
             panelMidLeft = new System.Windows.Forms.Panel();
             label9 = new Label();
             label8 = new Label();
-            cmbBoxBrand = new ComboBox();
-            cmbBoxCategory = new ComboBox();
             txtDescription = new TextBox();
             label7 = new Label();
             label6 = new Label();
@@ -49,6 +47,8 @@
             txtCriticalQuantity = new TextBox();
             txtUnitPrice = new TextBox();
             panelBottom = new System.Windows.Forms.Panel();
+            txtCategoryName = new TextBox();
+            txtBrandName = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pBoxProductImage).BeginInit();
             panelMidLeft.SuspendLayout();
             panelMid.SuspendLayout();
@@ -94,27 +94,13 @@
             label8.TabIndex = 32;
             label8.Text = "₺";
             // 
-            // cmbBoxBrand
-            // 
-            cmbBoxBrand.FormattingEnabled = true;
-            cmbBoxBrand.Location = new Point(17, 172);
-            cmbBoxBrand.Name = "cmbBoxBrand";
-            cmbBoxBrand.Size = new Size(217, 23);
-            cmbBoxBrand.TabIndex = 31;
-            // 
-            // cmbBoxCategory
-            // 
-            cmbBoxCategory.FormattingEnabled = true;
-            cmbBoxCategory.Location = new Point(17, 126);
-            cmbBoxCategory.Name = "cmbBoxCategory";
-            cmbBoxCategory.Size = new Size(217, 23);
-            cmbBoxCategory.TabIndex = 30;
-            // 
             // txtDescription
             // 
+            txtDescription.Enabled = false;
             txtDescription.Location = new Point(17, 304);
             txtDescription.Multiline = true;
             txtDescription.Name = "txtDescription";
+            txtDescription.ReadOnly = true;
             txtDescription.Size = new Size(217, 136);
             txtDescription.TabIndex = 29;
             // 
@@ -148,14 +134,14 @@
             // 
             // panelMidMid
             // 
+            panelMidMid.Controls.Add(txtBrandName);
+            panelMidMid.Controls.Add(txtCategoryName);
             panelMidMid.Controls.Add(cmbBoxProductCodeSelect);
             panelMidMid.Controls.Add(label11);
             panelMidMid.Controls.Add(cmbBoxProductNameSelect);
             panelMidMid.Controls.Add(label10);
             panelMidMid.Controls.Add(label9);
             panelMidMid.Controls.Add(label8);
-            panelMidMid.Controls.Add(cmbBoxBrand);
-            panelMidMid.Controls.Add(cmbBoxCategory);
             panelMidMid.Controls.Add(txtDescription);
             panelMidMid.Controls.Add(label7);
             panelMidMid.Controls.Add(label6);
@@ -239,8 +225,10 @@
             // 
             // txtCriticalQuantity
             // 
+            txtCriticalQuantity.Enabled = false;
             txtCriticalQuantity.Location = new Point(17, 260);
             txtCriticalQuantity.Name = "txtCriticalQuantity";
+            txtCriticalQuantity.ReadOnly = true;
             txtCriticalQuantity.Size = new Size(182, 23);
             txtCriticalQuantity.TabIndex = 19;
             txtCriticalQuantity.Text = "0";
@@ -249,8 +237,10 @@
             // 
             // txtUnitPrice
             // 
+            txtUnitPrice.Enabled = false;
             txtUnitPrice.Location = new Point(17, 216);
             txtUnitPrice.Name = "txtUnitPrice";
+            txtUnitPrice.ReadOnly = true;
             txtUnitPrice.Size = new Size(182, 23);
             txtUnitPrice.TabIndex = 18;
             txtUnitPrice.Text = "0";
@@ -266,6 +256,24 @@
             panelBottom.Padding = new Padding(0, 0, 15, 0);
             panelBottom.Size = new Size(474, 41);
             panelBottom.TabIndex = 2;
+            // 
+            // txtCategoryName
+            // 
+            txtCategoryName.Enabled = false;
+            txtCategoryName.Location = new Point(17, 124);
+            txtCategoryName.Name = "txtCategoryName";
+            txtCategoryName.ReadOnly = true;
+            txtCategoryName.Size = new Size(217, 23);
+            txtCategoryName.TabIndex = 42;
+            // 
+            // txtBrandName
+            // 
+            txtBrandName.Enabled = false;
+            txtBrandName.Location = new Point(17, 170);
+            txtBrandName.Name = "txtBrandName";
+            txtBrandName.ReadOnly = true;
+            txtBrandName.Size = new Size(217, 23);
+            txtBrandName.TabIndex = 43;
             // 
             // frmProductCart
             // 
@@ -294,8 +302,6 @@
         private System.Windows.Forms.Panel panelMidLeft;
         private Label label9;
         private Label label8;
-        private ComboBox cmbBoxBrand;
-        private ComboBox cmbBoxCategory;
         private TextBox txtDescription;
         private Label label7;
         private Label label6;
@@ -311,5 +317,7 @@
         private Label label11;
         private ComboBox cmbBoxProductNameSelect;
         private Label label10;
+        private TextBox txtBrandName;
+        private TextBox txtCategoryName;
     }
 }

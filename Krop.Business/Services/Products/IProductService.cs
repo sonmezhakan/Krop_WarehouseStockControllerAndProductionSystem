@@ -19,5 +19,7 @@ namespace Krop.Business.Services.Products
         Task<IDataResult<GetProductDTO>> GetByIdAsync(Guid id);
         Task<IDataResult<IEnumerable<GetProductComboBoxDTO>>> GetAllComboBoxAsync();
 
+        Task<IDataResult<GetProductCartDTO>> GetByIdCartAsync(Guid Id);
+
      } 
 }

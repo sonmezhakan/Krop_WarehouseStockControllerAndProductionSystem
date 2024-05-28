@@ -4,8 +4,8 @@ namespace Krop.WinForms.HelpersClass.BranchHelpers
 {
     public interface IBranchHelper
     {
-        Task<List<GetBranchComboBoxDTO>> GetAllComboBoxAsync();
-        Task<List<GetBranchDTO>> GetAllAsync();
-        Task<GetBranchDTO> GetByBranchIdAsync(Guid Id);
+        List<GetBranchComboBoxDTO> GetAllComboBoxAsync();
+        List<GetBranchDTO> GetAllAsync();
+        GetBranchDTO GetByBranchIdAsync(Guid Id);
     }
 }

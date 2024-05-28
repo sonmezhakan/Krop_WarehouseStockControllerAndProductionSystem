@@ -12,12 +12,6 @@ namespace Krop.WinForms
         [STAThread]
         static void Main()
         {
-            // AutoMapper konfigürasyonunu baþlatma
-            /*var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MappingProfile>();
-            });
-            Mapper = config.CreateMapper();*/
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
