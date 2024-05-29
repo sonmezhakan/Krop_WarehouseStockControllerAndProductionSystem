@@ -23,6 +23,7 @@ namespace Krop.Entities.Entities
         public virtual Category Category { get; set; }
         public virtual ICollection<Stock> Stocks { get; set; }
         public virtual Brand Brand { get; set; }
+        public virtual List<ProductReceipt> ProductReceipts { get; set; }
 
     }
 	

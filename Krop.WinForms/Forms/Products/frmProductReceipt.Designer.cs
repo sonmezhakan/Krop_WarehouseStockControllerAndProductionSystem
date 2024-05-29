@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmProductReceipt));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             panelBottom = new System.Windows.Forms.Panel();
@@ -37,6 +38,8 @@
             panel2 = new System.Windows.Forms.Panel();
             panelMidMid = new System.Windows.Forms.Panel();
             dgwProductReceiptList = new DataGridView();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            SelectToolStripMenuItem = new ToolStripMenuItem();
             panelTop = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
             bttnSearch = new Button();
@@ -56,6 +59,7 @@
             panel2.SuspendLayout();
             panelMidMid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgwProductReceiptList).BeginInit();
+            contextMenuStrip1.SuspendLayout();
             panelTop.SuspendLayout();
             panelMidLeft.SuspendLayout();
             SuspendLayout();
@@ -98,6 +102,7 @@
             bttnUpdate.Text = "Güncelle";
             bttnUpdate.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnUpdate.UseVisualStyleBackColor = true;
+            bttnUpdate.Click += bttnUpdate_Click;
             // 
             // bttnDelete
             // 
@@ -111,6 +116,7 @@
             bttnDelete.Text = "Sil";
             bttnDelete.TextImageRelation = TextImageRelation.ImageBeforeText;
             bttnDelete.UseVisualStyleBackColor = true;
+            bttnDelete.Click += bttnDelete_Click;
             // 
             // panel2
             // 
@@ -146,6 +152,7 @@
             dgwProductReceiptList.BorderStyle = BorderStyle.None;
             dgwProductReceiptList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwProductReceiptList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgwProductReceiptList.ContextMenuStrip = contextMenuStrip1;
             dgwProductReceiptList.Dock = DockStyle.Fill;
             dgwProductReceiptList.Location = new Point(5, 5);
             dgwProductReceiptList.Name = "dgwProductReceiptList";
@@ -155,6 +162,20 @@
             dgwProductReceiptList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgwProductReceiptList.Size = new Size(824, 444);
             dgwProductReceiptList.TabIndex = 9;
+            dgwProductReceiptList.DoubleClick += dgwProductReceiptList_DoubleClick;
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { SelectToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(93, 26);
+            // 
+            // SelectToolStripMenuItem
+            // 
+            SelectToolStripMenuItem.Name = "SelectToolStripMenuItem";
+            SelectToolStripMenuItem.Size = new Size(92, 22);
+            SelectToolStripMenuItem.Text = "Seç";
+            SelectToolStripMenuItem.Click += SelectToolStripMenuItem_Click;
             // 
             // panelTop
             // 
@@ -173,9 +194,9 @@
             txtSearch.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             txtSearch.Location = new Point(5, 5);
             txtSearch.Name = "txtSearch";
+            txtSearch.PlaceholderText = "Arama....";
             txtSearch.Size = new Size(749, 27);
             txtSearch.TabIndex = 2;
-            txtSearch.Text = "Arama....";
             txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // bttnSearch
@@ -332,6 +353,7 @@
             panel2.ResumeLayout(false);
             panelMidMid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgwProductReceiptList).EndInit();
+            contextMenuStrip1.ResumeLayout(false);
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
             panelMidLeft.ResumeLayout(false);
@@ -363,5 +385,7 @@
         private Button bttnDelete;
         private System.Windows.Forms.Panel panelMidMid;
         private DataGridView dgwProductReceiptList;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem SelectToolStripMenuItem;
     }
 }

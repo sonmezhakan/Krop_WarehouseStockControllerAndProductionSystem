@@ -9,18 +9,17 @@ using Krop.Business.Services.Categories;
 using Krop.Business.Services.Customers;
 using Krop.Business.Services.Deparments;
 using Krop.Business.Services.Employees;
+using Krop.Business.Services.ProductReceipts;
 using Krop.Business.Services.Products;
 using Krop.Business.Services.Stocks;
 using Krop.Business.Services.Suppliers;
 using Krop.Common.Helpers.WebApiService;
 using Krop.Common.Utilits.Interceptors;
 using Krop.DataAccess.Repositories.Abstracts;
-using Krop.DataAccess.Repositories.Abstracts.BaseRepository;
 using Krop.DataAccess.Repositories.Concretes.EntityFramework;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 
@@ -67,6 +66,8 @@ namespace Krop.Business.DependencyResolvers.Autofac
             builder.RegisterType<SupplierManager>().As<ISupplierService>().SingleInstance();
             builder.RegisterType<EfSupplierRepository>().As<ISupplierRepository>().SingleInstance();
 
+            builder.RegisterType<ProductReceiptManager>().As<IProductReceiptService>().SingleInstance();
+            builder.RegisterType<EFProductReceiptRepository>().As<IProductReceiptRepository>().SingleInstance();
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().SingleInstance();

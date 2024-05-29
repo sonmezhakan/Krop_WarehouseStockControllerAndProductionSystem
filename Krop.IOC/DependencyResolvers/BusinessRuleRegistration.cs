@@ -6,6 +6,7 @@ using Krop.Business.Features.Categories.Rules;
 using Krop.Business.Features.Customers.Rules;
 using Krop.Business.Features.Departments.Rules;
 using Krop.Business.Features.Employees.Rules;
+using Krop.Business.Features.ProductReceipts.Rules;
 using Krop.Business.Features.Products.Rules;
 using Krop.Business.Features.Suppliers.Rules;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,7 @@ namespace Krop.IOC.DependencyResolvers
             services.AddScoped<BrandBusinessRules>();
             services.AddScoped<CustomerBusinessRules>();
             services.AddScoped<SupplierBusinessRules>();
+            services.AddScoped<ProductReceiptBusinessRules>();
 
             return services;
         }

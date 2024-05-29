@@ -16,7 +16,7 @@ namespace Krop.DataAccess.Configurations
         {
             builder.Ignore(x => x.Id);
 
-            builder.HasKey(x => x.AppUserId);
+            builder.HasKey(x => new { x.AppUserId });
 
             builder.Property(x => x.Salary)
                 .HasColumnType("decimal(18,2)")

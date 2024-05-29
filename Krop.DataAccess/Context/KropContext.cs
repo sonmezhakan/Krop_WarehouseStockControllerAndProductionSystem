@@ -24,6 +24,7 @@ namespace Krop.DataAccess.Context
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Supplier>  Suppliers { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<ProductReceipt> ProductReceipts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -37,6 +38,7 @@ namespace Krop.DataAccess.Context
             builder.ApplyConfiguration(new BrandConfiguration());
             builder.ApplyConfiguration(new CustomerConfiguration());
             builder.ApplyConfiguration(new SupplierConfiguration());
+            builder.ApplyConfiguration(new ProductReceiptConfiguration());
 
 			base.OnModelCreating(builder);
 		}

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Krop.DataAccess.Migrations
 {
     [DbContext(typeof(KropContext))]
-    [Migration("20240524175309_init")]
+    [Migration("20240529153752_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -532,6 +532,54 @@ namespace Krop.DataAccess.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Krop.Entities.Entities.ProductReceipt", b =>
+                {
+                    b.Property<Guid>("ProduceProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedComputerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedIpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DataStatu")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeletedComputerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedIpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedComputerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedIpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProduceProductId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductReceipts");
+                });
+
             modelBuilder.Entity("Krop.Entities.Entities.Stock", b =>
                 {
                     b.Property<Guid>("BranchId")
@@ -1021,6 +1069,17 @@ namespace Krop.DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Krop.Entities.Entities.ProductReceipt", b =>
+                {
+                    b.HasOne("Krop.Entities.Entities.Product", "Product")
+                        .WithMany("ProductReceipts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Krop.Entities.Entities.Stock", b =>
                 {
                     b.HasOne("Krop.Entities.Entities.Branch", "Branch")
@@ -1210,6 +1269,8 @@ namespace Krop.DataAccess.Migrations
 
             modelBuilder.Entity("Krop.Entities.Entities.Product", b =>
                 {
+                    b.Navigation("ProductReceipts");
+
                     b.Navigation("Stocks");
                 });
 #pragma warning restore 612, 618

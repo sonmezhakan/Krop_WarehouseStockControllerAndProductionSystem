@@ -415,6 +415,35 @@ namespace Krop.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductReceipts",
+                columns: table => new
+                {
+                    ProduceProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    CreatedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedIpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DataStatu = table.Column<int>(type: "int", nullable: false),
+                    DeletedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedIpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedIpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductReceipts", x => new { x.ProduceProductId, x.ProductId });
+                    table.ForeignKey(
+                        name: "FK_ProductReceipts_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stocks",
                 columns: table => new
                 {
@@ -499,6 +528,11 @@ namespace Krop.DataAccess.Migrations
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductReceipts_ProductId",
+                table: "ProductReceipts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
                 table: "Products",
                 column: "BrandId");
@@ -537,6 +571,9 @@ namespace Krop.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Employees");
+
+            migrationBuilder.DropTable(
+                name: "ProductReceipts");
 
             migrationBuilder.DropTable(
                 name: "Stocks");

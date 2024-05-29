@@ -1,8 +1,12 @@
-﻿using Krop.Business.Features.Products.Dtos;
+﻿using Krop.Business.Features.ProductReceipts.Dtos;
+using Krop.Business.Features.Products.Dtos;
 using Krop.Common.Helpers.WebApiService;
+using Krop.Entities.Entities;
+using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using Krop.WinForms.HelpersClass.ProductHelpers;
 using System.ComponentModel;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Products
 {
@@ -10,8 +14,8 @@ namespace Krop.WinForms.Products
     {
         private readonly IProductHelper _productHelper;
         private readonly IWebApiService _webApiService;
-        /*private BindingList<> _originalData;
-        private BindingList<> _filteredData;*/
+        private BindingList<GetProductReceiptListDTO> _originalData;
+        private BindingList<GetProductReceiptListDTO> _filteredData;
 
         public frmProductReceipt(IProductHelper productHelper, IWebApiService webApiService)
         {
@@ -40,9 +44,42 @@ namespace Krop.WinForms.Products
 
         private void DgwReceiptListSettings()
         {
-            dgwProductReceiptList.Columns[0].HeaderText = "Ürün Adı";
-            dgwProductReceiptList.Columns[1].HeaderText = "Ürün Kodu";
-            dgwProductReceiptList.Columns[2].HeaderText = "Kullanılacak Miktar";
+            dgwProductReceiptList.Columns[0].HeaderText = "Id";
+            dgwProductReceiptList.Columns[1].HeaderText = "Ürün Adı";
+            dgwProductReceiptList.Columns[2].HeaderText = "Ürün Kodu";
+            dgwProductReceiptList.Columns[3].HeaderText = "Kullanılacak Miktar";
+
+            dgwProductReceiptList.Columns[0].Visible = false;
+        }
+        private void ProductReceiptList()
+        {
+            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"productReceipt/GetAll/{cmbBoxReceiptProductName.SelectedValue}").Result;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetProductReceiptListDTO>(response);
+
+            _originalData = new BindingList<GetProductReceiptListDTO>(result.Data.ToList());
+            _filteredData = new BindingList<GetProductReceiptListDTO>(_originalData.ToList());
+
+            dgwProductReceiptList.DataSource = _filteredData;
+
+            DgwReceiptListSettings();
+        }
+        private void DgwSelectedRowsAndCells()
+        {
+            if (cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode is not null)
+            {
+                cmbBoxProductNameSelect.SelectedValue = (Guid)dgwProductReceiptList.SelectedRows[0].Cells[0].Value;
+            }
+            else
+            {
+                MessageBox.Show("Reçeteyi Doğru Seçiniz!", "Hata!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void ProductNameList(List<GetProductComboBoxDTO> products)
         {
@@ -81,7 +118,7 @@ namespace Krop.WinForms.Products
             {
                 cmbBoxReceiptProductCode.SelectedValue = cmbBoxReceiptProductName.SelectedValue;
 
-                //todo:seçilen ürünün reçetesi listelenecek
+                ProductReceiptList();
             }
         }
 
@@ -147,30 +184,29 @@ namespace Krop.WinForms.Products
 
         private void Search()
         {
-            /*if(dgwProductReceiptList.Rows.Count > 0)
+            string searchText = txtSearch.Text.ToLower();
+            if (!string.IsNullOrWhiteSpace(searchText))
             {
-                string searchText = txtSearch.Text.ToLower();
-                if(!string.IsNullOrWhiteSpace(searchText))
+                var filteredList = _originalData.Where(x =>
+                (x.ProductName != null && x.ProductName.ToLower().Contains(searchText)) ||
+                (x.ProductCode != null && x.ProductCode.ToLower().Contains(searchText)) ||
+                (x.Quantity != null && x.Quantity.ToString().Contains(searchText))
+                );
+
+                _filteredData.Clear();
+                foreach (var item in filteredList)
                 {
-                    var filteredList = _originalData.Where(x =>
-                    x.ProductName.ToLower().Contains(searchText) ||
-                    x.ProductCode.ToLower().Contains(searchText) ||
-                    x.Quantity.ToString().Constains(searchText));
-                    _filteredData.Clear();
-                    foreach (var item in _originalData)
-                    {
-                        _filteredData.Add(item);
-                    }
+                    _filteredData.Add(item);
                 }
-                else
+            }
+            else
+            {
+                _filteredData.Clear();
+                foreach (var item in _originalData)
                 {
-                    _filteredData.Clear();
-                    foreach (var item in _originalData)
-                    {
-                        _filteredData.Add(item);
-                    }
+                    _filteredData.Add(item);
                 }
-            }*/
+            }
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
@@ -185,7 +221,86 @@ namespace Krop.WinForms.Products
 
         private void bttnAdd_Click(object sender, EventArgs e)
         {
+            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.SelectedValue is not null)
+            {
+                CreateProductReceiptDTO createProductReceiptDTO = new CreateProductReceiptDTO
+                {
+                    ProduceProductId = (Guid)cmbBoxReceiptProductName.SelectedValue,
+                    ProductId = (Guid)cmbBoxProductNameSelect.SelectedValue,
+                    Quantity = int.Parse(txtQuantity.Text)
+                };
 
+                HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("productReceipt/Add", createProductReceiptDTO).Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
+
+                ProductReceiptList();
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçim Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void bttnUpdate_Click(object sender, EventArgs e)
+        {
+            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.SelectedValue is not null)
+            {
+                UpdateProductReceiptDTO updateProductReceiptDTO = new UpdateProductReceiptDTO
+                {
+                    ProduceProductId = (Guid)cmbBoxReceiptProductName.SelectedValue,
+                    ProductId = (Guid)cmbBoxProductNameSelect.SelectedValue,
+                    Quantity = int.Parse(txtQuantity.Text)
+                };
+
+                HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("productReceipt/Update", updateProductReceiptDTO).Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
+
+                ProductReceiptList();
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçim Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void bttnDelete_Click(object sender, EventArgs e)
+        {
+            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.SelectedValue is not null)
+            {
+                HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"productReceipt/Delete/{cmbBoxReceiptProductName.SelectedValue}/{cmbBoxProductNameSelect.SelectedValue}").Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
+
+                ProductReceiptList();
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçim Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SelectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DgwSelectedRowsAndCells();
+        }
+
+        private void dgwProductReceiptList_DoubleClick(object sender, EventArgs e)
+        {
+            DgwSelectedRowsAndCells();
         }
     }
 }

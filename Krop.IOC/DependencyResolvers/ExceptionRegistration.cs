@@ -6,6 +6,7 @@ using Krop.Business.Features.Categories.ExceptionHelpers;
 using Krop.Business.Features.Customers.ExceptionHelpers;
 using Krop.Business.Features.Departments.ExceptionHelpers;
 using Krop.Business.Features.Employees.ExceptionHelpers;
+using Krop.Business.Features.ProductReceipts.ExceptionHelpers;
 using Krop.Business.Features.Products.ExceptionHelpers;
 using Krop.Business.Features.Suppliers.ExceptionHelpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,7 @@ namespace Krop.IOC.DependencyResolvers
             services.AddScoped<BrandExceptionHelper>();
             services.AddScoped<CustomerExceptionHelper>();
             services.AddScoped<SupplierExceptionHelper>();
+            services.AddScoped<ProductReceiptExceptionHelper>();
 
             return services;
         }
