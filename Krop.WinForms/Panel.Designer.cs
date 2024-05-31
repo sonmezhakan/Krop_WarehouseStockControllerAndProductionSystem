@@ -228,6 +228,7 @@
             stockBttnTransfer.Text = "Transfer";
             stockBttnTransfer.TextImageRelation = TextImageRelation.ImageAboveText;
             stockBttnTransfer.UseVisualStyleBackColor = false;
+            stockBttnTransfer.Click += stockBttnTransfer_Click;
             // 
             // stockBttnInput
             // 

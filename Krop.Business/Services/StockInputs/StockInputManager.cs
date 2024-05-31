@@ -42,12 +42,11 @@ namespace Krop.Business.Services.StockInputs
         [ValidationAspect(typeof(CreateStockInputValidator))]
         public async Task<IResult> AddAsync(CreateStockInputDTO createStockInputDTO)
         {
+            await _employeeBusinessRules.CheckByEmployeeId(createStockInputDTO.AppUserId);//Employee Business Rule
+            await _branchBusinessRules.CheckByBranchId(createStockInputDTO.BranchId);//Branch Business Rule
             await _employeeBusinessRules.CheckEmployeeBranch(createStockInputDTO.AppUserId, createStockInputDTO.BranchId);//Çalışanın bu şubede yetkisi olup olmadığı kontrol ediliyor.
             await _productBusinessRules.CheckByProductId(createStockInputDTO.ProductId);//Product Business Rule
-            await _branchBusinessRules.CheckByBranchId(createStockInputDTO.BranchId);//Branch Business Rule
-            await _supplierBusinessRules.CheckBySupplierId(createStockInputDTO.SupplierId);//Supplier Business Rule
-            await _employeeBusinessRules.CheckByEmployeeId(createStockInputDTO.AppUserId);//Employee Business Rule
-            
+            await _supplierBusinessRules.CheckBySupplierId(createStockInputDTO.SupplierId);//Supplier Business Rule            
 
             await _stockService.StockInputUpdateAsync(createStockInputDTO.BranchId,createStockInputDTO.ProductId,createStockInputDTO.Quantity);//Stoğa ekliyor
 
@@ -58,13 +57,14 @@ namespace Krop.Business.Services.StockInputs
         [ValidationAspect(typeof(UpdateStockInputValidator))]
         public async Task<IResult> UpdateAsync(UpdateStockInputDTO updateStockInputDTO)
         {
+            var result = await _stockInputBusinessRules.CheckStockInput(updateStockInputDTO.Id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
+
+            await _employeeBusinessRules.CheckByEmployeeId(updateStockInputDTO.AppUserId);//Employee Business Rule
+            await _branchBusinessRules.CheckByBranchId(updateStockInputDTO.BranchId);//Branch Business Rule
             await _employeeBusinessRules.CheckEmployeeBranch(updateStockInputDTO.AppUserId, updateStockInputDTO.BranchId);//Çalışanın bu şubede yetkisi olup olmadığı kontrol ediliyor.
             await _productBusinessRules.CheckByProductId(updateStockInputDTO.ProductId);//Product Business Rule
-            await _branchBusinessRules.CheckByBranchId(updateStockInputDTO.BranchId);//Branch Business Rule
             await _supplierBusinessRules.CheckBySupplierId(updateStockInputDTO.SupplierId);//Supplier Business Rule
-            await _employeeBusinessRules.CheckByEmployeeId(updateStockInputDTO.AppUserId);//Employee Business Rule
-
-            var result = await _stockInputBusinessRules.CheckStockInput(updateStockInputDTO.Id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
+            
 
             await _stockService.StockDeleteAsync(result.BranchId, result.ProductId, result.Quantity);//Şube değişikliği veya ürün değişikliği yapılırsa diye ilk önce stoktan miktarı çıkarmamız gerekiyor.
             await _stockService.StockInputUpdateAsync(updateStockInputDTO.BranchId, updateStockInputDTO.ProductId, updateStockInputDTO.Quantity);//Stoğa ekliyor
@@ -80,11 +80,12 @@ namespace Krop.Business.Services.StockInputs
         {
             var result = await _stockInputBusinessRules.CheckStockInput(Id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
 
+            await _employeeBusinessRules.CheckByEmployeeId(result.AppUserId);//Employee Business Rule
+            await _branchBusinessRules.CheckByBranchId(result.BranchId);//Branch Business Rule
             await _employeeBusinessRules.CheckEmployeeBranch(result.AppUserId, result.BranchId);//Çalışanın bu şubede yetkisi olup olmadığı kontrol ediliyor.
             await _productBusinessRules.CheckByProductId(result.ProductId);//Product Business Rule
-            await _branchBusinessRules.CheckByBranchId(result.BranchId);//Branch Business Rule
             await _supplierBusinessRules.CheckBySupplierId(result.SupplierId);//Supplier Business Rule
-            await _employeeBusinessRules.CheckByEmployeeId(result.AppUserId);//Employee Business Rule
+            
 
             await _stockService.StockDeleteAsync(result.BranchId, result.ProductId, result.Quantity);//Şube değişikliği veya ürün değişikliği yapılırsa diye ilk önce stoktan miktarı çıkarmamız gerekiyor.
 

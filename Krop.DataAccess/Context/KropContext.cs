@@ -26,6 +26,7 @@ namespace Krop.DataAccess.Context
         public DbSet<Brand> Brands { get; set; }
         public DbSet<ProductReceipt> ProductReceipts { get; set; }
         public DbSet<StockInput> StockInputs { get; set; }
+        public DbSet<StockTransfer> StockTransfers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -41,6 +42,7 @@ namespace Krop.DataAccess.Context
             builder.ApplyConfiguration(new SupplierConfiguration());
             builder.ApplyConfiguration(new ProductReceiptConfiguration());
             builder.ApplyConfiguration(new StockInputConfiguration());
+            builder.ApplyConfiguration(new StockTransferConfiguration());
 
 			base.OnModelCreating(builder);
 		}

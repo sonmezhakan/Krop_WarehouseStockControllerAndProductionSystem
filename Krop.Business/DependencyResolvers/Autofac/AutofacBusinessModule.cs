@@ -13,6 +13,7 @@ using Krop.Business.Services.ProductReceipts;
 using Krop.Business.Services.Products;
 using Krop.Business.Services.StockInputs;
 using Krop.Business.Services.Stocks;
+using Krop.Business.Services.StockTransfers;
 using Krop.Business.Services.Suppliers;
 using Krop.Common.Helpers.WebApiService;
 using Krop.Common.Utilits.Interceptors;
@@ -68,10 +69,13 @@ namespace Krop.Business.DependencyResolvers.Autofac
             builder.RegisterType<EfSupplierRepository>().As<ISupplierRepository>().SingleInstance();
 
             builder.RegisterType<ProductReceiptManager>().As<IProductReceiptService>().SingleInstance();
-            builder.RegisterType<EFProductReceiptRepository>().As<IProductReceiptRepository>().SingleInstance();
+            builder.RegisterType<EfProductReceiptRepository>().As<IProductReceiptRepository>().SingleInstance();
 
             builder.RegisterType<StockInputManager>().As<IStockInputService>().SingleInstance();
             builder.RegisterType<EfStockInputRepository>().As<IStockInputRepository>().SingleInstance();
+
+            builder.RegisterType<StockTransferManager>().As<IStockTransferService>().SingleInstance();
+            builder.RegisterType<EfStockTransferRepostiory>().As<IStockTransferRepository>().SingleInstance();
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().SingleInstance();

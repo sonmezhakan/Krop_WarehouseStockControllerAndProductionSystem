@@ -37,5 +37,12 @@ namespace Krop.Business.Features.Employees.Rules
             if (!result)
                 _employeeExceptionHelper.ThrowNotBranchAuthority();
         }
+        public async Task CheckEmployeeSenderAndSentBranch(Guid Id, Guid senderBranchId,Guid sentBranchId)
+        {
+            bool result = await _employeeRepository.AnyAsync(predicate: x => x.AppUserId == Id && (x.BranchId == senderBranchId || x.BranchId == sentBranchId));
+
+            if (!result)
+                _employeeExceptionHelper.ThrowNotBranchAuthority();
+        }
     }
 }

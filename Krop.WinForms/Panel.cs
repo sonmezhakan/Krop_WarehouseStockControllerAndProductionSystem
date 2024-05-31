@@ -8,6 +8,7 @@ using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.Forms.Departments;
 using Krop.WinForms.Forms.Employees;
 using Krop.WinForms.Forms.StockInputs;
+using Krop.WinForms.Forms.StockTransfers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
@@ -330,6 +331,13 @@ namespace Krop.WinForms
             frmStockInput frmStockInput = _serviceProvider.GetRequiredService<frmStockInput>();
             frmStockInput.AppUserId = AppUserId;
             FormController.FormOpenController(frmStockInput);
+        }
+
+        private void stockBttnTransfer_Click(object sender, EventArgs e)
+        {
+            frmStockTransfer frmStockTransfer = _serviceProvider.GetRequiredService<frmStockTransfer>();
+            frmStockTransfer.AppUserId = AppUserId;
+            FormController.FormOpenController(frmStockTransfer);
         }
     }
 }

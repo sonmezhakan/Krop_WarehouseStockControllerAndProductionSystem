@@ -4,6 +4,7 @@ using Krop.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Krop.DataAccess.Migrations
 {
     [DbContext(typeof(KropContext))]
-    partial class KropContextModelSnapshot : ModelSnapshot
+    [Migration("20240531120007_StockTransferAdded")]
+    partial class StockTransferAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -748,13 +751,13 @@ namespace Krop.DataAccess.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("SenderAppUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("SenderBranchId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SentBranchId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TransactorAppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("TransferDate")
@@ -773,11 +776,11 @@ namespace Krop.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("SenderAppUserId");
+
                     b.HasIndex("SenderBranchId");
 
                     b.HasIndex("SentBranchId");
-
-                    b.HasIndex("TransactorAppUserId");
 
                     b.ToTable("StockTransfers");
                 });
@@ -1294,6 +1297,12 @@ namespace Krop.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Krop.Entities.Entities.AppUser", "AppUser")
+                        .WithMany("StockTransfers")
+                        .HasForeignKey("SenderAppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Krop.Entities.Entities.Branch", "SenderBranch")
                         .WithMany("SenderStockTransfers")
                         .HasForeignKey("SenderBranchId")
@@ -1304,12 +1313,6 @@ namespace Krop.DataAccess.Migrations
                         .WithMany("SentStockTransfers")
                         .HasForeignKey("SentBranchId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Krop.Entities.Entities.AppUser", "AppUser")
-                        .WithMany("StockTransfers")
-                        .HasForeignKey("TransactorAppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");

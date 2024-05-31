@@ -33,13 +33,5 @@ namespace Krop.Business.Features.StockInputs.Validation
             RuleFor(x => x.Quantity)
                 .InclusiveBetween(1, 2147483647).WithMessage(StockInputMessages.QuantityMaxLenght);
         }
-
-        private bool CheckQuantity(int quantity)
-        {
-            if (quantity > 0)
-                return true;
-
-            return false;
-        }
     }
 }

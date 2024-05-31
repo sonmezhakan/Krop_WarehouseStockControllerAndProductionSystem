@@ -5,7 +5,7 @@ namespace Krop.Entities.Entities
 {
 	/// <summary>
 	/// Owned Entity
-	/// Employee Tablosu ile ilişkilidir.
+	/// Employee,StockInput,StockTransfer Tablosu ile ilişkilidir.
 	/// </summary>
 	public class AppUser: BaseAppUserEntity
 	{
@@ -14,5 +14,6 @@ namespace Krop.Entities.Entities
 
         public virtual Employee Employee { get; set; }
         public virtual ICollection<StockInput> StockInputs { get; set; }
+        public virtual ICollection<StockTransfer> StockTransfers { get; set; }
     }
 }

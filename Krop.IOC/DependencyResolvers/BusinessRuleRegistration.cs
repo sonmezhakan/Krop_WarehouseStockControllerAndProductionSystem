@@ -10,6 +10,7 @@ using Krop.Business.Features.ProductReceipts.Rules;
 using Krop.Business.Features.Products.Rules;
 using Krop.Business.Features.StockInputs.Rules;
 using Krop.Business.Features.Stocks.Rules;
+using Krop.Business.Features.StockTransfers.Rules;
 using Krop.Business.Features.Suppliers.Rules;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,6 +33,7 @@ namespace Krop.IOC.DependencyResolvers
             services.AddScoped<ProductReceiptBusinessRules>();
             services.AddScoped<StockBusinessRules>();
             services.AddScoped<StockInputBusinessRules>();
+            services.AddScoped<StockTransferBusinessRules>();
             return services;
         }
     }

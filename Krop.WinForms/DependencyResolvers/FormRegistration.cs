@@ -7,6 +7,7 @@ using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.Forms.Departments;
 using Krop.WinForms.Forms.Employees;
 using Krop.WinForms.Forms.StockInputs;
+using Krop.WinForms.Forms.StockTransfers;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
 using Microsoft.Extensions.DependencyInjection;
@@ -80,7 +81,7 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmEmployeeList>();
 
             services.AddTransient<frmStockInput>();
-
+            services.AddTransient<frmStockTransfer>();
             return services;
         }
     }
