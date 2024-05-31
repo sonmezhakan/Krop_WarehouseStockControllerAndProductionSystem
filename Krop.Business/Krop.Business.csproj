@@ -23,10 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Stocks\Constants\" />
-    <Folder Include="Features\Stocks\ExceptionHelpers\" />
     <Folder Include="Features\Stocks\Profiles\" />
-    <Folder Include="Features\Stocks\Rules\" />
     <Folder Include="Features\Stocks\Validations\" />
     <Folder Include="Features\Stocks\Dtos\" />
   </ItemGroup>

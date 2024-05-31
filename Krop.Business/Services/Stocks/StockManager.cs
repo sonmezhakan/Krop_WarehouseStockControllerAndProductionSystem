@@ -1,4 +1,5 @@
 ﻿
+using Krop.Business.Features.Stocks.Rules;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
@@ -10,12 +11,14 @@ namespace Krop.Business.Services.Stocks
         private readonly IStockRepository _stockRepository;
         private readonly IProductRepository _productRepository;
         private readonly IBranchRepository _branchRepository;
+        private readonly StockBusinessRules _stockBusinessRules;
 
-        public StockManager(IStockRepository stockRepository,IProductRepository productRepository,IBranchRepository branchRepository)
+        public StockManager(IStockRepository stockRepository,IProductRepository productRepository,IBranchRepository branchRepository,StockBusinessRules stockBusinessRules)
         {
             _stockRepository = stockRepository;
             _productRepository = productRepository;
             _branchRepository = branchRepository;
+            _stockBusinessRules = stockBusinessRules;
         }
 
         #region New Branch Added Product
@@ -129,16 +132,37 @@ namespace Krop.Business.Services.Stocks
         }
         #endregion
         #region Stock Update
-        public async Task<IResult> StockUpdateAsync()
+        public async Task<IResult> StockInputUpdateAsync(Guid branchId,Guid productId,int quantity)//Stok Girişi Yapılıp, Stok Güncelleniyor.
         {
-            //todo:stok giriş çıkış işlemleri ile birlikte yapılacak.
-            return new ErrorResult();
+            var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
+
+            result.UnitsInStock += quantity;
+
+            await _stockRepository.UpdateAsync(result);
+
+            return new SuccessResult();
+        }
+        public async Task<IResult> StockUpdateAsync(Guid branchId, Guid productId, int oldQuantity,int newQuantity)//Stok Güncellenmesi
+        {
+            var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
+
+            result.UnitsInStock -= oldQuantity;
+            result.UnitsInStock += newQuantity;
+
+            await _stockRepository.UpdateAsync(result);
+
+            return new SuccessResult();
         }
 
-        public async Task<IResult> StockUpdateRangeAsync()
+        public async Task<IResult> StockDeleteAsync(Guid branchId, Guid productId, int quantity)//Stok Silinmesi
         {
-            //todo:stok giriş çıkış işlemleri ile birlikte yapılacak.
-            return new ErrorResult();
+            var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
+
+            result.UnitsInStock -= quantity;
+
+            await _stockRepository.UpdateAsync(result);
+
+            return new SuccessResult();
         }
         #endregion
     }

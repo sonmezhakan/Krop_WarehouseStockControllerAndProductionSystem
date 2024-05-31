@@ -8,5 +8,7 @@
         public const string EmployeeAppUserIdNotNull = "Kullanıcı Boş Olamaz!";
         public const string EmployeeDepartmentIdNotNull = "Departman Boş Olamaz!";
         public const string EmployeeBranchIdNotNull = "Şube Boş olamaz!";
+
+        public const string EmployeeNotBranchAuthority = "Bu Şube İçin İşlem Yapamazsınız!";
     }
 }

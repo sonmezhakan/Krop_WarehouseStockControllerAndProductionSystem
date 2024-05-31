@@ -29,5 +29,13 @@ namespace Krop.Business.Features.Employees.Rules
             if (result)
                _employeeExceptionHelper.ThrowEmployeeExists();
         }
+        public async Task CheckEmployeeBranch(Guid Id,Guid branchId)
+        {
+            bool result = await _employeeRepository.AnyAsync(
+                predicate:x=>x.AppUserId == Id && x.BranchId == branchId);
+
+            if (!result)
+                _employeeExceptionHelper.ThrowNotBranchAuthority();
+        }
     }
 }

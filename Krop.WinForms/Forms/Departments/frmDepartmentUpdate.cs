@@ -2,6 +2,7 @@
 using Krop.Common.Helpers.WebApiService;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.Departments;
+using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.Departments
@@ -59,22 +60,29 @@ namespace Krop.WinForms.Forms.Departments
         {
             if (cmbBoxDepartmentSelect.SelectedValue is not null)
             {
-                UpdateDepartmentDTO updateDepartmentDTO = new UpdateDepartmentDTO
+                if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
-                    Id = (Guid)cmbBoxDepartmentSelect.SelectedValue,
-                    DepartmentName = txtDepartmentName.Text,
-                    Description = txtDescription.Text
-                };
+                    UpdateDepartmentDTO updateDepartmentDTO = new UpdateDepartmentDTO
+                    {
+                        Id = (Guid)cmbBoxDepartmentSelect.SelectedValue,
+                        DepartmentName = txtDepartmentName.Text,
+                        Description = txtDescription.Text
+                    };
 
-                HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("department/Update", updateDepartmentDTO).Result;
+                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("department/Update", updateDepartmentDTO).Result;
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    ResponseController.ErrorResponseController(response);
-                    return;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
+
+                    DepartmentList();
                 }
-
-                DepartmentList();
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçim Yapınız!", "Hata!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

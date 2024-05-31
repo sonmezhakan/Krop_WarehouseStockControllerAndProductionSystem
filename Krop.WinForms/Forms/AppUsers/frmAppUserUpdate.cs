@@ -107,41 +107,44 @@ namespace Krop.WinForms.Forms.AppUsers
         {
             if (cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response;
-                if (checkBoxPasswordReset.Checked)
+                if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
-                    UpdateAppUserPasswordDTO updateAppUserPasswordDTO = new UpdateAppUserPasswordDTO
+                    HttpResponseMessage response;
+                    if (checkBoxPasswordReset.Checked)
                     {
-                        Id = (Guid)cmbBoxAppUserSelect.SelectedValue,
-                        Password = txtPassword.Text
-                    };
+                        UpdateAppUserPasswordDTO updateAppUserPasswordDTO = new UpdateAppUserPasswordDTO
+                        {
+                            Id = (Guid)cmbBoxAppUserSelect.SelectedValue,
+                            Password = txtPassword.Text
+                        };
 
-                    response = _webApiService.httpClient.PutAsJsonAsync("account/UpdatePassword", updateAppUserPasswordDTO).Result;
-                }
-                else
-                {
-                    UpdateAppUserDTO updateAppUserDTO = new UpdateAppUserDTO
+                        response = _webApiService.httpClient.PutAsJsonAsync("account/UpdatePassword", updateAppUserPasswordDTO).Result;
+                    }
+                    else
                     {
-                        Id = (Guid)cmbBoxAppUserSelect.SelectedValue,
-                        FirstName = txtFirstName.Text,
-                        LastName = txtLastName.Text,
-                        Email = txtEmail.Text,
-                        PhoneNumber = txtPhoneNumber.Text,
-                        City = txtCity.Text,
-                        Country = txtCountry.Text,
-                        Addres = txtAddress.Text,
-                        NationalNumber = txtNationalNumber.Text
-                    };
+                        UpdateAppUserDTO updateAppUserDTO = new UpdateAppUserDTO
+                        {
+                            Id = (Guid)cmbBoxAppUserSelect.SelectedValue,
+                            FirstName = txtFirstName.Text,
+                            LastName = txtLastName.Text,
+                            Email = txtEmail.Text,
+                            PhoneNumber = txtPhoneNumber.Text,
+                            City = txtCity.Text,
+                            Country = txtCountry.Text,
+                            Addres = txtAddress.Text,
+                            NationalNumber = txtNationalNumber.Text
+                        };
 
-                    response = _webApiService.httpClient.PutAsJsonAsync("account/update", updateAppUserDTO).Result;
-                }
+                        response = _webApiService.httpClient.PutAsJsonAsync("account/update", updateAppUserDTO).Result;
+                    }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    ResponseController.ErrorResponseController(response);
-                    return;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
+                    AppUserList();
                 }
-                AppUserList();
             }
             else
             {

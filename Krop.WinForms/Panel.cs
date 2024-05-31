@@ -7,6 +7,7 @@ using Krop.WinForms.Forms.AppUsers;
 using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.Forms.Departments;
 using Krop.WinForms.Forms.Employees;
+using Krop.WinForms.Forms.StockInputs;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
@@ -18,6 +19,7 @@ namespace Krop.WinForms
     {
         public readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
+        internal Guid AppUserId = Guid.Parse("a6ff235f-e440-41d4-934e-08dc8095c75c");
 
         public Panel(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
@@ -322,6 +324,12 @@ namespace Krop.WinForms
         {
             frmEmployeeUpdate frmEmployeeUpdate = _serviceProvider.GetRequiredService<frmEmployeeUpdate>();
             FormController.FormOpenController(frmEmployeeUpdate);
+        }
+        private void stockBttnInput_Click(object sender, EventArgs e)
+        {
+            frmStockInput frmStockInput = _serviceProvider.GetRequiredService<frmStockInput>();
+            frmStockInput.AppUserId = AppUserId;
+            FormController.FormOpenController(frmStockInput);
         }
     }
 }

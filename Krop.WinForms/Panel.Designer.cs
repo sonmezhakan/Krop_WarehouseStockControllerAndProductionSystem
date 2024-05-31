@@ -35,7 +35,7 @@
             button1 = new Button();
             StocksTabPage = new TabPage();
             stockBttnTransfer = new Button();
-            stockBttnReceipt = new Button();
+            stockBttnInput = new Button();
             ProductionTabPage = new TabPage();
             productionBttnProduce = new Button();
             productionBttnList = new Button();
@@ -203,7 +203,7 @@
             // StocksTabPage
             // 
             StocksTabPage.Controls.Add(stockBttnTransfer);
-            StocksTabPage.Controls.Add(stockBttnReceipt);
+            StocksTabPage.Controls.Add(stockBttnInput);
             StocksTabPage.Location = new Point(4, 26);
             StocksTabPage.Name = "StocksTabPage";
             StocksTabPage.Size = new Size(1876, 65);
@@ -229,23 +229,24 @@
             stockBttnTransfer.TextImageRelation = TextImageRelation.ImageAboveText;
             stockBttnTransfer.UseVisualStyleBackColor = false;
             // 
-            // stockBttnReceipt
+            // stockBttnInput
             // 
-            stockBttnReceipt.BackColor = Color.Transparent;
-            stockBttnReceipt.Dock = DockStyle.Left;
-            stockBttnReceipt.FlatAppearance.BorderColor = Color.White;
-            stockBttnReceipt.FlatAppearance.BorderSize = 0;
-            stockBttnReceipt.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            stockBttnReceipt.FlatStyle = FlatStyle.Flat;
-            stockBttnReceipt.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            stockBttnReceipt.Image = (Image)resources.GetObject("stockBttnReceipt.Image");
-            stockBttnReceipt.Location = new Point(0, 0);
-            stockBttnReceipt.Name = "stockBttnReceipt";
-            stockBttnReceipt.Size = new Size(84, 65);
-            stockBttnReceipt.TabIndex = 11;
-            stockBttnReceipt.Text = "Giriş";
-            stockBttnReceipt.TextImageRelation = TextImageRelation.ImageAboveText;
-            stockBttnReceipt.UseVisualStyleBackColor = false;
+            stockBttnInput.BackColor = Color.Transparent;
+            stockBttnInput.Dock = DockStyle.Left;
+            stockBttnInput.FlatAppearance.BorderColor = Color.White;
+            stockBttnInput.FlatAppearance.BorderSize = 0;
+            stockBttnInput.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            stockBttnInput.FlatStyle = FlatStyle.Flat;
+            stockBttnInput.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            stockBttnInput.Image = (Image)resources.GetObject("stockBttnInput.Image");
+            stockBttnInput.Location = new Point(0, 0);
+            stockBttnInput.Name = "stockBttnInput";
+            stockBttnInput.Size = new Size(84, 65);
+            stockBttnInput.TabIndex = 11;
+            stockBttnInput.Text = "Giriş";
+            stockBttnInput.TextImageRelation = TextImageRelation.ImageAboveText;
+            stockBttnInput.UseVisualStyleBackColor = false;
+            stockBttnInput.Click += stockBttnInput_Click;
             // 
             // ProductionTabPage
             // 
@@ -1587,7 +1588,7 @@
         private Label lblServerName;
         private Button homeBttnExit;
         private Button stockBttnTransfer;
-        private Button stockBttnReceipt;
+        private Button stockBttnInput;
         private Button productionBttnProduce;
         private Button productionBttnList;
         private System.Windows.Forms.Panel panel1;

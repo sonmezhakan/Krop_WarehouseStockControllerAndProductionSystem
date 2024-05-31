@@ -13,5 +13,6 @@ namespace Krop.Entities.Entities
         public Person Person { get; set; }
 
         public virtual Employee Employee { get; set; }
+        public virtual ICollection<StockInput> StockInputs { get; set; }
     }
 }

@@ -444,6 +444,60 @@ namespace Krop.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StockInputs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InvoiceNumber = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValue: 0.0m),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    InputDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedIpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DataStatu = table.Column<int>(type: "int", nullable: false),
+                    DeletedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedIpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedIpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StockInputs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StockInputs_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StockInputs_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StockInputs_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StockInputs_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stocks",
                 columns: table => new
                 {
@@ -543,6 +597,26 @@ namespace Krop.DataAccess.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StockInputs_AppUserId",
+                table: "StockInputs",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockInputs_BranchId",
+                table: "StockInputs",
+                column: "BranchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockInputs_ProductId",
+                table: "StockInputs",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockInputs_SupplierId",
+                table: "StockInputs",
+                column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Stocks_ProductId",
                 table: "Stocks",
                 column: "ProductId");
@@ -576,19 +650,22 @@ namespace Krop.DataAccess.Migrations
                 name: "ProductReceipts");
 
             migrationBuilder.DropTable(
-                name: "Stocks");
+                name: "StockInputs");
 
             migrationBuilder.DropTable(
-                name: "Suppliers");
+                name: "Stocks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Departments");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Departments");
+                name: "Suppliers");
 
             migrationBuilder.DropTable(
                 name: "Branches");

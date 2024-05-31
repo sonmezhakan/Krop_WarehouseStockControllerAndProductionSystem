@@ -4,6 +4,7 @@ using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.BranchHelpers;
 using Krop.WinForms.HelpersClass.Departments;
 using Krop.WinForms.HelpersClass.Employees;
+using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.Employees
@@ -106,26 +107,29 @@ namespace Krop.WinForms.Forms.Employees
             if(cmbBoxAppUserSelect.SelectedValue is not null && cmbBoxDepartmentSelect.SelectedValue is not null &&
                 cmbBoxBranchSelect.SelectedValue is not null)
             {
-                UpdateEmployeeDTO updateEmployeeDTO = new UpdateEmployeeDTO
+                if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
-                    AppUserId = (Guid)cmbBoxAppUserSelect.SelectedValue,
-                    DepartmentId = (Guid)cmbBoxDepartmentSelect.SelectedValue,
-                    BranchId = (Guid)cmbBoxBranchSelect.SelectedValue,
-                    StartDateOfWork = dateTimePickerStart.Value,
-                    EndDateOfWork = checkDateTimePickerEndEnable.Checked ? dateTimePickerEnd.Value : null,
-                    Salary = decimal.Parse(txtSalary.Text),
-                    WorkingStatu = radioButtonActive.Checked ? true : false
-                };
+                    UpdateEmployeeDTO updateEmployeeDTO = new UpdateEmployeeDTO
+                    {
+                        AppUserId = (Guid)cmbBoxAppUserSelect.SelectedValue,
+                        DepartmentId = (Guid)cmbBoxDepartmentSelect.SelectedValue,
+                        BranchId = (Guid)cmbBoxBranchSelect.SelectedValue,
+                        StartDateOfWork = dateTimePickerStart.Value,
+                        EndDateOfWork = checkDateTimePickerEndEnable.Checked ? dateTimePickerEnd.Value : null,
+                        Salary = decimal.Parse(txtSalary.Text),
+                        WorkingStatu = radioButtonActive.Checked ? true : false
+                    };
 
-                HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("employee/update", updateEmployeeDTO).Result;
-                
-                if(!response.IsSuccessStatusCode)
-                {
-                    ResponseController.ErrorResponseController(response);
-                    return;
+                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("employee/update", updateEmployeeDTO).Result;
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
+
+                    EmployeeList();
                 }
-
-                EmployeeList();
             }
             else
             {

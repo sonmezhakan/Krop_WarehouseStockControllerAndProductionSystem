@@ -1,6 +1,7 @@
 ﻿using Krop.Common.Helpers.WebApiService;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.Departments;
+using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Forms.Departments
 {
@@ -25,7 +26,7 @@ namespace Krop.WinForms.Forms.Departments
         }
         private void DepartmentList()
         {
-            var result =  _departmentHelper.GetAllComboBoxAsync();
+            var result = _departmentHelper.GetAllComboBoxAsync();
             if (result is null)
                 return;
 
@@ -42,22 +43,29 @@ namespace Krop.WinForms.Forms.Departments
 
         private void CmbBoxDepartmentSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            
+
         }
 
         private void bttnDelete_Click(object sender, EventArgs e)
         {
-            if(cmbBoxDepartmentSelect.SelectedValue is not null)
+            if (cmbBoxDepartmentSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"department/delete/{cmbBoxDepartmentSelect.SelectedValue}").Result;
-
-                if(!response.IsSuccessStatusCode)
+                if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    ResponseController.ErrorResponseController(response);
-                    return;
-                }
+                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"department/delete/{cmbBoxDepartmentSelect.SelectedValue}").Result;
 
-                DepartmentList();
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
+
+                    DepartmentList();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçim Yapınız!", "Hata!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

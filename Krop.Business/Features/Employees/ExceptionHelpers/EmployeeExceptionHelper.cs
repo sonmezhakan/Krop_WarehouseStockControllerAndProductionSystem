@@ -7,5 +7,6 @@ namespace Krop.Business.Features.Employees.ExceptionHelpers
     {
         public void ThrowEmployeeNotFound() => throw new NotFoundException(EmployeeMessages.EmployeeNotFound);
         public void ThrowEmployeeExists() => throw new BusinessException(EmployeeMessages.EmployeeExists);
+        public void ThrowNotBranchAuthority() => throw new BusinessException(EmployeeMessages.EmployeeNotBranchAuthority);
     }
 }

@@ -250,22 +250,25 @@ namespace Krop.WinForms.Products
         {
             if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.SelectedValue is not null)
             {
-                UpdateProductReceiptDTO updateProductReceiptDTO = new UpdateProductReceiptDTO
+                if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
-                    ProduceProductId = (Guid)cmbBoxReceiptProductName.SelectedValue,
-                    ProductId = (Guid)cmbBoxProductNameSelect.SelectedValue,
-                    Quantity = int.Parse(txtQuantity.Text)
-                };
+                    UpdateProductReceiptDTO updateProductReceiptDTO = new UpdateProductReceiptDTO
+                    {
+                        ProduceProductId = (Guid)cmbBoxReceiptProductName.SelectedValue,
+                        ProductId = (Guid)cmbBoxProductNameSelect.SelectedValue,
+                        Quantity = int.Parse(txtQuantity.Text)
+                    };
 
-                HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("productReceipt/Update", updateProductReceiptDTO).Result;
+                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("productReceipt/Update", updateProductReceiptDTO).Result;
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    ResponseController.ErrorResponseController(response);
-                    return;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
+
+                    ProductReceiptList();
                 }
-
-                ProductReceiptList();
             }
             else
             {
@@ -277,15 +280,18 @@ namespace Krop.WinForms.Products
         {
             if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.SelectedValue is not null)
             {
-                HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"productReceipt/Delete/{cmbBoxReceiptProductName.SelectedValue}/{cmbBoxProductNameSelect.SelectedValue}").Result;
-
-                if (!response.IsSuccessStatusCode)
+                if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    ResponseController.ErrorResponseController(response);
-                    return;
-                }
+                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"productReceipt/Delete/{cmbBoxReceiptProductName.SelectedValue}/{cmbBoxProductNameSelect.SelectedValue}").Result;
 
-                ProductReceiptList();
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        ResponseController.ErrorResponseController(response);
+                        return;
+                    }
+
+                    ProductReceiptList();
+                }
             }
             else
             {

@@ -627,6 +627,86 @@ namespace Krop.DataAccess.Migrations
                     b.ToTable("Stocks");
                 });
 
+            modelBuilder.Entity("Krop.Entities.Entities.StockInput", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedComputerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedIpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DataStatu")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeletedComputerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedIpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("InputDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceNumber")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("UnitPrice")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0.0m);
+
+                    b.Property<string>("UpdatedComputerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedIpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("StockInputs");
+                });
+
             modelBuilder.Entity("Krop.Entities.Entities.Supplier", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1096,6 +1176,41 @@ namespace Krop.DataAccess.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Krop.Entities.Entities.StockInput", b =>
+                {
+                    b.HasOne("Krop.Entities.Entities.AppUser", "AppUser")
+                        .WithMany("StockInputs")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Krop.Entities.Entities.Branch", "Branch")
+                        .WithMany("StockInputs")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Krop.Entities.Entities.Product", "Product")
+                        .WithMany("StockInputs")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Krop.Entities.Entities.Supplier", "Supplier")
+                        .WithMany("StockInputs")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("Krop.Entities.Entities.Supplier", b =>
                 {
                     b.OwnsOne("Krop.Entities.Entities.Address", "Address", b1 =>
@@ -1240,11 +1355,15 @@ namespace Krop.DataAccess.Migrations
                 {
                     b.Navigation("Employee")
                         .IsRequired();
+
+                    b.Navigation("StockInputs");
                 });
 
             modelBuilder.Entity("Krop.Entities.Entities.Branch", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("StockInputs");
 
                     b.Navigation("Stocks");
                 });
@@ -1268,7 +1387,14 @@ namespace Krop.DataAccess.Migrations
                 {
                     b.Navigation("ProductReceipts");
 
+                    b.Navigation("StockInputs");
+
                     b.Navigation("Stocks");
+                });
+
+            modelBuilder.Entity("Krop.Entities.Entities.Supplier", b =>
+                {
+                    b.Navigation("StockInputs");
                 });
 #pragma warning restore 612, 618
         }
