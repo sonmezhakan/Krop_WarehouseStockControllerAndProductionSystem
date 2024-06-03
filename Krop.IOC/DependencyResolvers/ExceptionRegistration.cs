@@ -6,6 +6,7 @@ using Krop.Business.Features.Categories.ExceptionHelpers;
 using Krop.Business.Features.Customers.ExceptionHelpers;
 using Krop.Business.Features.Departments.ExceptionHelpers;
 using Krop.Business.Features.Employees.ExceptionHelpers;
+using Krop.Business.Features.Productions.ExceptionHelpers;
 using Krop.Business.Features.ProductReceipts.ExceptionHelpers;
 using Krop.Business.Features.Products.ExceptionHelpers;
 using Krop.Business.Features.StockInputs.ExceptionHelpers;
@@ -34,6 +35,7 @@ namespace Krop.IOC.DependencyResolvers
             services.AddScoped<StockExceptionHelper>();
             services.AddScoped<StockInputExceptionHelper>();
             services.AddScoped<StockTransferExceptionHelper>();
+            services.AddScoped<ProductionExceptionHelper>();
 
             return services;
         }

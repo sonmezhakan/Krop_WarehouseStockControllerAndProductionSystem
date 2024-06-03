@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.Categories.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.Categroies;
 
 namespace Krop.Business.Services.Categories
 {

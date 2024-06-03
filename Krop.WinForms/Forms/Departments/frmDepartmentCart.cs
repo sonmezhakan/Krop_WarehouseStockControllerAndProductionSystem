@@ -1,16 +1,19 @@
-﻿using Krop.WinForms.HelpersClass.Departments;
+﻿using Krop.Common.Helpers.WebApiRequests.Departments;
+using Krop.DTO.Dtos.Departments;
+using Krop.WinForms.HelpersClass;
 
 namespace Krop.WinForms.Forms.Departments
 {
     public partial class frmDepartmentCart : Form
     {
-        private readonly IDepartmentHelper _departmentHelper;
+        
         public Guid Id;
+        private readonly IDepartmentRequest _departmentRequest;
 
-        public frmDepartmentCart(IDepartmentHelper departmentHelper)
+        public frmDepartmentCart(IDepartmentRequest departmentRequest)
         {
             InitializeComponent();
-            _departmentHelper = departmentHelper;
+            _departmentRequest = departmentRequest;
         }
 
         private void frmDepartmentCart_Load(object sender, EventArgs e)
@@ -19,11 +22,16 @@ namespace Krop.WinForms.Forms.Departments
             if (cmbBoxDepartmentSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxDepartmentSelect.SelectedValue = Id;
         }
-        private void DepartmentList()
+        private async void DepartmentList()
         {
-            var result =  _departmentHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _departmentRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetDepartmentComboBoxDTO>(response).Data;
 
             cmbBoxDepartmentSelect.DataSource = null;
 
@@ -36,13 +44,18 @@ namespace Krop.WinForms.Forms.Departments
             cmbBoxDepartmentSelect.SelectedIndexChanged += CmbBoxDepartmentSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxDepartmentSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxDepartmentSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxDepartmentSelect.SelectedValue is not null)
             {
-                var result = _departmentHelper.GetByDepartmentId((Guid)cmbBoxDepartmentSelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _departmentRequest.GetByIdAsync((Guid)cmbBoxDepartmentSelect.SelectedValue);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetDepartmentDTO>(response).Data;
 
                 txtDescription.Text = result.Description;
             }

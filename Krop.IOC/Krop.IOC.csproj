@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Krop.Business\Krop.Business.csproj" />
     <ProjectReference Include="..\Krop.DataAccess\Krop.DataAccess.csproj" />
+    <ProjectReference Include="..\Krop.Entities\Krop.Entities.csproj" />
   </ItemGroup>
 
 </Project>

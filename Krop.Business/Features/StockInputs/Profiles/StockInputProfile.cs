@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.StockInputs.Dtos;
+using Krop.DTO.Dtos.StockInputs;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.StockInputs.Profiles

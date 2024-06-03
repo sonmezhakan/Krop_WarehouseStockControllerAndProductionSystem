@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.Products.Dtos;
-using Krop.Business.Services.Products;
+﻿using Krop.Business.Services.Products;
+using Krop.DTO.Dtos.Products;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

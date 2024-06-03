@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Krop.Business.Features.Categories.Dtos;
+using Krop.DTO.Dtos.Categroies;
 
 namespace Krop.Business.Features.Categories.Validations
 {

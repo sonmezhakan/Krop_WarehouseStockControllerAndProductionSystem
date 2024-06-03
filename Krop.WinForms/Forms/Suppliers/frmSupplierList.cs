@@ -1,6 +1,6 @@
-﻿using Krop.Business.Features.Suppliers.Dtos;
+﻿using Krop.Common.Helpers.WebApiRequests.Suppliers;
+using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.SupplierHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
@@ -8,15 +8,15 @@ namespace Krop.WinForms.Suppliers
 {
     public partial class frmSupplierList : Form
     {
-        private readonly ISupplierHelper _supplierHelper;
+        private readonly ISupplierRequest _supplierRequest;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetSupplierDTO> _originalData;
         private BindingList<GetSupplierDTO> _filteredData;
 
-        public frmSupplierList(ISupplierHelper supplierHelper, IServiceProvider serviceProvider)
+        public frmSupplierList(ISupplierRequest supplierRequest, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _supplierHelper = supplierHelper;
+            _supplierRequest = supplierRequest;
             _serviceProvider = serviceProvider;
         }
 
@@ -38,11 +38,16 @@ namespace Krop.WinForms.Suppliers
 
             dgwSupplierList.Columns[0].Visible = false;
         }
-        private void SupplierList()
+        private async void SupplierList()
         {
-            List<GetSupplierDTO> result = _supplierHelper.GetAllAsync();
-            if (result is null)
+            HttpResponseMessage response = await _supplierRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetSupplierDTO>(response).Data;
 
             _originalData = new BindingList<GetSupplierDTO>(result);
             _filteredData = new BindingList<GetSupplierDTO>(_originalData.ToList());

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Customers.Dtos;
 using Krop.Business.Features.Customers.Rules;
 using Krop.Business.Features.Customers.Valdiations;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DTO.Dtos.Customers;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Services.Customers

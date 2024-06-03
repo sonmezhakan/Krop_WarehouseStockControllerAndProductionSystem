@@ -7,6 +7,7 @@ using Krop.WinForms.Forms.AppUsers;
 using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.Forms.Departments;
 using Krop.WinForms.Forms.Employees;
+using Krop.WinForms.Forms.Productions;
 using Krop.WinForms.Forms.StockInputs;
 using Krop.WinForms.Forms.StockTransfers;
 using Krop.WinForms.HelpersClass;
@@ -20,7 +21,7 @@ namespace Krop.WinForms
     {
         public readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
-        internal Guid AppUserId = Guid.Parse("a6ff235f-e440-41d4-934e-08dc8095c75c");
+        internal Guid AppUserId = Guid.Parse("00f69e9b-a621-4568-d50d-08dc827538a0");
 
         public Panel(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
@@ -338,6 +339,13 @@ namespace Krop.WinForms
             frmStockTransfer frmStockTransfer = _serviceProvider.GetRequiredService<frmStockTransfer>();
             frmStockTransfer.AppUserId = AppUserId;
             FormController.FormOpenController(frmStockTransfer);
+        }
+
+        private void productionBttnProduce_Click(object sender, EventArgs e)
+        {
+            frmProduction frmProduction = _serviceProvider.GetRequiredService<frmProduction>();
+            frmProduction.appUserId = AppUserId;
+            FormController.FormOpenController(frmProduction);
         }
     }
 }

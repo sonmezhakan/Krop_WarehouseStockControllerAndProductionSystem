@@ -2,11 +2,11 @@
 using Krop.Business.Features.Branches.Rules;
 using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Features.Products.Rules;
-using Krop.Business.Features.StockTransfers.Dtos;
 using Krop.Business.Features.StockTransfers.Rules;
 using Krop.Business.Services.Stocks;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DTO.Dtos.StockTransfers;
 using Krop.Entities.Entities;
 using System.Linq.Expressions;
 
@@ -34,15 +34,10 @@ namespace Krop.Business.Services.StockTransfers
         }
         public async Task<IResult> AddAsync(CreateStockTransferDTO createStockTransferDTO)
         {
-            await _employeeBusinessRules.CheckByEmployeeId(createStockTransferDTO.TransactorAppUserId);//Employee Business Rule
-            await _branchBusinessRules.CheckByBranchId(createStockTransferDTO.SenderBranchId);//SenderBranch Business Rule
-            await _branchBusinessRules.CheckByBranchId(createStockTransferDTO.SentBranchId);//SentBranch Business Rule
-            await _stockTransferBusinessRules.CheckSenderAndSentBranchId(createStockTransferDTO.SenderBranchId, createStockTransferDTO.SentBranchId);//SenderBranch and SentBranch Exists Rule
-            await _employeeBusinessRules.CheckEmployeeBranch(createStockTransferDTO.TransactorAppUserId, createStockTransferDTO.SenderBranchId);//Çalışanın bu şubede yetkisi olup olmadığı kontrol ediliyor.
-            await _productBusinessRules.CheckByProductId(createStockTransferDTO.ProductId);//Product Business Rule
+            await _employeeBusinessRules.CheckEmployeeBranch(createStockTransferDTO.TransactorAppUserId, createStockTransferDTO.SenderBranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
 
             await _stockService.StockDeleteAsync(createStockTransferDTO.SenderBranchId, createStockTransferDTO.ProductId, createStockTransferDTO.Quantity);//Gönderen Şubeden Miktar Siliniyor.
-            await _stockService.StockInputUpdateAsync(createStockTransferDTO.SentBranchId, createStockTransferDTO.ProductId, createStockTransferDTO.Quantity);//Gönderilen Şubeye Stok Ekleniyor.
+            await _stockService.StockAddedAsync(createStockTransferDTO.SentBranchId, createStockTransferDTO.ProductId, createStockTransferDTO.Quantity);//Gönderilen Şubeye Stok Ekleniyor.
 
             await _stockTransferRepository.AddAsync(_mapper.Map<StockTransfer>(createStockTransferDTO));
 
@@ -52,20 +47,15 @@ namespace Krop.Business.Services.StockTransfers
         {
             var result = await _stockTransferBusinessRules.CheckByStockTransferId(updateStockTransferDTO.Id);
 
-            await _employeeBusinessRules.CheckByEmployeeId(updateStockTransferDTO.TransactorAppUserId);//Employee Business Rule
-            await _branchBusinessRules.CheckByBranchId(updateStockTransferDTO.SenderBranchId);//SenderBranch Business Rule
-            await _branchBusinessRules.CheckByBranchId(updateStockTransferDTO.SentBranchId);//SentBranch Business Rule
-            await _stockTransferBusinessRules.CheckSenderAndSentBranchId(updateStockTransferDTO.SenderBranchId, updateStockTransferDTO.SentBranchId);//SenderBranch and SentBranch Exists Rule
-            await _employeeBusinessRules.CheckEmployeeBranch(updateStockTransferDTO.TransactorAppUserId, updateStockTransferDTO.SenderBranchId);//Çalışanın bu şubede yetkisi olup olmadığı kontrol ediliyor.
-            await _productBusinessRules.CheckByProductId(updateStockTransferDTO.ProductId);//Product Business Rule
+            await _employeeBusinessRules.CheckEmployeeBranch(updateStockTransferDTO.TransactorAppUserId, updateStockTransferDTO.TransactorAppUserId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
 
             //Yapılmış İşlem
             await _stockService.StockDeleteAsync(result.SentBranchId,result.ProductId,result.Quantity);//Gönderilen Şubedeki Stok Miktarı Silinir.
-            await _stockService.StockInputUpdateAsync(result.SenderBranchId,result.ProductId,result.Quantity);//Gönderen Şubeye Tekrardan Stok Miktarı Eklenir.
+            await _stockService.StockAddedAsync(result.SenderBranchId,result.ProductId,result.Quantity);//Gönderen Şubeye Tekrardan Stok Miktarı Eklenir.
 
             //Yeni Yapılacak İşlem
             await _stockService.StockDeleteAsync(updateStockTransferDTO.SenderBranchId, updateStockTransferDTO.ProductId, updateStockTransferDTO.Quantity);//Güncelleme işlemindeki gönderen şubenin stoğundan miktar silinir.
-            await _stockService.StockInputUpdateAsync(updateStockTransferDTO.SentBranchId,updateStockTransferDTO.ProductId,updateStockTransferDTO.Quantity);//Güncelleme işlemindeki gönderilen şubenin stoğuna miktar eklenir.
+            await _stockService.StockAddedAsync(updateStockTransferDTO.SentBranchId,updateStockTransferDTO.ProductId,updateStockTransferDTO.Quantity);//Güncelleme işlemindeki gönderilen şubenin stoğuna miktar eklenir.
 
             await _stockTransferRepository.UpdateAsync(_mapper.Map(updateStockTransferDTO, result));//Stok Transfer işlemi güncelleniyor.
 
@@ -81,7 +71,7 @@ namespace Krop.Business.Services.StockTransfers
             result.TransactorAppUserId = appUserId;
 
             await _stockService.StockDeleteAsync(result.SentBranchId, result.ProductId, result.Quantity);//Gönderilen Şubedeki Stok Miktarı Silinir.
-            await _stockService.StockInputUpdateAsync(result.SenderBranchId, result.ProductId, result.Quantity);//Gönderen Şubeye Tekrardan Stok Miktarı Eklenir.
+            await _stockService.StockAddedAsync(result.SenderBranchId, result.ProductId, result.Quantity);//Gönderen Şubeye Tekrardan Stok Miktarı Eklenir.
 
             await _stockTransferRepository.DeleteAsync(result);
 

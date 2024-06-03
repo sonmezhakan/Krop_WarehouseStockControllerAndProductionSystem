@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Employees.Dtos;
+using Krop.DTO.Dtos.Employees;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.Employees.Profiles

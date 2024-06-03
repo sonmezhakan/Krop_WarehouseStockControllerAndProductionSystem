@@ -1,6 +1,6 @@
-﻿using Krop.Business.Features.Brands.Dtos;
+﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+using Krop.DTO.Dtos.Brands;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.BrandHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
@@ -8,15 +8,15 @@ namespace Krop.WinForms.Brands
 {
     public partial class frmBrandList : Form
     {
-        private readonly IBrandHelper _brandHelper;
+        private readonly IBrandRequest _brandRequest;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetBrandDTO> _originalData;
         private BindingList<GetBrandDTO> _filteredData;
 
-        public frmBrandList(IBrandHelper brandHelper, IServiceProvider serviceProvider)
+        public frmBrandList(IBrandRequest brandRequest, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _brandHelper = brandHelper;
+            _brandRequest = brandRequest;
             _serviceProvider = serviceProvider;
         }
 
@@ -33,9 +33,17 @@ namespace Krop.WinForms.Brands
 
             dgwBrandList.Columns[0].Visible = false;
         }
-        private void BrandList()
+        private async void BrandList()
         {
-            List<GetBrandDTO> result = _brandHelper.GetAllAsync();
+            HttpResponseMessage response = await _brandRequest.GetAllAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBrandDTO>(response).Data;
+
             _originalData = new BindingList<GetBrandDTO>(result);
             _filteredData = new BindingList<GetBrandDTO>(_originalData.ToList());
 

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Brands.Dtos;
 using Krop.Business.Features.Brands.Rules;
 using Krop.Business.Features.Brands.Validations;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DTO.Dtos.Brands;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Services.Brands

@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.StockInputs.Dtos;
-using Krop.Business.Services.StockInputs;
+﻿using Krop.Business.Services.StockInputs;
+using Krop.DTO.Dtos.StockInputs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
@@ -28,16 +28,16 @@ namespace Krop.WebAPI.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id,CancellationToken cancellationToken)
+        [HttpDelete("{id}/{appUserId}")]
+        public async Task<IActionResult> Delete(Guid id,Guid appUserId,CancellationToken cancellationToken)
         {
-            var result = await _stockInputService.DeleteAsync(id);
+            var result = await _stockInputService.DeleteAsync(id,appUserId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        [HttpGet("{appUserId}")]
+        public async Task<IActionResult> GetAll(Guid appUserId,CancellationToken cancellationToken)
         {
-            var result = await _stockInputService.GetAllAsync();
+            var result = await _stockInputService.GetAllAsync(appUserId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{id}")]

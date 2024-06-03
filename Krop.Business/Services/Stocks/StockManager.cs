@@ -132,7 +132,7 @@ namespace Krop.Business.Services.Stocks
         }
         #endregion
         #region Stock Update
-        public async Task<IResult> StockInputUpdateAsync(Guid branchId,Guid productId,int quantity)//Stok Girişi Yapılıp, Stok Güncelleniyor.
+        public async Task<IResult> StockAddedAsync(Guid branchId,Guid productId,int quantity)//Stok Girişi Yapılıp, Stok Güncelleniyor.
         {
             var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
 

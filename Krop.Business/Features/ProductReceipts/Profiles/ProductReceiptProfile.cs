@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.ProductReceipts.Dtos;
+using Krop.DTO.Dtos.ProductReceipts;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.ProductReceipts.Profiles

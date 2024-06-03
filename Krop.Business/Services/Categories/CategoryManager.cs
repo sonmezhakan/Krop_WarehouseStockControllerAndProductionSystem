@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Categories.Dtos;
 using Krop.Business.Features.Categories.Rules;
 using Krop.Business.Features.Categories.Validations;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DTO.Dtos.Categroies;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Services.Categories

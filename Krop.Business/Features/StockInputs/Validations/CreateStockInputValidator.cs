@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Krop.Business.Features.StockInputs.Constants;
-using Krop.Business.Features.StockInputs.Dtos;
+using Krop.DTO.Dtos.StockInputs;
 
 namespace Krop.Business.Features.StockInputs.Validation
 {
@@ -15,10 +15,6 @@ namespace Krop.Business.Features.StockInputs.Validation
             RuleFor(x => x.BranchId)
                 .NotNull().WithMessage(StockInputMessages.BranchNotNull)
                 .NotEmpty().WithMessage(StockInputMessages.BranchNotNull);
-
-            RuleFor(x => x.SupplierId)
-                .NotNull().WithMessage(StockInputMessages.SupplierNotNull)
-                .NotEmpty().WithMessage(StockInputMessages.SupplierNotNull);
 
             RuleFor(x => x.AppUserId)
                 .NotEmpty().WithMessage(StockInputMessages.EmployeeNotNull)

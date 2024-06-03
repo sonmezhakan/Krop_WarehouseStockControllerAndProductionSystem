@@ -1,18 +1,17 @@
-﻿using Krop.Business.Features.Departments.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Departments;
+using Krop.DTO.Dtos.Departments;
 using Krop.WinForms.HelpersClass;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.Departments
 {
     public partial class frmDepartmentAdd : Form
     {
-        private readonly IWebApiService _webApiService;
+        private readonly IDepartmentRequest _departmentRequest;
 
-        public frmDepartmentAdd(IWebApiService webApiService)
+        public frmDepartmentAdd(IDepartmentRequest departmentRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
+            _departmentRequest = departmentRequest;
         }
 
         private void frmDepartmentAdd_Load(object sender, EventArgs e)
@@ -20,7 +19,7 @@ namespace Krop.WinForms.Forms.Departments
 
         }
 
-        private void bttnAdd_Click(object sender, EventArgs e)
+        private async void bttnAdd_Click(object sender, EventArgs e)
         {
             CreateDepartmentDTO createDepartmentDTO = new CreateDepartmentDTO
             {
@@ -28,7 +27,7 @@ namespace Krop.WinForms.Forms.Departments
                 Description = txtDescription.Text
             };
 
-            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("department/add", createDepartmentDTO).Result;
+            HttpResponseMessage response = await _departmentRequest.AddAsync(createDepartmentDTO);
 
             if (!response.IsSuccessStatusCode)
             {

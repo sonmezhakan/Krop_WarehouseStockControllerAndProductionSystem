@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.StockTransfers.Dtos;
-using Krop.Business.Services.StockTransfers;
+﻿using Krop.Business.Services.StockTransfers;
+using Krop.DTO.Dtos.StockTransfers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

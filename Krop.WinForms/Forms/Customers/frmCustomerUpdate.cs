@@ -1,22 +1,19 @@
-﻿using Krop.Business.Features.Customers.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Customers;
+using Krop.DTO.Dtos.Customers;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.CustomerHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Customers
 {
     public partial class frmCustomerUpdate : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly ICustomerHelper _customerHelper;
-        public Guid Id;
-        public frmCustomerUpdate(IWebApiService webApiService, ICustomerHelper customerHelper)
+                public Guid Id;
+        private readonly ICustomerRequest _customerRequest;
+
+        public frmCustomerUpdate(ICustomerRequest customerRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _customerHelper = customerHelper;
+            _customerRequest = customerRequest;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -32,11 +29,16 @@ namespace Krop.WinForms.Customers
                 cmbBoxCustomerSelect.SelectedValue = Id;
         }
 
-        private void CustomerList()
+        private async void CustomerList()
         {
-            List<GetCustomerComboBoxDTO> result = _customerHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _customerRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCustomerComboBoxDTO>(response).Data;
 
             cmbBoxCustomerSelect.DataSource = null;
 
@@ -49,13 +51,18 @@ namespace Krop.WinForms.Customers
             cmbBoxCustomerSelect.SelectedIndexChanged += CmbBoxCustomerSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxCustomerSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxCustomerSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxCustomerSelect.SelectedValue is not null)
             {
-                var result = _customerHelper.GetByCustomerIdAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _customerRequest.GetByIdAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetCustomerDTO>(response).Data;
 
                 if (result.Invoice == Entities.Enums.InvoiceEnum.Bireysel)
                     radioBttnPerson.Checked = true;
@@ -73,7 +80,7 @@ namespace Krop.WinForms.Customers
             }
         }
 
-        private void bttnCustomerUpdate_Click(object sender, EventArgs e)
+        private async void bttnCustomerUpdate_Click(object sender, EventArgs e)
         {
             if (cmbBoxCustomerSelect.SelectedValue is not null)
             {
@@ -93,7 +100,7 @@ namespace Krop.WinForms.Customers
                         Invoice = radioBttnPerson.Checked ? Entities.Enums.InvoiceEnum.Bireysel : Entities.Enums.InvoiceEnum.Kurumsal
                     };
 
-                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("customer/update", updateCustomerDTO).Result;
+                    HttpResponseMessage response = await _customerRequest.UpdateAsync(updateCustomerDTO);
 
                     if (!response.IsSuccessStatusCode)
                     {

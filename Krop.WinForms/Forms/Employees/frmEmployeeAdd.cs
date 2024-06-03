@@ -1,37 +1,29 @@
-﻿using Krop.Business.Features.Employees.Dtos;
-using Krop.Common.Helpers.WebApiService;
-using Krop.Entities.Enums;
+﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+using Krop.Common.Helpers.WebApiRequests.Branches;
+using Krop.Common.Helpers.WebApiRequests.Departments;
+using Krop.Common.Helpers.WebApiRequests.Employees;
+using Krop.DTO.Dtos.AppUsers;
+using Krop.DTO.Dtos.Branches;
+using Krop.DTO.Dtos.Departments;
+using Krop.DTO.Dtos.Employees;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.AppUserHelpers;
-using Krop.WinForms.HelpersClass.BranchHelpers;
-using Krop.WinForms.HelpersClass.Departments;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Krop.WinForms.Forms.Employees
 {
     public partial class frmEmployeeAdd : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly IDepartmentHelper _departmentHelper;
-        private readonly IBranchHelper _branchHelper;
-        private readonly IAppUserHelper _appUserHelper;
+        private readonly IDepartmentRequest _departmentRequest;
+        private readonly IAppUserRequest _appUserRequest;
+        private readonly IBranchRequest _branchRequest;
+        private readonly IEmployeeRequest _employeeRequest;
 
-        public frmEmployeeAdd(IWebApiService webApiService, IDepartmentHelper departmentHelper, IBranchHelper branchHelper, IAppUserHelper appUserHelper)
+        public frmEmployeeAdd(IDepartmentRequest departmentRequest,IAppUserRequest appUserRequest,IBranchRequest branchRequest,IEmployeeRequest employeeRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _departmentHelper = departmentHelper;
-            _branchHelper = branchHelper;
-            _appUserHelper = appUserHelper;
+            _departmentRequest = departmentRequest;
+            _appUserRequest = appUserRequest;
+            _branchRequest = branchRequest;
+            _employeeRequest = employeeRequest;
         }
 
         private void frmEmployeeAdd_Load(object sender, EventArgs e)
@@ -40,11 +32,16 @@ namespace Krop.WinForms.Forms.Employees
             DepartmentList();
             BranchList();
         }
-        private void AppUserList()
+        private async void AppUserList()
         {
-            var result = _appUserHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _appUserRequest.GetAllComboBoxAsync();
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetAppUserComboBoxDTO>(response).Data;
 
             cmbBoxAppUserSelect.DataSource = null;
             cmbBoxAppUserSelect.DisplayMember = "UserName";
@@ -53,11 +50,16 @@ namespace Krop.WinForms.Forms.Employees
             cmbBoxAppUserSelect.DataSource = result;
 
         }
-        private void DepartmentList()
+        private async void DepartmentList()
         {
-            var result = _departmentHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _departmentRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetDepartmentComboBoxDTO>(response).Data;
 
             cmbBoxDepartmentSelect.DataSource = null;
             cmbBoxDepartmentSelect.DisplayMember = "DepartmentName";
@@ -65,10 +67,16 @@ namespace Krop.WinForms.Forms.Employees
 
             cmbBoxDepartmentSelect.DataSource = result;
         }
-        private void BranchList()
+        private async void BranchList()
         {
-            var result = _branchHelper.GetAllComboBoxAsync();
-            if (result is null) return;
+            HttpResponseMessage response = await _branchRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response).Data;
 
             cmbBoxBranchSelect.DataSource = null;
             cmbBoxBranchSelect.DisplayMember = "BranchName";
@@ -85,7 +93,7 @@ namespace Krop.WinForms.Forms.Employees
                 dateTimePickerEnd.Enabled = false;
         }
 
-        private void bttnAdd_Click(object sender, EventArgs e)
+        private async void bttnAdd_Click(object sender, EventArgs e)
         {
             if(cmbBoxAppUserSelect.SelectedValue is not null && cmbBoxDepartmentSelect.SelectedValue is not null && cmbBoxBranchSelect.SelectedValue is not null)
             {
@@ -100,7 +108,7 @@ namespace Krop.WinForms.Forms.Employees
                     WorkingStatu = radioButtonActive.Checked ? true : false
                 };
 
-                HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("employee/add", createEmployeeDTO).Result;
+                HttpResponseMessage response = await _employeeRequest.AddAsync(createEmployeeDTO);
 
                 if(!response.IsSuccessStatusCode)
                 {

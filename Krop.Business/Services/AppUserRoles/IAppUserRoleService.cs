@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.AppUserRoles.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.AppUserRoles;
 
 namespace Krop.Business.Services.AppUserRoles
 {

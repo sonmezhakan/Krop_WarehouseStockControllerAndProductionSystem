@@ -1,11 +1,6 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Krop.Business.Features.AppUserRoles.Dtos;
-using Krop.Business.Features.Suppliers.Dtos;
-using Krop.Business.Services.AppUserRoles;
-using Microsoft.AspNetCore.Http;
+﻿using Krop.Business.Services.AppUserRoles;
+using Krop.DTO.Dtos.AppUserRoles;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
 namespace Krop.WebAPI.Controllers
 {

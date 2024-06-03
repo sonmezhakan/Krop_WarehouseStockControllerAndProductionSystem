@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Employees.Dtos;
 using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Features.Employees.Validations;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DTO.Dtos.Employees;
 using Krop.Entities.Entities;
 using System.Linq.Expressions;
 

@@ -35,6 +35,10 @@ namespace Krop.DataAccess.Configurations
                 .WithMany(x=>x.StockInputs)
                 .HasForeignKey(x=>x.AppUserId);
 
+            builder.HasOne(x => x.Production)
+                .WithOne(x => x.StockInput)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.Configure(builder);
         }
     }

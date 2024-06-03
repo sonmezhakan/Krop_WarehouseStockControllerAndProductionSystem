@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.ProductReceipts.Dtos;
-using Krop.Business.Services.ProductReceipts;
+﻿using Krop.Business.Services.ProductReceipts;
+using Krop.DTO.Dtos.ProductReceipts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

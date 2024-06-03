@@ -1,23 +1,19 @@
-﻿using Krop.Business.Features.Customers.Dtos;
-using Krop.Common.Helpers.WebApiService;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Helpers.WebApiRequests.Customers;
+using Krop.DTO.Dtos.Customers;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.CustomerHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Customers
 {
     public partial class frmCustomerDelete : Form
     {
-        private readonly ICustomerHelper _customerHelper;
-        private readonly IWebApiService _webApiService;
         public Guid Id;
+        private readonly ICustomerRequest _customerRequest;
 
-        public frmCustomerDelete(ICustomerHelper customerHelper,IWebApiService webApiService)
+        public frmCustomerDelete(ICustomerRequest customerRequest)
         {
             InitializeComponent();
-            _customerHelper = customerHelper;
-            _webApiService = webApiService;
+            _customerRequest = customerRequest;
         }
 
         private void frmCustomerDelete_Load(object sender, EventArgs e)
@@ -26,11 +22,16 @@ namespace Krop.WinForms.Customers
             if (cmbBoxCustomerSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCustomerSelect.SelectedValue = Id;
         }
-        private void CustomerList()
+        private async void CustomerList()
         {
-            List<GetCustomerComboBoxDTO> result = _customerHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _customerRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCustomerComboBoxDTO>(response).Data;
 
             cmbBoxCustomerSelect.DataSource = null;
 
@@ -48,13 +49,13 @@ namespace Krop.WinForms.Customers
 
         }
 
-        private void bttnCustomerDelete_Click(object sender, EventArgs e)
+        private async void bttnCustomerDelete_Click(object sender, EventArgs e)
         {
             if(cmbBoxCustomerSelect.SelectedValue != null)
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"customer/delete/{cmbBoxCustomerSelect.SelectedValue}").Result;
+                    HttpResponseMessage response = await _customerRequest.DeleteAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
 
                     if (!response.IsSuccessStatusCode)
                     {

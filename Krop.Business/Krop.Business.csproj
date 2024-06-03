@@ -18,8 +18,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Krop.DataAccess\Krop.DataAccess.csproj" />
-    <ProjectReference Include="..\Krop.Entities\Krop.Entities.csproj" />
+    <ProjectReference Include="..\Krop.Common\Krop.Common.csproj" />
+    <ProjectReference Include="..\Krop.DataAccess\Krop.DataAccess.csproj">
+	  <PrivateAssets>All</PrivateAssets>
+	  </ProjectReference>
+    <ProjectReference Include="..\Krop.DTO\Krop.DTO.csproj">
+	  <PrivateAssets>All</PrivateAssets>
+	  </ProjectReference>
+    <ProjectReference Include="..\Krop.Entities\Krop.Entities.csproj">
+		<PrivateAssets>All</PrivateAssets>
+	</ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

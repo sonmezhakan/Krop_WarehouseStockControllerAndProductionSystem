@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.AppUsers.Dtos;
-using Krop.Business.Services.AppUsers;
+﻿using Krop.Business.Services.AppUsers;
+using Krop.DTO.Dtos.AppUsers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

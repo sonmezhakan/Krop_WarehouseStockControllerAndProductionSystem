@@ -1,18 +1,17 @@
-﻿using Krop.Business.Features.Brands.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+using Krop.DTO.Dtos.Brands;
 using Krop.WinForms.HelpersClass;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Brands
 {
     public partial class frmBrandAdd : Form
     {
-        private readonly IWebApiService _webApiService;
+        private readonly IBrandRequest _brandRequest;
 
-        public frmBrandAdd(IWebApiService webApiService)
+        public frmBrandAdd(IBrandRequest brandRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
+            _brandRequest = brandRequest;
         }
 
         private void frmBrandAdd_Load(object sender, EventArgs e)
@@ -20,7 +19,7 @@ namespace Krop.WinForms.Brands
 
         }
 
-        private void bttnBrandAdd_Click(object sender, EventArgs e)
+        private async void bttnBrandAdd_Click(object sender, EventArgs e)
         {
             CreateBrandDTO createBrandDTO = new CreateBrandDTO
             {
@@ -29,7 +28,7 @@ namespace Krop.WinForms.Brands
                 Email = txtEmail.Text
             };
 
-            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("brand/add", createBrandDTO).Result;
+            HttpResponseMessage response = await _brandRequest.AddAsync(createBrandDTO);
 
             if (!response.IsSuccessStatusCode)
             {

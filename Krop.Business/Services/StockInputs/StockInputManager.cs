@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Branches.Rules;
 using Krop.Business.Features.Employees.Rules;
-using Krop.Business.Features.Products.Rules;
-using Krop.Business.Features.StockInputs.Dtos;
 using Krop.Business.Features.StockInputs.Rules;
 using Krop.Business.Features.StockInputs.Validation;
-using Krop.Business.Features.Suppliers.Rules;
 using Krop.Business.Services.Stocks;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DTO.Dtos.StockInputs;
 using Krop.Entities.Entities;
 using System.Linq.Expressions;
 
@@ -19,38 +16,29 @@ namespace Krop.Business.Services.StockInputs
     {
         private readonly IStockInputRepository _stockInputRepository;
         private readonly IMapper _mapper;
-        private readonly BranchBusinessRules _branchBusinessRules;
-        private readonly SupplierBusinessRules _supplierBusinessRules;
         private readonly EmployeeBusinessRules _employeeBusinessRules;
-        private readonly ProductBusinessRules _productBusinessRules;
         private readonly IStockService _stockService;
         private readonly StockInputBusinessRules _stockInputBusinessRules;
 
         public StockInputManager(IStockInputRepository stockInputRepository,IMapper mapper,
-            BranchBusinessRules branchBusinessRules,SupplierBusinessRules supplierBusinessRules, EmployeeBusinessRules employeeBusinessRules, ProductBusinessRules productBusinessRules, IStockService stockService, StockInputBusinessRules stockInputBusinessRules
+            EmployeeBusinessRules employeeBusinessRules, IStockService stockService, StockInputBusinessRules stockInputBusinessRules
             )
         {
             _stockInputRepository = stockInputRepository;
             _mapper = mapper;
-            _branchBusinessRules = branchBusinessRules;
-            _supplierBusinessRules = supplierBusinessRules;
             _employeeBusinessRules = employeeBusinessRules;
-            _productBusinessRules = productBusinessRules;
             _stockService = stockService;
             _stockInputBusinessRules = stockInputBusinessRules;
         }
         [ValidationAspect(typeof(CreateStockInputValidator))]
         public async Task<IResult> AddAsync(CreateStockInputDTO createStockInputDTO)
         {
-            await _employeeBusinessRules.CheckByEmployeeId(createStockInputDTO.AppUserId);//Employee Business Rule
-            await _branchBusinessRules.CheckByBranchId(createStockInputDTO.BranchId);//Branch Business Rule
-            await _employeeBusinessRules.CheckEmployeeBranch(createStockInputDTO.AppUserId, createStockInputDTO.BranchId);//Çalışanın bu şubede yetkisi olup olmadığı kontrol ediliyor.
-            await _productBusinessRules.CheckByProductId(createStockInputDTO.ProductId);//Product Business Rule
-            await _supplierBusinessRules.CheckBySupplierId(createStockInputDTO.SupplierId);//Supplier Business Rule            
+            await _employeeBusinessRules.CheckEmployeeBranch(createStockInputDTO.AppUserId, createStockInputDTO.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor. 
 
-            await _stockService.StockInputUpdateAsync(createStockInputDTO.BranchId,createStockInputDTO.ProductId,createStockInputDTO.Quantity);//Stoğa ekliyor
+            await _stockService.StockAddedAsync(createStockInputDTO.BranchId,createStockInputDTO.ProductId,createStockInputDTO.Quantity);//Stoğa ekliyor
 
-            await _stockInputRepository.AddAsync(_mapper.Map<StockInput>(createStockInputDTO));
+            await _stockInputRepository.AddAsync(
+                _mapper.Map<StockInput>(createStockInputDTO));
 
             return new SuccessResult();
         }
@@ -59,15 +47,11 @@ namespace Krop.Business.Services.StockInputs
         {
             var result = await _stockInputBusinessRules.CheckStockInput(updateStockInputDTO.Id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
 
-            await _employeeBusinessRules.CheckByEmployeeId(updateStockInputDTO.AppUserId);//Employee Business Rule
-            await _branchBusinessRules.CheckByBranchId(updateStockInputDTO.BranchId);//Branch Business Rule
-            await _employeeBusinessRules.CheckEmployeeBranch(updateStockInputDTO.AppUserId, updateStockInputDTO.BranchId);//Çalışanın bu şubede yetkisi olup olmadığı kontrol ediliyor.
-            await _productBusinessRules.CheckByProductId(updateStockInputDTO.ProductId);//Product Business Rule
-            await _supplierBusinessRules.CheckBySupplierId(updateStockInputDTO.SupplierId);//Supplier Business Rule
-            
+            await _employeeBusinessRules.CheckEmployeeBranch(updateStockInputDTO.AppUserId, updateStockInputDTO.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+
 
             await _stockService.StockDeleteAsync(result.BranchId, result.ProductId, result.Quantity);//Şube değişikliği veya ürün değişikliği yapılırsa diye ilk önce stoktan miktarı çıkarmamız gerekiyor.
-            await _stockService.StockInputUpdateAsync(updateStockInputDTO.BranchId, updateStockInputDTO.ProductId, updateStockInputDTO.Quantity);//Stoğa ekliyor
+            await _stockService.StockAddedAsync(updateStockInputDTO.BranchId, updateStockInputDTO.ProductId, updateStockInputDTO.Quantity);//Stoğa ekliyor
 
             result = _mapper.Map(updateStockInputDTO, result);//Veritabanındaki bilgileri güncellenecek bilgiler ile değiştiriyor
 
@@ -76,16 +60,11 @@ namespace Krop.Business.Services.StockInputs
            return new SuccessResult();
         }
 
-        public async Task<IResult> DeleteAsync(Guid Id)
+        public async Task<IResult> DeleteAsync(Guid id, Guid appUserId)
         {
-            var result = await _stockInputBusinessRules.CheckStockInput(Id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
+            var result = await _stockInputBusinessRules.CheckStockInput(id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
 
-            await _employeeBusinessRules.CheckByEmployeeId(result.AppUserId);//Employee Business Rule
-            await _branchBusinessRules.CheckByBranchId(result.BranchId);//Branch Business Rule
-            await _employeeBusinessRules.CheckEmployeeBranch(result.AppUserId, result.BranchId);//Çalışanın bu şubede yetkisi olup olmadığı kontrol ediliyor.
-            await _productBusinessRules.CheckByProductId(result.ProductId);//Product Business Rule
-            await _supplierBusinessRules.CheckBySupplierId(result.SupplierId);//Supplier Business Rule
-            
+            await _employeeBusinessRules.CheckEmployeeBranch(appUserId, result.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
 
             await _stockService.StockDeleteAsync(result.BranchId, result.ProductId, result.Quantity);//Şube değişikliği veya ürün değişikliği yapılırsa diye ilk önce stoktan miktarı çıkarmamız gerekiyor.
 
@@ -94,8 +73,10 @@ namespace Krop.Business.Services.StockInputs
             return new SuccessResult();
         }
 
-        public async Task<IDataResult<IEnumerable<GetStockInputListDTO>>> GetAllAsync()
+        public async Task<IDataResult<IEnumerable<GetStockInputListDTO>>> GetAllAsync(Guid appUserId)
         {
+            var employee =await _employeeBusinessRules.CheckByEmployeeId(appUserId);
+            await _employeeBusinessRules.CheckEmployeeBranch(appUserId, (Guid)employee.BranchId);
             var result = await _stockInputRepository.GetAllAsync(includeProperties:new Expression<Func<StockInput, object>>[]
             {
                 p=>p.Product,

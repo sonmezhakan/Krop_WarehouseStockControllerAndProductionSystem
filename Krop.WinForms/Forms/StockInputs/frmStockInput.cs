@@ -1,14 +1,14 @@
-﻿using Krop.Business.Features.Branches.Dtos;
-using Krop.Business.Features.Products.Dtos;
-using Krop.Business.Features.StockInputs.Dtos;
-using Krop.Business.Features.Suppliers.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Branches;
+using Krop.Common.Helpers.WebApiRequests.Products;
+using Krop.Common.Helpers.WebApiRequests.StockInputs;
+using Krop.Common.Helpers.WebApiRequests.Suppliers;
+using Krop.DTO.Dtos.Branches;
+using Krop.DTO.Dtos.Products;
+using Krop.DTO.Dtos.StockInputs;
+using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.BranchHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using Krop.WinForms.HelpersClass.ProductHelpers;
-using Krop.WinForms.HelpersClass.SupplierHelpers;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,24 +20,24 @@ namespace Krop.WinForms.Forms.StockInputs
 {
     public partial class frmStockInput : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly IBranchHelper _branchHelper;
-        private readonly IProductHelper _productHelper;
-        private readonly ISupplierHelper _supplierHelper;
+        private readonly IBranchRequest _branchRequest;
+        private readonly ISupplierRequest _supplierRequest;
+        private readonly IProductRequest _productRequest;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IStockInputRequest _stockInputRequest;
         private BindingList<GetStockInputListDTO> _originalData;
         private BindingList<GetStockInputListDTO> _filteredData;
         internal Guid AppUserId;
         private Guid Id;
 
-        public frmStockInput(IWebApiService webApiService, IBranchHelper branchHelper, IProductHelper productHelper, ISupplierHelper supplierHelper, IServiceProvider serviceProvider)
+        public frmStockInput(IBranchRequest branchRequest,ISupplierRequest supplierRequest, IProductRequest productRequest, IServiceProvider serviceProvider,IStockInputRequest stockInputRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _branchHelper = branchHelper;
-            _productHelper = productHelper;
-            _supplierHelper = supplierHelper;
+            _branchRequest = branchRequest;
+            _supplierRequest = supplierRequest;
+            _productRequest = productRequest;
             _serviceProvider = serviceProvider;
+            _stockInputRequest = stockInputRequest;
         }
 
         private void frmStockInput_Load(object sender, EventArgs e)
@@ -47,11 +47,16 @@ namespace Krop.WinForms.Forms.StockInputs
             SupplierList();
             StockInputList();
         }
-        private void ProductList()
+        private async void ProductList()
         {
-            var result = _productHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _productRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response).Data;
 
             ProductNameList(result);
             ProductCodeList(result);
@@ -104,11 +109,16 @@ namespace Krop.WinForms.Forms.StockInputs
             }
         }
 
-        private void BranchList()
+        private async void BranchList()
         {
-            List<GetBranchComboBoxDTO> result = _branchHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _branchRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response).Data;
 
             cmbBoxBranch.DataSource = null;
 
@@ -118,11 +128,16 @@ namespace Krop.WinForms.Forms.StockInputs
             cmbBoxBranch.DataSource = result;
             cmbBoxBranch.SelectedIndex = -1;
         }
-        private void SupplierList()
+        private async void SupplierList()
         {
-            List<GetSupplierComboBoxDTO> result = _supplierHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _supplierRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetSupplierComboBoxDTO>(response).Data;
 
             cmbBoxSupplier.DataSource = null;
 
@@ -145,12 +160,15 @@ namespace Krop.WinForms.Forms.StockInputs
             dgwStockInputList.Columns[8].HeaderText = "Açıklama";
             dgwStockInputList.Columns[9].HeaderText = "Giriş Tarihi";
             dgwStockInputList.Columns[10].HeaderText = "İşlem Yapan Çalışan";
+            dgwStockInputList.Columns[11].HeaderText = "Üretim Id";
+            dgwStockInputList.Columns[12].HeaderText = "Üretim";
 
             dgwStockInputList.Columns[0].Visible = false;
+            dgwStockInputList.Columns[11].Visible = false;
         }
-        private void StockInputList()
+        private async void StockInputList()
         {
-            HttpResponseMessage response = _webApiService.httpClient.GetAsync("stockInput/getall").Result;
+            HttpResponseMessage response = await _stockInputRequest.GetAllAsync(AppUserId);
             if (!response.IsSuccessStatusCode)
             {
                 ResponseController.ErrorResponseController(response);
@@ -199,11 +217,11 @@ namespace Krop.WinForms.Forms.StockInputs
                 }
             }
         }
-        private void GetStockInput()
+        private async void GetStockInput()
         {
             if (Id != Guid.Empty)
             {
-                HttpResponseMessage response = _webApiService.httpClient.GetAsync($"StockInput/GetById/{Id}").Result;
+                HttpResponseMessage response = await _stockInputRequest.GetByIdAsync(Id);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -244,7 +262,7 @@ namespace Krop.WinForms.Forms.StockInputs
             Search();
         }
 
-        private void bttnAdd_Click(object sender, EventArgs e)
+        private async void bttnAdd_Click(object sender, EventArgs e)
         {
             if (cmbBoxProductName.SelectedValue is not null && cmbBoxProductCode.SelectedValue is not null && cmbBoxBranch.SelectedValue is not null && cmbBoxSupplier.SelectedValue is not null)
             {
@@ -261,7 +279,7 @@ namespace Krop.WinForms.Forms.StockInputs
                     Description = txtDescription.Text
                 };
 
-                HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("StockInput/add", createStockInputDTO).Result;
+                HttpResponseMessage response = await _stockInputRequest.AddAsync(createStockInputDTO);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -276,7 +294,7 @@ namespace Krop.WinForms.Forms.StockInputs
             }
         }
 
-        private void bttnUpdate_Click(object sender, EventArgs e)
+        private async void bttnUpdate_Click(object sender, EventArgs e)
         {
             if (Id != Guid.Empty)//Listeden seçilip seçilmedi kontrol ediliyor.
             {
@@ -298,7 +316,7 @@ namespace Krop.WinForms.Forms.StockInputs
                             Description = txtDescription.Text
                         };
 
-                        HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("StockInput/Update", updateStockInputDTO).Result;
+                        HttpResponseMessage response = await _stockInputRequest.UpdateAsync(updateStockInputDTO);
 
                         if (!response.IsSuccessStatusCode)
                         {
@@ -327,11 +345,11 @@ namespace Krop.WinForms.Forms.StockInputs
             GetStockInput();
         }
 
-        private void bttnDelete_Click(object sender, EventArgs e)
+        private async void bttnDelete_Click(object sender, EventArgs e)
         {
             if (Id != Guid.Empty)
             {
-                HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"StockInput/Delete/{Id}").Result;
+                HttpResponseMessage response = await _stockInputRequest.DeleteAsync(Id, AppUserId);
                 if (!response.IsSuccessStatusCode)
                 {
                     ResponseController.ErrorResponseController(response);

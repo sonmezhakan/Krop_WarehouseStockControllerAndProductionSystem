@@ -1,19 +1,20 @@
-﻿using Krop.Business.Features.Branches.Dtos;
-using Krop.WinForms.HelpersClass.BranchHelpers;
+﻿using Krop.Common.Helpers.WebApiRequests.Branches;
+using Krop.DTO.Dtos.Branches;
+using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Forms.Branches
 {
     public partial class frmBranchCart : Form
     {
-        private readonly IBranchHelper _branchHelper;
         public Guid Id;
+        private readonly IBranchRequest _branchRequest;
 
-        public frmBranchCart(IBranchHelper branchHelper)
+        public frmBranchCart(IBranchRequest branchRequest)
         {
             InitializeComponent();
-            _branchHelper = branchHelper;
             txtPhoneNumber.MaxLength = 11;
+            _branchRequest = branchRequest;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -27,11 +28,16 @@ namespace Krop.WinForms.Forms.Branches
             if (cmbBoxBranchSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBranchSelect.SelectedValue = Id;
         }
-        private void BranchList()
+        private async void BranchList()
         {
-            List<GetBranchComboBoxDTO> result = _branchHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _branchRequest.GetAllComboBoxAsync();
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response).Data;
 
             cmbBoxBranchSelect.DataSource = null;
 
@@ -44,11 +50,18 @@ namespace Krop.WinForms.Forms.Branches
             cmbBoxBranchSelect.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxBranchSelect.SelectedValue is not null)
             {
-                GetBranchDTO result = _branchHelper.GetByBranchIdAsync((Guid)cmbBoxBranchSelect.SelectedValue);
+                HttpResponseMessage response = await _branchRequest.GetByIdAsync((Guid)cmbBoxBranchSelect.SelectedValue);
+                if(!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetBranchDTO>(response).Data;
 
                 txtPhoneNumber.Text = result.PhoneNumber;
                 txtEmail.Text = result.Email;

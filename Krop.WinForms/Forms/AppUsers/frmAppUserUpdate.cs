@@ -1,23 +1,19 @@
-﻿using Krop.Business.Features.AppUsers.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.AppUserHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.AppUsers
 {
     public partial class frmAppUserUpdate : Form
     {
-        private readonly IAppUserHelper _appUserHelper;
-        private readonly IWebApiService _webApiService;
+        private readonly IAppUserRequest _appUserRequest;
         public Guid Id;
 
-        public frmAppUserUpdate(IAppUserHelper appUserHelper, IWebApiService webApiService)
+        public frmAppUserUpdate(IAppUserRequest appUserRequest)
         {
             InitializeComponent();
-            _appUserHelper = appUserHelper;
-            _webApiService = webApiService;
+           _appUserRequest = appUserRequest;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -33,12 +29,16 @@ namespace Krop.WinForms.Forms.AppUsers
                 cmbBoxAppUserSelect.SelectedValue = Id;
         }
 
-        private void AppUserList()
+        private async void AppUserList()
         {
-            var result = _appUserHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _appUserRequest.GetAllComboBoxAsync();
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
 
+            var result = ResponseController.SuccessDataListResponseController<GetAppUserComboBoxDTO>(response).Data;
 
             cmbBoxAppUserSelect.DataSource = null;
 
@@ -51,13 +51,18 @@ namespace Krop.WinForms.Forms.AppUsers
             cmbBoxAppUserSelect.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxAppUserSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxAppUserSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                var result = _appUserHelper.GetByAppUserIdAsync((Guid)cmbBoxAppUserSelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _appUserRequest.GetByAppUserIdAsync((Guid)cmbBoxAppUserSelect.SelectedValue);
+                if(!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetAppUserDTO>(response).Data;
 
                 txtFirstName.Text = result.FirstName;
                 txtLastName.Text = result.LastName;
@@ -118,7 +123,8 @@ namespace Krop.WinForms.Forms.AppUsers
                             Password = txtPassword.Text
                         };
 
-                        response = _webApiService.httpClient.PutAsJsonAsync("account/UpdatePassword", updateAppUserPasswordDTO).Result;
+                        //response = _webApiService.httpClient.PutAsJsonAsync("account/UpdatePassword", updateAppUserPasswordDTO).Result;
+                        response = await _appUserRequest.UpdatePasswordAsync(updateAppUserPasswordDTO);
                     }
                     else
                     {
@@ -135,7 +141,8 @@ namespace Krop.WinForms.Forms.AppUsers
                             NationalNumber = txtNationalNumber.Text
                         };
 
-                        response = _webApiService.httpClient.PutAsJsonAsync("account/update", updateAppUserDTO).Result;
+                        //response = _webApiService.httpClient.PutAsJsonAsync("account/update", updateAppUserDTO).Result;
+                        response = await _appUserRequest.UpdateAsync(updateAppUserDTO);
                     }
 
                     if (!response.IsSuccessStatusCode)

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Branches.Dtos;
+using Krop.DTO.Dtos.Branches;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.Branches.Profiles

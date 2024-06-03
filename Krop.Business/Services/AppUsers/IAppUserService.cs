@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.AppUsers.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.AppUsers;
 
 namespace Krop.Business.Services.AppUsers
 {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Krop.Business.Features.Branches.Constants;
-using Krop.Business.Features.Branches.Dtos;
+using Krop.DTO.Dtos.Branches;
 
 namespace Krop.Business.Features.Branches.Validations
 {

@@ -1,22 +1,20 @@
-﻿using Krop.Business.Features.Brands.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+using Krop.DTO.Dtos.Brands;
+using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.BrandHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Brands
 {
     public partial class frmBrandDelete : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly IBrandHelper _brandHelpers;
         public Guid Id;
+        private readonly IBrandRequest _brandRequest;
 
-        public frmBrandDelete(IWebApiService webApiService, IBrandHelper brandHelpers)
+        public frmBrandDelete(IBrandRequest brandRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _brandHelpers = brandHelpers;
+            _brandRequest = brandRequest;
         }
 
         private void frmBrandDelete_Load(object sender, EventArgs e)
@@ -26,13 +24,13 @@ namespace Krop.WinForms.Brands
                 cmbBoxBrandSelect.SelectedValue = Id;
         }
 
-        private void bttnBrandDelete_Click(object sender, EventArgs e)
+        private async void bttnBrandDelete_Click(object sender, EventArgs e)
         {
             if(cmbBoxBrandSelect.SelectedValue is not null)
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"brand/delete/{cmbBoxBrandSelect.SelectedValue}").Result;
+                    HttpResponseMessage response = await _brandRequest.DeleteAsync((Guid)cmbBoxBrandSelect.SelectedValue);
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -49,11 +47,16 @@ namespace Krop.WinForms.Brands
             }
         }
 
-        private void CategoryList()
+        private async void CategoryList()
         {
-            List<GetBrandComboBoxDTO> result = _brandHelpers.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _brandRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBrandComboBoxDTO>(response).Data;
 
             cmbBoxBrandSelect.DataSource = null;
 

@@ -1,10 +1,13 @@
-﻿using Krop.Business.Features.Brands.Dtos;
-using Krop.Business.Features.Categories.Dtos;
-using Krop.Business.Features.Products.Dtos;
+﻿using Krop.Common.Helpers.WebApiRequests.Branches;
+using Krop.Common.Helpers.WebApiRequests.Brands;
+using Krop.Common.Helpers.WebApiRequests.Categories;
+using Krop.Common.Helpers.WebApiRequests.Products;
 using Krop.Common.Helpers.WebApiService;
+using Krop.DTO.Dtos.AppUsers;
+using Krop.DTO.Dtos.Brands;
+using Krop.DTO.Dtos.Categroies;
+using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.BrandHelpers;
-using Krop.WinForms.HelpersClass.CategoryHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using System.Net.Http.Json;
 
@@ -12,18 +15,18 @@ namespace Krop.WinForms.Products
 {
     public partial class frmProductAdd : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly IBrandHelper _brandHelper;
-        private readonly ICategoryHelper _categoryHelper;
+        private readonly IBrandRequest _brandRequest;
+        private readonly ICategoryRequest _categoryRequest;
+        private readonly IProductRequest _productRequest;
 
-        public frmProductAdd(IWebApiService webApiService, IBrandHelper brandHelper, ICategoryHelper categoryHelper)
+        public frmProductAdd(IBrandRequest brandRequest,ICategoryRequest categoryRequest, IProductRequest productRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _brandHelper = brandHelper;
-            _categoryHelper = categoryHelper;
 
             txtCriticalQuantity.MaxLength = 10;
+            _brandRequest = brandRequest;
+            _categoryRequest = categoryRequest;
+            _productRequest = productRequest;
         }
 
         private void frmProductAdd_Load(object sender, EventArgs e)
@@ -32,11 +35,16 @@ namespace Krop.WinForms.Products
             BrandList();
         }
 
-        private void CategoryList()
+        private async void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _categoryRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response).Data;
 
             cmbBoxCategory.DataSource = null;
 
@@ -45,11 +53,16 @@ namespace Krop.WinForms.Products
 
             cmbBoxCategory.DataSource = result;
         }
-        private void BrandList()
+        private async void BrandList()
         {
-            List<GetBrandComboBoxDTO> result = _brandHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _brandRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBrandComboBoxDTO>(response).Data;
 
             cmbBoxBrand.DataSource = null;
             
@@ -69,7 +82,7 @@ namespace Krop.WinForms.Products
 
         }
 
-        private void bttnProductAdd_Click(object sender, EventArgs e)
+        private async void bttnProductAdd_Click(object sender, EventArgs e)
         {
             if(cmbBoxCategory.SelectedValue is not null && cmbBoxBrand.SelectedValue is not null)
             {
@@ -84,7 +97,7 @@ namespace Krop.WinForms.Products
                     Description = txtDescription.Text,
                 };
 
-                HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("product/Add", createProductDTO).Result;
+                HttpResponseMessage response = await _productRequest.AddAsync(createProductDTO);
 
                 if (!response.IsSuccessStatusCode)
                 {

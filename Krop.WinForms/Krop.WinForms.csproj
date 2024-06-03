@@ -14,10 +14,18 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Krop.Business\Krop.Business.csproj" />
-    <ProjectReference Include="..\Krop.IOC\Krop.IOC.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Krop.Business\Krop.Business.csproj">
+		<PrivateAssets>All</PrivateAssets>
+		</ProjectReference>
+		<ProjectReference Include="..\Krop.Common\Krop.Common.csproj" />
+		<ProjectReference Include="..\Krop.DTO\Krop.DTO.csproj" />
+		<ProjectReference Include="..\Krop.IOC\Krop.IOC.csproj">
+			<PrivateAssets>All</PrivateAssets>
+		</ProjectReference>
+
+	
+</ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Krop.Business.Features.StockTransfers.Constants;
-using Krop.Business.Features.StockTransfers.Dtos;
+using Krop.DTO.Dtos.StockTransfers;
 
 namespace Krop.Business.Features.StockTransfers.Validations
 {

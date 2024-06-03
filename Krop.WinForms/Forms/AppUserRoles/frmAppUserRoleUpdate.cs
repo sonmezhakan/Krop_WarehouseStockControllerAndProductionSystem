@@ -1,22 +1,20 @@
-﻿using Krop.Business.Features.AppUserRoles.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.AppUserRoles;
+using Krop.DTO.Dtos.AppUserRoles;
+using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.AppUserRoleHelpers;
 using System.Net.Http.Json;
 
 namespace Krop.WinForms.AppUserRoles
 {
     public partial class frmAppUserRoleUpdate : Form
     {
-        private readonly IAppUserRoleHelper _appUserRoleHelper;
-        private readonly IWebApiService _webApiService;
         public Guid Id;
+        private readonly IAppUserRoleRequest _appUserRoleRequest;
 
-        public frmAppUserRoleUpdate(IAppUserRoleHelper appUserRoleHelper, IWebApiService webApiService)
+        public frmAppUserRoleUpdate(IAppUserRoleRequest appUserRoleRequest)
         {
             InitializeComponent();
-            _appUserRoleHelper = appUserRoleHelper;
-            _webApiService = webApiService;
+            _appUserRoleRequest = appUserRoleRequest;
         }
 
         private void frmAppUserRoleUpdate_Load(object sender, EventArgs e)
@@ -25,11 +23,16 @@ namespace Krop.WinForms.AppUserRoles
             if (cmbBoxAppUserRoleSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxAppUserRoleSelect.SelectedValue = Id;
         }
-        private void AppUserRoleList()
+        private async void AppUserRoleList()
         {
-            List<GetAppUserRoleDTO> result = _appUserRoleHelper.GetAllAsync();
-            if (result is null)
+            HttpResponseMessage response = await _appUserRoleRequest.GetAllAsync();
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetAppUserComboBoxDTO>(response).Data;
 
             cmbBoxAppUserRoleSelect.DataSource = null;
             cmbBoxAppUserRoleSelect.DisplayMember = "Name";
@@ -41,18 +44,23 @@ namespace Krop.WinForms.AppUserRoles
             cmbBoxAppUserRoleSelect.SelectedIndexChanged += CmbBoxAppUserRoleSelect_SelectedIndexChanged;
         }
 
-        private  void CmbBoxAppUserRoleSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private  async void CmbBoxAppUserRoleSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxAppUserRoleSelect.SelectedValue is not null)
             {
-                GetAppUserRoleDTO result =  _appUserRoleHelper.GetByAppUserRoleIdAsync((Guid)cmbBoxAppUserRoleSelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _appUserRoleRequest.GetByIdAsync((Guid)cmbBoxAppUserRoleSelect.SelectedValue);
+                if(!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetAppUserRoleDTO>(response).Data;
 
                 txtAppUserRoleName.Text = result.Name;
             }
         }
-        private void bttnAppUserRoleUpdate_Click(object sender, EventArgs e)
+        private async void bttnAppUserRoleUpdate_Click(object sender, EventArgs e)
         {
             if (cmbBoxAppUserRoleSelect.SelectedValue is not null)
             {
@@ -62,7 +70,7 @@ namespace Krop.WinForms.AppUserRoles
                    Name = txtAppUserRoleName.Text
                 };
 
-                HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("appUserRole/update", updateAppUserRoleDTO).Result;
+                HttpResponseMessage response = await _appUserRoleRequest.UpdateAsync(updateAppUserRoleDTO);
 
                 if (!response.IsSuccessStatusCode)
                 {

@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.Brands.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.Brands;
 
 namespace Krop.Business.Services.Brands
 {

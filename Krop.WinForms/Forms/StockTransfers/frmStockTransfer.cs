@@ -1,12 +1,13 @@
-﻿using Krop.Business.Features.Branches.Dtos;
-using Krop.Business.Features.Products.Dtos;
-using Krop.Business.Features.StockTransfers.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Branches;
+using Krop.Common.Helpers.WebApiRequests.Products;
+using Krop.Common.Helpers.WebApiRequests.StockTransfers;
+using Krop.DTO.Dtos.Branches;
+using Krop.DTO.Dtos.Products;
+using Krop.DTO.Dtos.StockTransfers;
+using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.BranchHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using Krop.WinForms.HelpersClass.ProductHelpers;
 using Krop.WinForms.Products;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
@@ -16,22 +17,23 @@ namespace Krop.WinForms.Forms.StockTransfers
 {
     public partial class frmStockTransfer : Form
     {
-        private readonly IWebApiService _webApiService;
+        private readonly IBranchRequest _branchRequest;
+        private readonly IProductRequest _productRequest;
+        private readonly IStockTransferRequest _stockTransferRequest;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IBranchHelper _branchHelper;
-        private readonly IProductHelper _productHelper;
+
         public Guid Id;
         public Guid AppUserId;
         private BindingList<GetStockTransferListDTO> _originalData;
         private BindingList<GetStockTransferListDTO> _filteredData;
 
-        public frmStockTransfer(IWebApiService webApiService, IServiceProvider serviceProvider, IBranchHelper branchHelper, IProductHelper productHelper)
+        public frmStockTransfer(IBranchRequest branchRequest, IProductRequest productRequest, IStockTransferRequest stockTransferRequest, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _webApiService = webApiService;
+            _branchRequest = branchRequest;
+            _productRequest = productRequest;
+            _stockTransferRequest = stockTransferRequest;
             _serviceProvider = serviceProvider;
-            _branchHelper = branchHelper;
-            _productHelper = productHelper;
         }
 
         private void frmStockTransfer_Load(object sender, EventArgs e)
@@ -40,9 +42,16 @@ namespace Krop.WinForms.Forms.StockTransfers
             ProductList();
             StockTransferList();
         }
-        private void BranchList()
+        private async void BranchList()
         {
-            var result = _branchHelper.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _branchRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response).Data;
 
             List<GetBranchComboBoxDTO> senderBranchList = result.Select(x => new GetBranchComboBoxDTO
             {
@@ -76,9 +85,16 @@ namespace Krop.WinForms.Forms.StockTransfers
             cmbBoxSentBranch.DataSource = getBranchComboBoxDTOs;
             cmbBoxProductName.SelectedIndex = -1;
         }
-        private void ProductList()
+        private async void ProductList()
         {
-            var result = _productHelper.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _productRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
+                return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response).Data;
 
             ProductNameList(result);
             ProductCodeList(result);
@@ -139,9 +155,9 @@ namespace Krop.WinForms.Forms.StockTransfers
 
             dgwStockTransferList.Columns[0].Visible = false;
         }
-        private void StockTransferList()
+        private async void StockTransferList()
         {
-            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"stockTransfer/AppUserBranchGetAll/{AppUserId}").Result;
+            HttpResponseMessage response = await _stockTransferRequest.AppUserBranchGetAll(AppUserId);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -190,7 +206,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                 }
             }
         }
-        private void bttnAdd_Click(object sender, EventArgs e)
+        private async void bttnAdd_Click(object sender, EventArgs e)
         {
             if (cmbBoxSenderBranch.SelectedValue is not null && cmbBoxSentBranch.SelectedValue is not null && cmbBoxProductName.SelectedValue is not null && cmbBoxProductCode.SelectedValue is not null)
             {
@@ -206,7 +222,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                     TransactorAppUserId = AppUserId
                 };
 
-                HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("stockTransfer/Add", createStockTransferDTO).Result;
+                HttpResponseMessage response = await _stockTransferRequest.AddAsync(createStockTransferDTO);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -222,7 +238,7 @@ namespace Krop.WinForms.Forms.StockTransfers
             }
         }
 
-        private void bttnUpdate_Click(object sender, EventArgs e)
+        private async void bttnUpdate_Click(object sender, EventArgs e)
         {
             if (cmbBoxSenderBranch.SelectedValue is not null && cmbBoxSentBranch.SelectedValue is not null && cmbBoxProductName.SelectedValue is not null && cmbBoxProductCode.SelectedValue is not null)
             {
@@ -244,7 +260,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                             TransactorAppUserId = AppUserId
                         };
 
-                        HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("stockTransfer/Update", updateStockTransferDTO).Result;
+                        HttpResponseMessage response =await _stockTransferRequest.UpdateAsync(updateStockTransferDTO);
 
                         if (!response.IsSuccessStatusCode)
                         {
@@ -267,13 +283,13 @@ namespace Krop.WinForms.Forms.StockTransfers
             }
         }
 
-        private void bttnDelete_Click(object sender, EventArgs e)
+        private async void bttnDelete_Click(object sender, EventArgs e)
         {
             if (Id != Guid.Empty)
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"stockTransfer/Delete/{Id}/{AppUserId}").Result;
+                    HttpResponseMessage response = await _stockTransferRequest.DeleteAsync(Id, AppUserId);
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -318,11 +334,11 @@ namespace Krop.WinForms.Forms.StockTransfers
             FormController.FormOpenController(frmProductAdd);
         }
 
-        private void dgwStockTransferList_DoubleClick(object sender, EventArgs e)
+        private async void dgwStockTransferList_DoubleClick(object sender, EventArgs e)
         {
             Id = (Guid)dgwStockTransferList.SelectedRows[0].Cells[0].Value;
 
-            HttpResponseMessage response = _webApiService.httpClient.GetAsync($"stockTransfer/GetById/{Id}/{AppUserId}").Result;
+            HttpResponseMessage response = await _stockTransferRequest.GetByIdAsync(Id, AppUserId);
 
             if(!response.IsSuccessStatusCode)
             {

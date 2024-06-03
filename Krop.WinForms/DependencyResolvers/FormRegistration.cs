@@ -6,6 +6,7 @@ using Krop.WinForms.Forms.AppUsers;
 using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.Forms.Departments;
 using Krop.WinForms.Forms.Employees;
+using Krop.WinForms.Forms.Productions;
 using Krop.WinForms.Forms.StockInputs;
 using Krop.WinForms.Forms.StockTransfers;
 using Krop.WinForms.Products;
@@ -82,6 +83,8 @@ namespace Krop.WinForms.DependencyResolvers
 
             services.AddTransient<frmStockInput>();
             services.AddTransient<frmStockTransfer>();
+
+            services.AddTransient<frmProduction>();
             return services;
         }
     }

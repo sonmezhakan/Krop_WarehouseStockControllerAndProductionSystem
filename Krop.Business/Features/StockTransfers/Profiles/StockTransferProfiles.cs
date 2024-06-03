@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.StockTransfers.Dtos;
+using Krop.DTO.Dtos.StockTransfers;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.StockTransfers.Profiles

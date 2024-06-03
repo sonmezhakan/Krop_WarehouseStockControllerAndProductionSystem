@@ -1,6 +1,6 @@
-﻿using Krop.Business.Features.AppUsers.Dtos;
+﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.AppUserHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
@@ -8,16 +8,17 @@ namespace Krop.WinForms.Forms.AppUsers
 {
     public partial class frmAppUserList : Form
     {
-        private readonly IAppUserHelper _appUserHelper;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IAppUserRequest _appUserRequest;
         private BindingList<GetAppUserDTO> _originalData;
         private BindingList<GetAppUserDTO> _filteredData;
 
-        public frmAppUserList(IAppUserHelper appUserHelper, IServiceProvider serviceProvider)
+        public frmAppUserList(IServiceProvider serviceProvider,IAppUserRequest appUserRequest)
         {
             InitializeComponent();
-            _appUserHelper = appUserHelper;
+ 
             _serviceProvider = serviceProvider;
+            _appUserRequest = appUserRequest;
         }
 
         private void frmAppUserList_Load(object sender, EventArgs e)
@@ -39,11 +40,16 @@ namespace Krop.WinForms.Forms.AppUsers
 
             dgwAppUserList.Columns[0].Visible = false;
         }
-        private void AppUserList()
+        private async void AppUserList()
         {
-            var result = _appUserHelper.GetAllAsync();
-            if (result is null)
+            HttpResponseMessage response = await _appUserRequest.GetAllAsync();
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetAppUserDTO>(response).Data;
             _originalData = new BindingList<GetAppUserDTO>(result);
             _filteredData = new BindingList<GetAppUserDTO>(_originalData.ToList());
 

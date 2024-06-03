@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Krop.Business.Features.Products.Constants;
-using Krop.Business.Features.Products.Dtos;
+using Krop.DTO.Dtos.Products;
 
 namespace Krop.Business.Features.Products.Validations
 {

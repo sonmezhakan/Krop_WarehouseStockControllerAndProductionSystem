@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Products.Dtos;
 using Krop.Business.Features.Products.Rules;
 using Krop.Business.Features.Products.Validations;
 using Krop.Business.Services.Stocks;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DTO.Dtos.Products;
 using Krop.Entities.Entities;
 using System.Linq.Expressions;
 

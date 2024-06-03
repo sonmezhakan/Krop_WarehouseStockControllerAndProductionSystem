@@ -1,18 +1,20 @@
-﻿using Krop.Business.Features.Customers.Dtos;
-using Krop.WinForms.HelpersClass.CustomerHelpers;
+﻿using Krop.Common.Helpers.WebApiRequests.Customers;
+using Krop.DTO.Dtos.Customers;
+using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Customers
 {
     public partial class frmCustomerCart : Form
     {
-        private readonly ICustomerHelper _customerHelper;
+        
         public Guid Id;
+        private readonly ICustomerRequest _customerRequest;
 
-        public frmCustomerCart(ICustomerHelper customerHelper)
+        public frmCustomerCart(ICustomerRequest customerRequest)
         {
             InitializeComponent();
-            _customerHelper = customerHelper;
+            _customerRequest = customerRequest;
         }
 
         private void frmCustomerCart_Load(object sender, EventArgs e)
@@ -21,11 +23,16 @@ namespace Krop.WinForms.Customers
             if (cmbBoxCustomerSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCustomerSelect.SelectedValue = Id;
         }
-        private void CustomerList()
+        private async void CustomerList()
         {
-            List<GetCustomerComboBoxDTO> result = _customerHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _customerRequest.GetAllComboBoxAsync();
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCustomerComboBoxDTO>(response).Data;
 
             cmbBoxCustomerSelect.DataSource = null;
 
@@ -38,11 +45,18 @@ namespace Krop.WinForms.Customers
             cmbBoxCustomerSelect.SelectedIndexChanged += CmbBoxCustomerSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxCustomerSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxCustomerSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxCustomerSelect.SelectedValue is not null)
             {
-                var result = _customerHelper.GetByCustomerIdAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
+                HttpResponseMessage response = await _customerRequest.GetByIdAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
+                if(!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetCustomerDTO>(response).Data;
 
                 if (result.Invoice == Entities.Enums.InvoiceEnum.Bireysel)
                     radioBttnPerson.Checked = true;

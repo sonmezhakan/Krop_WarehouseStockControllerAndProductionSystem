@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.Suppliers.Dtos;
+using Krop.DTO.Dtos.Suppliers;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.Suppliers.Profiles

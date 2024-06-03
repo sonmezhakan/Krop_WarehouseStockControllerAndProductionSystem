@@ -1,22 +1,19 @@
-﻿using Krop.Business.Features.Categories.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Categories;
+using Krop.DTO.Dtos.Categroies;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.CategoryHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Categories
 {
     public partial class frmCategoryDelete : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly ICategoryHelper _categoryHelper;
         public Guid Id;
+        private readonly ICategoryRequest _categoryRequest;
 
-        public frmCategoryDelete(IWebApiService webApiService, ICategoryHelper categoryHelper)
+        public frmCategoryDelete(ICategoryRequest categoryRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _categoryHelper = categoryHelper;
+            _categoryRequest = categoryRequest;
         }
         private void frmCategoryDelete_Load(object sender, EventArgs e)
         {
@@ -24,12 +21,17 @@ namespace Krop.WinForms.Categories
             if(cmbBoxCategorySelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCategorySelect.SelectedValue = Id;
         }
-        private void CategoryList()
+        private async void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _categoryRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
-            
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response).Data;
+
             cmbBoxCategorySelect.DataSource = null;
 
             cmbBoxCategorySelect.DisplayMember = "CategoryName";
@@ -42,13 +44,13 @@ namespace Krop.WinForms.Categories
             cmbBoxCategorySelect.SelectedIndexChanged += cmbBoxCategorySelect_SelectedIndexChanged;
         }
 
-        private void bttnCategoryDelete_Click(object sender, EventArgs e)
+        private async void bttnCategoryDelete_Click(object sender, EventArgs e)
         {
             if (cmbBoxCategorySelect.SelectedValue is not null)
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)//Cevap evet ise silme işlemleri gerçekleştiriliyor
                 {
-                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"category/Delete/{cmbBoxCategorySelect.SelectedValue}").Result;
+                    HttpResponseMessage response = await _categoryRequest.DeleteAsync((Guid)cmbBoxCategorySelect.SelectedValue);
 
                     if (!response.IsSuccessStatusCode)
                     {

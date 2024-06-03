@@ -1,7 +1,6 @@
-﻿using Krop.Business.Features.Branches.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Helpers.WebApiRequests.Branches;
+using Krop.DTO.Dtos.Branches;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.BranchHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
@@ -9,15 +8,15 @@ namespace Krop.WinForms.Forms.Branches
 {
     public partial class frmBranchList : Form
     {
-        private readonly IBranchHelper _branchHelper;
+        private readonly IBranchRequest _branchRequest;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetBranchDTO> _originalData;
         private BindingList<GetBranchDTO> _filteredData;
 
-        public frmBranchList(IBranchHelper branchHelper, IServiceProvider serviceProvider)
+        public frmBranchList(IBranchRequest branchRequest1, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _branchHelper = branchHelper;
+            _branchRequest = branchRequest1;
             _serviceProvider = serviceProvider;
         }
 
@@ -37,11 +36,16 @@ namespace Krop.WinForms.Forms.Branches
 
             dgwBranchList.Columns[0].Visible = false;
         }
-        private void BranchList()
+        private async void BranchList()
         {
-            List<GetBranchDTO> result = _branchHelper.GetAllAsync();
-            if (result is null)
+            HttpResponseMessage response = await _branchRequest.GetAllAsync();
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBranchDTO>(response).Data;
 
             _originalData = new BindingList<GetBranchDTO>(result);
             _filteredData = new BindingList<GetBranchDTO>(_originalData.ToList());

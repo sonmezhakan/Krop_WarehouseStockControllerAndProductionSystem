@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.Branches.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.Branches;
 
 namespace Krop.Business.Services.Branches
 {

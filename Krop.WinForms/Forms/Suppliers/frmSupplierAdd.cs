@@ -1,22 +1,21 @@
-﻿using Krop.Business.Features.Suppliers.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Suppliers;
+using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Suppliers
 {
     public partial class frmSupplierAdd : Form
     {
-        private readonly IWebApiService _webApiService;
+        private readonly ISupplierRequest _supplierRequest;
 
-        public frmSupplierAdd(IWebApiService webApiService)
+        public frmSupplierAdd(ISupplierRequest supplierRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
+            _supplierRequest = supplierRequest;
         }
 
-        private void bttnSupplierAdd_Click(object sender, EventArgs e)
+        private async void bttnSupplierAdd_Click(object sender, EventArgs e)
         {
             CreateSupplierDTO createSupplierDTO = new CreateSupplierDTO
             {
@@ -31,7 +30,7 @@ namespace Krop.WinForms.Suppliers
                 WebSite = txtWebSiteUrl.Text
             };
 
-            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("supplier/Add", createSupplierDTO).Result;
+            HttpResponseMessage response = await _supplierRequest.AddAsync(createSupplierDTO);
 
             if (!response.IsSuccessStatusCode)
             {

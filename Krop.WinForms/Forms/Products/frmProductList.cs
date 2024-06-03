@@ -1,7 +1,6 @@
-﻿using Krop.Business.Features.Products.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Helpers.WebApiRequests.Products;
+using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.ProductHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
@@ -9,15 +8,15 @@ namespace Krop.WinForms.Products
 {
     public partial class frmProductList : Form
     {
-        private readonly IProductHelper _productHelper;
+        private readonly IProductRequest _productRequest;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetProductListDTO> _originalData;
         private BindingList<GetProductListDTO> _filteredData;
 
-        public frmProductList(IProductHelper productHelper, IServiceProvider serviceProvider)
+        public frmProductList(IProductRequest productRequest, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _productHelper = productHelper;
+            _productRequest = productRequest;
             _serviceProvider = serviceProvider;
         }
 
@@ -41,11 +40,16 @@ namespace Krop.WinForms.Products
             dgwProductList.Columns[6].Visible = false;
         }
 
-        private void ProductList()
+        private async void ProductList()
         {
-            List<GetProductListDTO> result = _productHelper.GetAllAsync();
-            if (result is null)
+            HttpResponseMessage response = await _productRequest.GetAllAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetProductListDTO>(response).Data;
 
             _originalData = new BindingList<GetProductListDTO>(result);
             _filteredData = new BindingList<GetProductListDTO>(_originalData.ToList());

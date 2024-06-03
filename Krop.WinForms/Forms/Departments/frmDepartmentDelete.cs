@@ -1,21 +1,19 @@
-﻿using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Departments;
+using Krop.DTO.Dtos.Departments;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.Departments;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Forms.Departments
 {
     public partial class frmDepartmentDelete : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly IDepartmentHelper _departmentHelper;
         public Guid Id;
+        private readonly IDepartmentRequest _departmentRequest;
 
-        public frmDepartmentDelete(IWebApiService webApiService, IDepartmentHelper departmentHelper)
+        public frmDepartmentDelete(IDepartmentRequest departmentRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _departmentHelper = departmentHelper;
+            _departmentRequest = departmentRequest;
         }
 
         private void frmDepartmentDelete_Load(object sender, EventArgs e)
@@ -24,11 +22,16 @@ namespace Krop.WinForms.Forms.Departments
             if (cmbBoxDepartmentSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxDepartmentSelect.SelectedValue = Id;
         }
-        private void DepartmentList()
+        private async void DepartmentList()
         {
-            var result = _departmentHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _departmentRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetDepartmentComboBoxDTO>(response).Data;
 
             cmbBoxDepartmentSelect.DataSource = null;
 
@@ -46,13 +49,13 @@ namespace Krop.WinForms.Forms.Departments
 
         }
 
-        private void bttnDelete_Click(object sender, EventArgs e)
+        private async void bttnDelete_Click(object sender, EventArgs e)
         {
             if (cmbBoxDepartmentSelect.SelectedValue is not null)
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = _webApiService.httpClient.DeleteAsync($"department/delete/{cmbBoxDepartmentSelect.SelectedValue}").Result;
+                    HttpResponseMessage response = await _departmentRequest.DeleteAsync((Guid)cmbBoxDepartmentSelect.SelectedValue);
 
                     if (!response.IsSuccessStatusCode)
                     {

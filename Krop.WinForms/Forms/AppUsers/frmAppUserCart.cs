@@ -1,21 +1,19 @@
-﻿using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.AppUserHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
 namespace Krop.WinForms.Forms.AppUsers
 {
     public partial class frmAppUserCart : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly IAppUserHelper _appUserHelper;
         public Guid Id;
+        private readonly IAppUserRequest _appUserRequest;
 
-        public frmAppUserCart(IWebApiService webApiService, IAppUserHelper appUserHelper)
+        public frmAppUserCart(IAppUserRequest appUserRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _appUserHelper = appUserHelper;
+            _appUserRequest = appUserRequest;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -35,11 +33,16 @@ namespace Krop.WinForms.Forms.AppUsers
             if (cmbBoxAppUserSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxAppUserSelect.SelectedValue = Id;
         }
-        private void AppUserList()
+        private async void AppUserList()
         {
-            var result = _appUserHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _appUserRequest.GetAllComboBoxAsync();
+            if(!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetAppUserComboBoxDTO>(response).Data;
 
             cmbBoxAppUserSelect.DataSource = null;
 
@@ -52,11 +55,18 @@ namespace Krop.WinForms.Forms.AppUsers
             cmbBoxAppUserSelect.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxAppUserSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxAppUserSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                var result = _appUserHelper.GetByAppUserIdAsync((Guid)cmbBoxAppUserSelect.SelectedValue);
+                HttpResponseMessage response = await _appUserRequest.GetByAppUserIdAsync((Guid)cmbBoxAppUserSelect.SelectedValue);
+                if(!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetAppUserDTO>(response).Data;
 
                 txtFirstName.Text = result.FirstName;
                 txtLastName.Text = result.LastName;
@@ -69,11 +79,11 @@ namespace Krop.WinForms.Forms.AppUsers
             }
         }
 
-        private void bttnActivasyonMailSender_Click(object sender, EventArgs e)
+        private async void bttnActivasyonMailSender_Click(object sender, EventArgs e)
         {
             if (cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = _webApiService.httpClient.GetAsync($"account/ConfirmationMailSender/{cmbBoxAppUserSelect.SelectedValue}").Result;
+                HttpResponseMessage response = await _appUserRequest.ConfirmationMailSender((Guid)cmbBoxAppUserSelect.SelectedValue);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -83,11 +93,11 @@ namespace Krop.WinForms.Forms.AppUsers
             }
         }
 
-        private void bttnPasswordResetMailSender_Click(object sender, EventArgs e)
+        private async void bttnPasswordResetMailSender_Click(object sender, EventArgs e)
         {
             if(cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = _webApiService.httpClient.GetAsync($"account/ResetPasswordMailSender/{cmbBoxAppUserSelect.SelectedValue}").Result;
+                HttpResponseMessage response = await _appUserRequest.ResetPasswordMailSender((Guid)cmbBoxAppUserSelect.SelectedValue);
 
                 if (!response.IsSuccessStatusCode)
                 {

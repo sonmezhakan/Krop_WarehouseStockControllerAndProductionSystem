@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.Brands.Dtos;
-using Krop.Business.Services.Brands;
+﻿using Krop.Business.Services.Brands;
+using Krop.DTO.Dtos.Brands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

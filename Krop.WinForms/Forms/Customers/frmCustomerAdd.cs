@@ -1,19 +1,18 @@
-﻿using Krop.Business.Features.Customers.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Customers;
+using Krop.DTO.Dtos.Customers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Customers
 {
     public partial class frmCustomerAdd : Form
     {
-        private readonly IWebApiService _webApiService;
+        private readonly ICustomerRequest _customerRequest;
 
-        public frmCustomerAdd(IWebApiService webApiService)
+        public frmCustomerAdd(ICustomerRequest customerRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
+            _customerRequest = customerRequest;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -26,7 +25,7 @@ namespace Krop.WinForms.Customers
             txtPhoneNumber.MaxLength = 11;
         }
 
-        private void bttnCustomerAdd_Click(object sender, EventArgs e)
+        private async void bttnCustomerAdd_Click(object sender, EventArgs e)
         {
             CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO
             {
@@ -41,7 +40,7 @@ namespace Krop.WinForms.Customers
                 Invoice = radioBttnPerson.Checked ? Entities.Enums.InvoiceEnum.Bireysel : Entities.Enums.InvoiceEnum.Kurumsal
             };
 
-            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("customer/add", createCustomerDTO).Result;
+            HttpResponseMessage response = await _customerRequest.AddAsync(createCustomerDTO);
 
             if (!response.IsSuccessStatusCode)
             {

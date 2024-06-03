@@ -1,6 +1,5 @@
-﻿using Krop.Business.Features.Employees.Dtos;
-using Krop.Business.Services.Employees;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Business.Services.Employees;
+using Krop.DTO.Dtos.Employees;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

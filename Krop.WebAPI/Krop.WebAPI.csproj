@@ -16,8 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Krop.Business\Krop.Business.csproj" />
-    <ProjectReference Include="..\Krop.IOC\Krop.IOC.csproj" />
+    <ProjectReference Include="..\Krop.Business\Krop.Business.csproj">
+	  <PrivateAssets>All</PrivateAssets>
+	  </ProjectReference>
+    <ProjectReference Include="..\Krop.DTO\Krop.DTO.csproj" />
+    <ProjectReference Include="..\Krop.IOC\Krop.IOC.csproj">
+	  <PrivateAssets>All</PrivateAssets>
+	  </ProjectReference>
   </ItemGroup>
 
 </Project>

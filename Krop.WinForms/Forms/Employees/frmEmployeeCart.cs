@@ -1,18 +1,18 @@
-﻿using Krop.WinForms.HelpersClass.AppUserHelpers;
-using Krop.WinForms.HelpersClass.BranchHelpers;
-using Krop.WinForms.HelpersClass.Employees;
+﻿using Krop.Common.Helpers.WebApiRequests.Employees;
+using Krop.DTO.Dtos.Employees;
+using Krop.WinForms.HelpersClass;
 
 namespace Krop.WinForms.Forms.Employees
 {
     public partial class frmEmployeeCart : Form
     {
-        private readonly IEmployeeHelper _employeeHelper;
         public Guid Id;
+        private readonly IEmployeeRequest _employeeRequest;
 
-        public frmEmployeeCart(IEmployeeHelper employeeHelper)
+        public frmEmployeeCart(IEmployeeRequest employeeRequest)
         {
             InitializeComponent();
-            _employeeHelper = employeeHelper;
+            _employeeRequest = employeeRequest;
         }
 
         private void frmEmployeeCart_Load(object sender, EventArgs e)
@@ -21,11 +21,16 @@ namespace Krop.WinForms.Forms.Employees
             if (cmbBoxAppUserSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxAppUserSelect.SelectedValue = Id;
         }
-        private void EmployeeList()
+        private async void EmployeeList()
         {
-            var result = _employeeHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _employeeRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetEmployeeComboBoxDTO>(response).Data;
 
             cmbBoxAppUserSelect.DataSource = null;
             cmbBoxAppUserSelect.DisplayMember = "UserName";
@@ -37,13 +42,18 @@ namespace Krop.WinForms.Forms.Employees
             cmbBoxAppUserSelect.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxAppUserSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxAppUserSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                var result = _employeeHelper.GetByEmployeeIdCartAsync((Guid)cmbBoxAppUserSelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _employeeRequest.GetByIdCartAsync((Guid)cmbBoxAppUserSelect.SelectedValue);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetEmployeeCartDTO>(response).Data;
 
                 txtDepartmentName.Text = result.DepartmentName;
                 txtBranchName.Text = result.BranchName;

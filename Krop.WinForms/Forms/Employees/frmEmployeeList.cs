@@ -1,6 +1,6 @@
-﻿using Krop.Business.Features.Employees.Dtos;
+﻿using Krop.Common.Helpers.WebApiRequests.Employees;
+using Krop.DTO.Dtos.Employees;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.Employees;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
@@ -8,15 +8,15 @@ namespace Krop.WinForms.Forms.Employees
 {
     public partial class frmEmployeeList : Form
     {
-        private readonly IEmployeeHelper _employeeHelper;
+        private readonly IEmployeeRequest _employeeRequest;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetEmployeeListDTO> _orginialData;
         private BindingList<GetEmployeeListDTO> _filteredData;
 
-        public frmEmployeeList(IEmployeeHelper employeeHelper, IServiceProvider serviceProvider)
+        public frmEmployeeList(IEmployeeRequest employeeRequest, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _employeeHelper = employeeHelper;
+            _employeeRequest = employeeRequest;
             _serviceProvider = serviceProvider;
         }
 
@@ -45,11 +45,16 @@ namespace Krop.WinForms.Forms.Employees
 
             dgwEmployeeList.Columns[0].Visible = false;
         }
-        private void EmployeeList()
+        private async void EmployeeList()
         {
-            var result = _employeeHelper.GetAllAsync();
-            if (result is null)
+            HttpResponseMessage response = await _employeeRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetEmployeeListDTO>(response).Data;
 
             _orginialData = new BindingList<GetEmployeeListDTO>(result.ToList());
             _filteredData = new BindingList<GetEmployeeListDTO>(_orginialData.ToList());

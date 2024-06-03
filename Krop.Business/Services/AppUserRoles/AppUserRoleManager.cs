@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.AppUserRoles.Dtos;
-using Krop.Business.Features.AppUserRoles.ExceptionHelpers;
 using Krop.Business.Features.AppUserRoles.Rules;
 using Krop.Business.Features.AppUserRoles.Validations;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.AppUserRoles;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

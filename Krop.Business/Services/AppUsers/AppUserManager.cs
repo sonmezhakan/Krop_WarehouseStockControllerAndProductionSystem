@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.AppUsers.Dtos;
 using Krop.Business.Features.AppUsers.Rules;
 using Krop.Business.Features.AppUsers.Validations;
 using Krop.Business.Services.AppUserRoles;
@@ -7,6 +6,7 @@ using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.EmailService;
 using Krop.Common.Models;
 using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.AppUsers;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +48,8 @@ namespace Krop.Business.Services.AppUsers
             await _appUserBusinessRules.AppUserNameCannotBeDuplicatedWhenInserted(createAppUserDTO.UserName);//Username Rule
             await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenInserted(createAppUserDTO.Email);//Email Rule
             await _appUserBusinessRules.AppUserPhoneNumberCannotBeDuplicatedWhenInserted(createAppUserDTO.PhoneNumber);//PhoneNumber Rule
-            await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenInserted(createAppUserDTO.NationalNumber);//NationalNumber Rule
+           if(createAppUserDTO.NationalNumber is not null)
+                await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenInserted(createAppUserDTO.NationalNumber);//NationalNumber Rule
 
             AppUser appUser = _mapper.Map<AppUser>(createAppUserDTO);
             await _userManager.CreateAsync(appUser);
@@ -67,7 +68,8 @@ namespace Krop.Business.Services.AppUsers
 
             await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenUpdated(appUser.Email, updateAppUserDTO.Email);//Email Rule
             await _appUserBusinessRules.AppUserPhoneNumberCannotBeDuplicatedWhenUpdated(appUser.PhoneNumber, updateAppUserDTO.PhoneNumber);//PhoneNumber Rule
-            await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenUpdated(appUser.Person.NationalNumber, updateAppUserDTO.NationalNumber);//NationalNumber Rule
+           if(updateAppUserDTO.NationalNumber is not null)
+                await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenUpdated(appUser.Person.NationalNumber, updateAppUserDTO.NationalNumber);//NationalNumber Rule
 
             appUser = _mapper.Map(updateAppUserDTO,appUser);
             await _userManager.UpdateAsync(appUser);//Kullanıcı bilgileri güncelleniyor

@@ -1,5 +1,6 @@
-﻿using Krop.Business.Features.Categories.Dtos;
-using Krop.WinForms.HelpersClass.CategoryHelpers;
+﻿using Krop.Common.Helpers.WebApiRequests.Categories;
+using Krop.DTO.Dtos.Categroies;
+using Krop.WinForms.HelpersClass;
 
 namespace Krop.WinForms.Categories
 {
@@ -7,12 +8,12 @@ namespace Krop.WinForms.Categories
     {
 
         public Guid Id;
-        private readonly ICategoryHelper _categoryHelper;
+        private readonly ICategoryRequest _categoryRequest;
 
-        public frmCategoryCart(ICategoryHelper categoryHelper)
+        public frmCategoryCart(ICategoryRequest categoryRequest)
         {
             InitializeComponent();
-            _categoryHelper = categoryHelper;
+            _categoryRequest = categoryRequest;
         }
         private void frmCategoryCart_Load(object sender, EventArgs e)
         {
@@ -22,11 +23,16 @@ namespace Krop.WinForms.Categories
 
         }
 
-        private void CategoryList()
+        private async void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _categoryRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response).Data;
 
             cmbBoxCategorySelect.DataSource = null;
             

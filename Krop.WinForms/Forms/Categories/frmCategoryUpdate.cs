@@ -1,24 +1,19 @@
-﻿using Krop.Business.Features.Categories.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.Categories;
+using Krop.DTO.Dtos.Categroies;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.CategoryHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Categories
 {
     public partial class frmCategoryUpdate : Form
     {
-        private readonly ICategoryHelper _categoryHelper;
-        private readonly IWebApiService _webApiService;
         public Guid Id;
+        private readonly ICategoryRequest _categoryRequest;
 
-
-        public frmCategoryUpdate(ICategoryHelper categoryHelper, IWebApiService webApiService)
+        public frmCategoryUpdate(ICategoryRequest categoryRequest)
         {
             InitializeComponent();
-            _categoryHelper = categoryHelper;
-            _webApiService = webApiService;
+            _categoryRequest = categoryRequest;
         }
         private void frmCategoryUpdate_Load(object sender, EventArgs e)
         {
@@ -26,11 +21,16 @@ namespace Krop.WinForms.Categories
             if (cmbBoxCategorySelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCategorySelect.SelectedValue = Id;
         }
-        private void CategoryList()
+        private async void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _categoryRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response).Data;
 
             cmbBoxCategorySelect.DataSource = null;
 
@@ -43,7 +43,7 @@ namespace Krop.WinForms.Categories
             cmbBoxCategorySelect.SelectedIndexChanged += cmbBoxCategorySelect_SelectedIndexChanged;
         }
 
-        private void bttnCategoryUpdate_Click(object sender, EventArgs e)
+        private async void bttnCategoryUpdate_Click(object sender, EventArgs e)
         {
             if (cmbBoxCategorySelect.SelectedValue is not null)
             {
@@ -55,7 +55,7 @@ namespace Krop.WinForms.Categories
                         CategoryName = txtCategoryName.Text
                     };
 
-                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("category/update", updateCategoryDTO).Result;
+                    HttpResponseMessage response = await _categoryRequest.UpdateAsync(updateCategoryDTO);
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -72,13 +72,18 @@ namespace Krop.WinForms.Categories
             }
         }
 
-        private void cmbBoxCategorySelect_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cmbBoxCategorySelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbBoxCategorySelect.SelectedValue is not null)
             {
-                GetCategoryDTO result = _categoryHelper.GetByCategoryIdAsync((Guid)cmbBoxCategorySelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _categoryRequest.GetByIdAsync((Guid)cmbBoxCategorySelect.SelectedValue);
+                if(!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetCategoryDTO>(response).Data;
 
                 txtCategoryName.Text = result.CategoryName;
             }

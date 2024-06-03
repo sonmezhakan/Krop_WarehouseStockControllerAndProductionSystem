@@ -1,19 +1,18 @@
-﻿using Krop.Business.Features.AppUsers.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.AppUsers
 {
     public partial class frmAppUserAdd : Form
     {
-        private readonly IWebApiService _webApiService;
+        private readonly IAppUserRequest _appUserRequest;
 
-        public frmAppUserAdd(IWebApiService webApiService)
+        public frmAppUserAdd(IAppUserRequest appUserRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
+            _appUserRequest = appUserRequest;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -26,7 +25,7 @@ namespace Krop.WinForms.Forms.AppUsers
             txtPhoneNumber.MaxLength = 11;
         }
 
-        private void bttnAppUserAdd_Click(object sender, EventArgs e)
+        private async void bttnAppUserAdd_Click(object sender, EventArgs e)
         {
             CreateAppUserDTO createAppUserDTO = new CreateAppUserDTO
             {
@@ -42,7 +41,7 @@ namespace Krop.WinForms.Forms.AppUsers
                 Addres = txtAddress.Text
             };
 
-            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("account/register", createAppUserDTO).Result;
+            var response = await _appUserRequest.AddAsync(createAppUserDTO);
 
             if (!response.IsSuccessStatusCode)
             {

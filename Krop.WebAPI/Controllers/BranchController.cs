@@ -1,9 +1,5 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using Krop.Business.Features.Branches.Dtos;
-using Krop.Business.Features.Departments.Dtos;
-using Krop.Business.Services.Branches;
-using Microsoft.AspNetCore.Http;
+﻿using Krop.Business.Services.Branches;
+using Krop.DTO.Dtos.Branches;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

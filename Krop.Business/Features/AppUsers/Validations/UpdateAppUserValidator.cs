@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Krop.Business.Features.AppUsers.Constants;
-using Krop.Business.Features.AppUsers.Dtos;
+using Krop.DTO.Dtos.AppUsers;
 
 namespace Krop.Business.Features.AppUsers.Validations
 {

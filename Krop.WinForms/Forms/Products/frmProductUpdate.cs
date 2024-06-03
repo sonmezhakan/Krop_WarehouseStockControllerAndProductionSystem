@@ -1,33 +1,28 @@
-﻿using Krop.Business.Features.Brands.Dtos;
-using Krop.Business.Features.Categories.Dtos;
-using Krop.Business.Features.Products.Dtos;
-using Krop.Common.Helpers.WebApiService;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+using Krop.Common.Helpers.WebApiRequests.Categories;
+using Krop.Common.Helpers.WebApiRequests.Products;
+using Krop.DTO.Dtos.Brands;
+using Krop.DTO.Dtos.Categroies;
+using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.BrandHelpers;
-using Krop.WinForms.HelpersClass.CategoryHelpers;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using Krop.WinForms.HelpersClass.ProductHelpers;
-using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Products
 {
     public partial class frmProductUpdate : Form
     {
-        private readonly IWebApiService _webApiService;
-        private readonly IProductHelper _productHelper;
-        private readonly ICategoryHelper _categoryHelper;
-        private readonly IBrandHelper _brandHelper;
-        public Guid Id;
 
-        public frmProductUpdate(IWebApiService webApiService, IProductHelper productHelper, ICategoryHelper categoryHelper, IBrandHelper brandHelper)
+        public Guid Id;
+        private readonly IProductRequest _productRequest;
+        private readonly IBrandRequest _brandRequest;
+        private readonly ICategoryRequest _categoryRequest;
+
+        public frmProductUpdate(IProductRequest productRequest,IBrandRequest brandRequest,ICategoryRequest categoryRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
-            _productHelper = productHelper;
-            _categoryHelper = categoryHelper;
-            _brandHelper = brandHelper;
+            _productRequest = productRequest;
+            _brandRequest = brandRequest;
+            _categoryRequest = categoryRequest;
         }
 
         private void frmProductUpdate_Load(object sender, EventArgs e)
@@ -39,11 +34,16 @@ namespace Krop.WinForms.Products
             if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxProductNameSelect.SelectedValue = Id;
         }
-        private void ProductList()
+        private async void ProductList()
         {
-            List<GetProductComboBoxDTO> result = _productHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _productRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response).Data;
 
             ProductNameList(result);
             ProductCodeList(result);
@@ -78,11 +78,16 @@ namespace Krop.WinForms.Products
 
             cmbBoxProductCodeSelect.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
         }
-        private void CategoryList()
+        private async void CategoryList()
         {
-            List<GetCategoryComboBoxDTO> result = _categoryHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _categoryRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response).Data;
 
             cmbBoxCategory.DataSource = null;
             cmbBoxCategory.DataSource = result;
@@ -90,11 +95,16 @@ namespace Krop.WinForms.Products
             cmbBoxCategory.DisplayMember = "CategoryName";
             cmbBoxCategory.ValueMember = "Id";
         }
-        private void BrandList()
+        private async void BrandList()
         {
-            List<GetBrandComboBoxDTO> result = _brandHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _brandRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBrandComboBoxDTO>(response).Data;
 
             cmbBoxBrand.DataSource = null;
             cmbBoxBrand.DataSource = result;
@@ -103,15 +113,20 @@ namespace Krop.WinForms.Products
             cmbBoxBrand.ValueMember = "Id";
         }
 
-        private void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.DataSource is not null)
             {
                 cmbBoxProductCodeSelect.SelectedValue = cmbBoxProductNameSelect.SelectedValue;
 
-                GetProductDTO result = _productHelper.GetByProductIdAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _productRequest.GetByIdAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
+                if(!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetProductDTO>(response).Data;
 
                 txtProductName.Text = result.ProductName;
                 txtProductCode.Text = result.ProductCode;
@@ -135,7 +150,7 @@ namespace Krop.WinForms.Products
             }
         }
 
-        private void bttnProductUpdate_Click(object sender, EventArgs e)
+        private async void bttnProductUpdate_Click(object sender, EventArgs e)
         {
             if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null &&
                 cmbBoxProductNameSelect.SelectedValue.ToString() == cmbBoxProductCodeSelect.SelectedValue.ToString())
@@ -165,7 +180,7 @@ namespace Krop.WinForms.Products
                         BrandId = (Guid)cmbBoxBrand.SelectedValue
                     };
 
-                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("product/update", updateProductDTO).Result;
+                    HttpResponseMessage response = await _productRequest.UpdateAsync(updateProductDTO);
 
                     if (!response.IsSuccessStatusCode)
                     {

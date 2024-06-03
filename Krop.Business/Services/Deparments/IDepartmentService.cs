@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.Departments.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.Departments;
 
 namespace Krop.Business.Services.Deparments
 {

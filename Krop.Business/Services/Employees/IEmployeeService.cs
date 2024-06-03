@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.Employees.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.Employees;
 
 namespace Krop.Business.Services.Employees
 {

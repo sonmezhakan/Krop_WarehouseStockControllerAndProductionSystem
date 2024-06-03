@@ -1,17 +1,19 @@
-﻿using Krop.Business.Features.Suppliers.Dtos;
-using Krop.WinForms.HelpersClass.SupplierHelpers;
+﻿using Krop.Common.Helpers.WebApiRequests.Suppliers;
+using Krop.DTO.Dtos.Suppliers;
+using Krop.WinForms.HelpersClass;
 
 namespace Krop.WinForms.Suppliers
 {
     public partial class frmSupplierCart : Form
     {
-        private readonly ISupplierHelper _supplierHelper;
+       
         public Guid Id;
+        private readonly ISupplierRequest _supplierRequest;
 
-        public frmSupplierCart(ISupplierHelper supplierHelper)
+        public frmSupplierCart(ISupplierRequest supplierRequest)
         {
             InitializeComponent();
-            _supplierHelper = supplierHelper;
+            _supplierRequest = supplierRequest;
         }
 
         private void frmSupplierCart_Load(object sender, EventArgs e)
@@ -21,11 +23,16 @@ namespace Krop.WinForms.Suppliers
             if (cmbBoxSupplierSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxSupplierSelect.SelectedValue = Id;
         }
-        private void SupplierList()
+        private async void SupplierList()
         {
-            List<GetSupplierComboBoxDTO> result = _supplierHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _supplierRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetSupplierComboBoxDTO>(response).Data;
 
             cmbBoxSupplierSelect.DataSource = null;
 
@@ -38,13 +45,18 @@ namespace Krop.WinForms.Suppliers
             cmbBoxSupplierSelect.SelectedIndexChanged += CmbBoxSupplierSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxSupplierSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxSupplierSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxSupplierSelect.SelectedValue is not null)
             {
-                var result = _supplierHelper.GetBySupplierIdAsync((Guid)cmbBoxSupplierSelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _supplierRequest.GetByIdAsync((Guid)cmbBoxSupplierSelect.SelectedValue);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetSupplierDTO>(response).Data;
 
                 txtContactName.Text = result.ContactName;
                 txtContactTitle.Text = result.ContactTitle;

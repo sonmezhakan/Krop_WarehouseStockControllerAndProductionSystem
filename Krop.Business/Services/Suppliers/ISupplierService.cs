@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.Suppliers.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.Suppliers;
 
 namespace Krop.Business.Services.Suppliers
 {

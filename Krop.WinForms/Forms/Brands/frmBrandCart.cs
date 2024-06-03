@@ -1,17 +1,18 @@
-﻿using Krop.Business.Features.Brands.Dtos;
-using Krop.WinForms.HelpersClass.BrandHelpers;
+﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+using Krop.DTO.Dtos.Brands;
+using Krop.WinForms.HelpersClass;
 
 namespace Krop.WinForms.Brands
 {
     public partial class frmBrandCart : Form
     {
-        private readonly IBrandHelper _brandHelper;
-        public Guid Id;
+                public Guid Id;
+        private readonly IBrandRequest _brandRequest;
 
-        public frmBrandCart(IBrandHelper brandHelper)
+        public frmBrandCart(IBrandRequest brandRequest)
         {
             InitializeComponent();
-            _brandHelper = brandHelper;
+            _brandRequest = brandRequest;
         }
 
         private void frmBrandCart_Load(object sender, EventArgs e)
@@ -21,11 +22,16 @@ namespace Krop.WinForms.Brands
                 cmbBoxBrandSelect.SelectedValue = Id;
         }
 
-        private void BrandList()
+        private async void BrandList()
         {
-            List<GetBrandComboBoxDTO> result = _brandHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _brandRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetBrandComboBoxDTO>(response).Data;
 
             cmbBoxBrandSelect.DataSource = null;
 
@@ -38,12 +44,19 @@ namespace Krop.WinForms.Brands
             cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
         }
 
-        private void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
 
             if (cmbBoxBrandSelect.SelectedValue is not null)
             {
-                GetBrandDTO result = _brandHelper.GetByBrandIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
+                HttpResponseMessage response = await _brandRequest.GetByIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
+                    return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetBrandDTO>(response).Data;
 
                 txtPhoneNumber.Text = result.PhoneNumber;
                 txtEmail.Text = result.Email;

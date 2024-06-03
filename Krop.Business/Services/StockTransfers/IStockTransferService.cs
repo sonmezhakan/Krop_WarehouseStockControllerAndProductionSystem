@@ -1,5 +1,5 @@
-﻿using Krop.Business.Features.StockTransfers.Dtos;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Utilits.Result;
+using Krop.DTO.Dtos.StockTransfers;
 
 namespace Krop.Business.Services.StockTransfers
 {

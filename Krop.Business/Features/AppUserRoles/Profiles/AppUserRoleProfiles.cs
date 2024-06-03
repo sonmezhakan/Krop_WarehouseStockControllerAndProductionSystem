@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Krop.Business.Features.AppUserRoles.Dtos;
-using Krop.Business.Features.AppUsers.Dtos;
+using Krop.DTO.Dtos.AppUserRoles;
 using Krop.Entities.Entities;
 
 namespace Krop.Business.Features.AppUserRoles.Profiles

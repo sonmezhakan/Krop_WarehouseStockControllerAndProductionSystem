@@ -1,6 +1,6 @@
-﻿using Krop.Business.Features.Categories.Dtos;
+﻿using Krop.Common.Helpers.WebApiRequests.Categories;
+using Krop.DTO.Dtos.Categroies;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.CategoryHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
@@ -8,15 +8,15 @@ namespace Krop.WinForms.Categories
 {
     public partial class frmCategoryList : Form
     {
-        private readonly ICategoryHelper _categoryHelper;
+        private readonly ICategoryRequest _categoryRequest;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetCategoryDTO> _originalData;
         private BindingList<GetCategoryDTO> _filteredData;
 
-        public frmCategoryList(ICategoryHelper categoryHelper, IServiceProvider serviceProvider)
+        public frmCategoryList(ICategoryRequest categoryRequest, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _categoryHelper = categoryHelper;
+            _categoryRequest = categoryRequest;
             _serviceProvider = serviceProvider;
         }
 
@@ -27,11 +27,16 @@ namespace Krop.WinForms.Categories
 
             dgwCategoryList.Columns[0].Visible = false;
         }
-        private void CategoryList()
+        private async void CategoryList()
         {
-            List<GetCategoryDTO> result = _categoryHelper.GetAllAsync();
-            if (result is null)
+            HttpResponseMessage response = await _categoryRequest.GetAllAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetCategoryDTO>(response).Data;
 
             _originalData = new BindingList<GetCategoryDTO>(result);
             _filteredData = new BindingList<GetCategoryDTO>(_originalData.ToList());

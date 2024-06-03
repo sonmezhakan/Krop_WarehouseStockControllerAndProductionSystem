@@ -1,6 +1,6 @@
-﻿using Krop.Business.Features.AppUserRoles.Dtos;
+﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+using Krop.DTO.Dtos.AppUserRoles;
 using Krop.WinForms.HelpersClass;
-using Krop.WinForms.HelpersClass.AppUserRoleHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
@@ -8,15 +8,15 @@ namespace Krop.WinForms.AppUserRoles
 {
     public partial class frmAppUserRoleList : Form
     {
-        private readonly IAppUserRoleHelper _appUserRoleHelper;
+        private readonly IAppUserRequest _appUserRequest;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetAppUserRoleDTO> _originalData;
         private BindingList<GetAppUserRoleDTO> _filteredData;
 
-        public frmAppUserRoleList(IAppUserRoleHelper appUserRoleHelper, IServiceProvider serviceProvider)
+        public frmAppUserRoleList(IAppUserRequest appUserRequest, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _appUserRoleHelper = appUserRoleHelper;
+            _appUserRequest = appUserRequest;
             _serviceProvider = serviceProvider;
         }
 
@@ -31,11 +31,16 @@ namespace Krop.WinForms.AppUserRoles
 
             dgwAppUserRoleList.Columns[0].Visible = false;
         }
-        private void AppUserRoleList()
+        private async void AppUserRoleList()
         {
-            List<GetAppUserRoleDTO> result = _appUserRoleHelper.GetAllAsync();
-            if (result is null)
+            HttpResponseMessage response = await _appUserRequest.GetAllAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetAppUserRoleDTO>(response).Data;
 
             _originalData = new BindingList<GetAppUserRoleDTO>(result);
             _filteredData = new BindingList<GetAppUserRoleDTO>(_originalData.ToList());

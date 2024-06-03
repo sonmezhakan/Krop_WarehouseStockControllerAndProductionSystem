@@ -1,24 +1,19 @@
-﻿using Krop.Business.Features.Suppliers.Dtos;
-using Krop.Common.Helpers.WebApiService;
-using Krop.Common.Utilits.Result;
+﻿using Krop.Common.Helpers.WebApiRequests.Suppliers;
+using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
-using Krop.WinForms.HelpersClass.SupplierHelpers;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.Suppliers
 {
     public partial class frmSupplierUpdate : Form
     {
-        private readonly ISupplierHelper _supplierHelper;
-        private readonly IWebApiService _webApiService;
         public Guid Id;
+        private readonly ISupplierRequest _supplierRequest;
 
-        public frmSupplierUpdate(ISupplierHelper supplierHelper, IWebApiService webApiService)
+        public frmSupplierUpdate(ISupplierRequest supplierRequest)
         {
             InitializeComponent();
-            _supplierHelper = supplierHelper;
-            _webApiService = webApiService;
+            _supplierRequest = supplierRequest;
         }
 
         private void frmSupplierUpdate_Load(object sender, EventArgs e)
@@ -28,11 +23,16 @@ namespace Krop.WinForms.Suppliers
             if (cmbBoxSupplierSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxSupplierSelect.SelectedValue = Id;
         }
-        private void SupplierList()
+        private async void SupplierList()
         {
-            List<GetSupplierComboBoxDTO> result = _supplierHelper.GetAllComboBoxAsync();
-            if (result is null)
+            HttpResponseMessage response = await _supplierRequest.GetAllComboBoxAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                ResponseController.ErrorResponseController(response);
                 return;
+            }
+
+            var result = ResponseController.SuccessDataListResponseController<GetSupplierComboBoxDTO>(response).Data;
 
             cmbBoxSupplierSelect.DataSource = null;
 
@@ -45,13 +45,18 @@ namespace Krop.WinForms.Suppliers
             cmbBoxSupplierSelect.SelectedIndexChanged += CmbBoxSupplierSelect_SelectedIndexChanged;
         }
 
-        private void CmbBoxSupplierSelect_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxSupplierSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbBoxSupplierSelect.SelectedValue is not null)
             {
-                var result = _supplierHelper.GetBySupplierIdAsync((Guid)cmbBoxSupplierSelect.SelectedValue);
-                if (result is null)
+                HttpResponseMessage response = await _supplierRequest.GetByIdAsync((Guid)cmbBoxSupplierSelect.SelectedValue);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ResponseController.ErrorResponseController(response);
                     return;
+                }
+
+                var result = ResponseController.SuccessDataResponseController<GetSupplierDTO>(response).Data;
 
                 txtCompanyName.Text = result.CompanyName;
                 txtContactName.Text = result.ContactName;
@@ -88,7 +93,7 @@ namespace Krop.WinForms.Suppliers
                         WebSite = txtWebSiteUrl.Text
                     };
 
-                    HttpResponseMessage response = _webApiService.httpClient.PutAsJsonAsync("supplier/update", updateSupplierDTO).Result;
+                    HttpResponseMessage response = await _supplierRequest.UpdateAsync(updateSupplierDTO);
 
                     if (!response.IsSuccessStatusCode)
                     {

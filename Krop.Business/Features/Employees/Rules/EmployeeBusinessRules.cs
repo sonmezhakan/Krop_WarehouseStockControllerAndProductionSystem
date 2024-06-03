@@ -32,7 +32,7 @@ namespace Krop.Business.Features.Employees.Rules
         public async Task CheckEmployeeBranch(Guid Id,Guid branchId)
         {
             bool result = await _employeeRepository.AnyAsync(
-                predicate:x=>x.AppUserId == Id && x.BranchId == branchId);
+                predicate:x=>x.AppUserId == Id && x.BranchId == branchId && x.WorkingStatu == true);
 
             if (!result)
                 _employeeExceptionHelper.ThrowNotBranchAuthority();

@@ -1,18 +1,17 @@
-﻿using Krop.Business.Features.AppUserRoles.Dtos;
-using Krop.Common.Helpers.WebApiService;
+﻿using Krop.Common.Helpers.WebApiRequests.AppUserRoles;
+using Krop.DTO.Dtos.AppUserRoles;
 using Krop.WinForms.HelpersClass;
-using System.Net.Http.Json;
 
 namespace Krop.WinForms.AppUserRoles
 {
     public partial class frmAppUserRoleAdd : Form
     {
-        private readonly IWebApiService _webApiService;
+        private readonly IAppUserRoleRequest _appUserRoleRequest;
 
-        public frmAppUserRoleAdd(IWebApiService webApiService)
+        public frmAppUserRoleAdd(IAppUserRoleRequest appUserRoleRequest)
         {
             InitializeComponent();
-            _webApiService = webApiService;
+            _appUserRoleRequest = appUserRoleRequest;
         }
 
         private void frmAppUserRoleAdd_Load(object sender, EventArgs e)
@@ -20,14 +19,14 @@ namespace Krop.WinForms.AppUserRoles
 
         }
 
-        private void bttnAppUserRoleAdd_Click(object sender, EventArgs e)
+        private async void bttnAppUserRoleAdd_Click(object sender, EventArgs e)
         {
             CreateAppUserRoleDTO createAppUserRoleDTO = new CreateAppUserRoleDTO
             {
                 Name = txtAppUserRoleName.Text
             };
 
-            HttpResponseMessage response = _webApiService.httpClient.PostAsJsonAsync("appUserRole/Add", createAppUserRoleDTO).Result;
+            HttpResponseMessage response = await _appUserRoleRequest.AddAsync(createAppUserRoleDTO);
 
             if (!response.IsSuccessStatusCode)
             {

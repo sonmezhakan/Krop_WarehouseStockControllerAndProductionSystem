@@ -277,6 +277,7 @@
             productionBttnProduce.Text = "Ürün Üret";
             productionBttnProduce.TextImageRelation = TextImageRelation.ImageAboveText;
             productionBttnProduce.UseVisualStyleBackColor = false;
+            productionBttnProduce.Click += productionBttnProduce_Click;
             // 
             // productionBttnList
             // 
