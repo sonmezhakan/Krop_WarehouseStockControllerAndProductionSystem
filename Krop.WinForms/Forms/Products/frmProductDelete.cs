@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Products;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -8,47 +8,50 @@ namespace Krop.WinForms.Products
     public partial class frmProductDelete : Form
     {
         public Guid Id;
-        private readonly IProductRequest _productRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmProductDelete(IProductRequest productRequest)
+        public frmProductDelete(IWebApiService webApiService)
         {
             InitializeComponent();
-            _productRequest = productRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmProductDelete_Load(object sender, EventArgs e)
+        private async void frmProductDelete_Load(object sender, EventArgs e)
         {
-            ProductList();
+            await ProductList();
             if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxProductNameSelect.SelectedValue = Id;
         }
 
-        private async void ProductList()
+        private async Task ProductList()
         {
-            HttpResponseMessage response = await _productRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
 
-            ProductNameList(result);
-            ProductCodeList(result);
+            if (result is not null)
+            {
+                await ProductNameList(result.Data);
+                await ProductCodeList(result.Data);
+            }
         }
-        private async void ProductNameList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
+        private async Task ProductNameList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
         {
             cmbBoxProductNameSelect.DataSource = null;
             cmbBoxProductNameSelect.DisplayMember = "ProductName";
             cmbBoxProductNameSelect.ValueMember = "Id";
 
             cmbBoxProductNameSelect.SelectedIndexChanged -= cmbBoxProductNameSelect_SelectedIndexChanged;
-            cmbBoxProductNameSelect.DataSource =getProductComboBoxDTOs;
+            cmbBoxProductNameSelect.DataSource = getProductComboBoxDTOs;
             cmbBoxProductNameSelect.SelectedIndex = -1;
             cmbBoxProductNameSelect.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
         }
-        private async void ProductCodeList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
+        private async Task ProductCodeList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
         {
             cmbBoxProductCodeSelect.DataSource = null;
             cmbBoxProductCodeSelect.DisplayMember = "ProductCode";
@@ -74,21 +77,25 @@ namespace Krop.WinForms.Products
 
         private async void bttnProductDelete_Click(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is null && cmbBoxProductCodeSelect.SelectedValue is null &&
-                cmbBoxProductNameSelect.SelectedValue != cmbBoxProductCodeSelect.SelectedValue)
-                MessageBox.Show("Doğru Seçim Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
+            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null &&
+                cmbBoxProductNameSelect.SelectedValue == cmbBoxProductCodeSelect.SelectedValue)
             {
-                HttpResponseMessage response = await _productRequest.DeleteAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
-
-                if (!response.IsSuccessStatusCode)
+                if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    ResponseController.ErrorResponseController(response);
-                    return;
-                }
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"product/delete/{cmbBoxProductNameSelect.SelectedValue}");
 
-                ProductList();
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        await ResponseController.ErrorResponseController(response);
+                        return;
+                    }
+
+                    await ProductList();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Doğru Seçim Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

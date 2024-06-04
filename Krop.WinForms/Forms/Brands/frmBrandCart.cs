@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Brands;
 using Krop.WinForms.HelpersClass;
 
@@ -6,32 +6,32 @@ namespace Krop.WinForms.Brands
 {
     public partial class frmBrandCart : Form
     {
-                public Guid Id;
-        private readonly IBrandRequest _brandRequest;
+        public Guid Id;
+        private readonly IWebApiService _webApiService;
 
-        public frmBrandCart(IBrandRequest brandRequest)
+        public frmBrandCart(IWebApiService webApiService)
         {
             InitializeComponent();
-            _brandRequest = brandRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmBrandCart_Load(object sender, EventArgs e)
+        private async void frmBrandCart_Load(object sender, EventArgs e)
         {
-            BrandList();
+            await BrandList();
             if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBrandSelect.SelectedValue = Id;
         }
 
-        private async void BrandList()
+        private async Task BrandList()
         {
-            HttpResponseMessage response = await _brandRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBrandComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
 
             cmbBoxBrandSelect.DataSource = null;
 
@@ -39,7 +39,7 @@ namespace Krop.WinForms.Brands
             cmbBoxBrandSelect.ValueMember = "Id";
 
             cmbBoxBrandSelect.SelectedIndexChanged -= cmbBoxBrandSelect_SelectedIndexChanged;
-            cmbBoxBrandSelect.DataSource = result;
+            cmbBoxBrandSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxBrandSelect.SelectedIndex = -1;
             cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
         }
@@ -49,17 +49,20 @@ namespace Krop.WinForms.Brands
 
             if (cmbBoxBrandSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _brandRequest.GetByIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/GetById/{cmbBoxBrandSelect.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetBrandDTO>(response).Data;
+                var result = await ResponseController.SuccessDataResponseController<GetBrandDTO>(response);
 
-                txtPhoneNumber.Text = result.PhoneNumber;
-                txtEmail.Text = result.Email;
+                if (result is not null)
+                {
+                    txtPhoneNumber.Text = result.Data.PhoneNumber;
+                    txtEmail.Text = result.Data.Email;
+                }
             }
 
         }

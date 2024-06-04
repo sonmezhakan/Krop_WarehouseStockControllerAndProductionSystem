@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Brands;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,21 +8,21 @@ namespace Krop.WinForms.Brands
 {
     public partial class frmBrandList : Form
     {
-        private readonly IBrandRequest _brandRequest;
+        private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetBrandDTO> _originalData;
         private BindingList<GetBrandDTO> _filteredData;
 
-        public frmBrandList(IBrandRequest brandRequest, IServiceProvider serviceProvider)
+        public frmBrandList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _brandRequest = brandRequest;
+            _webApiService = webApiService;
             _serviceProvider = serviceProvider;
         }
 
-        private void frmBrandList_Load(object sender, EventArgs e)
+        private async void frmBrandList_Load(object sender, EventArgs e)
         {
-             BrandList();
+            await BrandList();
         }
         private void DgwBrandListSettings()
         {
@@ -33,23 +33,26 @@ namespace Krop.WinForms.Brands
 
             dgwBrandList.Columns[0].Visible = false;
         }
-        private async void BrandList()
+        private async Task BrandList()
         {
-            HttpResponseMessage response = await _brandRequest.GetAllAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/getall");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBrandDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetBrandDTO>>(response);
 
-            _originalData = new BindingList<GetBrandDTO>(result);
-            _filteredData = new BindingList<GetBrandDTO>(_originalData.ToList());
+            if (result is not null)
+            {
+                _originalData = new BindingList<GetBrandDTO>(result.Data);
+                _filteredData = new BindingList<GetBrandDTO>(_originalData.ToList());
 
-            dgwBrandList.DataSource = _filteredData;
+                dgwBrandList.DataSource = _filteredData;
 
-            DgwBrandListSettings();
+                DgwBrandListSettings();
+            }
         }
         private void Search()
         {
@@ -109,9 +112,9 @@ namespace Krop.WinForms.Brands
             FormController.FormOpenController(frmBrandDelete);
         }
 
-        private void brandListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void brandListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BrandList();
+           await BrandList();
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)

@@ -1,7 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Branches;
-using Krop.Common.Helpers.WebApiRequests.Products;
-using Krop.Common.Helpers.WebApiRequests.StockInputs;
-using Krop.Common.Helpers.WebApiRequests.Suppliers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Branches;
 using Krop.DTO.Dtos.Products;
 using Krop.DTO.Dtos.StockInputs;
@@ -20,48 +17,42 @@ namespace Krop.WinForms.Forms.StockInputs
 {
     public partial class frmStockInput : Form
     {
-        private readonly IBranchRequest _branchRequest;
-        private readonly ISupplierRequest _supplierRequest;
-        private readonly IProductRequest _productRequest;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IStockInputRequest _stockInputRequest;
         private BindingList<GetStockInputListDTO> _originalData;
         private BindingList<GetStockInputListDTO> _filteredData;
         internal Guid AppUserId;
         private Guid Id;
+        private readonly IWebApiService _webApiService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public frmStockInput(IBranchRequest branchRequest,ISupplierRequest supplierRequest, IProductRequest productRequest, IServiceProvider serviceProvider,IStockInputRequest stockInputRequest)
+        public frmStockInput(IWebApiService webApiService,IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _branchRequest = branchRequest;
-            _supplierRequest = supplierRequest;
-            _productRequest = productRequest;
+            _webApiService = webApiService;
             _serviceProvider = serviceProvider;
-            _stockInputRequest = stockInputRequest;
         }
 
-        private void frmStockInput_Load(object sender, EventArgs e)
+        private async void frmStockInput_Load(object sender, EventArgs e)
         {
-            ProductList();
-            BranchList();
-            SupplierList();
-            StockInputList();
+           await ProductList();
+           await BranchList();
+           await SupplierList();
+           await StockInputList();
         }
-        private async void ProductList()
+        private async Task ProductList()
         {
-            HttpResponseMessage response = await _productRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
 
-            ProductNameList(result);
-            ProductCodeList(result);
+           await ProductNameList(result.Data);
+           await ProductCodeList(result.Data);
         }
-        private void ProductNameList(List<GetProductComboBoxDTO> products)
+        private async Task ProductNameList(List<GetProductComboBoxDTO> products)
         {
             cmbBoxProductName.DataSource = null;
 
@@ -70,7 +61,7 @@ namespace Krop.WinForms.Forms.StockInputs
 
             cmbBoxProductName.SelectedIndexChanged -= cmbBoxProductName_SelectedIndexChanged;
 
-            cmbBoxProductName.DataSource = products.Select(x => new GetProductComboBoxDTO { Id = x.Id, ProductName = x.ProductName }).ToList();
+            cmbBoxProductName.DataSource = products is not null ? products : null;
 
             cmbBoxProductName.SelectedIndex = -1;
 
@@ -85,7 +76,7 @@ namespace Krop.WinForms.Forms.StockInputs
             }
         }
 
-        private void ProductCodeList(List<GetProductComboBoxDTO> products)
+        private async Task ProductCodeList(List<GetProductComboBoxDTO> products)
         {
             cmbBoxProductCode.DataSource = null;
 
@@ -94,7 +85,7 @@ namespace Krop.WinForms.Forms.StockInputs
 
             cmbBoxProductCode.SelectedIndexChanged -= cmbBoxProductCode_SelectedIndexChanged;
 
-            cmbBoxProductCode.DataSource = products.Select(x => new GetProductComboBoxDTO { Id = x.Id, ProductCode = x.ProductCode }).ToList();
+            cmbBoxProductCode.DataSource = products is not null ? products : null;
 
             cmbBoxProductCode.SelectedIndex = -1;
 
@@ -109,42 +100,42 @@ namespace Krop.WinForms.Forms.StockInputs
             }
         }
 
-        private async void BranchList()
+        private async Task BranchList()
         {
-            HttpResponseMessage response = await _branchRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
 
             cmbBoxBranch.DataSource = null;
 
             cmbBoxBranch.DisplayMember = "BranchName";
             cmbBoxBranch.ValueMember = "Id";
 
-            cmbBoxBranch.DataSource = result;
+            cmbBoxBranch.DataSource = result is not null ? result.Data : null;
             cmbBoxBranch.SelectedIndex = -1;
         }
-        private async void SupplierList()
+        private async Task SupplierList()
         {
-            HttpResponseMessage response = await _supplierRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("supplier/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetSupplierComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetSupplierComboBoxDTO>>(response);
 
             cmbBoxSupplier.DataSource = null;
 
             cmbBoxSupplier.DisplayMember = "CompanyName";
             cmbBoxSupplier.ValueMember = "Id";
 
-            cmbBoxSupplier.DataSource = result;
+            cmbBoxSupplier.DataSource = result is not null ? result.Data : null;
             cmbBoxSupplier.SelectedIndex = -1;
         }
         private void DgwStockInputListSettings()
@@ -166,23 +157,25 @@ namespace Krop.WinForms.Forms.StockInputs
             dgwStockInputList.Columns[0].Visible = false;
             dgwStockInputList.Columns[11].Visible = false;
         }
-        private async void StockInputList()
+        private async Task StockInputList()
         {
-            HttpResponseMessage response = await _stockInputRequest.GetAllAsync(AppUserId);
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"stockInput/getall/{AppUserId}");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetStockInputListDTO>(response);
+            var result =await ResponseController.SuccessDataResponseController<List<GetStockInputListDTO>>(response);
+            if (result is not null)
+            {
+                _originalData = new BindingList<GetStockInputListDTO>(result.Data);
+                _filteredData = new BindingList<GetStockInputListDTO>(_originalData.ToList());
 
-            _originalData = new BindingList<GetStockInputListDTO>(result.Data.ToList());
-            _filteredData = new BindingList<GetStockInputListDTO>(_originalData.ToList());
+                dgwStockInputList.DataSource = _filteredData;
 
-            dgwStockInputList.DataSource = _filteredData;
-
-            DgwStockInputListSettings();
+                DgwStockInputListSettings();
+            } 
         }
         private void Search()
         {
@@ -217,28 +210,31 @@ namespace Krop.WinForms.Forms.StockInputs
                 }
             }
         }
-        private async void GetStockInput()
+        private async Task GetStockInput()
         {
             if (Id != Guid.Empty)
             {
-                HttpResponseMessage response = await _stockInputRequest.GetByIdAsync(Id);
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"StockInput/GetById/{Id}");
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetStockInputDTO>(response);
+                var result =await ResponseController.SuccessDataResponseController<GetStockInputDTO>(response);
 
-                cmbBoxBranch.SelectedValue = result.Data.BranchId;
-                cmbBoxProductName.SelectedValue = result.Data.ProductId;
-                cmbBoxSupplier.SelectedValue = result.Data.SupplierId;
-                txtUnitPrice.Text = result.Data.UnitPrice.ToString();
-                txtQuantity.Text = result.Data.Quantity.ToString();
-                txtDescription.Text = result.Data.Description;
-                inputDateTimePicker.Value = result.Data.InputDate;
-                txtInvoiceNumber.Text = result.Data.InvoiceNumber;
+                if(result is not null)
+                {
+                    cmbBoxBranch.SelectedValue = result.Data.BranchId;
+                    cmbBoxProductName.SelectedValue = result.Data.ProductId;
+                    cmbBoxSupplier.SelectedValue = result.Data.SupplierId;
+                    txtUnitPrice.Text = result.Data.UnitPrice.ToString();
+                    txtQuantity.Text = result.Data.Quantity.ToString();
+                    txtDescription.Text = result.Data.Description;
+                    inputDateTimePicker.Value = result.Data.InputDate;
+                    txtInvoiceNumber.Text = result.Data.InvoiceNumber;
+                }
             }
         }
 
@@ -279,14 +275,14 @@ namespace Krop.WinForms.Forms.StockInputs
                     Description = txtDescription.Text
                 };
 
-                HttpResponseMessage response = await _stockInputRequest.AddAsync(createStockInputDTO);
+                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("StockInput/add", createStockInputDTO);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
-                StockInputList();
+               await StockInputList();
             }
             else
             {
@@ -316,14 +312,14 @@ namespace Krop.WinForms.Forms.StockInputs
                             Description = txtDescription.Text
                         };
 
-                        HttpResponseMessage response = await _stockInputRequest.UpdateAsync(updateStockInputDTO);
+                        HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("StockInput/Update", updateStockInputDTO);
 
                         if (!response.IsSuccessStatusCode)
                         {
-                            ResponseController.ErrorResponseController(response);
+                            await ResponseController.ErrorResponseController(response);
                             return;
                         }
-                        StockInputList();
+                       await StockInputList();
                         Id = default;
                     }
                 }
@@ -338,25 +334,25 @@ namespace Krop.WinForms.Forms.StockInputs
             }
         }
 
-        private void dgwStockInputList_DoubleClick(object sender, EventArgs e)
+        private async void dgwStockInputList_DoubleClick(object sender, EventArgs e)
         {
             Id = (Guid)dgwStockInputList.SelectedRows[0].Cells[0].Value;
 
-            GetStockInput();
+           await GetStockInput();
         }
 
         private async void bttnDelete_Click(object sender, EventArgs e)
         {
             if (Id != Guid.Empty)
             {
-                HttpResponseMessage response = await _stockInputRequest.DeleteAsync(Id, AppUserId);
+                HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"StockInput/Delete/{Id}/{AppUserId}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                StockInputList();
+               await StockInputList();
                 Id = default;
             }
             else

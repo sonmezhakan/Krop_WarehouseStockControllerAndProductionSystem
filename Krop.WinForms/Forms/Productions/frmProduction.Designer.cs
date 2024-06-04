@@ -102,6 +102,7 @@
             dgwProductionList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgwProductionList.Size = new Size(1244, 209);
             dgwProductionList.TabIndex = 10;
+            dgwProductionList.DoubleClick += dgwProductionList_DoubleClick;
             // 
             // panel1
             // 
@@ -123,6 +124,7 @@
             txtProductionSearch.PlaceholderText = "Arama...";
             txtProductionSearch.Size = new Size(1159, 27);
             txtProductionSearch.TabIndex = 2;
+            txtProductionSearch.TextChanged += txtProductionSearch_TextChanged;
             // 
             // bttnProductionSearch
             // 
@@ -171,6 +173,7 @@
             bttnUpdate.TabIndex = 4;
             bttnUpdate.Text = "Güncelle";
             bttnUpdate.UseVisualStyleBackColor = true;
+            bttnUpdate.Click += bttnUpdate_Click;
             // 
             // bttnDelete
             // 
@@ -184,6 +187,7 @@
             bttnDelete.TabIndex = 3;
             bttnDelete.Text = "Sil";
             bttnDelete.UseVisualStyleBackColor = true;
+            bttnDelete.Click += bttnDelete_Click;
             // 
             // panelLeft
             // 
@@ -258,6 +262,7 @@
             txtProductionQuantity.Size = new Size(174, 23);
             txtProductionQuantity.TabIndex = 7;
             txtProductionQuantity.Text = "0";
+            txtProductionQuantity.KeyPress += txtProductionQuantity_KeyPress;
             // 
             // label4
             // 
@@ -378,6 +383,7 @@
             txtProductReceiptSearch.PlaceholderText = "Arama...";
             txtProductReceiptSearch.Size = new Size(897, 27);
             txtProductReceiptSearch.TabIndex = 2;
+            txtProductReceiptSearch.TextChanged += txtProductReceiptSearch_TextChanged;
             // 
             // bttnProductReceiptSearch
             // 

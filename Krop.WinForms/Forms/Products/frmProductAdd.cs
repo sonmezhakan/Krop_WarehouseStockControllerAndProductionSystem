@@ -1,9 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Branches;
-using Krop.Common.Helpers.WebApiRequests.Brands;
-using Krop.Common.Helpers.WebApiRequests.Categories;
-using Krop.Common.Helpers.WebApiRequests.Products;
-using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.AppUsers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Brands;
 using Krop.DTO.Dtos.Categroies;
 using Krop.DTO.Dtos.Products;
@@ -15,61 +10,58 @@ namespace Krop.WinForms.Products
 {
     public partial class frmProductAdd : Form
     {
-        private readonly IBrandRequest _brandRequest;
-        private readonly ICategoryRequest _categoryRequest;
-        private readonly IProductRequest _productRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmProductAdd(IBrandRequest brandRequest,ICategoryRequest categoryRequest, IProductRequest productRequest)
+        public frmProductAdd(IWebApiService webApiService)
         {
             InitializeComponent();
-
             txtCriticalQuantity.MaxLength = 10;
-            _brandRequest = brandRequest;
-            _categoryRequest = categoryRequest;
-            _productRequest = productRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmProductAdd_Load(object sender, EventArgs e)
+        private async void frmProductAdd_Load(object sender, EventArgs e)
         {
-            CategoryList();
-            BrandList();
+           await CategoryList();
+           await BrandList();
         }
 
-        private async void CategoryList()
+        private async Task CategoryList()
         {
-            HttpResponseMessage response = await _categoryRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("category/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetCategoryComboBoxDTO>>(response);
 
             cmbBoxCategory.DataSource = null;
 
             cmbBoxCategory.DisplayMember = "CategoryName";
             cmbBoxCategory.ValueMember = "Id";
 
-            cmbBoxCategory.DataSource = result;
+            cmbBoxCategory.DataSource = result is not null ? result.Data : null;
+            cmbBoxCategory.SelectedIndex = -1;
         }
-        private async void BrandList()
+        private async Task BrandList()
         {
-            HttpResponseMessage response = await _brandRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBrandComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
 
             cmbBoxBrand.DataSource = null;
             
             cmbBoxBrand.DisplayMember = "BrandName";
             cmbBoxBrand.ValueMember = "Id";
 
-            cmbBoxBrand.DataSource = result;
+            cmbBoxBrand.DataSource = result is not null ? result.Data : null;
+            cmbBoxBrand.SelectedValue = -1;
         }
 
         private void cmbBoxCategory_SelectedIndexChanged(object sender, EventArgs e)
@@ -97,11 +89,11 @@ namespace Krop.WinForms.Products
                     Description = txtDescription.Text,
                 };
 
-                HttpResponseMessage response = await _productRequest.AddAsync(createProductDTO);
+                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("product/Add", createProductDTO);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
             }

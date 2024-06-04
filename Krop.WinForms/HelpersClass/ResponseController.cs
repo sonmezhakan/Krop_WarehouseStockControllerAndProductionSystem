@@ -6,21 +6,15 @@ namespace Krop.WinForms.HelpersClass
 {
     internal static class ResponseController
     {
-        internal static void ErrorResponseController(HttpResponseMessage response)
+        internal async static Task ErrorResponseController(HttpResponseMessage response)
         {
-            ErrorResponseViewModel errorResponseViewModel = JsonHelper.DeserializeAsync<ErrorResponseViewModel>(response).Result;
+            ErrorResponseViewModel errorResponseViewModel = await JsonHelper.DeserializeAsync<ErrorResponseViewModel>(response);
             MessageBox.Show(errorResponseViewModel.Detail, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        internal static SuccessDataListResponseViewModel<T> SuccessDataListResponseController<T>(HttpResponseMessage response)
+        internal async static Task<SuccessDataResponseViewModel<T>> SuccessDataResponseController<T>(HttpResponseMessage response)
         {
-            SuccessDataListResponseViewModel<T> successDataListResponseViewModel = JsonHelper.DeserializeAsync<SuccessDataListResponseViewModel<T>>(response).Result;
-
-            return successDataListResponseViewModel;
-        }
-        internal static SuccessDataResponseViewModel<T> SuccessDataResponseController<T>(HttpResponseMessage response)
-        {
-            SuccessDataResponseViewModel<T> successDataResponseViewModel = JsonHelper.DeserializeAsync<SuccessDataResponseViewModel<T>>(response).Result;
+            SuccessDataResponseViewModel<T> successDataResponseViewModel = await JsonHelper.DeserializeAsync<SuccessDataResponseViewModel<T>>(response);
 
             return successDataResponseViewModel;
         }

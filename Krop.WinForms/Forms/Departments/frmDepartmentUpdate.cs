@@ -1,37 +1,38 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Departments;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Departments;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.Departments
 {
     public partial class frmDepartmentUpdate : Form
     {
         public Guid Id;
-        private readonly IDepartmentRequest _departmentRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmDepartmentUpdate(IDepartmentRequest departmentRequest)
+        public frmDepartmentUpdate(IWebApiService webApiService )
         {
             InitializeComponent();
-            _departmentRequest = departmentRequest;
+            _webApiService = webApiService;
         }
 
-        private  void frmDepartmentUpdate_Load(object sender, EventArgs e)
+        private  async void frmDepartmentUpdate_Load(object sender, EventArgs e)
         {
-             DepartmentList();
+            await DepartmentList();
             if(cmbBoxDepartmentSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxDepartmentSelect.SelectedValue = Id;
         }
-        private  async void DepartmentList()
+        private  async Task DepartmentList()
         {
-            HttpResponseMessage response = await _departmentRequest.GetAllComboBoxAsync();
-            if(!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("department/GetAllComboBox");
+            if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetDepartmentComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetDepartmentComboBoxDTO>>(response);
 
             cmbBoxDepartmentSelect.DataSource = null;
 
@@ -39,7 +40,7 @@ namespace Krop.WinForms.Forms.Departments
             cmbBoxDepartmentSelect.ValueMember = "Id";
 
             cmbBoxDepartmentSelect.SelectedIndexChanged -= CmbBoxDepartmentSelect_SelectedIndexChanged;
-            cmbBoxDepartmentSelect.DataSource = result;
+            cmbBoxDepartmentSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxDepartmentSelect.SelectedIndex = -1;
             cmbBoxDepartmentSelect.SelectedIndexChanged += CmbBoxDepartmentSelect_SelectedIndexChanged;
         }
@@ -48,17 +49,19 @@ namespace Krop.WinForms.Forms.Departments
         {
             if(cmbBoxDepartmentSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _departmentRequest.GetByIdAsync((Guid)cmbBoxDepartmentSelect.SelectedValue);
-                if(!response.IsSuccessStatusCode)
+                HttpResponseMessage response =await _webApiService.httpClient.GetAsync($"department/GetById/{cmbBoxDepartmentSelect.SelectedValue}");
+                if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetDepartmentDTO>(response).Data;
+                var result = await ResponseController.SuccessDataResponseController<GetDepartmentDTO>(response);
 
-                txtDepartmentName.Text = result.DepartmentName;
-                txtDescription.Text = result.Description;
+                if (result is not null)
+                {
+                    txtDescription.Text = result.Data.Description;
+                }
             }
         }
 
@@ -75,15 +78,15 @@ namespace Krop.WinForms.Forms.Departments
                         Description = txtDescription.Text
                     };
 
-                    HttpResponseMessage response = await _departmentRequest.UpdateAsync(updateDepartmentDTO);
+                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("department/Update", updateDepartmentDTO);
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    DepartmentList();
+                   await DepartmentList();
                 }
             }
             else

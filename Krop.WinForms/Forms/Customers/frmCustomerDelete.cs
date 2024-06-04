@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Customers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Customers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -8,30 +8,30 @@ namespace Krop.WinForms.Customers
     public partial class frmCustomerDelete : Form
     {
         public Guid Id;
-        private readonly ICustomerRequest _customerRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmCustomerDelete(ICustomerRequest customerRequest)
+        public frmCustomerDelete(IWebApiService webApiService)
         {
             InitializeComponent();
-            _customerRequest = customerRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmCustomerDelete_Load(object sender, EventArgs e)
+        private async void frmCustomerDelete_Load(object sender, EventArgs e)
         {
-            CustomerList();
+           await CustomerList();
             if (cmbBoxCustomerSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCustomerSelect.SelectedValue = Id;
         }
-        private async void CustomerList()
+        private async Task CustomerList()
         {
-            HttpResponseMessage response = await _customerRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("customer/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetCustomerComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetCustomerComboBoxDTO>>(response);
 
             cmbBoxCustomerSelect.DataSource = null;
 
@@ -39,7 +39,7 @@ namespace Krop.WinForms.Customers
             cmbBoxCustomerSelect.ValueMember = "Id";
 
             cmbBoxCustomerSelect.SelectedIndexChanged -= CmbBoxCustomerSelect_SelectedIndexChanged;
-            cmbBoxCustomerSelect.DataSource = result;
+            cmbBoxCustomerSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxCustomerSelect.SelectedIndex = -1;
             cmbBoxCustomerSelect.SelectedIndexChanged += CmbBoxCustomerSelect_SelectedIndexChanged;
         }
@@ -55,15 +55,15 @@ namespace Krop.WinForms.Customers
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _customerRequest.DeleteAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
+                    HttpResponseMessage response =  await _webApiService.httpClient.DeleteAsync($"customer/delete/{cmbBoxCustomerSelect.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    CustomerList();
+                   await CustomerList();
                 }
             }
             else

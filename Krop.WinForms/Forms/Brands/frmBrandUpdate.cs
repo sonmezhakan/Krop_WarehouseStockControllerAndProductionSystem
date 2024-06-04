@@ -1,24 +1,25 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Brands;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Brands
 {
     public partial class frmBrandUpdate : Form
     {
         public Guid Id;
-        private readonly IBrandRequest _brandRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmBrandUpdate(IBrandRequest brandRequest)
+        public frmBrandUpdate(IWebApiService webApiService)
         {
             InitializeComponent();
-            _brandRequest = brandRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmBrandUpdate_Load(object sender, EventArgs e)
+        private async void frmBrandUpdate_Load(object sender, EventArgs e)
         {
-            ComboBoxList();
+           await ComboBoxList();
             if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBrandSelect.SelectedValue = Id;
         }
@@ -37,15 +38,15 @@ namespace Krop.WinForms.Brands
                         Email = txtEmail.Text
                     };
 
-                    HttpResponseMessage response = await _brandRequest.UpdateAsync(updateBrandDTO);
+                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("brand/update", updateBrandDTO);
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    ComboBoxList();//Listele
+                   await ComboBoxList();//Listele
                 }
             }
             else
@@ -54,16 +55,16 @@ namespace Krop.WinForms.Brands
             }
         }
 
-        private async void ComboBoxList()
+        private async Task ComboBoxList()
         {
-            HttpResponseMessage response = await _brandRequest.GetAllComboBoxAsync();
-            if(!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
+            if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBrandComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
 
             cmbBoxBrandSelect.DataSource = null;
             
@@ -72,7 +73,7 @@ namespace Krop.WinForms.Brands
 
             cmbBoxBrandSelect.SelectedIndexChanged -= cmbBoxBrandSelect_SelectedIndexChanged;//SelectedIndexChanged Pasif
 
-            cmbBoxBrandSelect.DataSource = result;//liste aktarılıyor
+            cmbBoxBrandSelect.DataSource = result is not null ? result.Data : null;//liste aktarılıyor
             cmbBoxBrandSelect.SelectedIndex = -1;
             cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;//SelectedIndexChanged Aktif
         }
@@ -80,18 +81,20 @@ namespace Krop.WinForms.Brands
         {
             if (cmbBoxBrandSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _brandRequest.GetByIdAsync((Guid)cmbBoxBrandSelect.SelectedValue);
-                if(!response.IsSuccessStatusCode)
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/GetById/{cmbBoxBrandSelect.SelectedValue}");
+                if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetBrandDTO>(response).Data;
+                var result =await ResponseController.SuccessDataResponseController<GetBrandDTO>(response);
 
-                txtBrandName.Text = result.BrandName;
-                txtEmail.Text = result.Email;
-                txtPhoneNumber.Text = result.PhoneNumber;
+                if (result is not null)
+                {
+                    txtPhoneNumber.Text = result.Data.PhoneNumber;
+                    txtEmail.Text = result.Data.Email;
+                }
             }
         }
     }

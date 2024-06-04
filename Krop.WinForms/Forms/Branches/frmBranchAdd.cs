@@ -1,18 +1,19 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Branches;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Branches;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.Branches
 {
     public partial class frmBranchAdd : Form
     {
-        private readonly IBranchRequest _branchRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmBranchAdd(IBranchRequest branchRequest)
+        public frmBranchAdd(IWebApiService webApiService)
         {
             InitializeComponent();
-            _branchRequest = branchRequest;
+            _webApiService = webApiService;
         }
 
         private void frmBranchAdd_Load(object sender, EventArgs e)
@@ -37,11 +38,11 @@ namespace Krop.WinForms.Forms.Branches
                 Addres = txtAddress.Text
             };
 
-            HttpResponseMessage response = await _branchRequest.AddAsync(createBranchDTO);
+            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("branch/add", createBranchDTO);
 
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
         }

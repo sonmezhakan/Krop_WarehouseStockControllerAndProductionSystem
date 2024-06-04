@@ -1,10 +1,8 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Branches;
-using Krop.Common.Helpers.WebApiRequests.Products;
-using Krop.Common.Helpers.WebApiRequests.StockTransfers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Branches;
 using Krop.DTO.Dtos.Products;
 using Krop.DTO.Dtos.StockTransfers;
-using Krop.DTO.Dtos.Suppliers;
+using Krop.Entities.Entities;
 using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -17,57 +15,55 @@ namespace Krop.WinForms.Forms.StockTransfers
 {
     public partial class frmStockTransfer : Form
     {
-        private readonly IBranchRequest _branchRequest;
-        private readonly IProductRequest _productRequest;
-        private readonly IStockTransferRequest _stockTransferRequest;
+        private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
-
         public Guid Id;
         public Guid AppUserId;
         private BindingList<GetStockTransferListDTO> _originalData;
         private BindingList<GetStockTransferListDTO> _filteredData;
 
-        public frmStockTransfer(IBranchRequest branchRequest, IProductRequest productRequest, IStockTransferRequest stockTransferRequest, IServiceProvider serviceProvider)
+        public frmStockTransfer(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _branchRequest = branchRequest;
-            _productRequest = productRequest;
-            _stockTransferRequest = stockTransferRequest;
+            _webApiService = webApiService;
             _serviceProvider = serviceProvider;
         }
 
-        private void frmStockTransfer_Load(object sender, EventArgs e)
+        private async void frmStockTransfer_Load(object sender, EventArgs e)
         {
-            BranchList();
-            ProductList();
-            StockTransferList();
+           await BranchList();
+           await ProductList();
+           await StockTransferList();
         }
-        private async void BranchList()
+        private async Task BranchList()
         {
-            HttpResponseMessage response = await _branchRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
 
-            List<GetBranchComboBoxDTO> senderBranchList = result.Select(x => new GetBranchComboBoxDTO
+            if(result is not null)
             {
-                BranchName = x.BranchName,
-                Id = x.Id
-            }).ToList();
-            List<GetBranchComboBoxDTO> sentBranchList = result.Select(x => new GetBranchComboBoxDTO
-            {
-                BranchName = x.BranchName,
-                Id = x.Id
-            }).ToList();
+                List<GetBranchComboBoxDTO> senderBranchList = result.Data.Select(x => new GetBranchComboBoxDTO
+                {
+                    BranchName = x.BranchName,
+                    Id = x.Id
+                }).ToList();
+                List<GetBranchComboBoxDTO> sentBranchList = result.Data.Select(x => new GetBranchComboBoxDTO
+                {
+                    BranchName = x.BranchName,
+                    Id = x.Id
+                }).ToList();
 
-            SenderBranchList(senderBranchList);
-            SentBranchList(sentBranchList);
+               await SenderBranchList(senderBranchList);
+               await SentBranchList(sentBranchList);
+            }
         }
-        private void SenderBranchList(List<GetBranchComboBoxDTO> getBranchComboBoxDTOs)
+        private async Task SenderBranchList(List<GetBranchComboBoxDTO> getBranchComboBoxDTOs)
         {
             cmbBoxSenderBranch.DataSource = null;
 
@@ -76,7 +72,7 @@ namespace Krop.WinForms.Forms.StockTransfers
             cmbBoxSenderBranch.DataSource = getBranchComboBoxDTOs;
             cmbBoxProductName.SelectedIndex = -1;
         }
-        private void SentBranchList(List<GetBranchComboBoxDTO> getBranchComboBoxDTOs)
+        private async Task SentBranchList(List<GetBranchComboBoxDTO> getBranchComboBoxDTOs)
         {
             cmbBoxSentBranch.DataSource = null;
 
@@ -85,21 +81,24 @@ namespace Krop.WinForms.Forms.StockTransfers
             cmbBoxSentBranch.DataSource = getBranchComboBoxDTOs;
             cmbBoxProductName.SelectedIndex = -1;
         }
-        private async void ProductList()
+        private async Task ProductList()
         {
-            HttpResponseMessage response = await _productRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
 
-            ProductNameList(result);
-            ProductCodeList(result);
+            if(result is not null)
+            {
+               await ProductNameList(result.Data);
+               await ProductCodeList(result.Data);
+            }
         }
-        private void ProductNameList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
+        private async Task ProductNameList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
         {
             cmbBoxProductName.DataSource = null;
 
@@ -120,7 +119,7 @@ namespace Krop.WinForms.Forms.StockTransfers
             }
         }
 
-        private void ProductCodeList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
+        private async Task ProductCodeList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
         {
             cmbBoxProductCode.DataSource = null;
             cmbBoxProductCode.DisplayMember = "ProductCode";
@@ -155,24 +154,27 @@ namespace Krop.WinForms.Forms.StockTransfers
 
             dgwStockTransferList.Columns[0].Visible = false;
         }
-        private async void StockTransferList()
+        private async Task StockTransferList()
         {
-            HttpResponseMessage response = await _stockTransferRequest.AppUserBranchGetAll(AppUserId);
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"stockTransfer/AppUserBranchGetAll/{AppUserId}");
 
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetStockTransferListDTO>(response);
+            var result =await ResponseController.SuccessDataResponseController<List<GetStockTransferListDTO>>(response);
 
-            _originalData = new BindingList<GetStockTransferListDTO>(result.Data);
-            _filteredData = new BindingList<GetStockTransferListDTO>(_originalData.ToList());
+            if(result is not null)
+            {
+                _originalData = new BindingList<GetStockTransferListDTO>(result.Data);
+                _filteredData = new BindingList<GetStockTransferListDTO>(_originalData.ToList());
 
-            dgwStockTransferList.DataSource = _filteredData;
+                dgwStockTransferList.DataSource = _filteredData;
 
-            DgwStockTransferListSettings();
+                DgwStockTransferListSettings();
+            }
         }
         private void Search()
         {
@@ -222,15 +224,15 @@ namespace Krop.WinForms.Forms.StockTransfers
                     TransactorAppUserId = AppUserId
                 };
 
-                HttpResponseMessage response = await _stockTransferRequest.AddAsync(createStockTransferDTO);
+                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("stockTransfer/Add", createStockTransferDTO);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                StockTransferList();
+               await StockTransferList();
             }
             else
             {
@@ -260,15 +262,15 @@ namespace Krop.WinForms.Forms.StockTransfers
                             TransactorAppUserId = AppUserId
                         };
 
-                        HttpResponseMessage response =await _stockTransferRequest.UpdateAsync(updateStockTransferDTO);
+                        HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("stockTransfer/Update", updateStockTransferDTO);
 
                         if (!response.IsSuccessStatusCode)
                         {
-                            ResponseController.ErrorResponseController(response);
+                            await ResponseController.ErrorResponseController(response);
                             return;
                         }
 
-                        StockTransferList();
+                       await StockTransferList();
                         Id = default;
                     }
                 }
@@ -289,15 +291,15 @@ namespace Krop.WinForms.Forms.StockTransfers
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _stockTransferRequest.DeleteAsync(Id, AppUserId);
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"stockTransfer/Delete/{Id}/{AppUserId}");
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    StockTransferList();
+                   await StockTransferList();
                     Id = default;
                 }
             }
@@ -338,23 +340,26 @@ namespace Krop.WinForms.Forms.StockTransfers
         {
             Id = (Guid)dgwStockTransferList.SelectedRows[0].Cells[0].Value;
 
-            HttpResponseMessage response = await _stockTransferRequest.GetByIdAsync(Id, AppUserId);
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"stockTransfer/GetById/{Id}/{AppUserId}");
 
-            if(!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataResponseController<GetStockTransferDTO>(response);
+            var result =await ResponseController.SuccessDataResponseController<GetStockTransferDTO>(response);
 
-            cmbBoxSenderBranch.SelectedValue = result.Data.SenderBranchId;
-            cmbBoxSentBranch.SelectedValue = result.Data.SentBranchId;
-            cmbBoxProductName.SelectedValue = result.Data.ProductId;
-            txtInvoiceNumber.Text = result.Data.InvoiceNumber;
-            txtQuantity.Text = result.Data.Quantity.ToString();
-            txtDescription.Text = result.Data.Description;
-            transferDateTimePicker.Value = result.Data.TransferDate;
+            if(result is not null)
+            {
+                cmbBoxSenderBranch.SelectedValue = result.Data.SenderBranchId;
+                cmbBoxSentBranch.SelectedValue = result.Data.SentBranchId;
+                cmbBoxProductName.SelectedValue = result.Data.ProductId;
+                txtInvoiceNumber.Text = result.Data.InvoiceNumber;
+                txtQuantity.Text = result.Data.Quantity.ToString();
+                txtDescription.Text = result.Data.Description;
+                transferDateTimePicker.Value = result.Data.TransferDate;
+            }
         }
     }
 }

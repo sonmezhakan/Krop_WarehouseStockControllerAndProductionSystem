@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Employees;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Employees;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,21 +8,21 @@ namespace Krop.WinForms.Forms.Employees
 {
     public partial class frmEmployeeList : Form
     {
-        private readonly IEmployeeRequest _employeeRequest;
+        private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetEmployeeListDTO> _orginialData;
         private BindingList<GetEmployeeListDTO> _filteredData;
 
-        public frmEmployeeList(IEmployeeRequest employeeRequest, IServiceProvider serviceProvider)
+        public frmEmployeeList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _employeeRequest = employeeRequest;
+            _webApiService = webApiService;
             _serviceProvider = serviceProvider;
         }
 
-        private void frmEmployeeList_Load(object sender, EventArgs e)
+        private async void frmEmployeeList_Load(object sender, EventArgs e)
         {
-            EmployeeList();
+           await EmployeeList();
         }
         private void DgwEmployeeListSettings()
         {
@@ -45,22 +45,25 @@ namespace Krop.WinForms.Forms.Employees
 
             dgwEmployeeList.Columns[0].Visible = false;
         }
-        private async void EmployeeList()
+        private async Task EmployeeList()
         {
-            HttpResponseMessage response = await _employeeRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("employee/GetAll");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetEmployeeListDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetEmployeeListDTO>>(response);
 
-            _orginialData = new BindingList<GetEmployeeListDTO>(result.ToList());
-            _filteredData = new BindingList<GetEmployeeListDTO>(_orginialData.ToList());
+            if(response is not null)
+            {
+                _orginialData = new BindingList<GetEmployeeListDTO>(result.Data);
+                _filteredData = new BindingList<GetEmployeeListDTO>(_orginialData.ToList());
 
-            dgwEmployeeList.DataSource = _filteredData;
-            DgwEmployeeListSettings();
+                dgwEmployeeList.DataSource = _filteredData;
+                DgwEmployeeListSettings();
+            }
         }
         private void Search()
         {
@@ -122,7 +125,7 @@ namespace Krop.WinForms.Forms.Employees
 
         private async void EmployeeListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EmployeeList();
+           await EmployeeList();
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)

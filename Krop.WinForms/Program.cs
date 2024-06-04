@@ -33,7 +33,6 @@ namespace Krop.WinForms
 
             services.AddAutoMapperRegistration();//AutoMapper
             services.AddWebApiRegistration();//WebApi Service
-            services.AddWebApiRequestRegistration();
 
             // Forms
             services.AddFormRegistration();

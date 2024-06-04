@@ -1,36 +1,37 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Categories;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Categroies;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Categories
 {
     public partial class frmCategoryUpdate : Form
     {
         public Guid Id;
-        private readonly ICategoryRequest _categoryRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmCategoryUpdate(ICategoryRequest categoryRequest)
+        public frmCategoryUpdate(IWebApiService webApiService)
         {
             InitializeComponent();
-            _categoryRequest = categoryRequest;
+            _webApiService = webApiService;
         }
-        private void frmCategoryUpdate_Load(object sender, EventArgs e)
+        private async void frmCategoryUpdate_Load(object sender, EventArgs e)
         {
-            CategoryList();
+           await CategoryList();
             if (cmbBoxCategorySelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCategorySelect.SelectedValue = Id;
         }
-        private async void CategoryList()
+        private async Task CategoryList()
         {
-            HttpResponseMessage response = await _categoryRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("category/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetCategoryComboBoxDTO>>(response);
 
             cmbBoxCategorySelect.DataSource = null;
 
@@ -38,7 +39,7 @@ namespace Krop.WinForms.Categories
             cmbBoxCategorySelect.ValueMember = "Id";
 
             cmbBoxCategorySelect.SelectedIndexChanged -= cmbBoxCategorySelect_SelectedIndexChanged; 
-            cmbBoxCategorySelect.DataSource = result;
+            cmbBoxCategorySelect.DataSource = result is not null ? result.Data : null;
             cmbBoxCategorySelect.SelectedIndex = -1;
             cmbBoxCategorySelect.SelectedIndexChanged += cmbBoxCategorySelect_SelectedIndexChanged;
         }
@@ -55,15 +56,15 @@ namespace Krop.WinForms.Categories
                         CategoryName = txtCategoryName.Text
                     };
 
-                    HttpResponseMessage response = await _categoryRequest.UpdateAsync(updateCategoryDTO);
+                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("category/update", updateCategoryDTO);
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    CategoryList();
+                   await CategoryList();
                 }
             }
             else
@@ -76,16 +77,18 @@ namespace Krop.WinForms.Categories
         {
             if (cmbBoxCategorySelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _categoryRequest.GetByIdAsync((Guid)cmbBoxCategorySelect.SelectedValue);
-                if(!response.IsSuccessStatusCode)
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"category/GetById/{cmbBoxCategorySelect.SelectedValue}");
+                if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetCategoryDTO>(response).Data;
-
-                txtCategoryName.Text = result.CategoryName;
+                var result =await ResponseController.SuccessDataResponseController<GetCategoryDTO>(response);
+                if (result is not null)
+                {
+                    txtCategoryName.Text = result.Data.CategoryName;
+                }          
             }
         }
     }

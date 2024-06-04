@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Departments;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Departments;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -8,30 +8,30 @@ namespace Krop.WinForms.Forms.Departments
     public partial class frmDepartmentDelete : Form
     {
         public Guid Id;
-        private readonly IDepartmentRequest _departmentRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmDepartmentDelete(IDepartmentRequest departmentRequest)
+        public frmDepartmentDelete(IWebApiService webApiService)
         {
             InitializeComponent();
-            _departmentRequest = departmentRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmDepartmentDelete_Load(object sender, EventArgs e)
+        private async void frmDepartmentDelete_Load(object sender, EventArgs e)
         {
-            DepartmentList();
+           await DepartmentList();
             if (cmbBoxDepartmentSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxDepartmentSelect.SelectedValue = Id;
         }
-        private async void DepartmentList()
+        private async Task DepartmentList()
         {
-            HttpResponseMessage response = await _departmentRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("department/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetDepartmentComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetDepartmentComboBoxDTO>>(response);
 
             cmbBoxDepartmentSelect.DataSource = null;
 
@@ -39,7 +39,7 @@ namespace Krop.WinForms.Forms.Departments
             cmbBoxDepartmentSelect.ValueMember = "Id";
 
             cmbBoxDepartmentSelect.SelectedIndexChanged -= CmbBoxDepartmentSelect_SelectedIndexChanged;
-            cmbBoxDepartmentSelect.DataSource = result;
+            cmbBoxDepartmentSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxDepartmentSelect.SelectedIndex = -1;
             cmbBoxDepartmentSelect.SelectedIndexChanged += CmbBoxDepartmentSelect_SelectedIndexChanged;
         }
@@ -55,15 +55,15 @@ namespace Krop.WinForms.Forms.Departments
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _departmentRequest.DeleteAsync((Guid)cmbBoxDepartmentSelect.SelectedValue);
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"department/delete/{cmbBoxDepartmentSelect.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    DepartmentList();
+                   await DepartmentList();
                 }
             }
             else

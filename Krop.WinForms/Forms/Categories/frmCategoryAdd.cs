@@ -1,25 +1,25 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Categories;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Categroies;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Categories
 {
     public partial class frmCategoryAdd : Form
     {
-        private readonly ICategoryRequest _categoryRequest;
+        private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
 
-        public frmCategoryAdd(ICategoryRequest categoryRequest, IServiceProvider serviceProvider)
+        public frmCategoryAdd(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _categoryRequest = categoryRequest;
+            _webApiService = webApiService;
             _serviceProvider = serviceProvider;
         }
 
         private void frmCategoryAdd_Load(object sender, EventArgs e)
         {
-
 
         }
 
@@ -30,11 +30,11 @@ namespace Krop.WinForms.Categories
                 CategoryName = txtAppUserRoleName.Text
             };
 
-            HttpResponseMessage response = await _categoryRequest.AddAsync(createCategoryDTO);
+            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("category/Add", createCategoryDTO);
 
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 

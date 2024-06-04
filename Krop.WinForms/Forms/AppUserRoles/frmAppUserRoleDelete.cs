@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.AppUserRoles;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.AppUserRoles;
 using Krop.WinForms.HelpersClass;
 
@@ -8,37 +8,37 @@ namespace Krop.WinForms.AppUserRoles
     {
 
         public Guid Id;
-        private readonly IAppUserRoleRequest _appUserRoleRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmAppUserRoleDelete(IAppUserRoleRequest appUserRoleRequest)
+        public frmAppUserRoleDelete(IWebApiService webApiService)
         {
             InitializeComponent();
-            _appUserRoleRequest = appUserRoleRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmAppUserRoleDelete_Load(object sender, EventArgs e)
+        private async void frmAppUserRoleDelete_Load(object sender, EventArgs e)
         {
-            AppUserRoleList();
+            await AppUserRoleList();
             if (cmbBoxAppUserRoleSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxAppUserRoleSelect.SelectedValue = Id;
         }
-        private async void AppUserRoleList()
+        private async Task AppUserRoleList()
         {
-            HttpResponseMessage response = await _appUserRoleRequest.GetAllAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("AppUserRole/GetAll");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetAppUserRoleDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetAppUserRoleDTO>>(response);
 
             cmbBoxAppUserRoleSelect.DataSource = null;
             cmbBoxAppUserRoleSelect.DisplayMember = "Name";
             cmbBoxAppUserRoleSelect.ValueMember = "Id";
 
             cmbBoxAppUserRoleSelect.SelectedIndexChanged -= CmbBoxAppUserRoleSelect_SelectedIndexChanged;
-            cmbBoxAppUserRoleSelect.DataSource = result;
+            cmbBoxAppUserRoleSelect.DataSource = result is not null ? result.Data:null;
             cmbBoxAppUserRoleSelect.SelectedIndex = -1;
             cmbBoxAppUserRoleSelect.SelectedIndexChanged += CmbBoxAppUserRoleSelect_SelectedIndexChanged;
         }
@@ -51,15 +51,15 @@ namespace Krop.WinForms.AppUserRoles
         {
             if (cmbBoxAppUserRoleSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _appUserRoleRequest.DeleteAsync((Guid)cmbBoxAppUserRoleSelect.SelectedValue);
+                HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"appUserRole/Delete/{(Guid)cmbBoxAppUserRoleSelect.SelectedValue}");
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                AppUserRoleList();
+               await AppUserRoleList();
             }
             else
             {

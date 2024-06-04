@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Customers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Customers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -7,32 +7,31 @@ namespace Krop.WinForms.Customers
 {
     public partial class frmCustomerCart : Form
     {
-        
         public Guid Id;
-        private readonly ICustomerRequest _customerRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmCustomerCart(ICustomerRequest customerRequest)
+        public frmCustomerCart(IWebApiService webApiService)
         {
             InitializeComponent();
-            _customerRequest = customerRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmCustomerCart_Load(object sender, EventArgs e)
+        private async void frmCustomerCart_Load(object sender, EventArgs e)
         {
-            CustomerList();
+           await CustomerList();
             if (cmbBoxCustomerSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCustomerSelect.SelectedValue = Id;
         }
-        private async void CustomerList()
+        private async Task CustomerList()
         {
-            HttpResponseMessage response = await _customerRequest.GetAllComboBoxAsync();
-            if(!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("customer/GetAllComboBox");
+            if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetCustomerComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetCustomerComboBoxDTO>>(response);
 
             cmbBoxCustomerSelect.DataSource = null;
 
@@ -40,7 +39,7 @@ namespace Krop.WinForms.Customers
             cmbBoxCustomerSelect.ValueMember = "Id";
 
             cmbBoxCustomerSelect.SelectedIndexChanged -= CmbBoxCustomerSelect_SelectedIndexChanged;
-            cmbBoxCustomerSelect.DataSource = result;
+            cmbBoxCustomerSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxCustomerSelect.SelectedIndex = -1;
             cmbBoxCustomerSelect.SelectedIndexChanged += CmbBoxCustomerSelect_SelectedIndexChanged;
         }
@@ -49,27 +48,30 @@ namespace Krop.WinForms.Customers
         {
             if (cmbBoxCustomerSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _customerRequest.GetByIdAsync((Guid)cmbBoxCustomerSelect.SelectedValue);
-                if(!response.IsSuccessStatusCode)
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"customer/GetById/{cmbBoxCustomerSelect.SelectedValue}");
+                if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetCustomerDTO>(response).Data;
+                var result =await ResponseController.SuccessDataResponseController<GetCustomerDTO>(response);
 
-                if (result.Invoice == Entities.Enums.InvoiceEnum.Bireysel)
-                    radioBttnPerson.Checked = true;
-                else
-                    radioBttnCompany.Checked = true;
+                if(result is not null)
+                {
+                    if (result.Data.Invoice == Entities.Enums.InvoiceEnum.Bireysel)
+                        radioBttnPerson.Checked = true;
+                    else
+                        radioBttnCompany.Checked = true;
 
-                txtContactName.Text = result.ContactName;
-                txtContactTitle.Text = result.ContactTitle;
-                txtPhoneNumber.Text = result.PhoneNumber;
-                txtEmail.Text = result.Email;
-                txtCountry.Text = result.Country;
-                txtCity.Text = result.City;
-                txtAddress.Text = result.Addres;
+                    txtContactName.Text = result.Data.ContactName;
+                    txtContactTitle.Text = result.Data.ContactTitle;
+                    txtPhoneNumber.Text = result.Data.PhoneNumber;
+                    txtEmail.Text = result.Data.Email;
+                    txtCountry.Text = result.Data.Country;
+                    txtCity.Text = result.Data.City;
+                    txtAddress.Text = result.Data.Addres;
+                }
             }
         }
 

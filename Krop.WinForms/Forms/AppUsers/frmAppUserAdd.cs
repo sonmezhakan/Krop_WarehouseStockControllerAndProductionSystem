@@ -1,18 +1,19 @@
-﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.AppUsers
 {
     public partial class frmAppUserAdd : Form
     {
-        private readonly IAppUserRequest _appUserRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmAppUserAdd(IAppUserRequest appUserRequest)
+        public frmAppUserAdd(IWebApiService webApiService)
         {
             InitializeComponent();
-            _appUserRequest = appUserRequest;
+            _webApiService = webApiService;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -41,11 +42,11 @@ namespace Krop.WinForms.Forms.AppUsers
                 Addres = txtAddress.Text
             };
 
-            var response = await _appUserRequest.AddAsync(createAppUserDTO);
+            var response = await _webApiService.httpClient.PostAsJsonAsync("account/register", createAppUserDTO);
 
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
         }

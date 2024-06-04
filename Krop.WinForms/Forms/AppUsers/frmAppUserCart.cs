@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -8,12 +8,12 @@ namespace Krop.WinForms.Forms.AppUsers
     public partial class frmAppUserCart : Form
     {
         public Guid Id;
-        private readonly IAppUserRequest _appUserRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmAppUserCart(IAppUserRequest appUserRequest)
+        public frmAppUserCart(IWebApiService webApiService)
         {
             InitializeComponent();
-            _appUserRequest = appUserRequest;
+            _webApiService = webApiService;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -26,23 +26,23 @@ namespace Krop.WinForms.Forms.AppUsers
             TextBoxHelper.TextBoxInt32KeyPress(sender, e);
         }
 
-        private void frmAppUserCart_Load(object sender, EventArgs e)
+        private async void frmAppUserCart_Load(object sender, EventArgs e)
         {
-            AppUserList();
+            await AppUserList();
             txtPhoneNumber.MaxLength = 11;
             if (cmbBoxAppUserSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxAppUserSelect.SelectedValue = Id;
         }
-        private async void AppUserList()
+        private async Task AppUserList()
         {
-            HttpResponseMessage response = await _appUserRequest.GetAllComboBoxAsync();
-            if(!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("account/getAllComboBox");
+            if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetAppUserComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetAppUserComboBoxDTO>>(response);
 
             cmbBoxAppUserSelect.DataSource = null;
 
@@ -50,7 +50,7 @@ namespace Krop.WinForms.Forms.AppUsers
             cmbBoxAppUserSelect.ValueMember = "Id";
 
             cmbBoxAppUserSelect.SelectedIndexChanged -= CmbBoxAppUserSelect_SelectedIndexChanged;
-            cmbBoxAppUserSelect.DataSource = result;
+            cmbBoxAppUserSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxAppUserSelect.SelectedIndex = -1;
             cmbBoxAppUserSelect.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
         }
@@ -59,23 +59,26 @@ namespace Krop.WinForms.Forms.AppUsers
         {
             if (cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _appUserRequest.GetByAppUserIdAsync((Guid)cmbBoxAppUserSelect.SelectedValue);
-                if(!response.IsSuccessStatusCode)
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"account/GetById/{(Guid)cmbBoxAppUserSelect.SelectedValue}");
+                if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetAppUserDTO>(response).Data;
+                var result =await ResponseController.SuccessDataResponseController<GetAppUserDTO>(response);
 
-                txtFirstName.Text = result.FirstName;
-                txtLastName.Text = result.LastName;
-                txtEmail.Text = result.Email;
-                txtPhoneNumber.Text = result.PhoneNumber;
-                txtCity.Text = result.City;
-                txtCountry.Text = result.Country;
-                txtAddress.Text = result.Addres;
-                txtNationalNumber.Text = result.NationalNumber;
+                if(result is not null)
+                {
+                    txtFirstName.Text = result.Data.FirstName;
+                    txtLastName.Text = result.Data.LastName;
+                    txtEmail.Text = result.Data.Email;
+                    txtPhoneNumber.Text = result.Data.PhoneNumber;
+                    txtCity.Text = result.Data.City;
+                    txtCountry.Text = result.Data.Country;
+                    txtAddress.Text = result.Data.Addres;
+                    txtNationalNumber.Text = result.Data.NationalNumber;
+                }
             }
         }
 
@@ -83,11 +86,11 @@ namespace Krop.WinForms.Forms.AppUsers
         {
             if (cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _appUserRequest.ConfirmationMailSender((Guid)cmbBoxAppUserSelect.SelectedValue);
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"account/ConfirmationMailSender/{(Guid)cmbBoxAppUserSelect.SelectedValue}");
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
             }
@@ -97,11 +100,11 @@ namespace Krop.WinForms.Forms.AppUsers
         {
             if(cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _appUserRequest.ResetPasswordMailSender((Guid)cmbBoxAppUserSelect.SelectedValue);
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"account/ResetPasswordMailSender/{(Guid)cmbBoxAppUserSelect.SelectedValue}");
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
             }

@@ -1,5 +1,6 @@
 ﻿using Krop.Business.Services.Productions;
 using Krop.DTO.Dtos.Productions;
+using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
@@ -38,6 +39,12 @@ namespace Krop.WebAPI.Controllers
         public async Task<IActionResult> GetAll(Guid appUserId)
         {
             var result = await _productionService.GetAllAsync(appUserId);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("{id}/{appUserId}")]
+        public async Task<IActionResult> GetById(Guid id, Guid appUserId)
+        {
+            var result = await _productionService.GetByIdAsync(id,appUserId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }

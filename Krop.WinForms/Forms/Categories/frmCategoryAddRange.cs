@@ -1,18 +1,19 @@
 ﻿using Krop.Business.Features.Categories.Constants;
-using Krop.Common.Helpers.WebApiRequests.Categories;
+using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Categroies;
 using Krop.WinForms.HelpersClass;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Categories
 {
     public partial class frmCategoryAddRange : Form
     {
-        private readonly ICategoryRequest _categoryRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmCategoryAddRange(ICategoryRequest categoryRequest)
+        public frmCategoryAddRange(IWebApiService webApiService)
         {
             InitializeComponent();
-            _categoryRequest = categoryRequest;
+            _webApiService = webApiService;
         }
 
         private async void bttnCategoryAdd_Click(object sender, EventArgs e)
@@ -37,11 +38,11 @@ namespace Krop.WinForms.Categories
             if(categoryDTOs.Count <= 0)//Tüm TextBoxlar boş ise hata fırlat.
                 MessageBox.Show(CategoryMessages.CategoryNotNullAndEmpty, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            HttpResponseMessage response = await _categoryRequest.AddRangeAsync(categoryDTOs);
+            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("category/AddRange", categoryDTOs);
 
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
         }

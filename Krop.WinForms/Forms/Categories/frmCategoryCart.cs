@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Categories;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Categroies;
 using Krop.WinForms.HelpersClass;
 
@@ -8,31 +8,31 @@ namespace Krop.WinForms.Categories
     {
 
         public Guid Id;
-        private readonly ICategoryRequest _categoryRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmCategoryCart(ICategoryRequest categoryRequest)
+        public frmCategoryCart(IWebApiService webApiService)
         {
             InitializeComponent();
-            _categoryRequest = categoryRequest;
+            _webApiService = webApiService;
         }
-        private void frmCategoryCart_Load(object sender, EventArgs e)
+        private async void frmCategoryCart_Load(object sender, EventArgs e)
         {
-            CategoryList();
+           await CategoryList();
             if(cmbBoxCategorySelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxCategorySelect.SelectedValue = Id;
 
         }
 
-        private async void CategoryList()
+        private async Task CategoryList()
         {
-            HttpResponseMessage response = await _categoryRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("category/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetCategoryComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetCategoryComboBoxDTO>>(response);
 
             cmbBoxCategorySelect.DataSource = null;
             
@@ -40,7 +40,7 @@ namespace Krop.WinForms.Categories
             cmbBoxCategorySelect.ValueMember = "Id";
 
             cmbBoxCategorySelect.SelectedIndexChanged -= cmbCategorySelect_SelectedIndexChanged;
-            cmbBoxCategorySelect.DataSource = result;
+            cmbBoxCategorySelect.DataSource = result is not null ? result.Data : null;
             cmbBoxCategorySelect.SelectedIndex = -1;
             cmbBoxCategorySelect.SelectedIndexChanged += cmbCategorySelect_SelectedIndexChanged;
         }

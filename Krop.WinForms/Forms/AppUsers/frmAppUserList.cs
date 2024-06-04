@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,21 +9,21 @@ namespace Krop.WinForms.Forms.AppUsers
     public partial class frmAppUserList : Form
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IAppUserRequest _appUserRequest;
+        private readonly IWebApiService _webApiService;
         private BindingList<GetAppUserDTO> _originalData;
         private BindingList<GetAppUserDTO> _filteredData;
 
-        public frmAppUserList(IServiceProvider serviceProvider,IAppUserRequest appUserRequest)
+        public frmAppUserList(IServiceProvider serviceProvider,IWebApiService webApiService)
         {
             InitializeComponent();
  
             _serviceProvider = serviceProvider;
-            _appUserRequest = appUserRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmAppUserList_Load(object sender, EventArgs e)
+        private async void frmAppUserList_Load(object sender, EventArgs e)
         {
-            AppUserList();
+            await AppUserList();
         }
         private void DgwAppUserListSettings()
         {
@@ -40,22 +40,26 @@ namespace Krop.WinForms.Forms.AppUsers
 
             dgwAppUserList.Columns[0].Visible = false;
         }
-        private async void AppUserList()
+        private async Task AppUserList()
         {
-            HttpResponseMessage response = await _appUserRequest.GetAllAsync();
-            if(!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("account/getall");
+            if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetAppUserDTO>(response).Data;
-            _originalData = new BindingList<GetAppUserDTO>(result);
-            _filteredData = new BindingList<GetAppUserDTO>(_originalData.ToList());
+            var result = await ResponseController.SuccessDataResponseController<List<GetAppUserDTO>>(response);
 
-            dgwAppUserList.DataSource = _filteredData;
+            if (result is not null)
+            {
+                _originalData = new BindingList<GetAppUserDTO>(result.Data);
+                _filteredData = new BindingList<GetAppUserDTO>(_originalData.ToList());
 
-            DgwAppUserListSettings();
+                dgwAppUserList.DataSource = _filteredData;
+
+                DgwAppUserListSettings();
+            }
         }
         private void Search()
         {
@@ -121,7 +125,7 @@ namespace Krop.WinForms.Forms.AppUsers
 
         private async void appUserListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppUserList();
+           await AppUserList();
         }
     }
 }

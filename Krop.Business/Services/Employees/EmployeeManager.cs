@@ -57,7 +57,7 @@ namespace Krop.Business.Services.Employees
             });
 
             return new SuccessDataResult<IEnumerable<GetEmployeeListDTO>>(
-                _mapper.Map<List<GetEmployeeListDTO>>(employees));
+                _mapper.Map<IEnumerable<GetEmployeeListDTO>>(employees));
         }
 
         public async Task<IDataResult<IEnumerable<GetEmployeeComboBoxDTO>>> GetAllComboBoxAsync()

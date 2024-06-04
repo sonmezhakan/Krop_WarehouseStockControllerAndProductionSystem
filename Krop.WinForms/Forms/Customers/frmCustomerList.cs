@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Customers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Customers;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,21 +8,21 @@ namespace Krop.WinForms.Customers
 {
     public partial class frmCustomerList : Form
     {
-        private readonly ICustomerRequest _customerRequest;
+        private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetCustomerDTO> _originalData;
         private BindingList<GetCustomerDTO> _filteredData;
 
-        public frmCustomerList(ICustomerRequest customerRequest, IServiceProvider serviceProvider)
+        public frmCustomerList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _customerRequest = customerRequest;
+            _webApiService = webApiService;
             _serviceProvider = serviceProvider;
         }
 
-        private void frmCustomerList_Load(object sender, EventArgs e)
+        private async void frmCustomerList_Load(object sender, EventArgs e)
         {
-            CustomerList();
+           await CustomerList();
         }
         private void DgwCustomerListSettings()
         {
@@ -39,23 +39,26 @@ namespace Krop.WinForms.Customers
 
             dgwCustomerList.Columns[0].Visible = false;
         }
-        private async void CustomerList()
+        private async Task CustomerList()
         {
-            HttpResponseMessage response = await _customerRequest.GetAllAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("customer/getall");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetCustomerDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetCustomerDTO>>(response);
 
-            _originalData = new BindingList<GetCustomerDTO>(result);
-            _filteredData = new BindingList<GetCustomerDTO>(_originalData.ToList());
+            if(result is not null)
+            {
+                _originalData = new BindingList<GetCustomerDTO>(result.Data);
+                _filteredData = new BindingList<GetCustomerDTO>(_originalData.ToList());
 
-            dgwCustomerList.DataSource = _filteredData;
+                dgwCustomerList.DataSource = _filteredData;
 
-            DgwCustomerListSettings();
+                DgwCustomerListSettings();
+            }
         }
 
         private void Search()
@@ -127,9 +130,9 @@ namespace Krop.WinForms.Customers
             FormController.FormOpenController(frmCustomerDelete);
         }
 
-        private void customerRefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void customerRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CustomerList();
+           await CustomerList();
         }
     }
 }

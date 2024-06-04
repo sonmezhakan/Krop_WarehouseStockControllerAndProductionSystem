@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Employees;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Employees;
 using Krop.WinForms.HelpersClass;
 
@@ -7,37 +7,37 @@ namespace Krop.WinForms.Forms.Employees
     public partial class frmEmployeeCart : Form
     {
         public Guid Id;
-        private readonly IEmployeeRequest _employeeRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmEmployeeCart(IEmployeeRequest employeeRequest)
+        public frmEmployeeCart(IWebApiService webApiService)
         {
             InitializeComponent();
-            _employeeRequest = employeeRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmEmployeeCart_Load(object sender, EventArgs e)
+        private async void frmEmployeeCart_Load(object sender, EventArgs e)
         {
-            EmployeeList();
+           await EmployeeList();
             if (cmbBoxAppUserSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxAppUserSelect.SelectedValue = Id;
         }
-        private async void EmployeeList()
+        private async Task EmployeeList()
         {
-            HttpResponseMessage response = await _employeeRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("employee/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetEmployeeComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetEmployeeComboBoxDTO>>(response);
 
             cmbBoxAppUserSelect.DataSource = null;
             cmbBoxAppUserSelect.DisplayMember = "UserName";
             cmbBoxAppUserSelect.ValueMember = "AppUserId";
 
             cmbBoxAppUserSelect.SelectedIndexChanged -= CmbBoxAppUserSelect_SelectedIndexChanged;
-            cmbBoxAppUserSelect.DataSource = result;
+            cmbBoxAppUserSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxAppUserSelect.SelectedValue = -1;
             cmbBoxAppUserSelect.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
         }
@@ -46,24 +46,27 @@ namespace Krop.WinForms.Forms.Employees
         {
             if (cmbBoxAppUserSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _employeeRequest.GetByIdCartAsync((Guid)cmbBoxAppUserSelect.SelectedValue);
+                HttpResponseMessage response =await _webApiService.httpClient.GetAsync($"employee/GetById/{cmbBoxAppUserSelect.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetEmployeeCartDTO>(response).Data;
+                var result =await ResponseController.SuccessDataResponseController<GetEmployeeCartDTO>(response);
 
-                txtDepartmentName.Text = result.DepartmentName;
-                txtBranchName.Text = result.BranchName;
-                txtSalary.Text = result.Salary.ToString() + " ₺";
-                dateTimePickerStart.Value = result.StartDateOfWork;
-                dateTimePickerEnd.Value = result.EndDateOfWork == null || result.EndDateOfWork == DateTime.MinValue ? DateTime.Now : result.EndDateOfWork;
-                if (result.WorkingStatu)
-                    radioButtonActive.Checked = true;
-                else
-                    radioButtonPassive.Checked = true;
+                if(result is not null)
+                {
+                    txtDepartmentName.Text = result.Data.DepartmentName;
+                    txtBranchName.Text = result.Data.BranchName;
+                    txtSalary.Text = result.Data.Salary.ToString() + " ₺";
+                    dateTimePickerStart.Value = result.Data.StartDateOfWork;
+                    dateTimePickerEnd.Value = result.Data.EndDateOfWork == null || result.Data.EndDateOfWork == DateTime.MinValue ? DateTime.Now : result.Data.EndDateOfWork;
+                    if (result.Data.WorkingStatu)
+                        radioButtonActive.Checked = true;
+                    else
+                        radioButtonPassive.Checked = true;
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Suppliers;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,21 +8,21 @@ namespace Krop.WinForms.Suppliers
 {
     public partial class frmSupplierList : Form
     {
-        private readonly ISupplierRequest _supplierRequest;
+        private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetSupplierDTO> _originalData;
         private BindingList<GetSupplierDTO> _filteredData;
 
-        public frmSupplierList(ISupplierRequest supplierRequest, IServiceProvider serviceProvider)
+        public frmSupplierList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _supplierRequest = supplierRequest;
+            _webApiService = webApiService;
             _serviceProvider = serviceProvider;
         }
 
-        private void frmSupplierList_Load(object sender, EventArgs e)
+        private async void frmSupplierList_Load(object sender, EventArgs e)
         {
-            SupplierList();
+            await SupplierList();
         }
         private void DgwSupplierListSettings()
         {
@@ -38,22 +38,25 @@ namespace Krop.WinForms.Suppliers
 
             dgwSupplierList.Columns[0].Visible = false;
         }
-        private async void SupplierList()
+        private async Task SupplierList()
         {
-            HttpResponseMessage response = await _supplierRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("supplier/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetSupplierDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetSupplierDTO>>(response);
 
-            _originalData = new BindingList<GetSupplierDTO>(result);
-            _filteredData = new BindingList<GetSupplierDTO>(_originalData.ToList());
+            if (result is not null)
+            {
+                _originalData = new BindingList<GetSupplierDTO>(result.Data);
+                _filteredData = new BindingList<GetSupplierDTO>(_originalData.ToList());
 
-            dgwSupplierList.DataSource = _filteredData;
-            DgwSupplierListSettings();
+                dgwSupplierList.DataSource = _filteredData;
+                DgwSupplierListSettings();
+            }
         }
         private void Search()
         {
@@ -126,7 +129,7 @@ namespace Krop.WinForms.Suppliers
 
         private async void supplierListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SupplierList();
+            await SupplierList();
         }
     }
 }

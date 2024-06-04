@@ -1,6 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Brands;
-using Krop.Common.Helpers.WebApiRequests.Categories;
-using Krop.Common.Helpers.WebApiRequests.Products;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
 
@@ -9,31 +7,31 @@ namespace Krop.WinForms.Products
     public partial class frmProductCart : Form
     {
         public Guid Id;
-        private readonly IProductRequest _productRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmProductCart(IProductRequest productRequest)
+        public frmProductCart(IWebApiService webApiService)
         {
             InitializeComponent();
-            _productRequest = productRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmProductCart_Load(object sender, EventArgs e)
+        private async void frmProductCart_Load(object sender, EventArgs e)
         {
-            ProductList();
+           await ProductList();
             txtCriticalQuantity.MaxLength = 10;
             if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxProductNameSelect.SelectedValue = Id;
         }
-        private async void ProductList()
+        private async Task ProductList()
         {
-            HttpResponseMessage response = await _productRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
 
             cmbBoxProductNameSelect.DataSource = null;
             cmbBoxProductCodeSelect.DataSource = null;
@@ -47,8 +45,8 @@ namespace Krop.WinForms.Products
             cmbBoxProductNameSelect.SelectedIndexChanged -= cmbBoxProductNameSelect_SelectedIndexChanged;
             cmbBoxProductCodeSelect.SelectedIndexChanged -= cmbBoxProductCodeSelect_SelectedIndexChanged;
 
-            cmbBoxProductNameSelect.DataSource = result.Select(x => new GetProductComboBoxDTO { Id = x.Id, ProductName = x.ProductName }).ToList();
-            cmbBoxProductCodeSelect.DataSource = result.Select(x => new GetProductComboBoxDTO { Id = x.Id, ProductCode = x.ProductCode }).ToList();
+            cmbBoxProductNameSelect.DataSource = result is not null ? result.Data : null;
+            cmbBoxProductCodeSelect.DataSource = result  is not null ? result.Data : null;
 
             cmbBoxProductNameSelect.SelectedIndex = -1;
             cmbBoxProductCodeSelect.SelectedIndex = -1;
@@ -62,20 +60,23 @@ namespace Krop.WinForms.Products
             {
                 cmbBoxProductCodeSelect.SelectedValue = cmbBoxProductNameSelect.SelectedValue;
 
-                HttpResponseMessage response = await _productRequest.GetByIdAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"product/GetByIdCart/{cmbBoxProductNameSelect.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetProductCartDTO>(response).Data;
+                var result =await ResponseController.SuccessDataResponseController<GetProductCartDTO>(response);
 
-                txtUnitPrice.Text = result.UnitPrice.ToString();
-                txtCriticalQuantity.Text = result.CriticalStock.ToString();
-                txtDescription.Text = result.Description;
-                txtBrandName.Text = result.BrandName;
-                txtCategoryName.Text = result.CategoryName;
+                if(result is not null)
+                {
+                    txtUnitPrice.Text = result.Data.UnitPrice.ToString();
+                    txtCriticalQuantity.Text = result.Data.CriticalStock.ToString();
+                    txtDescription.Text = result.Data.Description;
+                    txtBrandName.Text = result.Data.BrandName;
+                    txtCategoryName.Text = result.Data.CategoryName;
+                }
             }
         }
 

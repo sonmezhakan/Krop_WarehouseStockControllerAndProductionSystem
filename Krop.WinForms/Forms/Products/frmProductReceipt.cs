@@ -1,10 +1,10 @@
-﻿using Krop.Common.Helpers.WebApiRequests.ProductReceipts;
-using Krop.Common.Helpers.WebApiRequests.Products;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.ProductReceipts;
 using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using System.ComponentModel;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Products
 {
@@ -13,37 +13,38 @@ namespace Krop.WinForms.Products
 
         private BindingList<GetProductReceiptListDTO> _originalData;
         private BindingList<GetProductReceiptListDTO> _filteredData;
-        private readonly IProductRequest _productRequest;
-        private readonly IProductReceiptRequest _productReceiptRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmProductReceipt(IProductRequest productRequest,IProductReceiptRequest productReceiptRequest)
+        public frmProductReceipt(IWebApiService webApiService)
         {
             InitializeComponent();
-            _productRequest = productRequest;
-            _productReceiptRequest = productReceiptRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmProductReceipt_Load(object sender, EventArgs e)
+        private async void frmProductReceipt_Load(object sender, EventArgs e)
         {
-            ProductList();
+           await ProductList();
             txtQuantity.MaxLength = 10;
         }
-        private async void ProductList()
+        private async Task ProductList()
         {
-            HttpResponseMessage response = await _productRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetProductComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
 
-            ProductNameList(result);
-            ProductCodeList(result);
+            if(result is not null)
+            {
+                ProductNameList(result.Data);
+                ProductCodeList(result.Data);
 
-            ProductNameSelectList(result);
-            ProductCodeSelectList(result);
+                ProductNameSelectList(result.Data);
+                ProductCodeSelectList(result.Data);
+            }
         }
 
         private void DgwReceiptListSettings()
@@ -55,23 +56,26 @@ namespace Krop.WinForms.Products
 
             dgwProductReceiptList.Columns[0].Visible = false;
         }
-        private async void ProductReceiptList()
+        private async Task ProductReceiptList()
         {
-            HttpResponseMessage response = await _productReceiptRequest.GetAllAsync((Guid)cmbBoxProductNameSelect.SelectedValue);
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productReceipt/GetAll/{cmbBoxProductNameSelect.SelectedValue}");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetProductReceiptListDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetProductReceiptListDTO>>(response);
 
-            _originalData = new BindingList<GetProductReceiptListDTO>(result.ToList());
-            _filteredData = new BindingList<GetProductReceiptListDTO>(_originalData.ToList());
+            if(result is not null)
+            {
+                _originalData = new BindingList<GetProductReceiptListDTO>(result.Data);
+                _filteredData = new BindingList<GetProductReceiptListDTO>(_originalData.ToList());
 
-            dgwProductReceiptList.DataSource = _filteredData;
+                dgwProductReceiptList.DataSource = _filteredData;
 
-            DgwReceiptListSettings();
+                DgwReceiptListSettings();
+            }
         }
         private void DgwSelectedRowsAndCells()
         {
@@ -93,7 +97,7 @@ namespace Krop.WinForms.Products
 
             cmbBoxReceiptProductName.SelectedIndexChanged -= cmbBoxReceiptProductName_SelectedIndexChanged;
 
-            cmbBoxReceiptProductName.DataSource = products.Select(x => new GetProductComboBoxDTO { Id = x.Id, ProductName = x.ProductName }).ToList();
+            cmbBoxReceiptProductName.DataSource = products is not null ? products : null;
 
             cmbBoxReceiptProductName.SelectedIndex = -1;
 
@@ -108,20 +112,20 @@ namespace Krop.WinForms.Products
 
             cmbBoxReceiptProductCode.SelectedIndexChanged -= cmbBoxReceiptProductCode_SelectedIndexChanged;
 
-            cmbBoxReceiptProductCode.DataSource = products.Select(x => new GetProductComboBoxDTO { Id = x.Id, ProductCode = x.ProductCode }).ToList();
+            cmbBoxReceiptProductCode.DataSource = products is not null ? products : null;
 
             cmbBoxReceiptProductCode.SelectedIndex = -1;
 
             cmbBoxReceiptProductCode.SelectedIndexChanged += cmbBoxReceiptProductCode_SelectedIndexChanged;
         }
 
-        private void cmbBoxReceiptProductName_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cmbBoxReceiptProductName_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.DataSource is not null)
             {
                 cmbBoxReceiptProductCode.SelectedValue = cmbBoxReceiptProductName.SelectedValue;
 
-                ProductReceiptList();
+               await ProductReceiptList();
             }
         }
 
@@ -233,15 +237,15 @@ namespace Krop.WinForms.Products
                     Quantity = int.Parse(txtQuantity.Text)
                 };
 
-                HttpResponseMessage response = await _productReceiptRequest.AddAsync(createProductReceiptDTO);
+                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("productReceipt/Add", createProductReceiptDTO);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                ProductReceiptList();
+               await ProductReceiptList();
             }
             else
             {
@@ -262,15 +266,15 @@ namespace Krop.WinForms.Products
                         Quantity = int.Parse(txtQuantity.Text)
                     };
 
-                    HttpResponseMessage response = await _productReceiptRequest.UpdateAsync(updateProductReceiptDTO);
+                    HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("productReceipt/Update", updateProductReceiptDTO);
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    ProductReceiptList();
+                   await ProductReceiptList();
                 }
             }
             else
@@ -285,15 +289,15 @@ namespace Krop.WinForms.Products
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _productReceiptRequest.DeleteAsync((Guid)cmbBoxReceiptProductName.SelectedValue,(Guid)cmbBoxProductNameSelect.SelectedValue);
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"productReceipt/Delete/{cmbBoxReceiptProductName.SelectedValue}/{cmbBoxProductNameSelect.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    ProductReceiptList();
+                   await ProductReceiptList();
                 }
             }
             else

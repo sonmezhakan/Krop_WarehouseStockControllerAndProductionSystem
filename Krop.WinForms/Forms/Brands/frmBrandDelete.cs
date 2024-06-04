@@ -1,6 +1,5 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Brands;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Brands;
-using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
@@ -9,17 +8,17 @@ namespace Krop.WinForms.Brands
     public partial class frmBrandDelete : Form
     {
         public Guid Id;
-        private readonly IBrandRequest _brandRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmBrandDelete(IBrandRequest brandRequest)
+        public frmBrandDelete(IWebApiService webApiService)
         {
             InitializeComponent();
-            _brandRequest = brandRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmBrandDelete_Load(object sender, EventArgs e)
+        private async void frmBrandDelete_Load(object sender, EventArgs e)
         {
-            CategoryList();
+           await CategoryList();
             if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBrandSelect.SelectedValue = Id;
         }
@@ -30,15 +29,15 @@ namespace Krop.WinForms.Brands
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _brandRequest.DeleteAsync((Guid)cmbBoxBrandSelect.SelectedValue);
+                    HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/delete/{cmbBoxBrandSelect.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        ResponseController.ErrorResponseController(response);
+                        await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    CategoryList();//Listele
+                  await  CategoryList();//Listele
                 }
             }
             else
@@ -47,23 +46,23 @@ namespace Krop.WinForms.Brands
             }
         }
 
-        private async void CategoryList()
+        private async Task CategoryList()
         {
-            HttpResponseMessage response = await _brandRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBrandComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
 
             cmbBoxBrandSelect.DataSource = null;
 
             cmbBoxBrandSelect.DisplayMember = "BrandName";
             cmbBoxBrandSelect.ValueMember = "Id";
 
-            cmbBoxBrandSelect.DataSource = result;
+            cmbBoxBrandSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxBrandSelect.SelectedIndex = -1;
         }
     }

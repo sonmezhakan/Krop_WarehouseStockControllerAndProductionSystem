@@ -1,88 +1,83 @@
-﻿using Krop.Common.Helpers.WebApiRequests.AppUsers;
-using Krop.Common.Helpers.WebApiRequests.Branches;
-using Krop.Common.Helpers.WebApiRequests.Departments;
-using Krop.Common.Helpers.WebApiRequests.Employees;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.AppUsers;
 using Krop.DTO.Dtos.Branches;
 using Krop.DTO.Dtos.Departments;
 using Krop.DTO.Dtos.Employees;
 using Krop.WinForms.HelpersClass;
+using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.Employees
 {
     public partial class frmEmployeeAdd : Form
     {
-        private readonly IDepartmentRequest _departmentRequest;
-        private readonly IAppUserRequest _appUserRequest;
-        private readonly IBranchRequest _branchRequest;
-        private readonly IEmployeeRequest _employeeRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmEmployeeAdd(IDepartmentRequest departmentRequest,IAppUserRequest appUserRequest,IBranchRequest branchRequest,IEmployeeRequest employeeRequest)
+        public frmEmployeeAdd(IWebApiService webApiService)
         {
             InitializeComponent();
-            _departmentRequest = departmentRequest;
-            _appUserRequest = appUserRequest;
-            _branchRequest = branchRequest;
-            _employeeRequest = employeeRequest;
+            _webApiService = webApiService;
         }
 
-        private void frmEmployeeAdd_Load(object sender, EventArgs e)
+        private async void frmEmployeeAdd_Load(object sender, EventArgs e)
         {
-            AppUserList();
-            DepartmentList();
-            BranchList();
+           await AppUserList();
+           await DepartmentList();
+           await BranchList();
         }
-        private async void AppUserList()
+        private async Task AppUserList()
         {
-            HttpResponseMessage response = await _appUserRequest.GetAllComboBoxAsync();
-            if(!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("account/getAllComboBox");
+            if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetAppUserComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetAppUserComboBoxDTO>>(response);
 
             cmbBoxAppUserSelect.DataSource = null;
             cmbBoxAppUserSelect.DisplayMember = "UserName";
             cmbBoxAppUserSelect.ValueMember = "Id";
 
-            cmbBoxAppUserSelect.DataSource = result;
+            cmbBoxAppUserSelect.DataSource = result is not null ? result.Data : null;
+            cmbBoxAppUserSelect.SelectedIndex = -1;
 
         }
-        private async void DepartmentList()
+        private async Task DepartmentList()
         {
-            HttpResponseMessage response = await _departmentRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("department/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetDepartmentComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetDepartmentComboBoxDTO>>(response);
 
             cmbBoxDepartmentSelect.DataSource = null;
             cmbBoxDepartmentSelect.DisplayMember = "DepartmentName";
             cmbBoxDepartmentSelect.ValueMember = "Id";
 
-            cmbBoxDepartmentSelect.DataSource = result;
+            cmbBoxDepartmentSelect.DataSource = result is not null ? result.Data : null;
+            cmbBoxDepartmentSelect.SelectedIndex = -1;
         }
-        private async void BranchList()
+        private async Task BranchList()
         {
-            HttpResponseMessage response = await _branchRequest.GetAllComboBoxAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
 
             cmbBoxBranchSelect.DataSource = null;
             cmbBoxBranchSelect.DisplayMember = "BranchName";
             cmbBoxBranchSelect.ValueMember = "Id";
 
-            cmbBoxBranchSelect.DataSource = result;
+            cmbBoxBranchSelect.DataSource = result is not null ? result.Data : null;
+            cmbBoxBranchSelect.SelectedIndex = -1;
         }
 
         private void checkDateTimePickerEndEnable_CheckedChanged(object sender, EventArgs e)
@@ -108,11 +103,11 @@ namespace Krop.WinForms.Forms.Employees
                     WorkingStatu = radioButtonActive.Checked ? true : false
                 };
 
-                HttpResponseMessage response = await _employeeRequest.AddAsync(createEmployeeDTO);
+                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("employee/add", createEmployeeDTO);
 
-                if(!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
             }

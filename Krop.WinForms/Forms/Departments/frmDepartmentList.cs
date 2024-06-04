@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Departments;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Departments;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,21 +8,21 @@ namespace Krop.WinForms.Forms.Departments
 {
     public partial class frmDepartmentList : Form
     {
-        private readonly IDepartmentRequest _departmentRequest;
+        private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetDepartmentDTO> _originalData;
         private BindingList<GetDepartmentDTO> _filteredData;
 
-        public frmDepartmentList(IDepartmentRequest departmentRequest, IServiceProvider serviceProvider)
+        public frmDepartmentList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _departmentRequest = departmentRequest;
+            _webApiService = webApiService;
             _serviceProvider = serviceProvider;
         }
 
-        private void frmDepartmentList_Load(object sender, EventArgs e)
+        private async void frmDepartmentList_Load(object sender, EventArgs e)
         {
-            DepartmentList();
+            await DepartmentList();
         }
         private void DgwDepartmentListSettings()
         {
@@ -32,23 +32,26 @@ namespace Krop.WinForms.Forms.Departments
 
             dgwDepartmentList.Columns[0].Visible = false;
         }
-        private async void DepartmentList()
+        private async Task DepartmentList()
         {
-            HttpResponseMessage response = await _departmentRequest.GetAllAsync();
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("department/getall");
             if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetDepartmentDTO>(response).Data;
+            var result =await ResponseController.SuccessDataResponseController<List<GetDepartmentDTO>>(response);
 
-            _originalData = new BindingList<GetDepartmentDTO>(result);
-            _filteredData = new BindingList<GetDepartmentDTO>(_originalData.ToList());
+            if(result is not null)
+            {
+                _originalData = new BindingList<GetDepartmentDTO>(result.Data);
+                _filteredData = new BindingList<GetDepartmentDTO>(_originalData.ToList());
 
-            dgwDepartmentList.DataSource = _filteredData;
+                dgwDepartmentList.DataSource = _filteredData;
 
-            DgwDepartmentListSettings();
+                DgwDepartmentListSettings();
+            }
         }
         private void Search()
         {
@@ -116,7 +119,7 @@ namespace Krop.WinForms.Forms.Departments
 
         private async void departmentListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DepartmentList();
+           await DepartmentList();
         }
     }
 }

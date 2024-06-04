@@ -1,4 +1,4 @@
-﻿using Krop.Common.Helpers.WebApiRequests.Branches;
+﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.Branches;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -8,13 +8,13 @@ namespace Krop.WinForms.Forms.Branches
     public partial class frmBranchCart : Form
     {
         public Guid Id;
-        private readonly IBranchRequest _branchRequest;
+        private readonly IWebApiService _webApiService;
 
-        public frmBranchCart(IBranchRequest branchRequest)
+        public frmBranchCart(IWebApiService webApiService)
         {
             InitializeComponent();
             txtPhoneNumber.MaxLength = 11;
-            _branchRequest = branchRequest;
+            _webApiService = webApiService;
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -22,22 +22,22 @@ namespace Krop.WinForms.Forms.Branches
             TextBoxHelper.TextBoxInt32KeyPress(sender, e);
         }
 
-        private void frmBranchCart_Load(object sender, EventArgs e)
+        private async void frmBranchCart_Load(object sender, EventArgs e)
         {
-            BranchList();
+           await BranchList();
             if (cmbBoxBranchSelect.DataSource != null && Id != Guid.Empty)
                 cmbBoxBranchSelect.SelectedValue = Id;
         }
-        private async void BranchList()
+        private async Task BranchList()
         {
-            HttpResponseMessage response = await _branchRequest.GetAllComboBoxAsync();
-            if(!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
+            if (!response.IsSuccessStatusCode)
             {
-                ResponseController.ErrorResponseController(response);
+                await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = ResponseController.SuccessDataListResponseController<GetBranchComboBoxDTO>(response).Data;
+            var result = await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
 
             cmbBoxBranchSelect.DataSource = null;
 
@@ -45,7 +45,7 @@ namespace Krop.WinForms.Forms.Branches
             cmbBoxBranchSelect.ValueMember = "Id";
 
             cmbBoxBranchSelect.SelectedIndexChanged -= CmbBoxBranchSelect_SelectedIndexChanged;
-            cmbBoxBranchSelect.DataSource = result;
+            cmbBoxBranchSelect.DataSource = result is not null ? result.Data : null;
             cmbBoxBranchSelect.SelectedIndex = -1;
             cmbBoxBranchSelect.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
         }
@@ -54,20 +54,23 @@ namespace Krop.WinForms.Forms.Branches
         {
             if (cmbBoxBranchSelect.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _branchRequest.GetByIdAsync((Guid)cmbBoxBranchSelect.SelectedValue);
-                if(!response.IsSuccessStatusCode)
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"branch/GetById/{cmbBoxBranchSelect.SelectedValue}");
+                if (!response.IsSuccessStatusCode)
                 {
-                    ResponseController.ErrorResponseController(response);
+                    await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                var result = ResponseController.SuccessDataResponseController<GetBranchDTO>(response).Data;
+                var result =await ResponseController.SuccessDataResponseController<GetBranchDTO>(response);
 
-                txtPhoneNumber.Text = result.PhoneNumber;
-                txtEmail.Text = result.Email;
-                txtCountry.Text = result.Country;
-                txtCity.Text = result.City;
-                txtAddress.Text = result.Addres;
+                if (result is not null)
+                {
+                    txtPhoneNumber.Text = result.Data.PhoneNumber;
+                    txtEmail.Text = result.Data.Email;
+                    txtCountry.Text = result.Data.Country;
+                    txtCity.Text = result.Data.City;
+                    txtAddress.Text = result.Data.Addres;
+                }
             }
         }
     }
