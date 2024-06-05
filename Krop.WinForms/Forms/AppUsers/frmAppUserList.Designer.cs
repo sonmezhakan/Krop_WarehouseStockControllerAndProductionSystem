@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAppUserList));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             appUserListRefreshToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             appUserUpdateToolStripMenuItem = new ToolStripMenuItem();
@@ -43,10 +42,9 @@
             txtSearch = new TextBox();
             bttnSearch = new Button();
             panelBottom = new System.Windows.Forms.Panel();
-            dgwAppUserList = new DataGridView();
+            appUserListControl = new UserControllers.AppUsers.AppUserListControl();
             contextMenuStrip1.SuspendLayout();
             panelTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwAppUserList).BeginInit();
             SuspendLayout();
             // 
             // appUserListRefreshToolStripMenuItem
@@ -145,35 +143,21 @@
             panelBottom.Size = new Size(1015, 32);
             panelBottom.TabIndex = 9;
             // 
-            // dgwAppUserList
+            // appUserListControl
             // 
-            dgwAppUserList.AllowUserToAddRows = false;
-            dgwAppUserList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwAppUserList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwAppUserList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwAppUserList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwAppUserList.BackgroundColor = SystemColors.Control;
-            dgwAppUserList.BorderStyle = BorderStyle.None;
-            dgwAppUserList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwAppUserList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwAppUserList.ContextMenuStrip = contextMenuStrip1;
-            dgwAppUserList.Dock = DockStyle.Fill;
-            dgwAppUserList.Location = new Point(0, 38);
-            dgwAppUserList.Name = "dgwAppUserList";
-            dgwAppUserList.ReadOnly = true;
-            dgwAppUserList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwAppUserList.RowTemplate.Height = 25;
-            dgwAppUserList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwAppUserList.Size = new Size(1015, 427);
-            dgwAppUserList.TabIndex = 13;
+            appUserListControl.ContextMenuStrip = contextMenuStrip1;
+            appUserListControl.Dock = DockStyle.Fill;
+            appUserListControl.Location = new Point(0, 38);
+            appUserListControl.Name = "appUserListControl";
+            appUserListControl.Size = new Size(1015, 427);
+            appUserListControl.TabIndex = 12;
             // 
             // frmAppUserList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1015, 523);
-            Controls.Add(dgwAppUserList);
+            Controls.Add(appUserListControl);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelTop);
             Controls.Add(panelBottom);
@@ -184,7 +168,6 @@
             contextMenuStrip1.ResumeLayout(false);
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwAppUserList).EndInit();
             ResumeLayout(false);
         }
 
@@ -202,6 +185,6 @@
         private TextBox txtSearch;
         private Button bttnSearch;
         private System.Windows.Forms.Panel panelBottom;
-        private DataGridView dgwAppUserList;
+        private UserControllers.AppUsers.AppUserListControl appUserListControl;
     }
 }

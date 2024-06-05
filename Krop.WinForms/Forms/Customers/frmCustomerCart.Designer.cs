@@ -46,8 +46,7 @@
             label2 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
             panelMid = new System.Windows.Forms.Panel();
-            cmbBoxCustomerSelect = new ComboBox();
-            label1 = new Label();
+            customerComboBoxControl = new UserControllers.Customers.CustomerComboBoxControl();
             panelMid.SuspendLayout();
             SuspendLayout();
             // 
@@ -76,7 +75,7 @@
             // txtAddress
             // 
             txtAddress.Enabled = false;
-            txtAddress.Location = new Point(23, 369);
+            txtAddress.Location = new Point(15, 369);
             txtAddress.Multiline = true;
             txtAddress.Name = "txtAddress";
             txtAddress.ReadOnly = true;
@@ -86,7 +85,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(23, 351);
+            label5.Location = new Point(17, 351);
             label5.Name = "label5";
             label5.Size = new Size(43, 15);
             label5.TabIndex = 14;
@@ -95,7 +94,7 @@
             // txtCity
             // 
             txtCity.Enabled = false;
-            txtCity.Location = new Point(23, 325);
+            txtCity.Location = new Point(15, 325);
             txtCity.Name = "txtCity";
             txtCity.ReadOnly = true;
             txtCity.Size = new Size(206, 23);
@@ -104,7 +103,7 @@
             // txtCountry
             // 
             txtCountry.Enabled = false;
-            txtCountry.Location = new Point(23, 281);
+            txtCountry.Location = new Point(15, 281);
             txtCountry.Name = "txtCountry";
             txtCountry.ReadOnly = true;
             txtCountry.Size = new Size(206, 23);
@@ -113,7 +112,7 @@
             // txtEmail
             // 
             txtEmail.Enabled = false;
-            txtEmail.Location = new Point(23, 237);
+            txtEmail.Location = new Point(15, 237);
             txtEmail.Name = "txtEmail";
             txtEmail.ReadOnly = true;
             txtEmail.Size = new Size(206, 23);
@@ -122,7 +121,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(23, 307);
+            label6.Location = new Point(17, 307);
             label6.Name = "label6";
             label6.Size = new Size(39, 15);
             label6.TabIndex = 10;
@@ -131,7 +130,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(23, 263);
+            label7.Location = new Point(17, 263);
             label7.Name = "label7";
             label7.Size = new Size(36, 15);
             label7.TabIndex = 9;
@@ -140,7 +139,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(23, 219);
+            label8.Location = new Point(17, 219);
             label8.Name = "label8";
             label8.Size = new Size(42, 15);
             label8.TabIndex = 8;
@@ -149,7 +148,7 @@
             // txtPhoneNumber
             // 
             txtPhoneNumber.Enabled = false;
-            txtPhoneNumber.Location = new Point(23, 191);
+            txtPhoneNumber.Location = new Point(15, 191);
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.ReadOnly = true;
             txtPhoneNumber.Size = new Size(206, 23);
@@ -159,7 +158,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(23, 173);
+            label4.Location = new Point(15, 173);
             label4.Name = "label4";
             label4.Size = new Size(105, 15);
             label4.TabIndex = 6;
@@ -168,7 +167,7 @@
             // txtContactTitle
             // 
             txtContactTitle.Enabled = false;
-            txtContactTitle.Location = new Point(23, 147);
+            txtContactTitle.Location = new Point(15, 147);
             txtContactTitle.Name = "txtContactTitle";
             txtContactTitle.ReadOnly = true;
             txtContactTitle.Size = new Size(206, 23);
@@ -177,7 +176,7 @@
             // txtContactName
             // 
             txtContactName.Enabled = false;
-            txtContactName.Location = new Point(23, 103);
+            txtContactName.Location = new Point(15, 103);
             txtContactName.Name = "txtContactName";
             txtContactName.ReadOnly = true;
             txtContactName.Size = new Size(206, 23);
@@ -186,7 +185,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(23, 129);
+            label3.Location = new Point(15, 129);
             label3.Name = "label3";
             label3.Size = new Size(213, 15);
             label3.TabIndex = 2;
@@ -195,7 +194,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(23, 85);
+            label2.Location = new Point(15, 85);
             label2.Name = "label2";
             label2.Size = new Size(131, 15);
             label2.TabIndex = 1;
@@ -208,12 +207,12 @@
             panelBottom.Location = new Point(0, 490);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(259, 41);
+            panelBottom.Size = new Size(236, 41);
             panelBottom.TabIndex = 4;
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(cmbBoxCustomerSelect);
+            panelMid.Controls.Add(customerComboBoxControl);
             panelMid.Controls.Add(radioBttnCompany);
             panelMid.Controls.Add(radioBttnPerson);
             panelMid.Controls.Add(txtAddress);
@@ -230,37 +229,24 @@
             panelMid.Controls.Add(txtContactName);
             panelMid.Controls.Add(label3);
             panelMid.Controls.Add(label2);
-            panelMid.Controls.Add(label1);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(259, 531);
+            panelMid.Size = new Size(236, 531);
             panelMid.TabIndex = 5;
             // 
-            // cmbBoxCustomerSelect
+            // customerComboBoxControl
             // 
-            cmbBoxCustomerSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxCustomerSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxCustomerSelect.FormattingEnabled = true;
-            cmbBoxCustomerSelect.Location = new Point(23, 59);
-            cmbBoxCustomerSelect.Name = "cmbBoxCustomerSelect";
-            cmbBoxCustomerSelect.Size = new Size(206, 23);
-            cmbBoxCustomerSelect.TabIndex = 20;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(23, 41);
-            label1.Name = "label1";
-            label1.Size = new Size(74, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Müşteri Adı :";
+            customerComboBoxControl.Location = new Point(0, 33);
+            customerComboBoxControl.Name = "customerComboBoxControl";
+            customerComboBoxControl.Size = new Size(240, 51);
+            customerComboBoxControl.TabIndex = 18;
             // 
             // frmCustomerCart
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(259, 531);
+            ClientSize = new Size(236, 531);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -294,7 +280,6 @@
         private Label label2;
         private System.Windows.Forms.Panel panelBottom;
         private System.Windows.Forms.Panel panelMid;
-        private Label label1;
-        private ComboBox cmbBoxCustomerSelect;
+        private UserControllers.Customers.CustomerComboBoxControl customerComboBoxControl;
     }
 }

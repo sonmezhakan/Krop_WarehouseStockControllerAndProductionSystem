@@ -1,7 +1,4 @@
 ﻿using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.AppUsers;
-using Krop.DTO.Dtos.Branches;
-using Krop.DTO.Dtos.Departments;
 using Krop.DTO.Dtos.Employees;
 using Krop.WinForms.HelpersClass;
 using System.Net.Http.Json;
@@ -20,64 +17,9 @@ namespace Krop.WinForms.Forms.Employees
 
         private async void frmEmployeeAdd_Load(object sender, EventArgs e)
         {
-           await AppUserList();
-           await DepartmentList();
-           await BranchList();
-        }
-        private async Task AppUserList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("account/getAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetAppUserComboBoxDTO>>(response);
-
-            cmbBoxAppUserSelect.DataSource = null;
-            cmbBoxAppUserSelect.DisplayMember = "UserName";
-            cmbBoxAppUserSelect.ValueMember = "Id";
-
-            cmbBoxAppUserSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxAppUserSelect.SelectedIndex = -1;
-
-        }
-        private async Task DepartmentList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("department/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetDepartmentComboBoxDTO>>(response);
-
-            cmbBoxDepartmentSelect.DataSource = null;
-            cmbBoxDepartmentSelect.DisplayMember = "DepartmentName";
-            cmbBoxDepartmentSelect.ValueMember = "Id";
-
-            cmbBoxDepartmentSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxDepartmentSelect.SelectedIndex = -1;
-        }
-        private async Task BranchList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
-
-            cmbBoxBranchSelect.DataSource = null;
-            cmbBoxBranchSelect.DisplayMember = "BranchName";
-            cmbBoxBranchSelect.ValueMember = "Id";
-
-            cmbBoxBranchSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxBranchSelect.SelectedIndex = -1;
+            await appUserComboBoxControl.AppUserList(_webApiService);
+            await departmentComboBoxControl.DepartmentList(_webApiService);
+            await branchComboBoxControl.BranchList(_webApiService);
         }
 
         private void checkDateTimePickerEndEnable_CheckedChanged(object sender, EventArgs e)
@@ -90,13 +32,13 @@ namespace Krop.WinForms.Forms.Employees
 
         private async void bttnAdd_Click(object sender, EventArgs e)
         {
-            if(cmbBoxAppUserSelect.SelectedValue is not null && cmbBoxDepartmentSelect.SelectedValue is not null && cmbBoxBranchSelect.SelectedValue is not null)
+            if (appUserComboBoxControl.AppUserComboBox.SelectedValue is not null && departmentComboBoxControl.DepartmentComboBox.SelectedValue is not null && branchComboBoxControl.BranchComboBox.SelectedValue is not null)
             {
                 CreateEmployeeDTO createEmployeeDTO = new CreateEmployeeDTO
                 {
-                    AppUserId = (Guid)cmbBoxAppUserSelect.SelectedValue,
-                    DepartmentId = (Guid)cmbBoxDepartmentSelect.SelectedValue,
-                    BranchId = (Guid)cmbBoxBranchSelect.SelectedValue,
+                    AppUserId = (Guid)appUserComboBoxControl.AppUserComboBox.SelectedValue,
+                    DepartmentId = (Guid)departmentComboBoxControl.DepartmentComboBox.SelectedValue,
+                    BranchId = (Guid)branchComboBoxControl.BranchComboBox.SelectedValue,
                     StartDateOfWork = dateTimePickerStart.Value,
                     EndDateOfWork = checkDateTimePickerEndEnable.Checked ? dateTimePickerEnd.Value : null,
                     Salary = decimal.Parse(txtSalary.Text),

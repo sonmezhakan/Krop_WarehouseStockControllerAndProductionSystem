@@ -18,71 +18,33 @@ namespace Krop.WinForms.Products
 
         private async void frmProductDelete_Load(object sender, EventArgs e)
         {
-            await ProductList();
-            if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxProductNameSelect.SelectedValue = Id;
+            await productComboBoxControl.ProductList(_webApiService);
+            productComboBoxControl.ProductNameComboBox.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
+            productComboBoxControl.ProductCodeComboBox.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
+            productComboBoxControl.ProductSelect(Id);
         }
 
-        private async Task ProductList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
-
-            if (result is not null)
-            {
-                await ProductNameList(result.Data);
-                await ProductCodeList(result.Data);
-            }
-        }
-        private async Task ProductNameList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
-        {
-            cmbBoxProductNameSelect.DataSource = null;
-            cmbBoxProductNameSelect.DisplayMember = "ProductName";
-            cmbBoxProductNameSelect.ValueMember = "Id";
-
-            cmbBoxProductNameSelect.SelectedIndexChanged -= cmbBoxProductNameSelect_SelectedIndexChanged;
-            cmbBoxProductNameSelect.DataSource = getProductComboBoxDTOs;
-            cmbBoxProductNameSelect.SelectedIndex = -1;
-            cmbBoxProductNameSelect.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
-        }
-        private async Task ProductCodeList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
-        {
-            cmbBoxProductCodeSelect.DataSource = null;
-            cmbBoxProductCodeSelect.DisplayMember = "ProductCode";
-            cmbBoxProductCodeSelect.ValueMember = "Id";
-
-            cmbBoxProductCodeSelect.SelectedIndexChanged -= cmbBoxProductCodeSelect_SelectedIndexChanged;
-            cmbBoxProductCodeSelect.DataSource = getProductComboBoxDTOs;
-            cmbBoxProductCodeSelect.SelectedIndex = -1;
-            cmbBoxProductCodeSelect.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
-        }
-
+        
         private void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.DataSource is not null)
-                cmbBoxProductCodeSelect.SelectedValue = cmbBoxProductNameSelect.SelectedValue;
+            if (productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.DataSource is not null)
+                productComboBoxControl.ProductCodeComboBox.SelectedValue = productComboBoxControl.ProductNameComboBox.SelectedValue;
         }
 
         private void cmbBoxProductCodeSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxProductNameSelect.DataSource is not null)
-                cmbBoxProductNameSelect.SelectedValue = cmbBoxProductCodeSelect.SelectedValue;
+            if (productComboBoxControl.ProductCodeComboBox.SelectedValue is not null && productComboBoxControl.ProductNameComboBox.DataSource is not null)
+                productComboBoxControl.ProductNameComboBox.SelectedValue = productComboBoxControl.ProductCodeComboBox.SelectedValue;
         }
 
         private async void bttnProductDelete_Click(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null &&
-                cmbBoxProductNameSelect.SelectedValue == cmbBoxProductCodeSelect.SelectedValue)
+            if (productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.SelectedValue is not null &&
+                productComboBoxControl.ProductNameComboBox.SelectedValue == productComboBoxControl.ProductNameComboBox.SelectedValue)
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"product/delete/{cmbBoxProductNameSelect.SelectedValue}");
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"product/delete/{(Guid)productComboBoxControl.ProductNameComboBox.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -90,7 +52,7 @@ namespace Krop.WinForms.Products
                         return;
                     }
 
-                    await ProductList();
+                    await productComboBoxControl.ProductList(_webApiService);
                 }
             }
             else

@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEmployeeUpdate));
             panelMid = new System.Windows.Forms.Panel();
+            branchComboBoxControl = new UserControllers.Branches.BranchComboBoxControl();
+            departmentComboBoxControl = new UserControllers.Departments.DepartmentComboBoxControl();
+            employeeComboBoxControl = new UserControllers.Employees.EmployeeComboBoxControl();
             label8 = new Label();
             radioButtonPassive = new RadioButton();
             radioButtonActive = new RadioButton();
@@ -41,12 +44,6 @@
             label4 = new Label();
             dateTimePickerEnd = new DateTimePicker();
             dateTimePickerStart = new DateTimePicker();
-            cmbBoxBranchSelect = new ComboBox();
-            label3 = new Label();
-            cmbBoxDepartmentSelect = new ComboBox();
-            label2 = new Label();
-            cmbBoxAppUserSelect = new ComboBox();
-            label1 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
             bttnUpdate = new Button();
             panelMid.SuspendLayout();
@@ -55,6 +52,9 @@
             // 
             // panelMid
             // 
+            panelMid.Controls.Add(branchComboBoxControl);
+            panelMid.Controls.Add(departmentComboBoxControl);
+            panelMid.Controls.Add(employeeComboBoxControl);
             panelMid.Controls.Add(label8);
             panelMid.Controls.Add(radioButtonPassive);
             panelMid.Controls.Add(radioButtonActive);
@@ -66,22 +66,37 @@
             panelMid.Controls.Add(label4);
             panelMid.Controls.Add(dateTimePickerEnd);
             panelMid.Controls.Add(dateTimePickerStart);
-            panelMid.Controls.Add(cmbBoxBranchSelect);
-            panelMid.Controls.Add(label3);
-            panelMid.Controls.Add(cmbBoxDepartmentSelect);
-            panelMid.Controls.Add(label2);
-            panelMid.Controls.Add(cmbBoxAppUserSelect);
-            panelMid.Controls.Add(label1);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
             panelMid.Size = new Size(237, 351);
             panelMid.TabIndex = 5;
             // 
+            // branchComboBoxControl
+            // 
+            branchComboBoxControl.Location = new Point(0, 98);
+            branchComboBoxControl.Name = "branchComboBoxControl";
+            branchComboBoxControl.Size = new Size(227, 54);
+            branchComboBoxControl.TabIndex = 19;
+            // 
+            // departmentComboBoxControl
+            // 
+            departmentComboBoxControl.Location = new Point(0, 53);
+            departmentComboBoxControl.Name = "departmentComboBoxControl";
+            departmentComboBoxControl.Size = new Size(230, 46);
+            departmentComboBoxControl.TabIndex = 18;
+            // 
+            // employeeComboBoxControl
+            // 
+            employeeComboBoxControl.Location = new Point(0, 0);
+            employeeComboBoxControl.Name = "employeeComboBoxControl";
+            employeeComboBoxControl.Size = new Size(226, 53);
+            employeeComboBoxControl.TabIndex = 17;
+            // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(12, 289);
+            label8.Location = new Point(15, 289);
             label8.Name = "label8";
             label8.Size = new Size(102, 15);
             label8.TabIndex = 16;
@@ -91,7 +106,7 @@
             // 
             radioButtonPassive.AutoSize = true;
             radioButtonPassive.Checked = true;
-            radioButtonPassive.Location = new Point(12, 307);
+            radioButtonPassive.Location = new Point(15, 307);
             radioButtonPassive.Name = "radioButtonPassive";
             radioButtonPassive.Size = new Size(50, 19);
             radioButtonPassive.TabIndex = 15;
@@ -102,7 +117,7 @@
             // radioButtonActive
             // 
             radioButtonActive.AutoSize = true;
-            radioButtonActive.Location = new Point(64, 307);
+            radioButtonActive.Location = new Point(67, 307);
             radioButtonActive.Name = "radioButtonActive";
             radioButtonActive.Size = new Size(50, 19);
             radioButtonActive.TabIndex = 14;
@@ -121,7 +136,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(12, 151);
+            label6.Location = new Point(15, 151);
             label6.Name = "label6";
             label6.Size = new Size(41, 15);
             label6.TabIndex = 12;
@@ -129,7 +144,7 @@
             // 
             // txtSalary
             // 
-            txtSalary.Location = new Point(12, 169);
+            txtSalary.Location = new Point(15, 169);
             txtSalary.Name = "txtSalary";
             txtSalary.Size = new Size(183, 23);
             txtSalary.TabIndex = 11;
@@ -137,7 +152,7 @@
             // checkDateTimePickerEndEnable
             // 
             checkDateTimePickerEndEnable.AutoSize = true;
-            checkDateTimePickerEndEnable.Location = new Point(218, 262);
+            checkDateTimePickerEndEnable.Location = new Point(219, 262);
             checkDateTimePickerEndEnable.Name = "checkDateTimePickerEndEnable";
             checkDateTimePickerEndEnable.Size = new Size(15, 14);
             checkDateTimePickerEndEnable.TabIndex = 10;
@@ -147,7 +162,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(12, 239);
+            label5.Location = new Point(15, 239);
             label5.Name = "label5";
             label5.Size = new Size(97, 15);
             label5.TabIndex = 9;
@@ -156,7 +171,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(12, 195);
+            label4.Location = new Point(15, 195);
             label4.Name = "label4";
             label4.Size = new Size(105, 15);
             label4.TabIndex = 8;
@@ -165,74 +180,17 @@
             // dateTimePickerEnd
             // 
             dateTimePickerEnd.Enabled = false;
-            dateTimePickerEnd.Location = new Point(12, 257);
+            dateTimePickerEnd.Location = new Point(15, 257);
             dateTimePickerEnd.Name = "dateTimePickerEnd";
             dateTimePickerEnd.Size = new Size(200, 23);
             dateTimePickerEnd.TabIndex = 7;
             // 
             // dateTimePickerStart
             // 
-            dateTimePickerStart.Location = new Point(12, 213);
+            dateTimePickerStart.Location = new Point(15, 213);
             dateTimePickerStart.Name = "dateTimePickerStart";
             dateTimePickerStart.Size = new Size(200, 23);
             dateTimePickerStart.TabIndex = 6;
-            // 
-            // cmbBoxBranchSelect
-            // 
-            cmbBoxBranchSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxBranchSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxBranchSelect.FormattingEnabled = true;
-            cmbBoxBranchSelect.Location = new Point(12, 122);
-            cmbBoxBranchSelect.Name = "cmbBoxBranchSelect";
-            cmbBoxBranchSelect.Size = new Size(202, 23);
-            cmbBoxBranchSelect.TabIndex = 5;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(12, 104);
-            label3.Name = "label3";
-            label3.Size = new Size(39, 15);
-            label3.TabIndex = 4;
-            label3.Text = "Şube :";
-            // 
-            // cmbBoxDepartmentSelect
-            // 
-            cmbBoxDepartmentSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxDepartmentSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxDepartmentSelect.FormattingEnabled = true;
-            cmbBoxDepartmentSelect.Location = new Point(12, 73);
-            cmbBoxDepartmentSelect.Name = "cmbBoxDepartmentSelect";
-            cmbBoxDepartmentSelect.Size = new Size(202, 23);
-            cmbBoxDepartmentSelect.TabIndex = 3;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 55);
-            label2.Name = "label2";
-            label2.Size = new Size(72, 15);
-            label2.TabIndex = 2;
-            label2.Text = "Departman :";
-            // 
-            // cmbBoxAppUserSelect
-            // 
-            cmbBoxAppUserSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxAppUserSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxAppUserSelect.FormattingEnabled = true;
-            cmbBoxAppUserSelect.Location = new Point(12, 27);
-            cmbBoxAppUserSelect.Name = "cmbBoxAppUserSelect";
-            cmbBoxAppUserSelect.Size = new Size(202, 23);
-            cmbBoxAppUserSelect.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(12, 9);
-            label1.Name = "label1";
-            label1.Size = new Size(210, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Güncellenecek Çalışanın Kullanıcı Adı :";
             // 
             // panelBottom
             // 
@@ -292,13 +250,10 @@
         private Label label4;
         private DateTimePicker dateTimePickerEnd;
         private DateTimePicker dateTimePickerStart;
-        private ComboBox cmbBoxBranchSelect;
-        private Label label3;
-        private ComboBox cmbBoxDepartmentSelect;
-        private Label label2;
-        private ComboBox cmbBoxAppUserSelect;
-        private Label label1;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnUpdate;
+        private UserControllers.Branches.BranchComboBoxControl branchComboBoxControl;
+        private UserControllers.Departments.DepartmentComboBoxControl departmentComboBoxControl;
+        private UserControllers.Employees.EmployeeComboBoxControl employeeComboBoxControl;
     }
 }

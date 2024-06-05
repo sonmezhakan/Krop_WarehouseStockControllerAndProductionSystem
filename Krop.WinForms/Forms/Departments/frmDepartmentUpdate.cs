@@ -19,37 +19,15 @@ namespace Krop.WinForms.Forms.Departments
 
         private  async void frmDepartmentUpdate_Load(object sender, EventArgs e)
         {
-            await DepartmentList();
-            if(cmbBoxDepartmentSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxDepartmentSelect.SelectedValue = Id;
+            await departmentComboBoxControl.DepartmentList(_webApiService);
+            departmentComboBoxControl.DepartmentComboBox.SelectedIndexChanged += CmbBoxDepartmentSelect_SelectedIndexChanged;
+            departmentComboBoxControl.DepartmentSelect(Id);
         }
-        private  async Task DepartmentList()
+                private  async void CmbBoxDepartmentSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("department/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
+            if(departmentComboBoxControl.DepartmentComboBox.SelectedValue is not null)
             {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetDepartmentComboBoxDTO>>(response);
-
-            cmbBoxDepartmentSelect.DataSource = null;
-
-            cmbBoxDepartmentSelect.DisplayMember = "DepartmentName";
-            cmbBoxDepartmentSelect.ValueMember = "Id";
-
-            cmbBoxDepartmentSelect.SelectedIndexChanged -= CmbBoxDepartmentSelect_SelectedIndexChanged;
-            cmbBoxDepartmentSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxDepartmentSelect.SelectedIndex = -1;
-            cmbBoxDepartmentSelect.SelectedIndexChanged += CmbBoxDepartmentSelect_SelectedIndexChanged;
-        }
-
-        private  async void CmbBoxDepartmentSelect_SelectedIndexChanged(object? sender, EventArgs e)
-        {
-            if(cmbBoxDepartmentSelect.SelectedValue is not null)
-            {
-                HttpResponseMessage response =await _webApiService.httpClient.GetAsync($"department/GetById/{cmbBoxDepartmentSelect.SelectedValue}");
+                HttpResponseMessage response =await _webApiService.httpClient.GetAsync($"department/GetById/{(Guid)departmentComboBoxControl.DepartmentComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);
@@ -67,13 +45,13 @@ namespace Krop.WinForms.Forms.Departments
 
         private async void bttnUpdate_Click(object sender, EventArgs e)
         {
-            if (cmbBoxDepartmentSelect.SelectedValue is not null)
+            if (departmentComboBoxControl.DepartmentComboBox.SelectedValue is not null)
             {
                 if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
                     UpdateDepartmentDTO updateDepartmentDTO = new UpdateDepartmentDTO
                     {
-                        Id = (Guid)cmbBoxDepartmentSelect.SelectedValue,
+                        Id = (Guid)departmentComboBoxControl.DepartmentComboBox.SelectedValue,
                         DepartmentName = txtDepartmentName.Text,
                         Description = txtDescription.Text
                     };
@@ -86,7 +64,7 @@ namespace Krop.WinForms.Forms.Departments
                         return;
                     }
 
-                   await DepartmentList();
+                    await departmentComboBoxControl.DepartmentList(_webApiService);
                 }
             }
             else

@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDepartmentList));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             departmentListRefreshToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             departmentDeleteToolStripMenuItem = new ToolStripMenuItem();
@@ -44,10 +43,9 @@
             txtSearch = new TextBox();
             bttnSearch = new Button();
             panelBottom = new System.Windows.Forms.Panel();
-            dgwDepartmentList = new DataGridView();
+            departmentListControl = new UserControllers.Departments.DepartmentListControl();
             contextMenuStrip1.SuspendLayout();
             panelTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwDepartmentList).BeginInit();
             SuspendLayout();
             // 
             // departmentListRefreshToolStripMenuItem
@@ -154,35 +152,21 @@
             panelBottom.Size = new Size(939, 32);
             panelBottom.TabIndex = 9;
             // 
-            // dgwDepartmentList
+            // departmentListControl
             // 
-            dgwDepartmentList.AllowUserToAddRows = false;
-            dgwDepartmentList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwDepartmentList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwDepartmentList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwDepartmentList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwDepartmentList.BackgroundColor = SystemColors.Control;
-            dgwDepartmentList.BorderStyle = BorderStyle.None;
-            dgwDepartmentList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwDepartmentList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwDepartmentList.ContextMenuStrip = contextMenuStrip1;
-            dgwDepartmentList.Dock = DockStyle.Fill;
-            dgwDepartmentList.Location = new Point(0, 38);
-            dgwDepartmentList.Name = "dgwDepartmentList";
-            dgwDepartmentList.ReadOnly = true;
-            dgwDepartmentList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwDepartmentList.RowTemplate.Height = 25;
-            dgwDepartmentList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwDepartmentList.Size = new Size(939, 487);
-            dgwDepartmentList.TabIndex = 13;
+            departmentListControl.ContextMenuStrip = contextMenuStrip1;
+            departmentListControl.Dock = DockStyle.Fill;
+            departmentListControl.Location = new Point(0, 38);
+            departmentListControl.Name = "departmentListControl";
+            departmentListControl.Size = new Size(939, 487);
+            departmentListControl.TabIndex = 12;
             // 
             // frmDepartmentList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(939, 583);
-            Controls.Add(dgwDepartmentList);
+            Controls.Add(departmentListControl);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelTop);
             Controls.Add(panelBottom);
@@ -193,7 +177,6 @@
             contextMenuStrip1.ResumeLayout(false);
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwDepartmentList).EndInit();
             ResumeLayout(false);
         }
 
@@ -212,6 +195,6 @@
         private TextBox txtSearch;
         private Button bttnSearch;
         private System.Windows.Forms.Panel panelBottom;
-        private DataGridView dgwDepartmentList;
+        private UserControllers.Departments.DepartmentListControl departmentListControl;
     }
 }

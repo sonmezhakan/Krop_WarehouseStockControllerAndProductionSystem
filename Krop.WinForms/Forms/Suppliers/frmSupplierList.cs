@@ -1,8 +1,6 @@
 ﻿using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.Suppliers;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
 
 namespace Krop.WinForms.Suppliers
 {
@@ -10,8 +8,6 @@ namespace Krop.WinForms.Suppliers
     {
         private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
-        private BindingList<GetSupplierDTO> _originalData;
-        private BindingList<GetSupplierDTO> _filteredData;
 
         public frmSupplierList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
@@ -22,48 +18,15 @@ namespace Krop.WinForms.Suppliers
 
         private async void frmSupplierList_Load(object sender, EventArgs e)
         {
-            await SupplierList();
+            await supplierListControl.SupplierList(_webApiService);
         }
-        private void DgwSupplierListSettings()
-        {
-            dgwSupplierList.Columns[0].HeaderText = "Id";
-            dgwSupplierList.Columns[1].HeaderText = "Tedarikçi Adı";
-            dgwSupplierList.Columns[2].HeaderText = "İletişim Kurulacak Kişi";
-            dgwSupplierList.Columns[3].HeaderText = "İletişim Kurulacak Kişinin Departmanı";
-            dgwSupplierList.Columns[4].HeaderText = "Telefon Numarası";
-            dgwSupplierList.Columns[5].HeaderText = "Email";
-            dgwSupplierList.Columns[6].HeaderText = "Ülke";
-            dgwSupplierList.Columns[7].HeaderText = "Şehir";
-            dgwSupplierList.Columns[8].HeaderText = "Adres";
 
-            dgwSupplierList.Columns[0].Visible = false;
-        }
-        private async Task SupplierList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("supplier/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetSupplierDTO>>(response);
-
-            if (result is not null)
-            {
-                _originalData = new BindingList<GetSupplierDTO>(result.Data);
-                _filteredData = new BindingList<GetSupplierDTO>(_originalData.ToList());
-
-                dgwSupplierList.DataSource = _filteredData;
-                DgwSupplierListSettings();
-            }
-        }
         private void Search()
         {
             string searchText = txtSearch.Text.ToLower();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
-                var filteredList = _originalData.Where(x =>
+                var filteredList = supplierListControl._originalData.Where(x =>
                 x.CompanyName.ToLower().Contains(searchText.ToLower()) ||
                 (x.ContactName != null && x.ContactName.ToLower().Contains(searchText)) ||
                 (x.ContactTitle != null && x.ContactTitle.ToLower().Contains(searchText)) ||
@@ -75,18 +38,18 @@ namespace Krop.WinForms.Suppliers
                 (x.WebSite != null && x.WebSite.ToLower().Contains(searchText))
                 );
 
-                _filteredData.Clear();
+                supplierListControl._filteredData.Clear();
                 foreach (var item in filteredList)
                 {
-                    _filteredData.Add(item);
+                    supplierListControl._filteredData.Add(item);
                 }
             }
             else
             {
-                _filteredData.Clear();
-                foreach (var item in _originalData)
+                supplierListControl._filteredData.Clear();
+                foreach (var item in supplierListControl._originalData)
                 {
-                    _filteredData.Add(item);
+                    supplierListControl._filteredData.Add(item);
                 }
             }
         }
@@ -103,7 +66,7 @@ namespace Krop.WinForms.Suppliers
         private void supplierCartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmSupplierCart frmSupplierCart = _serviceProvider.GetRequiredService<frmSupplierCart>();
-            frmSupplierCart.Id = (Guid)dgwSupplierList.SelectedRows[0].Cells[0].Value;
+            frmSupplierCart.Id = (Guid)supplierListControl.DataGridViewSupplierList.SelectedRows[0].Cells[0].Value;
             FormController.FormOpenController(frmSupplierCart);
         }
 
@@ -116,20 +79,20 @@ namespace Krop.WinForms.Suppliers
         private void supplierUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmSupplierUpdate frmSupplierUpdate = _serviceProvider.GetRequiredService<frmSupplierUpdate>();
-            frmSupplierUpdate.Id = (Guid)dgwSupplierList.SelectedRows[0].Cells[0].Value;
+            frmSupplierUpdate.Id = (Guid)supplierListControl.DataGridViewSupplierList.SelectedRows[0].Cells[0].Value;
             FormController.FormOpenController(frmSupplierUpdate);
         }
 
         private void supplierDeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmSupplierDelete frmSupplierDelete = _serviceProvider.GetRequiredService<frmSupplierDelete>();
-            frmSupplierDelete.Id = (Guid)dgwSupplierList.SelectedRows[0].Cells[0].Value;
+            frmSupplierDelete.Id = (Guid)supplierListControl.DataGridViewSupplierList.SelectedRows[0].Cells[0].Value;
             FormController.FormOpenController(frmSupplierDelete);
         }
 
         private async void supplierListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await SupplierList();
+            await supplierListControl.SupplierList(_webApiService);
         }
     }
 }

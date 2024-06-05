@@ -29,8 +29,7 @@
         private void InitializeComponent()
         {
             panelMid = new System.Windows.Forms.Panel();
-            cmbBoxBrandSelect = new ComboBox();
-            label4 = new Label();
+            brandComboBoxControl = new UserControllers.Brands.BrandComboBoxControl();
             txtEmail = new TextBox();
             txtPhoneNumber = new TextBox();
             label3 = new Label();
@@ -41,8 +40,7 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(cmbBoxBrandSelect);
-            panelMid.Controls.Add(label4);
+            panelMid.Controls.Add(brandComboBoxControl);
             panelMid.Controls.Add(txtEmail);
             panelMid.Controls.Add(txtPhoneNumber);
             panelMid.Controls.Add(label3);
@@ -53,28 +51,17 @@
             panelMid.Size = new Size(248, 172);
             panelMid.TabIndex = 5;
             // 
-            // cmbBoxBrandSelect
+            // brandComboBoxControl
             // 
-            cmbBoxBrandSelect.FormattingEnabled = true;
-            cmbBoxBrandSelect.Location = new Point(12, 41);
-            cmbBoxBrandSelect.Name = "cmbBoxBrandSelect";
-            cmbBoxBrandSelect.Size = new Size(206, 23);
-            cmbBoxBrandSelect.TabIndex = 7;
-            cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(12, 23);
-            label4.Name = "label4";
-            label4.Size = new Size(126, 15);
-            label4.TabIndex = 6;
-            label4.Text = "Güncellenecek Marka :";
+            brandComboBoxControl.Location = new Point(0, 3);
+            brandComboBoxControl.Name = "brandComboBoxControl";
+            brandComboBoxControl.Size = new Size(224, 65);
+            brandComboBoxControl.TabIndex = 6;
             // 
             // txtEmail
             // 
             txtEmail.Enabled = false;
-            txtEmail.Location = new Point(12, 129);
+            txtEmail.Location = new Point(15, 129);
             txtEmail.Name = "txtEmail";
             txtEmail.ReadOnly = true;
             txtEmail.Size = new Size(206, 23);
@@ -83,7 +70,7 @@
             // txtPhoneNumber
             // 
             txtPhoneNumber.Enabled = false;
-            txtPhoneNumber.Location = new Point(12, 85);
+            txtPhoneNumber.Location = new Point(15, 85);
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.ReadOnly = true;
             txtPhoneNumber.Size = new Size(206, 23);
@@ -92,7 +79,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 111);
+            label3.Location = new Point(15, 111);
             label3.Name = "label3";
             label3.Size = new Size(42, 15);
             label3.TabIndex = 2;
@@ -101,7 +88,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 67);
+            label2.Location = new Point(15, 67);
             label2.Name = "label2";
             label2.Size = new Size(105, 15);
             label2.TabIndex = 1;
@@ -138,12 +125,11 @@
         #endregion
 
         private System.Windows.Forms.Panel panelMid;
-        private ComboBox cmbBoxBrandSelect;
-        private Label label4;
         private TextBox txtEmail;
         private TextBox txtPhoneNumber;
         private Label label3;
         private Label label2;
         private System.Windows.Forms.Panel panelBottom;
+        private UserControllers.Brands.BrandComboBoxControl brandComboBoxControl;
     }
 }

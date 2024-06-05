@@ -111,15 +111,15 @@
             // 
             // txtCity
             // 
-            txtCity.Location = new Point(13, 423);
+            txtCity.Location = new Point(15, 423);
             txtCity.Name = "txtCity";
-            txtCity.Size = new Size(214, 23);
+            txtCity.Size = new Size(200, 23);
             txtCity.TabIndex = 17;
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(13, 405);
+            label10.Location = new Point(15, 405);
             label10.Name = "label10";
             label10.Size = new Size(39, 15);
             label10.TabIndex = 16;
@@ -127,16 +127,16 @@
             // 
             // txtAddress
             // 
-            txtAddress.Location = new Point(13, 466);
+            txtAddress.Location = new Point(15, 466);
             txtAddress.Multiline = true;
             txtAddress.Name = "txtAddress";
-            txtAddress.Size = new Size(214, 136);
+            txtAddress.Size = new Size(200, 136);
             txtAddress.TabIndex = 17;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(13, 448);
+            label9.Location = new Point(15, 448);
             label9.Name = "label9";
             label9.Size = new Size(43, 15);
             label9.TabIndex = 16;
@@ -144,15 +144,15 @@
             // 
             // txtCountry
             // 
-            txtCountry.Location = new Point(13, 378);
+            txtCountry.Location = new Point(15, 378);
             txtCountry.Name = "txtCountry";
-            txtCountry.Size = new Size(214, 23);
+            txtCountry.Size = new Size(200, 23);
             txtCountry.TabIndex = 15;
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(13, 360);
+            label8.Location = new Point(15, 360);
             label8.Name = "label8";
             label8.Size = new Size(36, 15);
             label8.TabIndex = 14;
@@ -160,16 +160,16 @@
             // 
             // txtNationalNumber
             // 
-            txtNationalNumber.Location = new Point(13, 329);
+            txtNationalNumber.Location = new Point(15, 329);
             txtNationalNumber.Name = "txtNationalNumber";
-            txtNationalNumber.Size = new Size(214, 23);
+            txtNationalNumber.Size = new Size(200, 23);
             txtNationalNumber.TabIndex = 13;
             txtNationalNumber.KeyPress += txtNationalNumber_KeyPress;
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(13, 311);
+            label7.Location = new Point(15, 311);
             label7.Name = "label7";
             label7.Size = new Size(52, 15);
             label7.TabIndex = 12;
@@ -177,15 +177,15 @@
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(13, 280);
+            txtEmail.Location = new Point(15, 280);
             txtEmail.Name = "txtEmail";
-            txtEmail.Size = new Size(214, 23);
+            txtEmail.Size = new Size(200, 23);
             txtEmail.TabIndex = 11;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(13, 262);
+            label6.Location = new Point(15, 262);
             label6.Name = "label6";
             label6.Size = new Size(42, 15);
             label6.TabIndex = 10;
@@ -193,16 +193,16 @@
             // 
             // txtPhoneNumber
             // 
-            txtPhoneNumber.Location = new Point(13, 230);
+            txtPhoneNumber.Location = new Point(15, 230);
             txtPhoneNumber.Name = "txtPhoneNumber";
-            txtPhoneNumber.Size = new Size(214, 23);
+            txtPhoneNumber.Size = new Size(200, 23);
             txtPhoneNumber.TabIndex = 9;
             txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(13, 212);
+            label5.Location = new Point(15, 212);
             label5.Name = "label5";
             label5.Size = new Size(105, 15);
             label5.TabIndex = 8;
@@ -210,15 +210,15 @@
             // 
             // txtLastName
             // 
-            txtLastName.Location = new Point(13, 182);
+            txtLastName.Location = new Point(15, 182);
             txtLastName.Name = "txtLastName";
-            txtLastName.Size = new Size(214, 23);
+            txtLastName.Size = new Size(200, 23);
             txtLastName.TabIndex = 7;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(13, 164);
+            label4.Location = new Point(15, 164);
             label4.Name = "label4";
             label4.Size = new Size(45, 15);
             label4.TabIndex = 6;
@@ -226,15 +226,15 @@
             // 
             // txtFirstName
             // 
-            txtFirstName.Location = new Point(13, 134);
+            txtFirstName.Location = new Point(15, 134);
             txtFirstName.Name = "txtFirstName";
-            txtFirstName.Size = new Size(214, 23);
+            txtFirstName.Size = new Size(200, 23);
             txtFirstName.TabIndex = 5;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(13, 116);
+            label3.Location = new Point(15, 116);
             label3.Name = "label3";
             label3.Size = new Size(28, 15);
             label3.TabIndex = 4;
@@ -242,16 +242,16 @@
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(13, 87);
+            txtPassword.Location = new Point(15, 87);
             txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(214, 23);
+            txtPassword.Size = new Size(200, 23);
             txtPassword.TabIndex = 3;
             txtPassword.UseSystemPasswordChar = true;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(13, 69);
+            label2.Location = new Point(15, 69);
             label2.Name = "label2";
             label2.Size = new Size(36, 15);
             label2.TabIndex = 2;
@@ -259,15 +259,15 @@
             // 
             // txtUserName
             // 
-            txtUserName.Location = new Point(13, 39);
+            txtUserName.Location = new Point(15, 39);
             txtUserName.Name = "txtUserName";
-            txtUserName.Size = new Size(214, 23);
+            txtUserName.Size = new Size(200, 23);
             txtUserName.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(13, 21);
+            label1.Location = new Point(15, 21);
             label1.Name = "label1";
             label1.Size = new Size(79, 15);
             label1.TabIndex = 0;

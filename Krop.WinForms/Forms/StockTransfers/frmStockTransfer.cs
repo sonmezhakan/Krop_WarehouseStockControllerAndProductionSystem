@@ -1,14 +1,10 @@
 ﻿using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.Branches;
-using Krop.DTO.Dtos.Products;
 using Krop.DTO.Dtos.StockTransfers;
-using Krop.Entities.Entities;
 using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using Krop.WinForms.Products;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
 using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.StockTransfers
@@ -19,161 +15,42 @@ namespace Krop.WinForms.Forms.StockTransfers
         private readonly IServiceProvider _serviceProvider;
         public Guid Id;
         public Guid AppUserId;
-        private BindingList<GetStockTransferListDTO> _originalData;
-        private BindingList<GetStockTransferListDTO> _filteredData;
 
         public frmStockTransfer(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             _webApiService = webApiService;
             _serviceProvider = serviceProvider;
+            branchComboBoxControl1.labelName.Text = "Transfer Yapan Şube :";
+            branchComboBoxControl2.labelName.Text = "Transfer Yapılan Şube :";
         }
 
         private async void frmStockTransfer_Load(object sender, EventArgs e)
         {
-           await BranchList();
-           await ProductList();
-           await StockTransferList();
-        }
-        private async Task BranchList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
+            await branchComboBoxControl1.BranchList(_webApiService);
+            await branchComboBoxControl2.BranchList(_webApiService);
 
-            var result =await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
+            await productComboBoxControl.ProductList(_webApiService);
+            productComboBoxControl.ProductNameComboBox.SelectedIndexChanged += CmbBoxProductName_SelectedIndexChanged;
+            productComboBoxControl.ProductCodeComboBox.SelectedIndexChanged += CmbBoxProductCode_SelectedIndexChanged;
 
-            if(result is not null)
-            {
-                List<GetBranchComboBoxDTO> senderBranchList = result.Data.Select(x => new GetBranchComboBoxDTO
-                {
-                    BranchName = x.BranchName,
-                    Id = x.Id
-                }).ToList();
-                List<GetBranchComboBoxDTO> sentBranchList = result.Data.Select(x => new GetBranchComboBoxDTO
-                {
-                    BranchName = x.BranchName,
-                    Id = x.Id
-                }).ToList();
-
-               await SenderBranchList(senderBranchList);
-               await SentBranchList(sentBranchList);
-            }
-        }
-        private async Task SenderBranchList(List<GetBranchComboBoxDTO> getBranchComboBoxDTOs)
-        {
-            cmbBoxSenderBranch.DataSource = null;
-
-            cmbBoxSenderBranch.DisplayMember = "BranchName";
-            cmbBoxSenderBranch.ValueMember = "Id";
-            cmbBoxSenderBranch.DataSource = getBranchComboBoxDTOs;
-            cmbBoxProductName.SelectedIndex = -1;
-        }
-        private async Task SentBranchList(List<GetBranchComboBoxDTO> getBranchComboBoxDTOs)
-        {
-            cmbBoxSentBranch.DataSource = null;
-
-            cmbBoxSentBranch.DisplayMember = "BranchName";
-            cmbBoxSentBranch.ValueMember = "Id";
-            cmbBoxSentBranch.DataSource = getBranchComboBoxDTOs;
-            cmbBoxProductName.SelectedIndex = -1;
-        }
-        private async Task ProductList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
-
-            if(result is not null)
-            {
-               await ProductNameList(result.Data);
-               await ProductCodeList(result.Data);
-            }
-        }
-        private async Task ProductNameList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
-        {
-            cmbBoxProductName.DataSource = null;
-
-            cmbBoxProductName.DisplayMember = "ProductName";
-            cmbBoxProductName.ValueMember = "Id";
-
-            cmbBoxProductName.SelectedIndexChanged -= CmbBoxProductName_SelectedIndexChanged;
-            cmbBoxProductName.DataSource = getProductComboBoxDTOs;
-            cmbBoxProductName.SelectedIndex = -1;
-            cmbBoxProductName.SelectedIndexChanged += CmbBoxProductName_SelectedIndexChanged;
+            await stockTransferListControl.StockTransferList(_webApiService, AppUserId);
+            stockTransferListControl.DataGridViewStockTransferList.DoubleClick += dgwStockTransferList_DoubleClick;
         }
 
         private void CmbBoxProductName_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbBoxProductName.SelectedValue != null && cmbBoxProductCode.DataSource != null)
+            if (productComboBoxControl.ProductNameComboBox.SelectedValue != null && productComboBoxControl.ProductCodeComboBox.DataSource != null)
             {
-                cmbBoxProductCode.SelectedValue = cmbBoxProductName.SelectedValue;
+                productComboBoxControl.ProductCodeComboBox.SelectedValue = productComboBoxControl.ProductNameComboBox.SelectedValue;
             }
-        }
-
-        private async Task ProductCodeList(List<GetProductComboBoxDTO> getProductComboBoxDTOs)
-        {
-            cmbBoxProductCode.DataSource = null;
-            cmbBoxProductCode.DisplayMember = "ProductCode";
-            cmbBoxProductCode.ValueMember = "Id";
-
-            cmbBoxProductCode.SelectedIndexChanged -= CmbBoxProductCode_SelectedIndexChanged;
-            cmbBoxProductCode.DataSource = getProductComboBoxDTOs;
-            cmbBoxProductCode.SelectedIndex = -1;
-            cmbBoxProductCode.SelectedIndexChanged += CmbBoxProductCode_SelectedIndexChanged;
-
         }
 
         private void CmbBoxProductCode_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbBoxProductCode.SelectedValue != null && cmbBoxProductName.DataSource != null)
+            if (productComboBoxControl.ProductCodeComboBox.SelectedValue != null && productComboBoxControl.ProductNameComboBox.DataSource != null)
             {
-                cmbBoxProductName.SelectedValue = cmbBoxProductCode.SelectedValue;
-            }
-        }
-        private void DgwStockTransferListSettings()
-        {
-            dgwStockTransferList.Columns[0].HeaderText = "Id";
-            dgwStockTransferList.Columns[1].HeaderText = "Gönderen Şube";
-            dgwStockTransferList.Columns[2].HeaderText = "Gönderilen Şube";
-            dgwStockTransferList.Columns[3].HeaderText = "Ürün Adı";
-            dgwStockTransferList.Columns[4].HeaderText = "Ürün Kodu";
-            dgwStockTransferList.Columns[5].HeaderText = "Fatura No";
-            dgwStockTransferList.Columns[6].HeaderText = "Gönderilen Adet";
-            dgwStockTransferList.Columns[7].HeaderText = "Açıklama";
-            dgwStockTransferList.Columns[8].HeaderText = "Transfer Tarihi";
-            dgwStockTransferList.Columns[9].HeaderText = "İşlem Yapan";
-
-            dgwStockTransferList.Columns[0].Visible = false;
-        }
-        private async Task StockTransferList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"stockTransfer/AppUserBranchGetAll/{AppUserId}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetStockTransferListDTO>>(response);
-
-            if(result is not null)
-            {
-                _originalData = new BindingList<GetStockTransferListDTO>(result.Data);
-                _filteredData = new BindingList<GetStockTransferListDTO>(_originalData.ToList());
-
-                dgwStockTransferList.DataSource = _filteredData;
-
-                DgwStockTransferListSettings();
+                productComboBoxControl.ProductNameComboBox.SelectedValue = productComboBoxControl.ProductCodeComboBox.SelectedValue;
             }
         }
         private void Search()
@@ -181,7 +58,7 @@ namespace Krop.WinForms.Forms.StockTransfers
             string searchText = txtSearch.Text.ToLower();
             if (!string.IsNullOrEmpty(searchText))
             {
-                var filteredList = _originalData.Where(x =>
+                var filteredList = stockTransferListControl._originalData.Where(x =>
                 (x.SenderBranchName != null && x.SenderBranchName.ToLower().Contains(searchText)) ||
                 (x.SentBranchName != null && x.SentBranchName.ToLower().Contains(searchText)) ||
                 (x.ProductName != null && x.ProductName.ToLower().Contains(searchText)) ||
@@ -193,30 +70,30 @@ namespace Krop.WinForms.Forms.StockTransfers
                 (x.SenderAppUserName != null && x.SenderAppUserName.ToString().Contains(searchText))
                 );
 
-                _filteredData.Clear();
+                stockTransferListControl._filteredData.Clear();
                 foreach (var item in filteredList)
                 {
-                    _filteredData.Add(item);
+                    stockTransferListControl._filteredData.Add(item);
                 }
             }
             else
             {
-                _filteredData.Clear();
-                foreach (var item in _originalData)
+                stockTransferListControl._filteredData.Clear();
+                foreach (var item in stockTransferListControl._originalData)
                 {
-                    _filteredData.Add(item);
+                    stockTransferListControl._filteredData.Add(item);
                 }
             }
         }
         private async void bttnAdd_Click(object sender, EventArgs e)
         {
-            if (cmbBoxSenderBranch.SelectedValue is not null && cmbBoxSentBranch.SelectedValue is not null && cmbBoxProductName.SelectedValue is not null && cmbBoxProductCode.SelectedValue is not null)
+            if (branchComboBoxControl1.BranchComboBox.SelectedValue is not null && branchComboBoxControl2.BranchComboBox.SelectedValue is not null && productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.SelectedValue is not null)
             {
                 CreateStockTransferDTO createStockTransferDTO = new CreateStockTransferDTO
                 {
-                    SenderBranchId = (Guid)cmbBoxSenderBranch.SelectedValue,
-                    SentBranchId = (Guid)cmbBoxSentBranch.SelectedValue,
-                    ProductId = (Guid)cmbBoxProductName.SelectedValue,
+                    SenderBranchId = (Guid)branchComboBoxControl1.BranchComboBox.SelectedValue,
+                    SentBranchId = (Guid)branchComboBoxControl2.BranchComboBox.SelectedValue,
+                    ProductId = (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue,
                     InvoiceNumber = txtInvoiceNumber.Text,
                     Quantity = int.Parse(txtQuantity.Text),
                     Description = txtDescription.Text,
@@ -232,7 +109,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                     return;
                 }
 
-               await StockTransferList();
+                await stockTransferListControl.StockTransferList(_webApiService, AppUserId);
             }
             else
             {
@@ -242,7 +119,7 @@ namespace Krop.WinForms.Forms.StockTransfers
 
         private async void bttnUpdate_Click(object sender, EventArgs e)
         {
-            if (cmbBoxSenderBranch.SelectedValue is not null && cmbBoxSentBranch.SelectedValue is not null && cmbBoxProductName.SelectedValue is not null && cmbBoxProductCode.SelectedValue is not null)
+            if (branchComboBoxControl1.BranchComboBox.SelectedValue is not null && branchComboBoxControl2.BranchComboBox.SelectedValue is not null && productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.SelectedValue is not null)
             {
                 if (Id != Guid.Empty)
                 {
@@ -252,9 +129,9 @@ namespace Krop.WinForms.Forms.StockTransfers
                         UpdateStockTransferDTO updateStockTransferDTO = new UpdateStockTransferDTO
                         {
                             Id = Id,
-                            SenderBranchId = (Guid)cmbBoxSenderBranch.SelectedValue,
-                            SentBranchId = (Guid)cmbBoxSentBranch.SelectedValue,
-                            ProductId = (Guid)cmbBoxProductName.SelectedValue,
+                            SenderBranchId = (Guid)branchComboBoxControl1.BranchComboBox.SelectedValue,
+                            SentBranchId = (Guid)branchComboBoxControl2.BranchComboBox.SelectedValue,
+                            ProductId = (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue,
                             InvoiceNumber = txtInvoiceNumber.Text,
                             Quantity = int.Parse(txtQuantity.Text),
                             Description = txtDescription.Text,
@@ -270,7 +147,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                             return;
                         }
 
-                       await StockTransferList();
+                        await stockTransferListControl.StockTransferList(_webApiService, AppUserId);
                         Id = default;
                     }
                 }
@@ -299,7 +176,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                         return;
                     }
 
-                   await StockTransferList();
+                    await stockTransferListControl.StockTransferList(_webApiService, AppUserId);
                     Id = default;
                 }
             }
@@ -338,7 +215,7 @@ namespace Krop.WinForms.Forms.StockTransfers
 
         private async void dgwStockTransferList_DoubleClick(object sender, EventArgs e)
         {
-            Id = (Guid)dgwStockTransferList.SelectedRows[0].Cells[0].Value;
+            Id = (Guid)stockTransferListControl.DataGridViewStockTransferList.SelectedRows[0].Cells[0].Value;
 
             HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"stockTransfer/GetById/{Id}/{AppUserId}");
 
@@ -348,13 +225,13 @@ namespace Krop.WinForms.Forms.StockTransfers
                 return;
             }
 
-            var result =await ResponseController.SuccessDataResponseController<GetStockTransferDTO>(response);
+            var result = await ResponseController.SuccessDataResponseController<GetStockTransferDTO>(response);
 
-            if(result is not null)
+            if (result is not null)
             {
-                cmbBoxSenderBranch.SelectedValue = result.Data.SenderBranchId;
-                cmbBoxSentBranch.SelectedValue = result.Data.SentBranchId;
-                cmbBoxProductName.SelectedValue = result.Data.ProductId;
+                branchComboBoxControl1.BranchComboBox.SelectedValue = result.Data.SenderBranchId;
+                branchComboBoxControl2.BranchComboBox.SelectedValue = result.Data.SentBranchId;
+                productComboBoxControl.ProductNameComboBox.SelectedValue = result.Data.ProductId;
                 txtInvoiceNumber.Text = result.Data.InvoiceNumber;
                 txtQuantity.Text = result.Data.Quantity.ToString();
                 txtDescription.Text = result.Data.Description;

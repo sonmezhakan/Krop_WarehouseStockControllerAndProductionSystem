@@ -24,39 +24,15 @@ namespace Krop.WinForms.Customers
 
         private async void frmCustomerUpdate_Load(object sender, EventArgs e)
         {
-           await CustomerList();
-            txtPhoneNumber.MaxLength = 11;
-            if (cmbBoxCustomerSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxCustomerSelect.SelectedValue = Id;
+            await customerComboBoxControl.CustomerList(_webApiService);
+            customerComboBoxControl.CustomerComboBox.SelectedIndexChanged += CmbBoxCustomerSelect_SelectedIndexChanged;
+            customerComboBoxControl.CustomerSelect(Id);
         }
-
-        private async Task CustomerList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("customer/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetCustomerComboBoxDTO>>(response);
-
-            cmbBoxCustomerSelect.DataSource = null;
-
-            cmbBoxCustomerSelect.DisplayMember = "CompanyName";
-            cmbBoxCustomerSelect.ValueMember = "Id";
-
-            cmbBoxCustomerSelect.SelectedIndexChanged -= CmbBoxCustomerSelect_SelectedIndexChanged;
-            cmbBoxCustomerSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxCustomerSelect.SelectedIndex = -1;
-            cmbBoxCustomerSelect.SelectedIndexChanged += CmbBoxCustomerSelect_SelectedIndexChanged;
-        }
-
         private async void CmbBoxCustomerSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbBoxCustomerSelect.SelectedValue is not null)
+            if (customerComboBoxControl.CustomerComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"customer/GetById/{cmbBoxCustomerSelect.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"customer/GetById/{(Guid)customerComboBoxControl.CustomerComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);
@@ -85,13 +61,13 @@ namespace Krop.WinForms.Customers
 
         private async void bttnCustomerUpdate_Click(object sender, EventArgs e)
         {
-            if (cmbBoxCustomerSelect.SelectedValue is not null)
+            if (customerComboBoxControl.CustomerComboBox.SelectedValue is not null)
             {
                 if (DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
                     UpdateCustomerDTO updateCustomerDTO = new UpdateCustomerDTO
                     {
-                        Id = (Guid)cmbBoxCustomerSelect.SelectedValue,
+                        Id = (Guid)customerComboBoxControl.CustomerComboBox.SelectedValue,
                         CompanyName = txtCompanyName.Text,
                         ContactName = txtContactName.Text,
                         ContactTitle = txtContactTitle.Text,
@@ -111,7 +87,7 @@ namespace Krop.WinForms.Customers
                         return;
                     }
 
-                   await CustomerList();
+                    await customerComboBoxControl.CustomerList(_webApiService);
                 }
             }
             else

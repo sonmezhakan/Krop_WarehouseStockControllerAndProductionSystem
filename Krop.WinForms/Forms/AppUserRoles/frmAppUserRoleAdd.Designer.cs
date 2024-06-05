@@ -46,7 +46,7 @@
             panelBottom.Location = new Point(0, 76);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(270, 41);
+            panelBottom.Size = new Size(229, 41);
             panelBottom.TabIndex = 2;
             // 
             // bttnAppUserRoleAdd
@@ -54,7 +54,7 @@
             bttnAppUserRoleAdd.Dock = DockStyle.Right;
             bttnAppUserRoleAdd.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnAppUserRoleAdd.Image = (Image)resources.GetObject("bttnAppUserRoleAdd.Image");
-            bttnAppUserRoleAdd.Location = new Point(166, 0);
+            bttnAppUserRoleAdd.Location = new Point(125, 0);
             bttnAppUserRoleAdd.Name = "bttnAppUserRoleAdd";
             bttnAppUserRoleAdd.Size = new Size(92, 39);
             bttnAppUserRoleAdd.TabIndex = 1;
@@ -70,30 +70,30 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(270, 117);
+            panelMid.Size = new Size(229, 117);
             panelMid.TabIndex = 3;
             // 
             // txtAppUserRoleName
             // 
-            txtAppUserRoleName.Location = new Point(12, 37);
+            txtAppUserRoleName.Location = new Point(15, 34);
             txtAppUserRoleName.Name = "txtAppUserRoleName";
-            txtAppUserRoleName.Size = new Size(246, 23);
-            txtAppUserRoleName.TabIndex = 1;
+            txtAppUserRoleName.Size = new Size(200, 23);
+            txtAppUserRoleName.TabIndex = 5;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 19);
+            label1.Location = new Point(15, 16);
             label1.Name = "label1";
             label1.Size = new Size(59, 15);
-            label1.TabIndex = 0;
+            label1.TabIndex = 4;
             label1.Text = "Yetki Adı :";
             // 
             // frmAppUserRoleAdd
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(270, 117);
+            ClientSize = new Size(229, 117);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
             FormBorderStyle = FormBorderStyle.FixedSingle;

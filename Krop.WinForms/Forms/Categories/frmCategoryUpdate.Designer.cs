@@ -30,8 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCategoryUpdate));
             panelMid = new System.Windows.Forms.Panel();
-            cmbBoxCategorySelect = new ComboBox();
-            label2 = new Label();
+            categoryComboBoxControl = new UserControllers.Categories.CategoryComboBoxControl();
             txtCategoryName = new TextBox();
             label1 = new Label();
             panelBottom = new System.Windows.Forms.Panel();
@@ -42,39 +41,27 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(cmbBoxCategorySelect);
-            panelMid.Controls.Add(label2);
+            panelMid.Controls.Add(categoryComboBoxControl);
             panelMid.Controls.Add(txtCategoryName);
             panelMid.Controls.Add(label1);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(273, 135);
+            panelMid.Size = new Size(230, 130);
             panelMid.TabIndex = 3;
             // 
-            // cmbBoxCategorySelect
+            // categoryComboBoxControl
             // 
-            cmbBoxCategorySelect.FormattingEnabled = true;
-            cmbBoxCategorySelect.Location = new Point(12, 37);
-            cmbBoxCategorySelect.Name = "cmbBoxCategorySelect";
-            cmbBoxCategorySelect.Size = new Size(246, 23);
-            cmbBoxCategorySelect.TabIndex = 3;
-            cmbBoxCategorySelect.SelectedIndexChanged += cmbBoxCategorySelect_SelectedIndexChanged;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 19);
-            label2.Name = "label2";
-            label2.Size = new Size(137, 15);
-            label2.TabIndex = 2;
-            label2.Text = "Güncellenecek Kategori :";
+            categoryComboBoxControl.Location = new Point(0, 12);
+            categoryComboBoxControl.Name = "categoryComboBoxControl";
+            categoryComboBoxControl.Size = new Size(271, 51);
+            categoryComboBoxControl.TabIndex = 2;
             // 
             // txtCategoryName
             // 
-            txtCategoryName.Location = new Point(12, 81);
+            txtCategoryName.Location = new Point(15, 81);
             txtCategoryName.Name = "txtCategoryName";
-            txtCategoryName.Size = new Size(246, 23);
+            txtCategoryName.Size = new Size(200, 23);
             txtCategoryName.TabIndex = 1;
             // 
             // label1
@@ -91,10 +78,10 @@
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
             panelBottom.Controls.Add(bttnCategoryUpdate);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 135);
+            panelBottom.Location = new Point(0, 130);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 15, 0);
-            panelBottom.Size = new Size(273, 41);
+            panelBottom.Size = new Size(230, 41);
             panelBottom.TabIndex = 2;
             // 
             // bttnCategoryUpdate
@@ -102,7 +89,7 @@
             bttnCategoryUpdate.Dock = DockStyle.Right;
             bttnCategoryUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnCategoryUpdate.Image = (Image)resources.GetObject("bttnCategoryUpdate.Image");
-            bttnCategoryUpdate.Location = new Point(149, 0);
+            bttnCategoryUpdate.Location = new Point(106, 0);
             bttnCategoryUpdate.Name = "bttnCategoryUpdate";
             bttnCategoryUpdate.Size = new Size(107, 39);
             bttnCategoryUpdate.TabIndex = 1;
@@ -115,7 +102,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(273, 176);
+            ClientSize = new Size(230, 171);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -133,11 +120,10 @@
         #endregion
 
         private System.Windows.Forms.Panel panelMid;
-        private Label label2;
         private TextBox txtCategoryName;
         private Label label1;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnCategoryUpdate;
-        private ComboBox cmbBoxCategorySelect;
+        private UserControllers.Categories.CategoryComboBoxControl categoryComboBoxControl;
     }
 }

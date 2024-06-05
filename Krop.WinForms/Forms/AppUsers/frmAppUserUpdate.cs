@@ -2,6 +2,7 @@
 using Krop.DTO.Dtos.AppUsers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
+using Krop.WinForms.UserControllers.AppUsers;
 using System.Net.Http.Json;
 
 namespace Krop.WinForms.Forms.AppUsers
@@ -25,39 +26,17 @@ namespace Krop.WinForms.Forms.AppUsers
 
         private async void frmAppUserUpdate_Load(object sender, EventArgs e)
         {
-            await AppUserList();
             txtPhoneNumber.MaxLength = 11;
-            if (cmbBoxAppUserSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxAppUserSelect.SelectedValue = Id;
-        }
-
-        private async Task AppUserList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("account/getAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetAppUserComboBoxDTO>>(response);
-
-            cmbBoxAppUserSelect.DataSource = null;
-
-            cmbBoxAppUserSelect.DisplayMember = "UserName";
-            cmbBoxAppUserSelect.ValueMember = "Id";
-
-            cmbBoxAppUserSelect.SelectedIndexChanged -= CmbBoxAppUserSelect_SelectedIndexChanged;
-            cmbBoxAppUserSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxAppUserSelect.SelectedIndex = -1;
-            cmbBoxAppUserSelect.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
+            await appUserComboBoxControl.AppUserList(_webApiService);
+            appUserComboBoxControl.AppUserComboBox.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
+            appUserComboBoxControl.AppUserSelected(Id);
         }
 
         private async void CmbBoxAppUserSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbBoxAppUserSelect.SelectedValue is not null)
+            if (appUserComboBoxControl.AppUserComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"account/GetById/{(Guid)cmbBoxAppUserSelect.SelectedValue}"); 
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"account/GetById/{(Guid)appUserComboBoxControl.AppUserComboBox.SelectedValue}"); 
                 if(!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);
@@ -115,7 +94,7 @@ namespace Krop.WinForms.Forms.AppUsers
 
         private async void bttnAppUserUpdate_Click(object sender, EventArgs e)
         {
-            if (cmbBoxAppUserSelect.SelectedValue is not null)
+            if (appUserComboBoxControl.AppUserComboBox.SelectedValue is not null)
             {
                 if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
@@ -124,7 +103,7 @@ namespace Krop.WinForms.Forms.AppUsers
                     {
                         UpdateAppUserPasswordDTO updateAppUserPasswordDTO = new UpdateAppUserPasswordDTO
                         {
-                            Id = (Guid)cmbBoxAppUserSelect.SelectedValue,
+                            Id = (Guid)appUserComboBoxControl.AppUserComboBox.SelectedValue,
                             Password = txtPassword.Text
                         };
 
@@ -134,7 +113,7 @@ namespace Krop.WinForms.Forms.AppUsers
                     {
                         UpdateAppUserDTO updateAppUserDTO = new UpdateAppUserDTO
                         {
-                            Id = (Guid)cmbBoxAppUserSelect.SelectedValue,
+                            Id = (Guid)appUserComboBoxControl.AppUserComboBox.SelectedValue,
                             FirstName = txtFirstName.Text,
                             LastName = txtLastName.Text,
                             Email = txtEmail.Text,
@@ -153,7 +132,7 @@ namespace Krop.WinForms.Forms.AppUsers
                         await ResponseController.ErrorResponseController(response);
                         return;
                     }
-                   await AppUserList();
+                    await appUserComboBoxControl.AppUserList(_webApiService);
                 }
             }
             else

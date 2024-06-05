@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSupplierList));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             bttnSearch = new Button();
             panel1 = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
@@ -45,10 +44,9 @@
             toolStripSeparator4 = new ToolStripSeparator();
             panelDgwFooter = new System.Windows.Forms.Panel();
             panelBottom = new System.Windows.Forms.Panel();
-            dgwSupplierList = new DataGridView();
+            supplierListControl = new UserControllers.Suppliers.SupplierListControl();
             panel1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwSupplierList).BeginInit();
             SuspendLayout();
             // 
             // bttnSearch
@@ -160,35 +158,21 @@
             panelBottom.Size = new Size(1004, 32);
             panelBottom.TabIndex = 9;
             // 
-            // dgwSupplierList
+            // supplierListControl
             // 
-            dgwSupplierList.AllowUserToAddRows = false;
-            dgwSupplierList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwSupplierList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwSupplierList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwSupplierList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwSupplierList.BackgroundColor = SystemColors.Control;
-            dgwSupplierList.BorderStyle = BorderStyle.None;
-            dgwSupplierList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwSupplierList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwSupplierList.ContextMenuStrip = contextMenuStrip1;
-            dgwSupplierList.Dock = DockStyle.Fill;
-            dgwSupplierList.Location = new Point(0, 38);
-            dgwSupplierList.Name = "dgwSupplierList";
-            dgwSupplierList.ReadOnly = true;
-            dgwSupplierList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwSupplierList.RowTemplate.Height = 25;
-            dgwSupplierList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwSupplierList.Size = new Size(1004, 439);
-            dgwSupplierList.TabIndex = 13;
+            supplierListControl.ContextMenuStrip = contextMenuStrip1;
+            supplierListControl.Dock = DockStyle.Fill;
+            supplierListControl.Location = new Point(0, 38);
+            supplierListControl.Name = "supplierListControl";
+            supplierListControl.Size = new Size(1004, 439);
+            supplierListControl.TabIndex = 13;
             // 
             // frmSupplierList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1004, 535);
-            Controls.Add(dgwSupplierList);
+            Controls.Add(supplierListControl);
             Controls.Add(panel1);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelBottom);
@@ -198,7 +182,6 @@
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgwSupplierList).EndInit();
             ResumeLayout(false);
         }
 
@@ -218,6 +201,6 @@
         private ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.Panel panelDgwFooter;
         private System.Windows.Forms.Panel panelBottom;
-        private DataGridView dgwSupplierList;
+        private UserControllers.Suppliers.SupplierListControl supplierListControl;
     }
 }

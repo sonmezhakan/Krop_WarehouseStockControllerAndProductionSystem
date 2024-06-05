@@ -17,37 +17,17 @@ namespace Krop.WinForms.Forms.Departments
 
         private async void frmDepartmentCart_Load(object sender, EventArgs e)
         {
-            await DepartmentList();
-            if (cmbBoxDepartmentSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxDepartmentSelect.SelectedValue = Id;
+            await departmentComboBoxControl.DepartmentList(_webApiService);
+            departmentComboBoxControl.DepartmentComboBox.SelectedIndexChanged += CmbBoxDepartmentSelect_SelectedIndexChanged;
+            departmentComboBoxControl.DepartmentSelect(Id);
         }
-        private async Task DepartmentList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("department/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetDepartmentComboBoxDTO>>(response);
-
-            cmbBoxDepartmentSelect.DataSource = null;
-
-            cmbBoxDepartmentSelect.DisplayMember = "DepartmentName";
-            cmbBoxDepartmentSelect.ValueMember = "Id";
-
-            cmbBoxDepartmentSelect.SelectedIndexChanged -= CmbBoxDepartmentSelect_SelectedIndexChanged;
-            cmbBoxDepartmentSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxDepartmentSelect.SelectedIndex = -1;
-            cmbBoxDepartmentSelect.SelectedIndexChanged += CmbBoxDepartmentSelect_SelectedIndexChanged;
-        }
+        
 
         private async void CmbBoxDepartmentSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbBoxDepartmentSelect.SelectedValue is not null)
+            if (departmentComboBoxControl.DepartmentComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"department/GetById/{cmbBoxDepartmentSelect.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"department/GetById/{(Guid)departmentComboBoxControl.DepartmentComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);

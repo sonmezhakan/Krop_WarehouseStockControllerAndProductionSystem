@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCustomerList));
             bttnSearch = new Button();
             panel1 = new System.Windows.Forms.Panel();
@@ -38,7 +37,6 @@
             toolStripSeparator1 = new ToolStripSeparator();
             panelDgwFooter = new System.Windows.Forms.Panel();
             panelBottom = new System.Windows.Forms.Panel();
-            dgwCustomerList = new DataGridView();
             contextMenuStrip1 = new ContextMenuStrip(components);
             customerCartToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
@@ -47,8 +45,8 @@
             customerDeleteToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             customerRefreshToolStripMenuItem = new ToolStripMenuItem();
+            customerListControl = new UserControllers.Customers.CustomerListControl();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwCustomerList).BeginInit();
             contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -111,29 +109,6 @@
             panelBottom.Size = new Size(1025, 32);
             panelBottom.TabIndex = 9;
             // 
-            // dgwCustomerList
-            // 
-            dgwCustomerList.AllowUserToAddRows = false;
-            dgwCustomerList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwCustomerList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwCustomerList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwCustomerList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwCustomerList.BackgroundColor = SystemColors.Control;
-            dgwCustomerList.BorderStyle = BorderStyle.None;
-            dgwCustomerList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwCustomerList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwCustomerList.ContextMenuStrip = contextMenuStrip1;
-            dgwCustomerList.Dock = DockStyle.Fill;
-            dgwCustomerList.Location = new Point(0, 38);
-            dgwCustomerList.Name = "dgwCustomerList";
-            dgwCustomerList.ReadOnly = true;
-            dgwCustomerList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwCustomerList.RowTemplate.Height = 25;
-            dgwCustomerList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwCustomerList.Size = new Size(1025, 427);
-            dgwCustomerList.TabIndex = 13;
-            // 
             // contextMenuStrip1
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { customerCartToolStripMenuItem, toolStripSeparator3, customerAddToolStripMenuItem, customerUpdateToolStripMenuItem, customerDeleteToolStripMenuItem, toolStripSeparator4, customerRefreshToolStripMenuItem });
@@ -189,12 +164,21 @@
             customerRefreshToolStripMenuItem.Text = "Yenile";
             customerRefreshToolStripMenuItem.Click += customerRefreshToolStripMenuItem_Click;
             // 
+            // customerListControl
+            // 
+            customerListControl.ContextMenuStrip = contextMenuStrip1;
+            customerListControl.Dock = DockStyle.Fill;
+            customerListControl.Location = new Point(0, 38);
+            customerListControl.Name = "customerListControl";
+            customerListControl.Size = new Size(1025, 427);
+            customerListControl.TabIndex = 13;
+            // 
             // frmCustomerList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1025, 523);
-            Controls.Add(dgwCustomerList);
+            Controls.Add(customerListControl);
             Controls.Add(panel1);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelBottom);
@@ -204,7 +188,6 @@
             Load += frmCustomerList_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwCustomerList).EndInit();
             contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -228,12 +211,12 @@
         private ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.Panel panelDgwFooter;
         private System.Windows.Forms.Panel panelBottom;
-        private DataGridView dgwCustomerList;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem customerCartToolStripMenuItem;
         private ToolStripMenuItem customerAddToolStripMenuItem;
         private ToolStripMenuItem customerUpdateToolStripMenuItem;
         private ToolStripMenuItem customerDeleteToolStripMenuItem;
         private ToolStripMenuItem customerRefreshToolStripMenuItem;
+        private UserControllers.Customers.CustomerListControl customerListControl;
     }
 }

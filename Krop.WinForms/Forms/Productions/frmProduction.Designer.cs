@@ -28,11 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmProduction));
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             panelBottom = new System.Windows.Forms.Panel();
-            dgwProductionList = new DataGridView();
+            productionListControl = new UserControllers.Productions.ProductionListControl();
             panel1 = new System.Windows.Forms.Panel();
             txtProductionSearch = new TextBox();
             bttnProductionSearch = new Button();
@@ -40,38 +38,32 @@
             bttnAdd = new Button();
             bttnUpdate = new Button();
             bttnDelete = new Button();
-            panelLeft = new System.Windows.Forms.Panel();
-            txtDescription = new TextBox();
-            label7 = new Label();
-            label6 = new Label();
-            productionDateTimePicker = new DateTimePicker();
-            label5 = new Label();
-            txtProductionQuantity = new TextBox();
-            label4 = new Label();
-            cmbBoxProductCode = new ComboBox();
-            label3 = new Label();
-            cmbBoxProductName = new ComboBox();
-            label2 = new Label();
-            cmbBoxBranch = new ComboBox();
-            label1 = new Label();
             panelMid = new System.Windows.Forms.Panel();
-            dgwProductReceiptList = new DataGridView();
+            productReceiptListControl = new UserControllers.ProductReceipts.ProductReceiptListControl();
             panelTop = new System.Windows.Forms.Panel();
             txtProductReceiptSearch = new TextBox();
             bttnProductReceiptSearch = new Button();
+            label4 = new Label();
+            txtProductionQuantity = new TextBox();
+            label5 = new Label();
+            productionDateTimePicker = new DateTimePicker();
+            label6 = new Label();
+            label7 = new Label();
+            txtDescription = new TextBox();
+            branchComboBoxControl = new UserControllers.Branches.BranchComboBoxControl();
+            panelLeft = new System.Windows.Forms.Panel();
+            productComboBoxControl = new UserControllers.Products.ProductComboBoxControl();
             panelBottom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwProductionList).BeginInit();
             panel1.SuspendLayout();
             panelBottomBottom.SuspendLayout();
-            panelLeft.SuspendLayout();
             panelMid.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwProductReceiptList).BeginInit();
             panelTop.SuspendLayout();
+            panelLeft.SuspendLayout();
             SuspendLayout();
             // 
             // panelBottom
             // 
-            panelBottom.Controls.Add(dgwProductionList);
+            panelBottom.Controls.Add(productionListControl);
             panelBottom.Controls.Add(panel1);
             panelBottom.Controls.Add(panelBottomBottom);
             panelBottom.Dock = DockStyle.Bottom;
@@ -81,28 +73,13 @@
             panelBottom.Size = new Size(1264, 298);
             panelBottom.TabIndex = 0;
             // 
-            // dgwProductionList
+            // productionListControl
             // 
-            dgwProductionList.AllowUserToAddRows = false;
-            dgwProductionList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwProductionList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwProductionList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwProductionList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwProductionList.BackgroundColor = SystemColors.Control;
-            dgwProductionList.BorderStyle = BorderStyle.None;
-            dgwProductionList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwProductionList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwProductionList.Dock = DockStyle.Fill;
-            dgwProductionList.Location = new Point(10, 48);
-            dgwProductionList.Name = "dgwProductionList";
-            dgwProductionList.ReadOnly = true;
-            dgwProductionList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwProductionList.RowTemplate.Height = 25;
-            dgwProductionList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwProductionList.Size = new Size(1244, 209);
-            dgwProductionList.TabIndex = 10;
-            dgwProductionList.DoubleClick += dgwProductionList_DoubleClick;
+            productionListControl.Dock = DockStyle.Fill;
+            productionListControl.Location = new Point(10, 48);
+            productionListControl.Name = "productionListControl";
+            productionListControl.Size = new Size(1244, 209);
+            productionListControl.TabIndex = 7;
             // 
             // panel1
             // 
@@ -189,179 +166,24 @@
             bttnDelete.UseVisualStyleBackColor = true;
             bttnDelete.Click += bttnDelete_Click;
             // 
-            // panelLeft
-            // 
-            panelLeft.Controls.Add(txtDescription);
-            panelLeft.Controls.Add(label7);
-            panelLeft.Controls.Add(label6);
-            panelLeft.Controls.Add(productionDateTimePicker);
-            panelLeft.Controls.Add(label5);
-            panelLeft.Controls.Add(txtProductionQuantity);
-            panelLeft.Controls.Add(label4);
-            panelLeft.Controls.Add(cmbBoxProductCode);
-            panelLeft.Controls.Add(label3);
-            panelLeft.Controls.Add(cmbBoxProductName);
-            panelLeft.Controls.Add(label2);
-            panelLeft.Controls.Add(cmbBoxBranch);
-            panelLeft.Controls.Add(label1);
-            panelLeft.Dock = DockStyle.Left;
-            panelLeft.Location = new Point(0, 0);
-            panelLeft.Name = "panelLeft";
-            panelLeft.Padding = new Padding(10);
-            panelLeft.Size = new Size(262, 383);
-            panelLeft.TabIndex = 1;
-            // 
-            // txtDescription
-            // 
-            txtDescription.Location = new Point(13, 261);
-            txtDescription.Multiline = true;
-            txtDescription.Name = "txtDescription";
-            txtDescription.PlaceholderText = "Açıklama...";
-            txtDescription.Size = new Size(219, 109);
-            txtDescription.TabIndex = 11;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(11, 243);
-            label7.Name = "label7";
-            label7.Size = new Size(62, 15);
-            label7.TabIndex = 10;
-            label7.Text = "Açıklama :";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(12, 199);
-            label6.Name = "label6";
-            label6.Size = new Size(80, 15);
-            label6.TabIndex = 9;
-            label6.Text = "Üretim Tarihi :";
-            // 
-            // productionDateTimePicker
-            // 
-            productionDateTimePicker.Location = new Point(12, 217);
-            productionDateTimePicker.Name = "productionDateTimePicker";
-            productionDateTimePicker.Size = new Size(200, 23);
-            productionDateTimePicker.TabIndex = 8;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(200, 176);
-            label5.Name = "label5";
-            label5.Size = new Size(32, 15);
-            label5.TabIndex = 7;
-            label5.Text = "Adet";
-            // 
-            // txtProductionQuantity
-            // 
-            txtProductionQuantity.Location = new Point(12, 173);
-            txtProductionQuantity.Name = "txtProductionQuantity";
-            txtProductionQuantity.PlaceholderText = "Üretilecek Miktar...";
-            txtProductionQuantity.Size = new Size(174, 23);
-            txtProductionQuantity.TabIndex = 7;
-            txtProductionQuantity.Text = "0";
-            txtProductionQuantity.KeyPress += txtProductionQuantity_KeyPress;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(13, 155);
-            label4.Name = "label4";
-            label4.Size = new Size(102, 15);
-            label4.TabIndex = 6;
-            label4.Text = "Üretilecek Miktar :";
-            // 
-            // cmbBoxProductCode
-            // 
-            cmbBoxProductCode.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxProductCode.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxProductCode.FormattingEnabled = true;
-            cmbBoxProductCode.Location = new Point(12, 129);
-            cmbBoxProductCode.Name = "cmbBoxProductCode";
-            cmbBoxProductCode.Size = new Size(219, 23);
-            cmbBoxProductCode.TabIndex = 5;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(12, 111);
-            label3.Name = "label3";
-            label3.Size = new Size(70, 15);
-            label3.TabIndex = 4;
-            label3.Text = "Ürün Kodu :";
-            // 
-            // cmbBoxProductName
-            // 
-            cmbBoxProductName.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxProductName.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxProductName.FormattingEnabled = true;
-            cmbBoxProductName.Location = new Point(13, 81);
-            cmbBoxProductName.Name = "cmbBoxProductName";
-            cmbBoxProductName.Size = new Size(219, 23);
-            cmbBoxProductName.TabIndex = 3;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(13, 63);
-            label2.Name = "label2";
-            label2.Size = new Size(60, 15);
-            label2.TabIndex = 2;
-            label2.Text = "Ürün Adı :";
-            // 
-            // cmbBoxBranch
-            // 
-            cmbBoxBranch.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxBranch.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxBranch.FormattingEnabled = true;
-            cmbBoxBranch.Location = new Point(12, 33);
-            cmbBoxBranch.Name = "cmbBoxBranch";
-            cmbBoxBranch.Size = new Size(219, 23);
-            cmbBoxBranch.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(12, 15);
-            label1.Name = "label1";
-            label1.Size = new Size(130, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Üretim Yapılacak Şube :";
-            // 
             // panelMid
             // 
-            panelMid.Controls.Add(dgwProductReceiptList);
+            panelMid.Controls.Add(productReceiptListControl);
             panelMid.Controls.Add(panelTop);
             panelMid.Dock = DockStyle.Fill;
-            panelMid.Location = new Point(262, 0);
+            panelMid.Location = new Point(238, 0);
             panelMid.Name = "panelMid";
             panelMid.Padding = new Padding(10);
-            panelMid.Size = new Size(1002, 383);
+            panelMid.Size = new Size(1026, 383);
             panelMid.TabIndex = 2;
             // 
-            // dgwProductReceiptList
+            // productReceiptListControl
             // 
-            dgwProductReceiptList.AllowUserToAddRows = false;
-            dgwProductReceiptList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle2.BackColor = SystemColors.GradientInactiveCaption;
-            dgwProductReceiptList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
-            dgwProductReceiptList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwProductReceiptList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwProductReceiptList.BackgroundColor = SystemColors.Control;
-            dgwProductReceiptList.BorderStyle = BorderStyle.None;
-            dgwProductReceiptList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwProductReceiptList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwProductReceiptList.Dock = DockStyle.Fill;
-            dgwProductReceiptList.Location = new Point(10, 48);
-            dgwProductReceiptList.Name = "dgwProductReceiptList";
-            dgwProductReceiptList.ReadOnly = true;
-            dgwProductReceiptList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwProductReceiptList.RowTemplate.Height = 25;
-            dgwProductReceiptList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwProductReceiptList.Size = new Size(982, 325);
-            dgwProductReceiptList.TabIndex = 10;
+            productReceiptListControl.Dock = DockStyle.Fill;
+            productReceiptListControl.Location = new Point(10, 48);
+            productReceiptListControl.Name = "productReceiptListControl";
+            productReceiptListControl.Size = new Size(1006, 325);
+            productReceiptListControl.TabIndex = 7;
             // 
             // panelTop
             // 
@@ -371,7 +193,7 @@
             panelTop.Location = new Point(10, 10);
             panelTop.Name = "panelTop";
             panelTop.Padding = new Padding(5);
-            panelTop.Size = new Size(982, 38);
+            panelTop.Size = new Size(1006, 38);
             panelTop.TabIndex = 6;
             // 
             // txtProductReceiptSearch
@@ -381,19 +203,113 @@
             txtProductReceiptSearch.Location = new Point(5, 5);
             txtProductReceiptSearch.Name = "txtProductReceiptSearch";
             txtProductReceiptSearch.PlaceholderText = "Arama...";
-            txtProductReceiptSearch.Size = new Size(897, 27);
+            txtProductReceiptSearch.Size = new Size(921, 27);
             txtProductReceiptSearch.TabIndex = 2;
             txtProductReceiptSearch.TextChanged += txtProductReceiptSearch_TextChanged;
             // 
             // bttnProductReceiptSearch
             // 
             bttnProductReceiptSearch.Dock = DockStyle.Right;
-            bttnProductReceiptSearch.Location = new Point(902, 5);
+            bttnProductReceiptSearch.Location = new Point(926, 5);
             bttnProductReceiptSearch.Name = "bttnProductReceiptSearch";
             bttnProductReceiptSearch.Size = new Size(75, 28);
             bttnProductReceiptSearch.TabIndex = 1;
             bttnProductReceiptSearch.Text = "Ara...";
             bttnProductReceiptSearch.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(15, 155);
+            label4.Name = "label4";
+            label4.Size = new Size(102, 15);
+            label4.TabIndex = 6;
+            label4.Text = "Üretilecek Miktar :";
+            // 
+            // txtProductionQuantity
+            // 
+            txtProductionQuantity.Location = new Point(14, 173);
+            txtProductionQuantity.Name = "txtProductionQuantity";
+            txtProductionQuantity.PlaceholderText = "Üretilecek Miktar...";
+            txtProductionQuantity.Size = new Size(155, 23);
+            txtProductionQuantity.TabIndex = 7;
+            txtProductionQuantity.Text = "0";
+            txtProductionQuantity.KeyPress += txtProductionQuantity_KeyPress;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(183, 176);
+            label5.Name = "label5";
+            label5.Size = new Size(32, 15);
+            label5.TabIndex = 7;
+            label5.Text = "Adet";
+            // 
+            // productionDateTimePicker
+            // 
+            productionDateTimePicker.Location = new Point(14, 217);
+            productionDateTimePicker.Name = "productionDateTimePicker";
+            productionDateTimePicker.Size = new Size(200, 23);
+            productionDateTimePicker.TabIndex = 8;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(14, 199);
+            label6.Name = "label6";
+            label6.Size = new Size(80, 15);
+            label6.TabIndex = 9;
+            label6.Text = "Üretim Tarihi :";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(13, 243);
+            label7.Name = "label7";
+            label7.Size = new Size(62, 15);
+            label7.TabIndex = 10;
+            label7.Text = "Açıklama :";
+            // 
+            // txtDescription
+            // 
+            txtDescription.Location = new Point(15, 261);
+            txtDescription.Multiline = true;
+            txtDescription.Name = "txtDescription";
+            txtDescription.PlaceholderText = "Açıklama...";
+            txtDescription.Size = new Size(200, 109);
+            txtDescription.TabIndex = 11;
+            // 
+            // branchComboBoxControl
+            // 
+            branchComboBoxControl.Location = new Point(0, 11);
+            branchComboBoxControl.Name = "branchComboBoxControl";
+            branchComboBoxControl.Size = new Size(227, 50);
+            branchComboBoxControl.TabIndex = 12;
+            // 
+            // panelLeft
+            // 
+            panelLeft.Controls.Add(productComboBoxControl);
+            panelLeft.Controls.Add(branchComboBoxControl);
+            panelLeft.Controls.Add(txtDescription);
+            panelLeft.Controls.Add(label7);
+            panelLeft.Controls.Add(label6);
+            panelLeft.Controls.Add(productionDateTimePicker);
+            panelLeft.Controls.Add(label5);
+            panelLeft.Controls.Add(txtProductionQuantity);
+            panelLeft.Controls.Add(label4);
+            panelLeft.Dock = DockStyle.Left;
+            panelLeft.Location = new Point(0, 0);
+            panelLeft.Name = "panelLeft";
+            panelLeft.Padding = new Padding(10);
+            panelLeft.Size = new Size(238, 383);
+            panelLeft.TabIndex = 1;
+            // 
+            // productComboBoxControl
+            // 
+            productComboBoxControl.Location = new Point(0, 61);
+            productComboBoxControl.Name = "productComboBoxControl";
+            productComboBoxControl.Size = new Size(231, 88);
+            productComboBoxControl.TabIndex = 13;
             // 
             // frmProduction
             // 
@@ -408,16 +324,14 @@
             Text = "Üretim";
             Load += frmProduction_Load;
             panelBottom.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgwProductionList).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panelBottomBottom.ResumeLayout(false);
-            panelLeft.ResumeLayout(false);
-            panelLeft.PerformLayout();
             panelMid.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgwProductReceiptList).EndInit();
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
+            panelLeft.ResumeLayout(false);
+            panelLeft.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -425,7 +339,6 @@
 
         private System.Windows.Forms.Panel panelBottom;
         private System.Windows.Forms.Panel panelBottomBottom;
-        private System.Windows.Forms.Panel panelLeft;
         private System.Windows.Forms.Panel panelMid;
         private System.Windows.Forms.Panel panel1;
         private TextBox txtProductionSearch;
@@ -433,23 +346,20 @@
         private System.Windows.Forms.Panel panelTop;
         private TextBox txtProductReceiptSearch;
         private Button bttnProductReceiptSearch;
-        private TextBox txtDescription;
-        private Label label7;
-        private Label label6;
-        private DateTimePicker productionDateTimePicker;
-        private Label label5;
-        private TextBox txtProductionQuantity;
-        private Label label4;
-        private ComboBox cmbBoxProductCode;
-        private Label label3;
-        private ComboBox cmbBoxProductName;
-        private Label label2;
-        private ComboBox cmbBoxBranch;
-        private Label label1;
-        private DataGridView dgwProductReceiptList;
-        private DataGridView dgwProductionList;
         private Button bttnAdd;
         private Button bttnUpdate;
         private Button bttnDelete;
+        private UserControllers.ProductReceipts.ProductReceiptListControl productReceiptListControl;
+        private UserControllers.Productions.ProductionListControl productionListControl;
+        private Label label4;
+        private TextBox txtProductionQuantity;
+        private Label label5;
+        private DateTimePicker productionDateTimePicker;
+        private Label label6;
+        private Label label7;
+        private TextBox txtDescription;
+        private UserControllers.Branches.BranchComboBoxControl branchComboBoxControl;
+        private System.Windows.Forms.Panel panelLeft;
+        private UserControllers.Products.ProductComboBoxControl productComboBoxControl;
     }
 }

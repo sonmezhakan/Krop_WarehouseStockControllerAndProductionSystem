@@ -1,5 +1,4 @@
 ﻿using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.Brands;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 
@@ -18,18 +17,17 @@ namespace Krop.WinForms.Brands
 
         private async void frmBrandDelete_Load(object sender, EventArgs e)
         {
-           await CategoryList();
-            if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxBrandSelect.SelectedValue = Id;
+            await brandComboBoxControl.BrandList(_webApiService);
+            brandComboBoxControl.BrandSelect(Id);
         }
 
         private async void bttnBrandDelete_Click(object sender, EventArgs e)
         {
-            if(cmbBoxBrandSelect.SelectedValue is not null)
+            if(brandComboBoxControl.BrandComboBox.SelectedValue is not null)
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/delete/{cmbBoxBrandSelect.SelectedValue}");
+                    HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/delete/{(Guid)brandComboBoxControl.BrandComboBox.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -37,33 +35,13 @@ namespace Krop.WinForms.Brands
                         return;
                     }
 
-                  await  CategoryList();//Listele
+                    await brandComboBoxControl.BrandList(_webApiService);
                 }
             }
             else
             {
                 MessageBox.Show("Doğru Seçim Yapınız!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private async Task CategoryList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
-
-            cmbBoxBrandSelect.DataSource = null;
-
-            cmbBoxBrandSelect.DisplayMember = "BrandName";
-            cmbBoxBrandSelect.ValueMember = "Id";
-
-            cmbBoxBrandSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxBrandSelect.SelectedIndex = -1;
         }
     }
 }

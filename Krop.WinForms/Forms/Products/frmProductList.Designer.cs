@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmProductList));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             panelBottom = new System.Windows.Forms.Panel();
             panelDgwFooter = new System.Windows.Forms.Panel();
             contextMenuStrip1 = new ContextMenuStrip(components);
@@ -47,12 +46,11 @@
             stockTransferToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             stockNotificationToolStripMenuItem = new ToolStripMenuItem();
-            dgwProductList = new DataGridView();
             panel1 = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
             bttnSearch = new Button();
+            productListControl = new UserControllers.Products.ProductListControl();
             contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwProductList).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -164,30 +162,6 @@
             stockNotificationToolStripMenuItem.Size = new Size(157, 22);
             stockNotificationToolStripMenuItem.Text = "Stok Bildirimi";
             // 
-            // dgwProductList
-            // 
-            dgwProductList.AllowUserToAddRows = false;
-            dgwProductList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwProductList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwProductList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwProductList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwProductList.BackgroundColor = SystemColors.Control;
-            dgwProductList.BorderStyle = BorderStyle.None;
-            dgwProductList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwProductList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwProductList.ContextMenuStrip = contextMenuStrip1;
-            dgwProductList.Dock = DockStyle.Fill;
-            dgwProductList.Location = new Point(0, 38);
-            dgwProductList.MultiSelect = false;
-            dgwProductList.Name = "dgwProductList";
-            dgwProductList.ReadOnly = true;
-            dgwProductList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwProductList.RowTemplate.Height = 25;
-            dgwProductList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwProductList.Size = new Size(1254, 585);
-            dgwProductList.TabIndex = 7;
-            // 
             // panel1
             // 
             panel1.Controls.Add(txtSearch);
@@ -221,12 +195,20 @@
             bttnSearch.UseVisualStyleBackColor = true;
             bttnSearch.Click += bttnSearch_Click;
             // 
+            // productListControl
+            // 
+            productListControl.Dock = DockStyle.Fill;
+            productListControl.Location = new Point(0, 38);
+            productListControl.Name = "productListControl";
+            productListControl.Size = new Size(1254, 585);
+            productListControl.TabIndex = 9;
+            // 
             // frmProductList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1254, 681);
-            Controls.Add(dgwProductList);
+            Controls.Add(productListControl);
             Controls.Add(panel1);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelBottom);
@@ -235,7 +217,6 @@
             Text = "Ürün Listesi";
             Load += frmProductList_Load;
             contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgwProductList).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
@@ -259,9 +240,9 @@
         private ToolStripMenuItem stockReceiptToolStripMenuItem;
         private ToolStripMenuItem stockTransferToolStripMenuItem;
         private ToolStripMenuItem stockNotificationToolStripMenuItem;
-        private DataGridView dgwProductList;
         private System.Windows.Forms.Panel panel1;
         private TextBox txtSearch;
         private Button bttnSearch;
+        private UserControllers.Products.ProductListControl productListControl;
     }
 }

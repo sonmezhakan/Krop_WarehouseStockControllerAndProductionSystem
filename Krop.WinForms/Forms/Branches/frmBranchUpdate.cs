@@ -19,38 +19,17 @@ namespace Krop.WinForms.Forms.Branches
 
         private async void frmBranchUpdate_Load(object sender, EventArgs e)
         {
-            await BranchList();
             txtPhoneNumber.MaxLength = 11;
-            if (cmbBoxBranchSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxBranchSelect.SelectedValue = Id;
-        }
-        private async Task BranchList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
-
-            cmbBoxBranchSelect.DataSource = null;
-
-            cmbBoxBranchSelect.DisplayMember = "BranchName";
-            cmbBoxBranchSelect.ValueMember = "Id";
-
-            cmbBoxBranchSelect.SelectedIndexChanged -= CmbBoxBranchSelect_SelectedIndexChanged;
-            cmbBoxBranchSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxBranchSelect.SelectedIndex = -1;
-            cmbBoxBranchSelect.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
+            await branchComboBoxControl.BranchList(_webApiService);
+            branchComboBoxControl.BranchComboBox.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
+            branchComboBoxControl.BranchSelect(Id);
         }
 
         private async void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbBoxBranchSelect.SelectedValue is not null)
+            if (branchComboBoxControl.BranchComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"branch/GetById/{cmbBoxBranchSelect.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"branch/GetById/{(Guid)branchComboBoxControl.BranchComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);
@@ -77,13 +56,13 @@ namespace Krop.WinForms.Forms.Branches
 
         private async void bttnBranchUpdate_Click(object sender, EventArgs e)
         {
-            if (cmbBoxBranchSelect.SelectedValue is not null)
+            if (branchComboBoxControl.BranchComboBox.SelectedValue is not null)
             {
                 if (DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
                     UpdateBranchDTO updateBranchDTO = new UpdateBranchDTO
                     {
-                        Id = (Guid)cmbBoxBranchSelect.SelectedValue,
+                        Id = (Guid)branchComboBoxControl.BranchComboBox.SelectedValue,
                         BranchName = txtBranchName.Text,
                         PhoneNumber = txtPhoneNumber.Text,
                         Email = txtEmail.Text,
@@ -98,7 +77,7 @@ namespace Krop.WinForms.Forms.Branches
                         await ResponseController.ErrorResponseController(response);
                         return;
                     }
-                   await BranchList();
+                    await branchComboBoxControl.BranchList(_webApiService); ;
                 }
             }
             else

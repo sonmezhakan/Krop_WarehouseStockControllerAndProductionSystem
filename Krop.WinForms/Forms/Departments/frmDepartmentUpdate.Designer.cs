@@ -31,8 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDepartmentUpdate));
             bttnUpdate = new Button();
             panelMid = new System.Windows.Forms.Panel();
-            label3 = new Label();
-            cmbBoxDepartmentSelect = new ComboBox();
+            departmentComboBoxControl = new UserControllers.Departments.DepartmentComboBoxControl();
             txtDescription = new TextBox();
             label2 = new Label();
             txtDepartmentName = new TextBox();
@@ -58,8 +57,7 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(label3);
-            panelMid.Controls.Add(cmbBoxDepartmentSelect);
+            panelMid.Controls.Add(departmentComboBoxControl);
             panelMid.Controls.Add(txtDescription);
             panelMid.Controls.Add(label2);
             panelMid.Controls.Add(txtDepartmentName);
@@ -71,37 +69,25 @@
             panelMid.Size = new Size(235, 256);
             panelMid.TabIndex = 3;
             // 
-            // label3
+            // departmentComboBoxControl
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(12, 19);
-            label3.Name = "label3";
-            label3.Size = new Size(173, 15);
-            label3.TabIndex = 5;
-            label3.Text = "Güncellenecek Departman Adı :";
-            // 
-            // cmbBoxDepartmentSelect
-            // 
-            cmbBoxDepartmentSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxDepartmentSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxDepartmentSelect.FormattingEnabled = true;
-            cmbBoxDepartmentSelect.Location = new Point(13, 37);
-            cmbBoxDepartmentSelect.Name = "cmbBoxDepartmentSelect";
-            cmbBoxDepartmentSelect.Size = new Size(211, 23);
-            cmbBoxDepartmentSelect.TabIndex = 4;
+            departmentComboBoxControl.Location = new Point(0, 14);
+            departmentComboBoxControl.Name = "departmentComboBoxControl";
+            departmentComboBoxControl.Size = new Size(241, 46);
+            departmentComboBoxControl.TabIndex = 5;
             // 
             // txtDescription
             // 
-            txtDescription.Location = new Point(13, 126);
+            txtDescription.Location = new Point(11, 126);
             txtDescription.Multiline = true;
             txtDescription.Name = "txtDescription";
-            txtDescription.Size = new Size(211, 111);
+            txtDescription.Size = new Size(200, 111);
             txtDescription.TabIndex = 3;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(13, 108);
+            label2.Location = new Point(11, 108);
             label2.Name = "label2";
             label2.Size = new Size(62, 15);
             label2.TabIndex = 2;
@@ -109,15 +95,15 @@
             // 
             // txtDepartmentName
             // 
-            txtDepartmentName.Location = new Point(13, 81);
+            txtDepartmentName.Location = new Point(11, 81);
             txtDepartmentName.Name = "txtDepartmentName";
-            txtDepartmentName.Size = new Size(211, 23);
+            txtDepartmentName.Size = new Size(200, 23);
             txtDepartmentName.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 63);
+            label1.Location = new Point(10, 63);
             label1.Name = "label1";
             label1.Size = new Size(93, 15);
             label1.TabIndex = 0;
@@ -156,12 +142,11 @@
 
         private Button bttnUpdate;
         private System.Windows.Forms.Panel panelMid;
-        private Label label3;
-        private ComboBox cmbBoxDepartmentSelect;
         private TextBox txtDescription;
         private Label label2;
         private TextBox txtDepartmentName;
         private Label label1;
         private System.Windows.Forms.Panel panelBottom;
+        private UserControllers.Departments.DepartmentComboBoxControl departmentComboBoxControl;
     }
 }

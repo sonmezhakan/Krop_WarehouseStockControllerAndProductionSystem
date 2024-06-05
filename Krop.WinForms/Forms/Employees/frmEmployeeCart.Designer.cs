@@ -35,8 +35,6 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
-            cmbBoxAppUserSelect = new ComboBox();
-            label1 = new Label();
             panelMid = new System.Windows.Forms.Panel();
             txtDepartmentName = new TextBox();
             txtBranchName = new TextBox();
@@ -46,6 +44,7 @@
             txtSalary = new TextBox();
             dateTimePickerEnd = new DateTimePicker();
             dateTimePickerStart = new DateTimePicker();
+            employeeComboBoxControl1 = new UserControllers.Employees.EmployeeComboBoxControl();
             panelMid.SuspendLayout();
             SuspendLayout();
             // 
@@ -62,7 +61,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(12, 289);
+            label8.Location = new Point(15, 289);
             label8.Name = "label8";
             label8.Size = new Size(102, 15);
             label8.TabIndex = 16;
@@ -71,7 +70,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(12, 151);
+            label6.Location = new Point(15, 151);
             label6.Name = "label6";
             label6.Size = new Size(41, 15);
             label6.TabIndex = 12;
@@ -80,7 +79,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(12, 239);
+            label5.Location = new Point(15, 239);
             label5.Name = "label5";
             label5.Size = new Size(97, 15);
             label5.TabIndex = 9;
@@ -89,7 +88,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(12, 195);
+            label4.Location = new Point(15, 195);
             label4.Name = "label4";
             label4.Size = new Size(105, 15);
             label4.TabIndex = 8;
@@ -98,7 +97,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 104);
+            label3.Location = new Point(15, 104);
             label3.Name = "label3";
             label3.Size = new Size(39, 15);
             label3.TabIndex = 4;
@@ -107,33 +106,15 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 55);
+            label2.Location = new Point(15, 55);
             label2.Name = "label2";
             label2.Size = new Size(72, 15);
             label2.TabIndex = 2;
             label2.Text = "Departman :";
             // 
-            // cmbBoxAppUserSelect
-            // 
-            cmbBoxAppUserSelect.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxAppUserSelect.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxAppUserSelect.FormattingEnabled = true;
-            cmbBoxAppUserSelect.Location = new Point(12, 27);
-            cmbBoxAppUserSelect.Name = "cmbBoxAppUserSelect";
-            cmbBoxAppUserSelect.Size = new Size(202, 23);
-            cmbBoxAppUserSelect.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(12, 9);
-            label1.Name = "label1";
-            label1.Size = new Size(130, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Çalışanın Kullanıcı Adı :";
-            // 
             // panelMid
             // 
+            panelMid.Controls.Add(employeeComboBoxControl1);
             panelMid.Controls.Add(txtDepartmentName);
             panelMid.Controls.Add(txtBranchName);
             panelMid.Controls.Add(label7);
@@ -148,8 +129,6 @@
             panelMid.Controls.Add(label4);
             panelMid.Controls.Add(label3);
             panelMid.Controls.Add(label2);
-            panelMid.Controls.Add(cmbBoxAppUserSelect);
-            panelMid.Controls.Add(label1);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
@@ -159,7 +138,7 @@
             // txtDepartmentName
             // 
             txtDepartmentName.Enabled = false;
-            txtDepartmentName.Location = new Point(12, 73);
+            txtDepartmentName.Location = new Point(15, 73);
             txtDepartmentName.Name = "txtDepartmentName";
             txtDepartmentName.ReadOnly = true;
             txtDepartmentName.Size = new Size(202, 23);
@@ -168,7 +147,7 @@
             // txtBranchName
             // 
             txtBranchName.Enabled = false;
-            txtBranchName.Location = new Point(12, 125);
+            txtBranchName.Location = new Point(15, 125);
             txtBranchName.Name = "txtBranchName";
             txtBranchName.ReadOnly = true;
             txtBranchName.Size = new Size(202, 23);
@@ -188,7 +167,7 @@
             radioButtonPassive.AutoSize = true;
             radioButtonPassive.Checked = true;
             radioButtonPassive.Enabled = false;
-            radioButtonPassive.Location = new Point(12, 307);
+            radioButtonPassive.Location = new Point(15, 307);
             radioButtonPassive.Name = "radioButtonPassive";
             radioButtonPassive.Size = new Size(50, 19);
             radioButtonPassive.TabIndex = 21;
@@ -200,7 +179,7 @@
             // 
             radioButtonActive.AutoSize = true;
             radioButtonActive.Enabled = false;
-            radioButtonActive.Location = new Point(64, 307);
+            radioButtonActive.Location = new Point(67, 307);
             radioButtonActive.Name = "radioButtonActive";
             radioButtonActive.Size = new Size(50, 19);
             radioButtonActive.TabIndex = 20;
@@ -210,7 +189,7 @@
             // txtSalary
             // 
             txtSalary.Enabled = false;
-            txtSalary.Location = new Point(12, 169);
+            txtSalary.Location = new Point(15, 169);
             txtSalary.Name = "txtSalary";
             txtSalary.ReadOnly = true;
             txtSalary.Size = new Size(183, 23);
@@ -219,7 +198,7 @@
             // dateTimePickerEnd
             // 
             dateTimePickerEnd.Enabled = false;
-            dateTimePickerEnd.Location = new Point(12, 257);
+            dateTimePickerEnd.Location = new Point(15, 257);
             dateTimePickerEnd.Name = "dateTimePickerEnd";
             dateTimePickerEnd.Size = new Size(200, 23);
             dateTimePickerEnd.TabIndex = 18;
@@ -227,10 +206,17 @@
             // dateTimePickerStart
             // 
             dateTimePickerStart.Enabled = false;
-            dateTimePickerStart.Location = new Point(12, 213);
+            dateTimePickerStart.Location = new Point(15, 213);
             dateTimePickerStart.Name = "dateTimePickerStart";
             dateTimePickerStart.Size = new Size(200, 23);
             dateTimePickerStart.TabIndex = 17;
+            // 
+            // employeeComboBoxControl1
+            // 
+            employeeComboBoxControl1.Location = new Point(0, 3);
+            employeeComboBoxControl1.Name = "employeeComboBoxControl1";
+            employeeComboBoxControl1.Size = new Size(226, 53);
+            employeeComboBoxControl1.TabIndex = 25;
             // 
             // frmEmployeeCart
             // 
@@ -259,8 +245,6 @@
         private Label label4;
         private Label label3;
         private Label label2;
-        private ComboBox cmbBoxAppUserSelect;
-        private Label label1;
         private System.Windows.Forms.Panel panelMid;
         private RadioButton radioButtonPassive;
         private RadioButton radioButtonActive;
@@ -270,5 +254,6 @@
         private TextBox txtDepartmentName;
         private TextBox txtBranchName;
         private Label label7;
+        private UserControllers.Employees.EmployeeComboBoxControl employeeComboBoxControl1;
     }
 }

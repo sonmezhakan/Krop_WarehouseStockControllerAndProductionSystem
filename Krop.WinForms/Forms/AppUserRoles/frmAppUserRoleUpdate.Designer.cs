@@ -32,10 +32,9 @@
             panelBottom = new System.Windows.Forms.Panel();
             bttnAppUserRoleUpdate = new Button();
             panelMid = new System.Windows.Forms.Panel();
-            cmbBoxAppUserRoleSelect = new ComboBox();
-            label2 = new Label();
             txtAppUserRoleName = new TextBox();
             label1 = new Label();
+            appUserRoleComboBoxListControl = new UserControllers.AppUserRoles.AppUserRoleComboBoxControl();
             panelBottom.SuspendLayout();
             panelMid.SuspendLayout();
             SuspendLayout();
@@ -45,10 +44,10 @@
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
             panelBottom.Controls.Add(bttnAppUserRoleUpdate);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 132);
+            panelBottom.Location = new Point(0, 111);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(271, 41);
+            panelBottom.Size = new Size(235, 41);
             panelBottom.TabIndex = 4;
             // 
             // bttnAppUserRoleUpdate
@@ -56,7 +55,7 @@
             bttnAppUserRoleUpdate.Dock = DockStyle.Right;
             bttnAppUserRoleUpdate.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnAppUserRoleUpdate.Image = (Image)resources.GetObject("bttnAppUserRoleUpdate.Image");
-            bttnAppUserRoleUpdate.Location = new Point(152, 0);
+            bttnAppUserRoleUpdate.Location = new Point(116, 0);
             bttnAppUserRoleUpdate.Name = "bttnAppUserRoleUpdate";
             bttnAppUserRoleUpdate.Size = new Size(107, 39);
             bttnAppUserRoleUpdate.TabIndex = 1;
@@ -67,54 +66,43 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(cmbBoxAppUserRoleSelect);
-            panelMid.Controls.Add(label2);
             panelMid.Controls.Add(txtAppUserRoleName);
             panelMid.Controls.Add(label1);
+            panelMid.Controls.Add(appUserRoleComboBoxListControl);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(271, 173);
+            panelMid.Size = new Size(235, 152);
             panelMid.TabIndex = 5;
-            // 
-            // cmbBoxAppUserRoleSelect
-            // 
-            cmbBoxAppUserRoleSelect.FormattingEnabled = true;
-            cmbBoxAppUserRoleSelect.Location = new Point(12, 38);
-            cmbBoxAppUserRoleSelect.Name = "cmbBoxAppUserRoleSelect";
-            cmbBoxAppUserRoleSelect.Size = new Size(246, 23);
-            cmbBoxAppUserRoleSelect.TabIndex = 23;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 20);
-            label2.Name = "label2";
-            label2.Size = new Size(139, 15);
-            label2.TabIndex = 22;
-            label2.Text = "Güncellenecek Yetki Adı :";
             // 
             // txtAppUserRoleName
             // 
-            txtAppUserRoleName.Location = new Point(12, 82);
+            txtAppUserRoleName.Location = new Point(15, 74);
             txtAppUserRoleName.Name = "txtAppUserRoleName";
-            txtAppUserRoleName.Size = new Size(246, 23);
-            txtAppUserRoleName.TabIndex = 1;
+            txtAppUserRoleName.Size = new Size(200, 23);
+            txtAppUserRoleName.TabIndex = 26;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 64);
+            label1.Location = new Point(15, 56);
             label1.Name = "label1";
             label1.Size = new Size(59, 15);
-            label1.TabIndex = 0;
+            label1.TabIndex = 25;
             label1.Text = "Yetki Adı :";
+            // 
+            // appUserRoleComboBoxListControl
+            // 
+            appUserRoleComboBoxListControl.Location = new Point(0, 12);
+            appUserRoleComboBoxListControl.Name = "appUserRoleComboBoxListControl";
+            appUserRoleComboBoxListControl.Size = new Size(232, 44);
+            appUserRoleComboBoxListControl.TabIndex = 24;
             // 
             // frmAppUserRoleUpdate
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(271, 173);
+            ClientSize = new Size(235, 152);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -134,9 +122,8 @@
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnAppUserRoleUpdate;
         private System.Windows.Forms.Panel panelMid;
+        private UserControllers.AppUserRoles.AppUserRoleComboBoxControl appUserRoleComboBoxListControl;
         private TextBox txtAppUserRoleName;
         private Label label1;
-        private ComboBox cmbBoxAppUserRoleSelect;
-        private Label label2;
     }
 }

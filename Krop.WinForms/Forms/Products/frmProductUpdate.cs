@@ -1,6 +1,4 @@
 ﻿using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.Brands;
-using Krop.DTO.Dtos.Categroies;
 using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -22,103 +20,22 @@ namespace Krop.WinForms.Products
 
         private async void frmProductUpdate_Load(object sender, EventArgs e)
         {
-           await ProductList();
-           await CategoryList();
-           await BrandList();
             txtCriticalQuantity.MaxLength = 10;
-            if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxProductNameSelect.SelectedValue = Id;
+            await productComboBoxControl.ProductList(_webApiService);
+            productComboBoxControl.ProductNameComboBox.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
+            productComboBoxControl.ProductCodeComboBox.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
+            productComboBoxControl.ProductSelect(Id);
+
+            await categoryComboBoxControl.CategoryList(_webApiService);
+            await brandComboBoxControl.BrandList(_webApiService);
         }
-        private async Task ProductList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
-
-           await ProductNameList(result.Data);
-           await ProductCodeList(result.Data);
-        }
-        private async Task ProductNameList(List<GetProductComboBoxDTO> products)
-        {
-            cmbBoxProductNameSelect.DataSource = null; 
-            
-            cmbBoxProductNameSelect.DisplayMember = "ProductName";
-            cmbBoxProductNameSelect.ValueMember = "Id";
-
-            cmbBoxProductNameSelect.SelectedIndexChanged -= cmbBoxProductNameSelect_SelectedIndexChanged;
-
-            cmbBoxProductNameSelect.DataSource = products is not null ? products : null;
-
-            cmbBoxProductNameSelect.SelectedIndex = -1;
-
-            cmbBoxProductNameSelect.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
-        }
-        private async Task ProductCodeList(List<GetProductComboBoxDTO> products)
-        {
-            cmbBoxProductCodeSelect.DataSource = null;
-
-            cmbBoxProductCodeSelect.DisplayMember = "ProductCode";
-            cmbBoxProductCodeSelect.ValueMember = "Id";
-
-            cmbBoxProductCodeSelect.SelectedIndexChanged -= cmbBoxProductCodeSelect_SelectedIndexChanged;
-
-            cmbBoxProductCodeSelect.DataSource = products is not null ? products : null;
-
-            cmbBoxProductCodeSelect.SelectedIndex = -1;
-
-            cmbBoxProductCodeSelect.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
-        }
-        private async Task CategoryList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("category/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetCategoryComboBoxDTO>>(response);
-
-            cmbBoxCategory.DataSource = null;
-
-            cmbBoxCategory.DisplayMember = "CategoryName";
-            cmbBoxCategory.ValueMember = "Id";
-
-            cmbBoxCategory.DataSource = result is not null ? result.Data : null;
-            cmbBoxCategory.SelectedIndex = -1;
-        }
-        private async Task BrandList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
-
-            cmbBoxBrand.DataSource = null; 
-
-            cmbBoxBrand.DisplayMember = "BrandName";
-            cmbBoxBrand.ValueMember = "Id";
-
-            cmbBoxBrand.DataSource = result is not null ? result.Data : null;
-            cmbBoxBrand.SelectedIndex = -1;
-        }
-
         private async void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.DataSource is not null)
+            if (productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.DataSource is not null)
             {
-                cmbBoxProductCodeSelect.SelectedValue = cmbBoxProductNameSelect.SelectedValue;
+                productComboBoxControl.ProductCodeComboBox.SelectedValue = productComboBoxControl.ProductNameComboBox.SelectedValue;
 
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"product/GetById/{cmbBoxProductNameSelect.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"product/GetById/{(Guid)productComboBoxControl.ProductNameComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);
@@ -136,33 +53,33 @@ namespace Krop.WinForms.Products
                     txtDescription.Text = result.Data.Description;
 
                     if (result.Data.BrandId != null)
-                        cmbBoxBrand.SelectedValue = result.Data.BrandId;
+                        brandComboBoxControl.BrandComboBox.SelectedValue = result.Data.BrandId;
 
                     if (result.Data.BrandId != null)
-                        cmbBoxCategory.SelectedValue = result.Data.CategoryId;
+                        categoryComboBoxControl.CategoryComboBox.SelectedValue = result.Data.CategoryId;
                 }
             }
         }
 
         private void cmbBoxProductCodeSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxProductNameSelect.DataSource is not null)
+            if (productComboBoxControl.ProductCodeComboBox.SelectedValue is not null && productComboBoxControl.ProductNameComboBox.DataSource is not null)
             {
-                cmbBoxProductNameSelect.SelectedValue = cmbBoxProductCodeSelect.SelectedValue;
+                productComboBoxControl.ProductNameComboBox.SelectedValue = productComboBoxControl.ProductCodeComboBox.SelectedValue;
             }
         }
 
         private async void bttnProductUpdate_Click(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null &&
-                cmbBoxProductNameSelect.SelectedValue.ToString() == cmbBoxProductCodeSelect.SelectedValue.ToString())
+            if (productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.SelectedValue is not null &&
+                productComboBoxControl.ProductNameComboBox.SelectedValue.ToString() == productComboBoxControl.ProductCodeComboBox.SelectedValue.ToString())
             {
-                if(cmbBoxCategory.SelectedValue == null)
+                if(categoryComboBoxControl.CategoryComboBox.SelectedValue == null)
                 {
                     MessageBox.Show("Kategori Seçimi Hatalı!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if(cmbBoxBrand.SelectedValue == null)
+                if(brandComboBoxControl.BrandComboBox.SelectedValue == null)
                 {
                     MessageBox.Show("Marka Seçimi Hatalı!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -172,14 +89,14 @@ namespace Krop.WinForms.Products
                 {
                     UpdateProductDTO updateProductDTO = new UpdateProductDTO
                     {
-                        Id = (Guid)cmbBoxProductNameSelect.SelectedValue,
+                        Id = (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue,
                         ProductName = txtProductName.Text,
                         ProductCode = txtProductCode.Text,
                         UnitPrice = decimal.Parse(string.IsNullOrEmpty(txtUnitPrice.Text) ? "0" : txtUnitPrice.Text),
                         CriticalStock = int.Parse(string.IsNullOrEmpty(txtCriticalQuantity.Text) ? "0" : txtCriticalQuantity.Text),
                         Description = txtDescription.Text,
-                        CategoryId = (Guid)cmbBoxCategory.SelectedValue,
-                        BrandId = (Guid)cmbBoxBrand.SelectedValue
+                        CategoryId = (Guid)categoryComboBoxControl.CategoryComboBox.SelectedValue,
+                        BrandId = (Guid)brandComboBoxControl.BrandComboBox.SelectedValue
                     };
 
                     HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("product/update", updateProductDTO);
@@ -190,7 +107,7 @@ namespace Krop.WinForms.Products
                         return;
                     }
 
-                   await ProductList();
+                    await productComboBoxControl.ProductList(_webApiService);
                 }
             }
             else

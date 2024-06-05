@@ -56,16 +56,17 @@
             // 
             // txtAddress
             // 
-            txtAddress.Location = new Point(12, 337);
+            txtAddress.Location = new Point(15, 337);
             txtAddress.Multiline = true;
             txtAddress.Name = "txtAddress";
-            txtAddress.Size = new Size(206, 97);
+            txtAddress.PlaceholderText = "Adres...";
+            txtAddress.Size = new Size(200, 97);
             txtAddress.TabIndex = 15;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(12, 319);
+            label5.Location = new Point(15, 319);
             label5.Name = "label5";
             label5.Size = new Size(43, 15);
             label5.TabIndex = 14;
@@ -73,23 +74,26 @@
             // 
             // txtCity
             // 
-            txtCity.Location = new Point(12, 293);
+            txtCity.Location = new Point(15, 293);
             txtCity.Name = "txtCity";
-            txtCity.Size = new Size(206, 23);
+            txtCity.PlaceholderText = "Şehir...";
+            txtCity.Size = new Size(200, 23);
             txtCity.TabIndex = 13;
             // 
             // txtCountry
             // 
-            txtCountry.Location = new Point(12, 249);
+            txtCountry.Location = new Point(15, 249);
             txtCountry.Name = "txtCountry";
-            txtCountry.Size = new Size(206, 23);
+            txtCountry.PlaceholderText = "Ülke...";
+            txtCountry.Size = new Size(200, 23);
             txtCountry.TabIndex = 12;
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(12, 205);
+            txtEmail.Location = new Point(15, 205);
             txtEmail.Name = "txtEmail";
-            txtEmail.Size = new Size(206, 23);
+            txtEmail.PlaceholderText = "Email...";
+            txtEmail.Size = new Size(200, 23);
             txtEmail.TabIndex = 11;
             // 
             // label6
@@ -121,16 +125,17 @@
             // 
             // txtPhoneNumber
             // 
-            txtPhoneNumber.Location = new Point(12, 159);
+            txtPhoneNumber.Location = new Point(15, 159);
             txtPhoneNumber.Name = "txtPhoneNumber";
-            txtPhoneNumber.Size = new Size(206, 23);
+            txtPhoneNumber.PlaceholderText = "Telefon Numarası...";
+            txtPhoneNumber.Size = new Size(200, 23);
             txtPhoneNumber.TabIndex = 7;
             txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(12, 141);
+            label4.Location = new Point(15, 141);
             label4.Name = "label4";
             label4.Size = new Size(105, 15);
             label4.TabIndex = 6;
@@ -138,29 +143,32 @@
             // 
             // txtContactTitle
             // 
-            txtContactTitle.Location = new Point(12, 115);
+            txtContactTitle.Location = new Point(15, 115);
             txtContactTitle.Name = "txtContactTitle";
-            txtContactTitle.Size = new Size(206, 23);
+            txtContactTitle.PlaceholderText = "İletişime Geçilecek Kişinin Departmenı...";
+            txtContactTitle.Size = new Size(200, 23);
             txtContactTitle.TabIndex = 5;
             // 
             // txtContactName
             // 
-            txtContactName.Location = new Point(12, 71);
+            txtContactName.Location = new Point(15, 71);
             txtContactName.Name = "txtContactName";
-            txtContactName.Size = new Size(206, 23);
+            txtContactName.PlaceholderText = "İletişime Geçilecek Kişi...";
+            txtContactName.Size = new Size(200, 23);
             txtContactName.TabIndex = 4;
             // 
             // txtCompanyName
             // 
-            txtCompanyName.Location = new Point(12, 27);
+            txtCompanyName.Location = new Point(15, 27);
             txtCompanyName.Name = "txtCompanyName";
-            txtCompanyName.Size = new Size(206, 23);
+            txtCompanyName.PlaceholderText = "Tedarikçi Adı...";
+            txtCompanyName.Size = new Size(200, 23);
             txtCompanyName.TabIndex = 3;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 97);
+            label3.Location = new Point(15, 97);
             label3.Name = "label3";
             label3.Size = new Size(213, 15);
             label3.TabIndex = 2;
@@ -169,7 +177,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 53);
+            label2.Location = new Point(15, 53);
             label2.Name = "label2";
             label2.Size = new Size(131, 15);
             label2.TabIndex = 1;
@@ -203,15 +211,16 @@
             // 
             // txtWebSiteUrl
             // 
-            txtWebSiteUrl.Location = new Point(12, 459);
+            txtWebSiteUrl.Location = new Point(15, 459);
             txtWebSiteUrl.Name = "txtWebSiteUrl";
-            txtWebSiteUrl.Size = new Size(206, 23);
+            txtWebSiteUrl.PlaceholderText = "Website Url...";
+            txtWebSiteUrl.Size = new Size(200, 23);
             txtWebSiteUrl.TabIndex = 17;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(12, 441);
+            label9.Location = new Point(15, 441);
             label9.Name = "label9";
             label9.Size = new Size(79, 15);
             label9.TabIndex = 16;
@@ -220,7 +229,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 9);
+            label1.Location = new Point(15, 9);
             label1.Name = "label1";
             label1.Size = new Size(80, 15);
             label1.TabIndex = 0;

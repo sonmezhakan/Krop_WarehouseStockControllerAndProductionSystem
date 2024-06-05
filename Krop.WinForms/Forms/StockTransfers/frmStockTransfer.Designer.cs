@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmStockTransfer));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             productCartToolStripMenuItem = new ToolStripMenuItem();
             productAddToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -48,9 +47,6 @@
             productUpdateToolStripMenuItem = new ToolStripMenuItem();
             productionListToolStripMenuItem = new ToolStripMenuItem();
             label5 = new Label();
-            cmbBoxProductCode = new ComboBox();
-            label4 = new Label();
-            cmbBoxProductName = new ComboBox();
             toolStripSeparator3 = new ToolStripSeparator();
             contextMenuStrip1 = new ContextMenuStrip(components);
             stockReceiptToolStripMenuItem = new ToolStripMenuItem();
@@ -58,25 +54,22 @@
             toolStripSeparator4 = new ToolStripSeparator();
             stockNotificationToolStripMenuItem = new ToolStripMenuItem();
             panelMid = new System.Windows.Forms.Panel();
-            dgwStockTransferList = new DataGridView();
+            stockTransferListControl = new UserControllers.StockTransfers.StockTransferListControl();
             panel1 = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
             bttnSearch = new Button();
             txtInvoiceNumber = new TextBox();
-            label3 = new Label();
-            label2 = new Label();
-            cmbBoxSenderBranch = new ComboBox();
-            label1 = new Label();
             panelLeft = new System.Windows.Forms.Panel();
+            productComboBoxControl = new UserControllers.Products.ProductComboBoxControl();
+            branchComboBoxControl2 = new UserControllers.Branches.BranchComboBoxControl();
+            branchComboBoxControl1 = new UserControllers.Branches.BranchComboBoxControl();
             transferDateTimePicker = new DateTimePicker();
-            cmbBoxSentBranch = new ComboBox();
             bttnAdd = new Button();
             bttnUpdate = new Button();
             bttnDelete = new Button();
             panelBottom = new System.Windows.Forms.Panel();
             contextMenuStrip1.SuspendLayout();
             panelMid.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwStockTransferList).BeginInit();
             panel1.SuspendLayout();
             panelLeft.SuspendLayout();
             panelBottom.SuspendLayout();
@@ -104,7 +97,7 @@
             // bttnNewBranch
             // 
             bttnNewBranch.Font = new Font("Arial Black", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            bttnNewBranch.Location = new Point(235, 39);
+            bttnNewBranch.Location = new Point(237, 39);
             bttnNewBranch.Name = "bttnNewBranch";
             bttnNewBranch.Size = new Size(23, 23);
             bttnNewBranch.TabIndex = 22;
@@ -115,7 +108,7 @@
             // bttnNewSupplier
             // 
             bttnNewSupplier.Font = new Font("Arial Black", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            bttnNewSupplier.Location = new Point(235, 130);
+            bttnNewSupplier.Location = new Point(237, 129);
             bttnNewSupplier.Name = "bttnNewSupplier";
             bttnNewSupplier.Size = new Size(23, 23);
             bttnNewSupplier.TabIndex = 21;
@@ -138,7 +131,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(13, 288);
+            label11.Location = new Point(15, 288);
             label11.Name = "label11";
             label11.Size = new Size(97, 15);
             label11.TabIndex = 18;
@@ -146,17 +139,17 @@
             // 
             // txtDescription
             // 
-            txtDescription.Location = new Point(13, 350);
+            txtDescription.Location = new Point(15, 350);
             txtDescription.Multiline = true;
             txtDescription.Name = "txtDescription";
             txtDescription.PlaceholderText = "Açıklama...";
-            txtDescription.Size = new Size(216, 132);
+            txtDescription.Size = new Size(200, 132);
             txtDescription.TabIndex = 17;
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(13, 332);
+            label10.Location = new Point(15, 332);
             label10.Name = "label10";
             label10.Size = new Size(62, 15);
             label10.TabIndex = 16;
@@ -165,7 +158,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(205, 265);
+            label9.Location = new Point(183, 265);
             label9.Name = "label9";
             label9.Size = new Size(32, 15);
             label9.TabIndex = 15;
@@ -173,10 +166,10 @@
             // 
             // txtQuantity
             // 
-            txtQuantity.Location = new Point(12, 262);
+            txtQuantity.Location = new Point(14, 262);
             txtQuantity.Name = "txtQuantity";
             txtQuantity.PlaceholderText = "Giriş Yapılacak Miktar..";
-            txtQuantity.Size = new Size(178, 23);
+            txtQuantity.Size = new Size(163, 23);
             txtQuantity.TabIndex = 14;
             txtQuantity.Text = "0";
             txtQuantity.KeyPress += txtQuantity_KeyPress;
@@ -184,7 +177,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(12, 244);
+            label8.Location = new Point(14, 244);
             label8.Name = "label8";
             label8.Size = new Size(108, 15);
             label8.TabIndex = 13;
@@ -213,40 +206,11 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(13, 200);
+            label5.Location = new Point(15, 200);
             label5.Name = "label5";
             label5.Size = new Size(100, 15);
             label5.TabIndex = 8;
             label5.Text = "Fatura Numarası :";
-            // 
-            // cmbBoxProductCode
-            // 
-            cmbBoxProductCode.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxProductCode.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxProductCode.FormattingEnabled = true;
-            cmbBoxProductCode.Location = new Point(13, 174);
-            cmbBoxProductCode.Name = "cmbBoxProductCode";
-            cmbBoxProductCode.Size = new Size(216, 23);
-            cmbBoxProductCode.TabIndex = 7;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(13, 156);
-            label4.Name = "label4";
-            label4.Size = new Size(70, 15);
-            label4.TabIndex = 6;
-            label4.Text = "Ürün Kodu :";
-            // 
-            // cmbBoxProductName
-            // 
-            cmbBoxProductName.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxProductName.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxProductName.FormattingEnabled = true;
-            cmbBoxProductName.Location = new Point(13, 130);
-            cmbBoxProductName.Name = "cmbBoxProductName";
-            cmbBoxProductName.Size = new Size(216, 23);
-            cmbBoxProductName.TabIndex = 5;
             // 
             // toolStripSeparator3
             // 
@@ -286,7 +250,7 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(dgwStockTransferList);
+            panelMid.Controls.Add(stockTransferListControl);
             panelMid.Controls.Add(panel1);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(267, 0);
@@ -295,30 +259,14 @@
             panelMid.Size = new Size(868, 594);
             panelMid.TabIndex = 5;
             // 
-            // dgwStockTransferList
+            // stockTransferListControl
             // 
-            dgwStockTransferList.AllowUserToAddRows = false;
-            dgwStockTransferList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwStockTransferList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwStockTransferList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwStockTransferList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwStockTransferList.BackgroundColor = SystemColors.Control;
-            dgwStockTransferList.BorderStyle = BorderStyle.None;
-            dgwStockTransferList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwStockTransferList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwStockTransferList.ContextMenuStrip = contextMenuStrip1;
-            dgwStockTransferList.Dock = DockStyle.Fill;
-            dgwStockTransferList.Location = new Point(10, 48);
-            dgwStockTransferList.MultiSelect = false;
-            dgwStockTransferList.Name = "dgwStockTransferList";
-            dgwStockTransferList.ReadOnly = true;
-            dgwStockTransferList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwStockTransferList.RowTemplate.Height = 25;
-            dgwStockTransferList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwStockTransferList.Size = new Size(848, 536);
-            dgwStockTransferList.TabIndex = 15;
-            dgwStockTransferList.DoubleClick += dgwStockTransferList_DoubleClick;
+            stockTransferListControl.ContextMenuStrip = contextMenuStrip1;
+            stockTransferListControl.Dock = DockStyle.Fill;
+            stockTransferListControl.Location = new Point(10, 48);
+            stockTransferListControl.Name = "stockTransferListControl";
+            stockTransferListControl.Size = new Size(848, 536);
+            stockTransferListControl.TabIndex = 14;
             // 
             // panel1
             // 
@@ -355,53 +303,18 @@
             // 
             // txtInvoiceNumber
             // 
-            txtInvoiceNumber.Location = new Point(13, 218);
+            txtInvoiceNumber.Location = new Point(15, 218);
             txtInvoiceNumber.Name = "txtInvoiceNumber";
             txtInvoiceNumber.PlaceholderText = "Fatura Numarası...";
-            txtInvoiceNumber.Size = new Size(216, 23);
+            txtInvoiceNumber.Size = new Size(200, 23);
             txtInvoiceNumber.TabIndex = 9;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(13, 112);
-            label3.Name = "label3";
-            label3.Size = new Size(57, 15);
-            label3.TabIndex = 4;
-            label3.Text = "Ürün Adı:";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 67);
-            label2.Name = "label2";
-            label2.Size = new Size(124, 15);
-            label2.TabIndex = 2;
-            label2.Text = "Transfer Yapılan Şube :";
-            // 
-            // cmbBoxSenderBranch
-            // 
-            cmbBoxSenderBranch.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxSenderBranch.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxSenderBranch.FormattingEnabled = true;
-            cmbBoxSenderBranch.Location = new Point(13, 39);
-            cmbBoxSenderBranch.Name = "cmbBoxSenderBranch";
-            cmbBoxSenderBranch.Size = new Size(216, 23);
-            cmbBoxSenderBranch.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(13, 21);
-            label1.Name = "label1";
-            label1.Size = new Size(118, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Transfer Yapan Şube :";
             // 
             // panelLeft
             // 
+            panelLeft.Controls.Add(productComboBoxControl);
+            panelLeft.Controls.Add(branchComboBoxControl2);
+            panelLeft.Controls.Add(branchComboBoxControl1);
             panelLeft.Controls.Add(transferDateTimePicker);
-            panelLeft.Controls.Add(cmbBoxSentBranch);
             panelLeft.Controls.Add(bttnNewBranch);
             panelLeft.Controls.Add(bttnNewSupplier);
             panelLeft.Controls.Add(label11);
@@ -412,13 +325,6 @@
             panelLeft.Controls.Add(label8);
             panelLeft.Controls.Add(txtInvoiceNumber);
             panelLeft.Controls.Add(label5);
-            panelLeft.Controls.Add(cmbBoxProductCode);
-            panelLeft.Controls.Add(label4);
-            panelLeft.Controls.Add(cmbBoxProductName);
-            panelLeft.Controls.Add(label3);
-            panelLeft.Controls.Add(label2);
-            panelLeft.Controls.Add(cmbBoxSenderBranch);
-            panelLeft.Controls.Add(label1);
             panelLeft.Dock = DockStyle.Left;
             panelLeft.Location = new Point(0, 0);
             panelLeft.Name = "panelLeft";
@@ -426,22 +332,33 @@
             panelLeft.Size = new Size(267, 594);
             panelLeft.TabIndex = 4;
             // 
+            // productComboBoxControl
+            // 
+            productComboBoxControl.Location = new Point(0, 111);
+            productComboBoxControl.Name = "productComboBoxControl";
+            productComboBoxControl.Size = new Size(231, 88);
+            productComboBoxControl.TabIndex = 27;
+            // 
+            // branchComboBoxControl2
+            // 
+            branchComboBoxControl2.Location = new Point(0, 63);
+            branchComboBoxControl2.Name = "branchComboBoxControl2";
+            branchComboBoxControl2.Size = new Size(227, 49);
+            branchComboBoxControl2.TabIndex = 26;
+            // 
+            // branchComboBoxControl1
+            // 
+            branchComboBoxControl1.Location = new Point(0, 18);
+            branchComboBoxControl1.Name = "branchComboBoxControl1";
+            branchComboBoxControl1.Size = new Size(227, 49);
+            branchComboBoxControl1.TabIndex = 25;
+            // 
             // transferDateTimePicker
             // 
-            transferDateTimePicker.Location = new Point(13, 306);
+            transferDateTimePicker.Location = new Point(15, 306);
             transferDateTimePicker.Name = "transferDateTimePicker";
-            transferDateTimePicker.Size = new Size(216, 23);
+            transferDateTimePicker.Size = new Size(200, 23);
             transferDateTimePicker.TabIndex = 24;
-            // 
-            // cmbBoxSentBranch
-            // 
-            cmbBoxSentBranch.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxSentBranch.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxSentBranch.FormattingEnabled = true;
-            cmbBoxSentBranch.Location = new Point(13, 85);
-            cmbBoxSentBranch.Name = "cmbBoxSentBranch";
-            cmbBoxSentBranch.Size = new Size(216, 23);
-            cmbBoxSentBranch.TabIndex = 23;
             // 
             // bttnAdd
             // 
@@ -511,7 +428,6 @@
             Load += frmStockTransfer_Load;
             contextMenuStrip1.ResumeLayout(false);
             panelMid.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgwStockTransferList).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panelLeft.ResumeLayout(false);
@@ -545,8 +461,6 @@
         private Label label6;
         private Label label5;
         private ComboBox cmbBoxSupplier;
-        private Label label4;
-        private ComboBox cmbBoxProductCode;
         private ToolStripSeparator toolStripSeparator3;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem stockReceiptToolStripMenuItem;
@@ -554,22 +468,19 @@
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem stockNotificationToolStripMenuItem;
         private System.Windows.Forms.Panel panelMid;
-        private DataGridView dgwStockTransferList;
         private System.Windows.Forms.Panel panel1;
         private TextBox txtSearch;
         private Button bttnSearch;
         private TextBox txtInvoiceNumber;
-        private Label label3;
-        private ComboBox cmbBoxProductName;
-        private Label label2;
-        private ComboBox cmbBoxSenderBranch;
-        private Label label1;
         private System.Windows.Forms.Panel panelLeft;
         private Button bttnAdd;
         private Button bttnUpdate;
         private Button bttnDelete;
         private System.Windows.Forms.Panel panelBottom;
         private DateTimePicker transferDateTimePicker;
-        private ComboBox cmbBoxSentBranch;
+        private UserControllers.Branches.BranchComboBoxControl branchComboBoxControl1;
+        private UserControllers.Branches.BranchComboBoxControl branchComboBoxControl2;
+        private UserControllers.Products.ProductComboBoxControl productComboBoxControl;
+        private UserControllers.StockTransfers.StockTransferListControl stockTransferListControl;
     }
 }

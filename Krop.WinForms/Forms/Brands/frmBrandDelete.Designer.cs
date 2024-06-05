@@ -30,8 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBrandDelete));
             panelMid = new System.Windows.Forms.Panel();
-            cmbBoxBrandSelect = new ComboBox();
-            label4 = new Label();
+            brandComboBoxControl = new UserControllers.Brands.BrandComboBoxControl();
             panelBottom = new System.Windows.Forms.Panel();
             bttnBrandDelete = new Button();
             panelMid.SuspendLayout();
@@ -40,30 +39,19 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(cmbBoxBrandSelect);
-            panelMid.Controls.Add(label4);
+            panelMid.Controls.Add(brandComboBoxControl);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
             panelMid.Size = new Size(227, 83);
             panelMid.TabIndex = 5;
             // 
-            // cmbBoxBrandSelect
+            // brandComboBoxControl
             // 
-            cmbBoxBrandSelect.FormattingEnabled = true;
-            cmbBoxBrandSelect.Location = new Point(12, 36);
-            cmbBoxBrandSelect.Name = "cmbBoxBrandSelect";
-            cmbBoxBrandSelect.Size = new Size(206, 23);
-            cmbBoxBrandSelect.TabIndex = 7;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(12, 18);
-            label4.Name = "label4";
-            label4.Size = new Size(95, 15);
-            label4.TabIndex = 6;
-            label4.Text = "Silinecek Marka :";
+            brandComboBoxControl.Location = new Point(0, 3);
+            brandComboBoxControl.Name = "brandComboBoxControl";
+            brandComboBoxControl.Size = new Size(224, 65);
+            brandComboBoxControl.TabIndex = 0;
             // 
             // panelBottom
             // 
@@ -103,7 +91,6 @@
             Text = "Marka Sil";
             Load += frmBrandDelete_Load;
             panelMid.ResumeLayout(false);
-            panelMid.PerformLayout();
             panelBottom.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -111,9 +98,8 @@
         #endregion
 
         private System.Windows.Forms.Panel panelMid;
-        private ComboBox cmbBoxBrandSelect;
-        private Label label4;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnBrandDelete;
+        private UserControllers.Brands.BrandComboBoxControl brandComboBoxControl;
     }
 }

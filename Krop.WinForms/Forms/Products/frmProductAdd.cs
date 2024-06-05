@@ -1,6 +1,4 @@
 ﻿using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.Brands;
-using Krop.DTO.Dtos.Categroies;
 using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
@@ -21,67 +19,18 @@ namespace Krop.WinForms.Products
 
         private async void frmProductAdd_Load(object sender, EventArgs e)
         {
-           await CategoryList();
-           await BrandList();
-        }
-
-        private async Task CategoryList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("category/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetCategoryComboBoxDTO>>(response);
-
-            cmbBoxCategory.DataSource = null;
-
-            cmbBoxCategory.DisplayMember = "CategoryName";
-            cmbBoxCategory.ValueMember = "Id";
-
-            cmbBoxCategory.DataSource = result is not null ? result.Data : null;
-            cmbBoxCategory.SelectedIndex = -1;
-        }
-        private async Task BrandList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
-
-            cmbBoxBrand.DataSource = null;
-            
-            cmbBoxBrand.DisplayMember = "BrandName";
-            cmbBoxBrand.ValueMember = "Id";
-
-            cmbBoxBrand.DataSource = result is not null ? result.Data : null;
-            cmbBoxBrand.SelectedValue = -1;
-        }
-
-        private void cmbBoxCategory_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cmbBoxBrand_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
+            await categoryComboBoxControl1.CategoryList(_webApiService);
+            await brandComboBoxControl1.BrandList(_webApiService);
         }
 
         private async void bttnProductAdd_Click(object sender, EventArgs e)
         {
-            if(cmbBoxCategory.SelectedValue is not null && cmbBoxBrand.SelectedValue is not null)
+            if(categoryComboBoxControl1.CategoryComboBox.SelectedValue is not null && brandComboBoxControl1.BrandComboBox.SelectedValue is not null)
             {
                 CreateProductDTO createProductDTO = new CreateProductDTO
                 {
-                    BrandId = (Guid)cmbBoxBrand.SelectedValue,
-                    CategoryId = (Guid)cmbBoxCategory.SelectedValue,
+                    BrandId = (Guid)brandComboBoxControl1.BrandComboBox.SelectedValue,
+                    CategoryId = (Guid)categoryComboBoxControl1.CategoryComboBox.SelectedValue,
                     ProductName = txtProductName.Text,
                     ProductCode = txtProductCode.Text,
                     UnitPrice = decimal.Parse(string.IsNullOrEmpty(txtUnitPrice.Text) ? "0" : txtUnitPrice.Text),

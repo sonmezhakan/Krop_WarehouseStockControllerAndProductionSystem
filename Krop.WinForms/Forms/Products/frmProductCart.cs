@@ -14,53 +14,20 @@ namespace Krop.WinForms.Products
             InitializeComponent();
             _webApiService = webApiService;
         }
-
         private async void frmProductCart_Load(object sender, EventArgs e)
         {
-           await ProductList();
-            txtCriticalQuantity.MaxLength = 10;
-            if (cmbBoxProductNameSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxProductNameSelect.SelectedValue = Id;
-        }
-        private async Task ProductList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
-
-            cmbBoxProductNameSelect.DataSource = null;
-            cmbBoxProductCodeSelect.DataSource = null;
-
-            cmbBoxProductNameSelect.DisplayMember = "ProductName";
-            cmbBoxProductNameSelect.ValueMember = "Id";
-
-            cmbBoxProductCodeSelect.DisplayMember = "ProductCode";
-            cmbBoxProductCodeSelect.ValueMember = "Id";
-
-            cmbBoxProductNameSelect.SelectedIndexChanged -= cmbBoxProductNameSelect_SelectedIndexChanged;
-            cmbBoxProductCodeSelect.SelectedIndexChanged -= cmbBoxProductCodeSelect_SelectedIndexChanged;
-
-            cmbBoxProductNameSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxProductCodeSelect.DataSource = result  is not null ? result.Data : null;
-
-            cmbBoxProductNameSelect.SelectedIndex = -1;
-            cmbBoxProductCodeSelect.SelectedIndex = -1;
-
-            cmbBoxProductNameSelect.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
-            cmbBoxProductCodeSelect.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
+            await productComboBoxControl.ProductList(_webApiService);
+            productComboBoxControl.ProductNameComboBox.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
+            productComboBoxControl.ProductCodeComboBox.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
+            productComboBoxControl.ProductSelect(Id);
         }
         private async void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.DataSource is not null)
+            if (productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.DataSource is not null)
             {
-                cmbBoxProductCodeSelect.SelectedValue = cmbBoxProductNameSelect.SelectedValue;
+                productComboBoxControl.ProductCodeComboBox.SelectedValue = productComboBoxControl.ProductNameComboBox.SelectedValue;
 
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"product/GetByIdCart/{cmbBoxProductNameSelect.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"product/GetByIdCart/{(Guid)productComboBoxControl.ProductNameComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);
@@ -82,9 +49,9 @@ namespace Krop.WinForms.Products
 
         private void cmbBoxProductCodeSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxProductNameSelect.DataSource is not null)
+            if (productComboBoxControl.ProductCodeComboBox.SelectedValue is not null && productComboBoxControl.ProductNameComboBox.DataSource is not null)
             {
-                cmbBoxProductNameSelect.SelectedValue = cmbBoxProductCodeSelect.SelectedValue;
+                productComboBoxControl.ProductNameComboBox.SelectedValue = productComboBoxControl.ProductCodeComboBox.SelectedValue;
             }
         }
         private void txtUnitPrice_KeyPress(object sender, KeyPressEventArgs e)

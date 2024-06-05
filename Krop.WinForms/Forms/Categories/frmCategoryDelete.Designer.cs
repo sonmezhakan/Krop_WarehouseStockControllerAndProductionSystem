@@ -30,8 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCategoryDelete));
             panelMid = new System.Windows.Forms.Panel();
-            cmbBoxCategorySelect = new ComboBox();
-            label2 = new Label();
+            categoryComboBoxControl = new UserControllers.Categories.CategoryComboBoxControl();
             panelBottom = new System.Windows.Forms.Panel();
             bttnCategoryDelete = new Button();
             panelMid.SuspendLayout();
@@ -40,43 +39,29 @@
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(cmbBoxCategorySelect);
-            panelMid.Controls.Add(label2);
+            panelMid.Controls.Add(categoryComboBoxControl);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(272, 90);
+            panelMid.Size = new Size(234, 63);
             panelMid.TabIndex = 5;
             // 
-            // cmbBoxCategorySelect
+            // categoryComboBoxControl
             // 
-            cmbBoxCategorySelect.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxCategorySelect.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxCategorySelect.FormattingEnabled = true;
-            cmbBoxCategorySelect.Location = new Point(12, 37);
-            cmbBoxCategorySelect.Name = "cmbBoxCategorySelect";
-            cmbBoxCategorySelect.Size = new Size(246, 23);
-            cmbBoxCategorySelect.TabIndex = 3;
-            cmbBoxCategorySelect.SelectedIndexChanged += cmbBoxCategorySelect_SelectedIndexChanged;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 19);
-            label2.Name = "label2";
-            label2.Size = new Size(106, 15);
-            label2.TabIndex = 2;
-            label2.Text = "Silinecek Kategori :";
+            categoryComboBoxControl.Location = new Point(0, 3);
+            categoryComboBoxControl.Name = "categoryComboBoxControl";
+            categoryComboBoxControl.Size = new Size(271, 51);
+            categoryComboBoxControl.TabIndex = 1;
             // 
             // panelBottom
             // 
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
             panelBottom.Controls.Add(bttnCategoryDelete);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 90);
+            panelBottom.Location = new Point(0, 63);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 15, 0);
-            panelBottom.Size = new Size(272, 41);
+            panelBottom.Size = new Size(234, 41);
             panelBottom.TabIndex = 4;
             // 
             // bttnCategoryDelete
@@ -84,7 +69,7 @@
             bttnCategoryDelete.Dock = DockStyle.Right;
             bttnCategoryDelete.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnCategoryDelete.Image = (Image)resources.GetObject("bttnCategoryDelete.Image");
-            bttnCategoryDelete.Location = new Point(148, 0);
+            bttnCategoryDelete.Location = new Point(110, 0);
             bttnCategoryDelete.Name = "bttnCategoryDelete";
             bttnCategoryDelete.Size = new Size(107, 39);
             bttnCategoryDelete.TabIndex = 1;
@@ -97,7 +82,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(272, 131);
+            ClientSize = new Size(234, 104);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -107,7 +92,6 @@
             Text = "Kategori Sil";
             Load += frmCategoryDelete_Load;
             panelMid.ResumeLayout(false);
-            panelMid.PerformLayout();
             panelBottom.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -115,9 +99,8 @@
         #endregion
 
         private System.Windows.Forms.Panel panelMid;
-        private ComboBox cmbBoxCategorySelect;
-        private Label label2;
         private System.Windows.Forms.Panel panelBottom;
         private Button bttnCategoryDelete;
+        private UserControllers.Categories.CategoryComboBoxControl categoryComboBoxControl;
     }
 }

@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCategoryList));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             CategoryListRefreshToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             CategoryDeleteToolStripMenuItem = new ToolStripMenuItem();
@@ -44,10 +43,9 @@
             txtSearch = new TextBox();
             bttnSearch = new Button();
             panelBottom = new System.Windows.Forms.Panel();
-            dgwCategoryList = new DataGridView();
+            categoryListControl = new UserControllers.Categories.CategoryListControl();
             contextMenuStrip1.SuspendLayout();
             panelTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwCategoryList).BeginInit();
             SuspendLayout();
             // 
             // CategoryListRefreshToolStripMenuItem
@@ -154,35 +152,21 @@
             panelBottom.Size = new Size(941, 32);
             panelBottom.TabIndex = 4;
             // 
-            // dgwCategoryList
+            // categoryListControl
             // 
-            dgwCategoryList.AllowUserToAddRows = false;
-            dgwCategoryList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwCategoryList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwCategoryList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwCategoryList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwCategoryList.BackgroundColor = SystemColors.Control;
-            dgwCategoryList.BorderStyle = BorderStyle.None;
-            dgwCategoryList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwCategoryList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwCategoryList.ContextMenuStrip = contextMenuStrip1;
-            dgwCategoryList.Dock = DockStyle.Fill;
-            dgwCategoryList.Location = new Point(0, 38);
-            dgwCategoryList.Name = "dgwCategoryList";
-            dgwCategoryList.ReadOnly = true;
-            dgwCategoryList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwCategoryList.RowTemplate.Height = 25;
-            dgwCategoryList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwCategoryList.Size = new Size(941, 418);
-            dgwCategoryList.TabIndex = 8;
+            categoryListControl.ContextMenuStrip = contextMenuStrip1;
+            categoryListControl.Dock = DockStyle.Fill;
+            categoryListControl.Location = new Point(0, 38);
+            categoryListControl.Name = "categoryListControl";
+            categoryListControl.Size = new Size(941, 418);
+            categoryListControl.TabIndex = 7;
             // 
             // frmCategoryList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(941, 514);
-            Controls.Add(dgwCategoryList);
+            Controls.Add(categoryListControl);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelTop);
             Controls.Add(panelBottom);
@@ -193,7 +177,6 @@
             contextMenuStrip1.ResumeLayout(false);
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwCategoryList).EndInit();
             ResumeLayout(false);
         }
 
@@ -209,8 +192,8 @@
         private System.Windows.Forms.Panel panelDgwFooter;
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Panel panelBottom;
-        private DataGridView dgwCategoryList;
         private TextBox txtSearch;
         private Button bttnSearch;
+        private UserControllers.Categories.CategoryListControl categoryListControl;
     }
 }

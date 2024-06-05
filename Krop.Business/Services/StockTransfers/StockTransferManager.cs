@@ -17,19 +17,15 @@ namespace Krop.Business.Services.StockTransfers
         private readonly IStockTransferRepository _stockTransferRepository;
         private readonly IStockService _stockService;
         private readonly IMapper _mapper;
-        private readonly BranchBusinessRules _branchBusinessRules;
         private readonly EmployeeBusinessRules _employeeBusinessRules;
-        private readonly ProductBusinessRules _productBusinessRules;
         private readonly StockTransferBusinessRules _stockTransferBusinessRules;
 
-        public StockTransferManager(IStockTransferRepository stockTransferRepository, IStockService stockService,IMapper mapper, BranchBusinessRules branchBusinessRules,EmployeeBusinessRules employeeBusinessRules,ProductBusinessRules productBusinessRules,StockTransferBusinessRules stockTransferBusinessRules)
+        public StockTransferManager(IStockTransferRepository stockTransferRepository, IStockService stockService,IMapper mapper, EmployeeBusinessRules employeeBusinessRules,StockTransferBusinessRules stockTransferBusinessRules)
         {
             _stockTransferRepository = stockTransferRepository;
             _stockService = stockService;
             _mapper = mapper;
-            _branchBusinessRules = branchBusinessRules;
             _employeeBusinessRules = employeeBusinessRules;
-            _productBusinessRules = productBusinessRules;
             _stockTransferBusinessRules = stockTransferBusinessRules;
         }
         public async Task<IResult> AddAsync(CreateStockTransferDTO createStockTransferDTO)
@@ -47,7 +43,8 @@ namespace Krop.Business.Services.StockTransfers
         {
             var result = await _stockTransferBusinessRules.CheckByStockTransferId(updateStockTransferDTO.Id);
 
-            await _employeeBusinessRules.CheckEmployeeBranch(updateStockTransferDTO.TransactorAppUserId, updateStockTransferDTO.TransactorAppUserId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            await _employeeBusinessRules.CheckEmployeeBranch(updateStockTransferDTO.TransactorAppUserId, updateStockTransferDTO.SenderBranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            await _employeeBusinessRules.CheckEmployeeBranch(updateStockTransferDTO.TransactorAppUserId, result.SenderBranchId);//Güncellenecek işlemdeki şubede çalışanın çalışıp çalışmadığı kontrol ediliyor.
 
             //Yapılmış İşlem
             await _stockService.StockDeleteAsync(result.SentBranchId,result.ProductId,result.Quantity);//Gönderilen Şubedeki Stok Miktarı Silinir.

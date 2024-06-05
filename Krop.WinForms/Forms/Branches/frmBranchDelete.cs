@@ -2,6 +2,7 @@
 using Krop.DTO.Dtos.Branches;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
+using Krop.WinForms.UserControllers.Branches;
 
 namespace Krop.WinForms.Forms.Branches
 {
@@ -18,44 +19,16 @@ namespace Krop.WinForms.Forms.Branches
 
         private async void frmBranchDelete_Load(object sender, EventArgs e)
         {
-           await BranchList();
-            if (cmbBoxBranchSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxBranchSelect.SelectedValue = Id;
+            await branchComboBoxControl.BranchList(_webApiService);
+            branchComboBoxControl.BranchSelect(Id);
         }
-        private async Task BranchList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/getall");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
-
-            cmbBoxBranchSelect.DataSource = null;
-
-            cmbBoxBranchSelect.DisplayMember = "BranchName";
-            cmbBoxBranchSelect.ValueMember = "Id";
-
-            cmbBoxBranchSelect.SelectedIndexChanged -= CmbBoxBranchSelect_SelectedIndexChanged;
-            cmbBoxBranchSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxBranchSelect.SelectedIndex = -1;
-            cmbBoxBranchSelect.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
-        }
-
-        private void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
-        {
-
-        }
-
         private async void bttnBranchDelete_Click(object sender, EventArgs e)
         {
-            if(cmbBoxBranchSelect.SelectedValue is not null)
+            if(branchComboBoxControl.BranchComboBox.SelectedValue is not null)
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"branch/delete/{cmbBoxBranchSelect.SelectedValue}");
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"branch/delete/{(Guid)branchComboBoxControl.BranchComboBox.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -63,7 +36,7 @@ namespace Krop.WinForms.Forms.Branches
                         return;
                     }
 
-                   await BranchList();
+                    await branchComboBoxControl.BranchList(_webApiService);
                 }
             }
             else

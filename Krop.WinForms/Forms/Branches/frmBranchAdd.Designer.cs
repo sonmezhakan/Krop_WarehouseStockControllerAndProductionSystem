@@ -55,7 +55,7 @@
             panelBottom.Location = new Point(0, 412);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(259, 41);
+            panelBottom.Size = new Size(233, 41);
             panelBottom.TabIndex = 0;
             // 
             // bttnBranchAdd
@@ -63,7 +63,7 @@
             bttnBranchAdd.Dock = DockStyle.Right;
             bttnBranchAdd.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnBranchAdd.Image = (Image)resources.GetObject("bttnBranchAdd.Image");
-            bttnBranchAdd.Location = new Point(157, 0);
+            bttnBranchAdd.Location = new Point(131, 0);
             bttnBranchAdd.Name = "bttnBranchAdd";
             bttnBranchAdd.Size = new Size(92, 41);
             bttnBranchAdd.TabIndex = 2;
@@ -90,13 +90,13 @@
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
             panelMid.Padding = new Padding(10);
-            panelMid.Size = new Size(259, 412);
+            panelMid.Size = new Size(233, 412);
             panelMid.TabIndex = 1;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(12, 249);
+            label6.Location = new Point(15, 249);
             label6.Name = "label6";
             label6.Size = new Size(43, 15);
             label6.TabIndex = 11;
@@ -104,17 +104,17 @@
             // 
             // txtAddress
             // 
-            txtAddress.Location = new Point(12, 267);
+            txtAddress.Location = new Point(15, 267);
             txtAddress.Multiline = true;
             txtAddress.Name = "txtAddress";
             txtAddress.PlaceholderText = "Adres...";
-            txtAddress.Size = new Size(228, 139);
+            txtAddress.Size = new Size(200, 139);
             txtAddress.TabIndex = 10;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(12, 202);
+            label5.Location = new Point(15, 202);
             label5.Name = "label5";
             label5.Size = new Size(39, 15);
             label5.TabIndex = 9;
@@ -122,16 +122,16 @@
             // 
             // txtCity
             // 
-            txtCity.Location = new Point(12, 220);
+            txtCity.Location = new Point(15, 220);
             txtCity.Name = "txtCity";
             txtCity.PlaceholderText = "Şehir...";
-            txtCity.Size = new Size(228, 23);
+            txtCity.Size = new Size(200, 23);
             txtCity.TabIndex = 8;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(12, 156);
+            label4.Location = new Point(15, 156);
             label4.Name = "label4";
             label4.Size = new Size(36, 15);
             label4.TabIndex = 7;
@@ -139,16 +139,16 @@
             // 
             // txtCountry
             // 
-            txtCountry.Location = new Point(12, 174);
+            txtCountry.Location = new Point(15, 174);
             txtCountry.Name = "txtCountry";
             txtCountry.PlaceholderText = "Ülke...";
-            txtCountry.Size = new Size(228, 23);
+            txtCountry.Size = new Size(200, 23);
             txtCountry.TabIndex = 6;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 112);
+            label3.Location = new Point(15, 112);
             label3.Name = "label3";
             label3.Size = new Size(42, 15);
             label3.TabIndex = 5;
@@ -156,16 +156,16 @@
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(12, 130);
+            txtEmail.Location = new Point(15, 130);
             txtEmail.Name = "txtEmail";
             txtEmail.PlaceholderText = "Email...";
-            txtEmail.Size = new Size(228, 23);
+            txtEmail.Size = new Size(200, 23);
             txtEmail.TabIndex = 4;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 64);
+            label2.Location = new Point(15, 64);
             label2.Name = "label2";
             label2.Size = new Size(105, 15);
             label2.TabIndex = 3;
@@ -173,17 +173,17 @@
             // 
             // txtPhoneNumber
             // 
-            txtPhoneNumber.Location = new Point(12, 82);
+            txtPhoneNumber.Location = new Point(15, 82);
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.PlaceholderText = "Telefon Numarası...";
-            txtPhoneNumber.Size = new Size(228, 23);
+            txtPhoneNumber.Size = new Size(200, 23);
             txtPhoneNumber.TabIndex = 2;
             txtPhoneNumber.KeyPress += txtPhoneNumber_KeyPress;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(13, 18);
+            label1.Location = new Point(15, 18);
             label1.Name = "label1";
             label1.Size = new Size(60, 15);
             label1.TabIndex = 1;
@@ -191,17 +191,17 @@
             // 
             // txtBranchName
             // 
-            txtBranchName.Location = new Point(13, 36);
+            txtBranchName.Location = new Point(15, 36);
             txtBranchName.Name = "txtBranchName";
             txtBranchName.PlaceholderText = "Şube Adı...";
-            txtBranchName.Size = new Size(228, 23);
+            txtBranchName.Size = new Size(200, 23);
             txtBranchName.TabIndex = 0;
             // 
             // frmBranchAdd
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(259, 453);
+            ClientSize = new Size(233, 453);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;

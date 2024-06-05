@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEmployeeList));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             panelDgwFooter = new System.Windows.Forms.Panel();
             panelTop = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
@@ -43,10 +42,9 @@
             toolStripSeparator2 = new ToolStripSeparator();
             EmployeeListRefreshToolStripMenuItem = new ToolStripMenuItem();
             panelBottom = new System.Windows.Forms.Panel();
-            dgwEmployeeList = new DataGridView();
+            employeeListControl = new UserControllers.Employees.EmployeeListControl();
             panelTop.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwEmployeeList).BeginInit();
             SuspendLayout();
             // 
             // panelDgwFooter
@@ -145,35 +143,21 @@
             panelBottom.Size = new Size(932, 32);
             panelBottom.TabIndex = 13;
             // 
-            // dgwEmployeeList
+            // employeeListControl
             // 
-            dgwEmployeeList.AllowUserToAddRows = false;
-            dgwEmployeeList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwEmployeeList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwEmployeeList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwEmployeeList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwEmployeeList.BackgroundColor = SystemColors.Control;
-            dgwEmployeeList.BorderStyle = BorderStyle.None;
-            dgwEmployeeList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwEmployeeList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwEmployeeList.ContextMenuStrip = contextMenuStrip1;
-            dgwEmployeeList.Dock = DockStyle.Fill;
-            dgwEmployeeList.Location = new Point(0, 38);
-            dgwEmployeeList.Name = "dgwEmployeeList";
-            dgwEmployeeList.ReadOnly = true;
-            dgwEmployeeList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwEmployeeList.RowTemplate.Height = 25;
-            dgwEmployeeList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwEmployeeList.Size = new Size(932, 463);
-            dgwEmployeeList.TabIndex = 17;
+            employeeListControl.ContextMenuStrip = contextMenuStrip1;
+            employeeListControl.Dock = DockStyle.Fill;
+            employeeListControl.Location = new Point(0, 38);
+            employeeListControl.Name = "employeeListControl";
+            employeeListControl.Size = new Size(932, 463);
+            employeeListControl.TabIndex = 16;
             // 
             // frmEmployeeList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(932, 559);
-            Controls.Add(dgwEmployeeList);
+            Controls.Add(employeeListControl);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelTop);
             Controls.Add(panelBottom);
@@ -184,7 +168,6 @@
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
             contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgwEmployeeList).EndInit();
             ResumeLayout(false);
         }
 
@@ -202,6 +185,6 @@
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem EmployeeListRefreshToolStripMenuItem;
         private System.Windows.Forms.Panel panelBottom;
-        private DataGridView dgwEmployeeList;
+        private UserControllers.Employees.EmployeeListControl employeeListControl;
     }
 }

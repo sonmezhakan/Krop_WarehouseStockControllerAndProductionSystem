@@ -32,8 +32,7 @@
             bttnCustomerDelete = new Button();
             panelBottom = new System.Windows.Forms.Panel();
             panelMid = new System.Windows.Forms.Panel();
-            cmbBoxCustomerSelect = new ComboBox();
-            label9 = new Label();
+            customerComboBoxControl = new UserControllers.Customers.CustomerComboBoxControl();
             panelBottom.SuspendLayout();
             panelMid.SuspendLayout();
             SuspendLayout();
@@ -43,7 +42,7 @@
             bttnCustomerDelete.Dock = DockStyle.Right;
             bttnCustomerDelete.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             bttnCustomerDelete.Image = (Image)resources.GetObject("bttnCustomerDelete.Image");
-            bttnCustomerDelete.Location = new Point(161, 0);
+            bttnCustomerDelete.Location = new Point(122, 0);
             bttnCustomerDelete.Name = "bttnCustomerDelete";
             bttnCustomerDelete.Size = new Size(109, 39);
             bttnCustomerDelete.TabIndex = 1;
@@ -57,44 +56,33 @@
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
             panelBottom.Controls.Add(bttnCustomerDelete);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 91);
+            panelBottom.Location = new Point(0, 62);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
-            panelBottom.Size = new Size(282, 41);
+            panelBottom.Size = new Size(243, 41);
             panelBottom.TabIndex = 6;
             // 
             // panelMid
             // 
-            panelMid.Controls.Add(cmbBoxCustomerSelect);
-            panelMid.Controls.Add(label9);
+            panelMid.Controls.Add(customerComboBoxControl);
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(282, 132);
+            panelMid.Size = new Size(243, 103);
             panelMid.TabIndex = 7;
             // 
-            // cmbBoxCustomerSelect
+            // customerComboBoxControl
             // 
-            cmbBoxCustomerSelect.FormattingEnabled = true;
-            cmbBoxCustomerSelect.Location = new Point(21, 38);
-            cmbBoxCustomerSelect.Name = "cmbBoxCustomerSelect";
-            cmbBoxCustomerSelect.Size = new Size(245, 23);
-            cmbBoxCustomerSelect.TabIndex = 19;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(21, 20);
-            label9.Name = "label9";
-            label9.Size = new Size(140, 15);
-            label9.TabIndex = 18;
-            label9.Text = "Silinecek Müşterinin Adı :";
+            customerComboBoxControl.Location = new Point(0, 3);
+            customerComboBoxControl.Name = "customerComboBoxControl";
+            customerComboBoxControl.Size = new Size(240, 51);
+            customerComboBoxControl.TabIndex = 19;
             // 
             // frmCustomerDelete
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(282, 132);
+            ClientSize = new Size(243, 103);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -105,7 +93,6 @@
             Load += frmCustomerDelete_Load;
             panelBottom.ResumeLayout(false);
             panelMid.ResumeLayout(false);
-            panelMid.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -114,7 +101,6 @@
         private Button bttnCustomerDelete;
         private System.Windows.Forms.Panel panelBottom;
         private System.Windows.Forms.Panel panelMid;
-        private ComboBox cmbBoxCustomerSelect;
-        private Label label9;
+        private UserControllers.Customers.CustomerComboBoxControl customerComboBoxControl;
     }
 }

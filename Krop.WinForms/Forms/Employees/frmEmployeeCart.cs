@@ -17,36 +17,17 @@ namespace Krop.WinForms.Forms.Employees
 
         private async void frmEmployeeCart_Load(object sender, EventArgs e)
         {
-           await EmployeeList();
-            if (cmbBoxAppUserSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxAppUserSelect.SelectedValue = Id;
+            await employeeComboBoxControl1.EmployeeList(_webApiService);
+            employeeComboBoxControl1.EmployeeComboBox.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
+            employeeComboBoxControl1.EmployeeSelect(Id);
         }
-        private async Task EmployeeList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("employee/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetEmployeeComboBoxDTO>>(response);
-
-            cmbBoxAppUserSelect.DataSource = null;
-            cmbBoxAppUserSelect.DisplayMember = "UserName";
-            cmbBoxAppUserSelect.ValueMember = "AppUserId";
-
-            cmbBoxAppUserSelect.SelectedIndexChanged -= CmbBoxAppUserSelect_SelectedIndexChanged;
-            cmbBoxAppUserSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxAppUserSelect.SelectedValue = -1;
-            cmbBoxAppUserSelect.SelectedIndexChanged += CmbBoxAppUserSelect_SelectedIndexChanged;
-        }
+        
 
         private async void CmbBoxAppUserSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbBoxAppUserSelect.SelectedValue is not null)
+            if (employeeComboBoxControl1.EmployeeComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response =await _webApiService.httpClient.GetAsync($"employee/GetById/{cmbBoxAppUserSelect.SelectedValue}");
+                HttpResponseMessage response =await _webApiService.httpClient.GetAsync($"employee/GetById/{(Guid)employeeComboBoxControl1.EmployeeComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);

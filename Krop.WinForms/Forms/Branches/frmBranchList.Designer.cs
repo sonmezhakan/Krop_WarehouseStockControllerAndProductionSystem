@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBranchList));
-            dgwBranchList = new DataGridView();
             contextMenuStrip1 = new ContextMenuStrip(components);
             branchCartToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -45,33 +43,10 @@
             panelDgwFooter = new System.Windows.Forms.Panel();
             panelTop = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
-            ((System.ComponentModel.ISupportInitialize)dgwBranchList).BeginInit();
+            branchListControl = new UserControllers.Branches.BranchListControl();
             contextMenuStrip1.SuspendLayout();
             panelTop.SuspendLayout();
             SuspendLayout();
-            // 
-            // dgwBranchList
-            // 
-            dgwBranchList.AllowUserToAddRows = false;
-            dgwBranchList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwBranchList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwBranchList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwBranchList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwBranchList.BackgroundColor = SystemColors.Control;
-            dgwBranchList.BorderStyle = BorderStyle.None;
-            dgwBranchList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwBranchList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwBranchList.ContextMenuStrip = contextMenuStrip1;
-            dgwBranchList.Dock = DockStyle.Fill;
-            dgwBranchList.Location = new Point(0, 38);
-            dgwBranchList.Name = "dgwBranchList";
-            dgwBranchList.ReadOnly = true;
-            dgwBranchList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwBranchList.RowTemplate.Height = 25;
-            dgwBranchList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwBranchList.Size = new Size(1123, 493);
-            dgwBranchList.TabIndex = 16;
             // 
             // contextMenuStrip1
             // 
@@ -177,12 +152,21 @@
             txtSearch.TabIndex = 2;
             txtSearch.TextChanged += txtSearch_TextChanged;
             // 
+            // branchListControl
+            // 
+            branchListControl.ContextMenuStrip = contextMenuStrip1;
+            branchListControl.Dock = DockStyle.Fill;
+            branchListControl.Location = new Point(0, 38);
+            branchListControl.Name = "branchListControl";
+            branchListControl.Size = new Size(1123, 493);
+            branchListControl.TabIndex = 16;
+            // 
             // frmBranchList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1123, 589);
-            Controls.Add(dgwBranchList);
+            Controls.Add(branchListControl);
             Controls.Add(panelBottom);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelTop);
@@ -190,7 +174,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Şube Listesi";
             Load += frmBranchList_Load;
-            ((System.ComponentModel.ISupportInitialize)dgwBranchList).EndInit();
             contextMenuStrip1.ResumeLayout(false);
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
@@ -198,8 +181,6 @@
         }
 
         #endregion
-
-        private DataGridView dgwBranchList;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem branchCartToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
@@ -213,5 +194,6 @@
         private System.Windows.Forms.Panel panelDgwFooter;
         private System.Windows.Forms.Panel panelTop;
         private TextBox txtSearch;
+        private UserControllers.Branches.BranchListControl branchListControl;
     }
 }

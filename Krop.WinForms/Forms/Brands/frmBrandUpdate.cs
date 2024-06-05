@@ -19,20 +19,20 @@ namespace Krop.WinForms.Brands
 
         private async void frmBrandUpdate_Load(object sender, EventArgs e)
         {
-           await ComboBoxList();
-            if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxBrandSelect.SelectedValue = Id;
+            await brandComboBoxControl.BrandList(_webApiService);
+            brandComboBoxControl.BrandComboBox.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
+            brandComboBoxControl.BrandSelect(Id);
         }
 
         private async void bttnBrandUpdate_Click(object sender, EventArgs e)
         {
-            if (cmbBoxBrandSelect.SelectedValue is not null)
+            if (brandComboBoxControl.BrandComboBox.SelectedValue is not null)
             {
                 if (DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
                     UpdateBrandDTO updateBrandDTO = new UpdateBrandDTO
                     {
-                        Id = (Guid)cmbBoxBrandSelect.SelectedValue,
+                        Id = (Guid)brandComboBoxControl.BrandComboBox.SelectedValue,
                         BrandName = txtBrandName.Text,
                         PhoneNumber = txtPhoneNumber.Text,
                         Email = txtEmail.Text
@@ -46,7 +46,7 @@ namespace Krop.WinForms.Brands
                         return;
                     }
 
-                   await ComboBoxList();//Listele
+                    await brandComboBoxControl.BrandList(_webApiService);
                 }
             }
             else
@@ -55,33 +55,11 @@ namespace Krop.WinForms.Brands
             }
         }
 
-        private async Task ComboBoxList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
-
-            cmbBoxBrandSelect.DataSource = null;
-            
-            cmbBoxBrandSelect.DisplayMember = "BrandName";
-            cmbBoxBrandSelect.ValueMember = "Id";
-
-            cmbBoxBrandSelect.SelectedIndexChanged -= cmbBoxBrandSelect_SelectedIndexChanged;//SelectedIndexChanged Pasif
-
-            cmbBoxBrandSelect.DataSource = result is not null ? result.Data : null;//liste aktarılıyor
-            cmbBoxBrandSelect.SelectedIndex = -1;
-            cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;//SelectedIndexChanged Aktif
-        }
         private async void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxBrandSelect.SelectedValue is not null)
+            if (brandComboBoxControl.BrandComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/GetById/{cmbBoxBrandSelect.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/GetById/{(Guid)brandComboBoxControl.BrandComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);

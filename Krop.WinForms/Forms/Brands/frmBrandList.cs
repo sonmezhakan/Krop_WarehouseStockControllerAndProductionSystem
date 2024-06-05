@@ -1,8 +1,6 @@
 ﻿using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.Brands;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
 
 namespace Krop.WinForms.Brands
 {
@@ -10,8 +8,6 @@ namespace Krop.WinForms.Brands
     {
         private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
-        private BindingList<GetBrandDTO> _originalData;
-        private BindingList<GetBrandDTO> _filteredData;
 
         public frmBrandList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
@@ -22,60 +18,30 @@ namespace Krop.WinForms.Brands
 
         private async void frmBrandList_Load(object sender, EventArgs e)
         {
-            await BrandList();
-        }
-        private void DgwBrandListSettings()
-        {
-            dgwBrandList.Columns[0].HeaderText = "Id";
-            dgwBrandList.Columns[1].HeaderText = "Marka Adı";
-            dgwBrandList.Columns[2].HeaderText = "Telefon Numarası";
-            dgwBrandList.Columns[3].HeaderText = "Email";
-
-            dgwBrandList.Columns[0].Visible = false;
-        }
-        private async Task BrandList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/getall");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetBrandDTO>>(response);
-
-            if (result is not null)
-            {
-                _originalData = new BindingList<GetBrandDTO>(result.Data);
-                _filteredData = new BindingList<GetBrandDTO>(_originalData.ToList());
-
-                dgwBrandList.DataSource = _filteredData;
-
-                DgwBrandListSettings();
-            }
+            await brandListControl.BrandList(_webApiService);
         }
         private void Search()
         {
             string searchText = txtSearch.Text.ToLower();//girilen değerleri küçülterek ata.
             if (!string.IsNullOrWhiteSpace(searchText))
             {
-                var filteredList = _originalData.Where(x =>
+                var filteredList = brandListControl._originalData.Where(x =>
                 (x.BrandName != null && x.BrandName.ToLower().Contains(searchText)) ||
                 (x.PhoneNumber != null && x.PhoneNumber.ToString().ToLower().Contains(searchText)) ||
                 (x.Email != null && x.Email.ToLower().Contains(searchText)));
 
-                _filteredData.Clear();
+                brandListControl._filteredData.Clear();
                 foreach (var item in filteredList)
                 {
-                    _filteredData.Add(item);
+                    brandListControl._filteredData.Add(item);
                 }
             }
             else
             {
-                _filteredData.Clear();
-                foreach (var item in _originalData)
+                brandListControl._filteredData.Clear();
+                foreach (var item in brandListControl._originalData)
                 {
-                    _filteredData.Add(item);
+                    brandListControl._filteredData.Add(item);
                 }
             }
         }
@@ -88,7 +54,7 @@ namespace Krop.WinForms.Brands
         private void brandCartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmBrandCart frmBrandCart = _serviceProvider.GetRequiredService<frmBrandCart>();
-            frmBrandCart.Id = (Guid)dgwBrandList.SelectedRows[0].Cells[0].Value;
+            frmBrandCart.Id = (Guid)brandListControl.DataGridViewBrandList.SelectedRows[0].Cells[0].Value;
             FormController.FormOpenController(frmBrandCart);
         }
 
@@ -101,20 +67,20 @@ namespace Krop.WinForms.Brands
         private void brandUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmBrandUpdate frmBrandUpdate = _serviceProvider.GetRequiredService<frmBrandUpdate>();
-            frmBrandUpdate.Id = (Guid)dgwBrandList.SelectedRows[0].Cells[0].Value;
+            frmBrandUpdate.Id = (Guid)brandListControl.DataGridViewBrandList.SelectedRows[0].Cells[0].Value;
             FormController.FormOpenController(frmBrandUpdate);
         }
 
         private void brandDeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmBrandDelete frmBrandDelete = _serviceProvider.GetRequiredService<frmBrandDelete>();
-            frmBrandDelete.Id = (Guid)dgwBrandList.SelectedRows[0].Cells[0].Value;
+            frmBrandDelete.Id = (Guid)brandListControl.DataGridViewBrandList.SelectedRows[0].Cells[0].Value;
             FormController.FormOpenController(frmBrandDelete);
         }
 
         private async void brandListRefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           await BrandList();
+            await brandListControl.BrandList(_webApiService);
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)

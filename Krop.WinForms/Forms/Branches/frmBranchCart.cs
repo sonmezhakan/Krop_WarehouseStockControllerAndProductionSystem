@@ -24,37 +24,16 @@ namespace Krop.WinForms.Forms.Branches
 
         private async void frmBranchCart_Load(object sender, EventArgs e)
         {
-           await BranchList();
-            if (cmbBoxBranchSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxBranchSelect.SelectedValue = Id;
-        }
-        private async Task BranchList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("branch/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetBranchComboBoxDTO>>(response);
-
-            cmbBoxBranchSelect.DataSource = null;
-
-            cmbBoxBranchSelect.DisplayMember = "BranchName";
-            cmbBoxBranchSelect.ValueMember = "Id";
-
-            cmbBoxBranchSelect.SelectedIndexChanged -= CmbBoxBranchSelect_SelectedIndexChanged;
-            cmbBoxBranchSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxBranchSelect.SelectedIndex = -1;
-            cmbBoxBranchSelect.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
+            await branchComboBoxControl.BranchList(_webApiService);
+            branchComboBoxControl.BranchComboBox.SelectedIndexChanged += CmbBoxBranchSelect_SelectedIndexChanged;
+            branchComboBoxControl.BranchSelect(Id);
         }
 
         private async void CmbBoxBranchSelect_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbBoxBranchSelect.SelectedValue is not null)
+            if (branchComboBoxControl.BranchComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"branch/GetById/{cmbBoxBranchSelect.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"branch/GetById/{(Guid)branchComboBoxControl.BranchComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);

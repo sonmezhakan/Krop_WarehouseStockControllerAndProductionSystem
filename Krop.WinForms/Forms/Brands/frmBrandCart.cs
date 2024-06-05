@@ -17,39 +17,17 @@ namespace Krop.WinForms.Brands
 
         private async void frmBrandCart_Load(object sender, EventArgs e)
         {
-            await BrandList();
-            if (cmbBoxBrandSelect.DataSource != null && Id != Guid.Empty)
-                cmbBoxBrandSelect.SelectedValue = Id;
-        }
-
-        private async Task BrandList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("brand/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result = await ResponseController.SuccessDataResponseController<List<GetBrandComboBoxDTO>>(response);
-
-            cmbBoxBrandSelect.DataSource = null;
-
-            cmbBoxBrandSelect.DisplayMember = "BrandName";
-            cmbBoxBrandSelect.ValueMember = "Id";
-
-            cmbBoxBrandSelect.SelectedIndexChanged -= cmbBoxBrandSelect_SelectedIndexChanged;
-            cmbBoxBrandSelect.DataSource = result is not null ? result.Data : null;
-            cmbBoxBrandSelect.SelectedIndex = -1;
-            cmbBoxBrandSelect.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
+            await brandComboBoxControl.BrandList(_webApiService);
+            brandComboBoxControl.BrandComboBox.SelectedIndexChanged += cmbBoxBrandSelect_SelectedIndexChanged;
+            brandComboBoxControl.BrandSelect(Id);
         }
 
         private async void cmbBoxBrandSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            if (cmbBoxBrandSelect.SelectedValue is not null)
+            if (brandComboBoxControl.BrandComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/GetById/{cmbBoxBrandSelect.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/GetById/{(Guid)brandComboBoxControl.BrandComboBox.SelectedValue}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);

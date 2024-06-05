@@ -32,10 +32,10 @@
             panelBottom = new System.Windows.Forms.Panel();
             bttnAdd = new Button();
             panelMid = new System.Windows.Forms.Panel();
-            txtDepartmentName = new TextBox();
-            label1 = new Label();
             txtDescription = new TextBox();
             label2 = new Label();
+            txtDepartmentName = new TextBox();
+            label1 = new Label();
             panelBottom.SuspendLayout();
             panelMid.SuspendLayout();
             SuspendLayout();
@@ -77,38 +77,38 @@
             panelMid.Size = new Size(237, 187);
             panelMid.TabIndex = 1;
             // 
-            // txtDepartmentName
-            // 
-            txtDepartmentName.Location = new Point(13, 28);
-            txtDepartmentName.Name = "txtDepartmentName";
-            txtDepartmentName.Size = new Size(211, 23);
-            txtDepartmentName.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(13, 10);
-            label1.Name = "label1";
-            label1.Size = new Size(93, 15);
-            label1.TabIndex = 0;
-            label1.Text = "⁬Departman Adı :";
-            // 
             // txtDescription
             // 
-            txtDescription.Location = new Point(13, 70);
+            txtDescription.Location = new Point(15, 70);
             txtDescription.Multiline = true;
             txtDescription.Name = "txtDescription";
-            txtDescription.Size = new Size(211, 111);
+            txtDescription.Size = new Size(200, 111);
             txtDescription.TabIndex = 3;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(13, 52);
+            label2.Location = new Point(15, 52);
             label2.Name = "label2";
             label2.Size = new Size(62, 15);
             label2.TabIndex = 2;
             label2.Text = "Açıklama :";
+            // 
+            // txtDepartmentName
+            // 
+            txtDepartmentName.Location = new Point(15, 28);
+            txtDepartmentName.Name = "txtDepartmentName";
+            txtDepartmentName.Size = new Size(200, 23);
+            txtDepartmentName.TabIndex = 1;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(15, 10);
+            label1.Name = "label1";
+            label1.Size = new Size(93, 15);
+            label1.TabIndex = 0;
+            label1.Text = "⁬Departman Adı :";
             // 
             // frmDepartmentAdd
             // 

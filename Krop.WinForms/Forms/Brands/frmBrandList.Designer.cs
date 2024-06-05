@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBrandList));
-            dgwBrandList = new DataGridView();
             contextMenuStrip1 = new ContextMenuStrip(components);
             brandCartToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -46,33 +44,10 @@
             panelDgwFooter = new System.Windows.Forms.Panel();
             panelTop = new System.Windows.Forms.Panel();
             txtSearch = new TextBox();
-            ((System.ComponentModel.ISupportInitialize)dgwBrandList).BeginInit();
+            brandListControl = new UserControllers.Brands.BrandListControl();
             contextMenuStrip1.SuspendLayout();
             panelTop.SuspendLayout();
             SuspendLayout();
-            // 
-            // dgwBrandList
-            // 
-            dgwBrandList.AllowUserToAddRows = false;
-            dgwBrandList.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dgwBrandList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgwBrandList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgwBrandList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgwBrandList.BackgroundColor = SystemColors.Control;
-            dgwBrandList.BorderStyle = BorderStyle.None;
-            dgwBrandList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwBrandList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgwBrandList.ContextMenuStrip = contextMenuStrip1;
-            dgwBrandList.Dock = DockStyle.Fill;
-            dgwBrandList.Location = new Point(0, 38);
-            dgwBrandList.Name = "dgwBrandList";
-            dgwBrandList.ReadOnly = true;
-            dgwBrandList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgwBrandList.RowTemplate.Height = 25;
-            dgwBrandList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwBrandList.Size = new Size(875, 382);
-            dgwBrandList.TabIndex = 12;
             // 
             // contextMenuStrip1
             // 
@@ -183,12 +158,21 @@
             txtSearch.TabIndex = 2;
             txtSearch.TextChanged += txtSearch_TextChanged;
             // 
+            // brandListControl
+            // 
+            brandListControl.ContextMenuStrip = contextMenuStrip1;
+            brandListControl.Dock = DockStyle.Fill;
+            brandListControl.Location = new Point(0, 38);
+            brandListControl.Name = "brandListControl";
+            brandListControl.Size = new Size(875, 382);
+            brandListControl.TabIndex = 12;
+            // 
             // frmBrandList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(875, 478);
-            Controls.Add(dgwBrandList);
+            Controls.Add(brandListControl);
             Controls.Add(panelBottom);
             Controls.Add(panelDgwFooter);
             Controls.Add(panelTop);
@@ -196,7 +180,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Marka Listesi";
             Load += frmBrandList_Load;
-            ((System.ComponentModel.ISupportInitialize)dgwBrandList).EndInit();
             contextMenuStrip1.ResumeLayout(false);
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
@@ -204,7 +187,6 @@
         }
 
         #endregion
-        private DataGridView dgwBrandList;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem brandCartToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
@@ -219,5 +201,6 @@
         private System.Windows.Forms.Panel panelDgwFooter;
         private System.Windows.Forms.Panel panelTop;
         private TextBox txtSearch;
+        private UserControllers.Brands.BrandListControl brandListControl;
     }
 }

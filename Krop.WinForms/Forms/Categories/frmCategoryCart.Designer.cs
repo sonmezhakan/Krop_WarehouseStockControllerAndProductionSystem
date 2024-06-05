@@ -28,37 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
-            cmbBoxCategorySelect = new ComboBox();
+            categoryComboBoxControl = new UserControllers.Categories.CategoryComboBoxControl();
             SuspendLayout();
             // 
-            // label1
+            // categoryComboBoxControl
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(12, 16);
-            label1.Name = "label1";
-            label1.Size = new Size(75, 15);
-            label1.TabIndex = 2;
-            label1.Text = "Kategori Adı:";
-            // 
-            // cmbBoxCategorySelect
-            // 
-            cmbBoxCategorySelect.AutoCompleteMode = AutoCompleteMode.Suggest;
-            cmbBoxCategorySelect.AutoCompleteSource = AutoCompleteSource.ListItems;
-            cmbBoxCategorySelect.FormattingEnabled = true;
-            cmbBoxCategorySelect.Location = new Point(12, 34);
-            cmbBoxCategorySelect.Name = "cmbBoxCategorySelect";
-            cmbBoxCategorySelect.Size = new Size(251, 23);
-            cmbBoxCategorySelect.TabIndex = 3;
-            cmbBoxCategorySelect.SelectedIndexChanged += cmbCategorySelect_SelectedIndexChanged;
+            categoryComboBoxControl.Location = new Point(0, 12);
+            categoryComboBoxControl.Name = "categoryComboBoxControl";
+            categoryComboBoxControl.Size = new Size(240, 51);
+            categoryComboBoxControl.TabIndex = 0;
             // 
             // frmCategoryCart
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(275, 84);
-            Controls.Add(cmbBoxCategorySelect);
-            Controls.Add(label1);
+            ClientSize = new Size(242, 84);
+            Controls.Add(categoryComboBoxControl);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "frmCategoryCart";
@@ -66,11 +51,10 @@
             Text = "Kategori Kartı";
             Load += frmCategoryCart_Load;
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-        private Label label1;
-        private ComboBox cmbBoxCategorySelect;
+
+        private UserControllers.Categories.CategoryComboBoxControl categoryComboBoxControl;
     }
 }

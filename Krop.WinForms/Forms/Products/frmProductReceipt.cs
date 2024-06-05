@@ -1,6 +1,5 @@
 ﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.ProductReceipts;
-using Krop.DTO.Dtos.Products;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.HelpersClass.FromObjectHelpers;
 using System.ComponentModel;
@@ -19,168 +18,70 @@ namespace Krop.WinForms.Products
         {
             InitializeComponent();
             _webApiService = webApiService;
+            productComboBoxControl1.labelName.Text = "Reçetesi Düzenlenecek Ürün Adı :";
+            productComboBoxControl1.labelCode.Text = "Reçetesi Düzenlenecek Ürün Kodu :";
+
+            productComboBoxControl2.labelName.Text = "Reçeteye Eklenecek Ürün Adı :";
+            productComboBoxControl2.labelCode.Text = "Reçeteye Eklenecek Ürün Kodu :";
         }
 
         private async void frmProductReceipt_Load(object sender, EventArgs e)
         {
-           await ProductList();
             txtQuantity.MaxLength = 10;
-        }
-        private async Task ProductList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/GetAllComboBox");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
+            await productComboBoxControl1.ProductList(_webApiService);
+            productComboBoxControl1.ProductNameComboBox.SelectedIndexChanged += cmbBoxReceiptProductName_SelectedIndexChanged;
+            productComboBoxControl1.ProductCodeComboBox.SelectedIndexChanged += cmbBoxReceiptProductCode_SelectedIndexChanged;
+            
+            await productComboBoxControl2.ProductList(_webApiService);
+            productComboBoxControl2.ProductNameComboBox.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
+            productComboBoxControl2.ProductCodeComboBox.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
 
-            var result =await ResponseController.SuccessDataResponseController<List<GetProductComboBoxDTO>>(response);
-
-            if(result is not null)
-            {
-                ProductNameList(result.Data);
-                ProductCodeList(result.Data);
-
-                ProductNameSelectList(result.Data);
-                ProductCodeSelectList(result.Data);
-            }
-        }
-
-        private void DgwReceiptListSettings()
-        {
-            dgwProductReceiptList.Columns[0].HeaderText = "Id";
-            dgwProductReceiptList.Columns[1].HeaderText = "Ürün Adı";
-            dgwProductReceiptList.Columns[2].HeaderText = "Ürün Kodu";
-            dgwProductReceiptList.Columns[3].HeaderText = "Kullanılacak Miktar";
-
-            dgwProductReceiptList.Columns[0].Visible = false;
-        }
-        private async Task ProductReceiptList()
-        {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productReceipt/GetAll/{cmbBoxProductNameSelect.SelectedValue}");
-            if (!response.IsSuccessStatusCode)
-            {
-                await ResponseController.ErrorResponseController(response);
-                return;
-            }
-
-            var result =await ResponseController.SuccessDataResponseController<List<GetProductReceiptListDTO>>(response);
-
-            if(result is not null)
-            {
-                _originalData = new BindingList<GetProductReceiptListDTO>(result.Data);
-                _filteredData = new BindingList<GetProductReceiptListDTO>(_originalData.ToList());
-
-                dgwProductReceiptList.DataSource = _filteredData;
-
-                DgwReceiptListSettings();
-            }
+            productReceiptListControl.DataGridViewProductReceiptList.DoubleClick += dgwProductReceiptList_DoubleClick;
         }
         private void DgwSelectedRowsAndCells()
         {
-            if (cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode is not null)
+            if (productComboBoxControl1.ProductNameComboBox.SelectedValue is not null && productComboBoxControl1.ProductCodeComboBox.DataSource is not null)
             {
-                cmbBoxProductNameSelect.SelectedValue = (Guid)dgwProductReceiptList.SelectedRows[0].Cells[0].Value;
+                productComboBoxControl2.ProductNameComboBox.SelectedValue = (Guid)productReceiptListControl.DataGridViewProductReceiptList.SelectedRows[0].Cells[0].Value;
             }
             else
             {
                 MessageBox.Show("Reçeteyi Doğru Seçiniz!", "Hata!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void ProductNameList(List<GetProductComboBoxDTO> products)
-        {
-            cmbBoxReceiptProductName.DataSource = null;
-
-            cmbBoxReceiptProductName.DisplayMember = "ProductName";
-            cmbBoxReceiptProductName.ValueMember = "Id";
-
-            cmbBoxReceiptProductName.SelectedIndexChanged -= cmbBoxReceiptProductName_SelectedIndexChanged;
-
-            cmbBoxReceiptProductName.DataSource = products is not null ? products : null;
-
-            cmbBoxReceiptProductName.SelectedIndex = -1;
-
-            cmbBoxReceiptProductName.SelectedIndexChanged += cmbBoxReceiptProductName_SelectedIndexChanged;
-        }
-        private void ProductCodeList(List<GetProductComboBoxDTO> products)
-        {
-            cmbBoxReceiptProductCode.DataSource = null;
-
-            cmbBoxReceiptProductCode.DisplayMember = "ProductCode";
-            cmbBoxReceiptProductCode.ValueMember = "Id";
-
-            cmbBoxReceiptProductCode.SelectedIndexChanged -= cmbBoxReceiptProductCode_SelectedIndexChanged;
-
-            cmbBoxReceiptProductCode.DataSource = products is not null ? products : null;
-
-            cmbBoxReceiptProductCode.SelectedIndex = -1;
-
-            cmbBoxReceiptProductCode.SelectedIndexChanged += cmbBoxReceiptProductCode_SelectedIndexChanged;
-        }
 
         private async void cmbBoxReceiptProductName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.DataSource is not null)
+            if (productComboBoxControl1.ProductNameComboBox.SelectedValue is not null && productComboBoxControl1.ProductCodeComboBox.DataSource is not null)
             {
-                cmbBoxReceiptProductCode.SelectedValue = cmbBoxReceiptProductName.SelectedValue;
+                productComboBoxControl1.ProductCodeComboBox.SelectedValue = productComboBoxControl1.ProductNameComboBox.SelectedValue;
 
-               await ProductReceiptList();
+                await productReceiptListControl.ProductReceiptList(_webApiService, (Guid)productComboBoxControl1.ProductNameComboBox.SelectedValue);
             }
         }
 
         private void cmbBoxReceiptProductCode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxReceiptProductCode.SelectedValue is not null && cmbBoxReceiptProductName.DataSource is not null)
+            if (productComboBoxControl1.ProductCodeComboBox.SelectedValue is not null && productComboBoxControl1.ProductNameComboBox.DataSource is not null)
             {
-                cmbBoxReceiptProductName.SelectedValue = cmbBoxReceiptProductCode.SelectedValue;
+                productComboBoxControl1.ProductNameComboBox.SelectedValue = productComboBoxControl1.ProductCodeComboBox.SelectedValue;
             }
-        }
-        private void ProductNameSelectList(List<GetProductComboBoxDTO> products)
-        {
-            cmbBoxProductNameSelect.DataSource = null;
-
-            cmbBoxProductNameSelect.DisplayMember = "ProductName";
-            cmbBoxProductNameSelect.ValueMember = "Id";
-
-            cmbBoxProductNameSelect.SelectedIndexChanged -= cmbBoxProductNameSelect_SelectedIndexChanged;
-
-            cmbBoxProductNameSelect.DataSource = products.Select(x => new GetProductComboBoxDTO { Id = x.Id, ProductName = x.ProductName }).ToList();
-
-            cmbBoxProductNameSelect.SelectedIndex = -1;
-
-            cmbBoxProductNameSelect.SelectedIndexChanged += cmbBoxProductNameSelect_SelectedIndexChanged;
-        }
-        private void ProductCodeSelectList(List<GetProductComboBoxDTO> products)
-        {
-            cmbBoxProductCodeSelect.DataSource = null;
-
-            cmbBoxProductCodeSelect.DisplayMember = "ProductCode";
-            cmbBoxProductCodeSelect.ValueMember = "Id";
-
-            cmbBoxProductCodeSelect.SelectedIndexChanged -= cmbBoxProductCodeSelect_SelectedIndexChanged;
-
-            cmbBoxProductCodeSelect.DataSource = products.Select(x => new GetProductComboBoxDTO { Id = x.Id, ProductCode = x.ProductCode }).ToList();
-
-            cmbBoxProductCodeSelect.SelectedIndex = -1;
-
-            cmbBoxProductCodeSelect.SelectedIndexChanged += cmbBoxProductCodeSelect_SelectedIndexChanged;
         }
 
         private void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.DataSource is not null)
+            if (productComboBoxControl2.ProductNameComboBox.SelectedValue is not null && productComboBoxControl2.ProductCodeComboBox.DataSource is not null)
             {
-                cmbBoxProductCodeSelect.SelectedValue = cmbBoxProductNameSelect.SelectedValue;
+                productComboBoxControl2.ProductCodeComboBox.SelectedValue = productComboBoxControl2.ProductNameComboBox.SelectedValue;
             }
 
         }
 
         private void cmbBoxProductCodeSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxProductNameSelect.DataSource is not null)
+            if (productComboBoxControl2.ProductCodeComboBox.SelectedValue is not null && productComboBoxControl2.ProductNameComboBox.DataSource is not null)
             {
-                cmbBoxProductNameSelect.SelectedValue = cmbBoxProductCodeSelect.SelectedValue;
+                productComboBoxControl2.ProductNameComboBox.SelectedValue = productComboBoxControl2.ProductCodeComboBox.SelectedValue;
             }
         }
 
@@ -228,12 +129,12 @@ namespace Krop.WinForms.Products
 
         private async void bttnAdd_Click(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.SelectedValue is not null)
+            if (productComboBoxControl2.ProductNameComboBox.SelectedValue is not null && productComboBoxControl2.ProductCodeComboBox.SelectedValue is not null && productComboBoxControl1.ProductNameComboBox.SelectedValue is not null && productComboBoxControl1.ProductCodeComboBox.SelectedValue is not null)
             {
                 CreateProductReceiptDTO createProductReceiptDTO = new CreateProductReceiptDTO
                 {
-                    ProduceProductId = (Guid)cmbBoxReceiptProductName.SelectedValue,
-                    ProductId = (Guid)cmbBoxProductNameSelect.SelectedValue,
+                    ProduceProductId = (Guid)productComboBoxControl1.ProductNameComboBox.SelectedValue,
+                    ProductId = (Guid)productComboBoxControl2.ProductNameComboBox.SelectedValue,
                     Quantity = int.Parse(txtQuantity.Text)
                 };
 
@@ -245,7 +146,7 @@ namespace Krop.WinForms.Products
                     return;
                 }
 
-               await ProductReceiptList();
+                await productReceiptListControl.ProductReceiptList(_webApiService, (Guid)productComboBoxControl2.ProductNameComboBox.SelectedValue);
             }
             else
             {
@@ -255,14 +156,14 @@ namespace Krop.WinForms.Products
 
         private async void bttnUpdate_Click(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.SelectedValue is not null)
+            if (productComboBoxControl2.ProductNameComboBox.SelectedValue is not null && productComboBoxControl2.ProductCodeComboBox.SelectedValue is not null && productComboBoxControl1.ProductNameComboBox.SelectedValue is not null && productComboBoxControl1.ProductCodeComboBox.SelectedValue is not null)
             {
                 if(DialogResultHelper.UpdateDialogResult() == DialogResult.Yes)
                 {
                     UpdateProductReceiptDTO updateProductReceiptDTO = new UpdateProductReceiptDTO
                     {
-                        ProduceProductId = (Guid)cmbBoxReceiptProductName.SelectedValue,
-                        ProductId = (Guid)cmbBoxProductNameSelect.SelectedValue,
+                        ProduceProductId = (Guid)productComboBoxControl1.ProductNameComboBox.SelectedValue,
+                        ProductId = (Guid)productComboBoxControl2.ProductNameComboBox.SelectedValue,
                         Quantity = int.Parse(txtQuantity.Text)
                     };
 
@@ -274,7 +175,7 @@ namespace Krop.WinForms.Products
                         return;
                     }
 
-                   await ProductReceiptList();
+                    await productReceiptListControl.ProductReceiptList(_webApiService, (Guid)productComboBoxControl2.ProductNameComboBox.SelectedValue);
                 }
             }
             else
@@ -285,11 +186,11 @@ namespace Krop.WinForms.Products
 
         private async void bttnDelete_Click(object sender, EventArgs e)
         {
-            if (cmbBoxProductNameSelect.SelectedValue is not null && cmbBoxProductCodeSelect.SelectedValue is not null && cmbBoxReceiptProductName.SelectedValue is not null && cmbBoxReceiptProductCode.SelectedValue is not null)
+            if (productComboBoxControl2.ProductNameComboBox.SelectedValue is not null && productComboBoxControl2.ProductCodeComboBox.SelectedValue is not null && productComboBoxControl1.ProductNameComboBox.SelectedValue is not null && productComboBoxControl1.ProductCodeComboBox.SelectedValue is not null)
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"productReceipt/Delete/{cmbBoxReceiptProductName.SelectedValue}/{cmbBoxProductNameSelect.SelectedValue}");
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"productReceipt/Delete/{productComboBoxControl1.ProductNameComboBox.SelectedValue}/{productComboBoxControl2.ProductNameComboBox.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -297,7 +198,7 @@ namespace Krop.WinForms.Products
                         return;
                     }
 
-                   await ProductReceiptList();
+                    await productReceiptListControl.ProductReceiptList(_webApiService, (Guid)productComboBoxControl2.ProductNameComboBox.SelectedValue);
                 }
             }
             else
