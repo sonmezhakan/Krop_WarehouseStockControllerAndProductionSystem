@@ -1,4 +1,4 @@
-﻿namespace Krop.DTO.Dtos.AppUsers
+﻿namespace Krop.DTO.Dtos.Auths
 {
     public record class LoginDTO
     {

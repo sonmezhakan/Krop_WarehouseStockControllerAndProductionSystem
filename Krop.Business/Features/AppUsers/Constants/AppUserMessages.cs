@@ -36,5 +36,9 @@
         public const string NationalNumberMaxLenght = "Kimlik Numarası En Fazla 11 Karakter Olabilir!";
 
         public const string EmailConfirmed = "Email Onaylanmış!";
+        public const string AuthorizationDenied = "Yetkiniz Yok!";
+
+        public const string PasswordResetFailed = "Şifre Sıfırlama İşlemi Başarısız!";
+
     }
 }

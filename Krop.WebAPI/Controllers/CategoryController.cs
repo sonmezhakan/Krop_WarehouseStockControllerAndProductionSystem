@@ -1,5 +1,6 @@
 ﻿using Krop.Business.Services.Categories;
 using Krop.DTO.Dtos.Categroies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
@@ -16,19 +17,20 @@ namespace Krop.WebAPI.Controllers
         }
 
         [HttpPost]
+        //[Authorize(AuthenticationSchemes = "Bearer",Roles = "category.add")]
         public async Task<IActionResult> Add([FromBody] CreateCategoryDTO createCategoryDTO, CancellationToken cancellationToken)
         {
             var result = await _categoryService.AddAsync(createCategoryDTO);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        /*[HttpPost("AddRange")]
+       [HttpPost]
         public async Task<IActionResult> AddRange([FromBody] List<CreateCategoryDTO> createCategoryDTOs, CancellationToken cancellationToken)
         {
             var result = await _categoryService.AddRangeAsync(createCategoryDTOs);
 
             return result.Success ? Ok(result) : BadRequest(result);
-        }*/
+        }
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCategoryDTO updateCategoryDTO, CancellationToken cancellationToken)
         {

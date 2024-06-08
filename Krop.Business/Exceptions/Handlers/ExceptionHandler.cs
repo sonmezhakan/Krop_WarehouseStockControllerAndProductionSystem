@@ -10,6 +10,7 @@ namespace Krop.Business.Exceptions.Handlers
             exception switch
             {
                 
+                AuthorizationException authorizationException => HandleException(authorizationException),
                 BusinessException businessException => HandleException(businessException),//Hata tipi BusinessException ise HandleExceptiona parametre olarak gönder.
                 NotFoundException notFoundException => HandleException(notFoundException),
                 TransactionException transactionException => HandleException(transactionException),
@@ -24,5 +25,6 @@ namespace Krop.Business.Exceptions.Handlers
         protected abstract Task HandleException(ValidationException validationException);//ValidationException(FluentValidation)
         protected abstract Task HandleException(TransactionException transactionException);
         protected abstract Task HandleException(Exception exception);
+        protected abstract Task HandleException(AuthorizationException authorizationException);
     }
 }

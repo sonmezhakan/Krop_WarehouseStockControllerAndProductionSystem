@@ -1,6 +1,5 @@
 ﻿using Krop.Common.Helpers.JsonHelpers;
 using Krop.Common.Models;
-using Krop.Common.Utilits.Result;
 
 namespace Krop.WinForms.HelpersClass
 {

@@ -1,5 +1,5 @@
 ﻿using Krop.Common.Helpers.WebApiService;
-using Krop.DTO.Dtos.AppUsers;
+using Krop.DTO.Dtos.Auths;
 using Krop.WinForms.HelpersClass;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
@@ -11,7 +11,7 @@ namespace Krop.WinForms.Forms.Logins
         private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
 
-        public frmLogin(IWebApiService webApiService,IServiceProvider serviceProvider)
+        public frmLogin(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             _webApiService = webApiService;
@@ -30,19 +30,32 @@ namespace Krop.WinForms.Forms.Logins
                 UserName = txtUserName.Text,
                 Password = txtPassword.Text
             };
-            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("login/login", loginDTO); 
+            HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("auth/login", loginDTO);
             if (!response.IsSuccessStatusCode)
             {
                 await ResponseController.ErrorResponseController(response);
                 return;
             }
 
-            var result = await ResponseController.SuccessDataResponseController<Guid>(response);
+            if (checkRemmemberMe.Checked)
+            {
+                Properties.Settings.Default.UserName = txtUserName.Text;
+                Properties.Settings.Default.Save();
+            }
+
+            var result = await ResponseController.SuccessDataResponseController<LoginResponseDTO>(response);
 
             Panel panel = new Panel(_webApiService, _serviceProvider);
-            panel.AppUserId = result.Data;
+            panel.AppUserId = result.Data.Id;
+            panel.token = result.Data.Token;
             this.Hide();
             panel.Show();
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            frmPasswordReset frmPasswordReset = new frmPasswordReset(_webApiService);
+            frmPasswordReset.ShowDialog();
         }
     }
 }

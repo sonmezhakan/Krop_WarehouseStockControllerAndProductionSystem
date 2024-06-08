@@ -46,7 +46,7 @@
             // 
             panelBottom.Controls.Add(bttnLogin);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 158);
+            panelBottom.Location = new Point(0, 315);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(30, 0, 30, 0);
             panelBottom.Size = new Size(266, 43);
@@ -68,7 +68,7 @@
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(266, 21);
+            panelTop.Size = new Size(266, 179);
             panelTop.TabIndex = 1;
             // 
             // panelMid
@@ -80,9 +80,9 @@
             panelMid.Controls.Add(txtPassword);
             panelMid.Controls.Add(txtUserName);
             panelMid.Dock = DockStyle.Fill;
-            panelMid.Location = new Point(0, 21);
+            panelMid.Location = new Point(0, 179);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(266, 137);
+            panelMid.Size = new Size(266, 136);
             panelMid.TabIndex = 2;
             // 
             // label3
@@ -95,6 +95,7 @@
             label3.Size = new Size(89, 15);
             label3.TabIndex = 5;
             label3.Text = "Şifreyi Unuttum";
+            label3.Click += label3_Click;
             // 
             // checkRemmemberMe
             // 
@@ -145,7 +146,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(266, 201);
+            ClientSize = new Size(266, 358);
             Controls.Add(panelMid);
             Controls.Add(panelTop);
             Controls.Add(panelBottom);

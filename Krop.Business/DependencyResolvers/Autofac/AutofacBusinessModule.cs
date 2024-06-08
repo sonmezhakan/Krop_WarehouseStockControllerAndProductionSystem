@@ -3,7 +3,7 @@ using Autofac.Extras.DynamicProxy;
 using Castle.DynamicProxy;
 using Krop.Business.Services.AppUserRoles;
 using Krop.Business.Services.AppUsers;
-using Krop.Business.Services.AppUsers.Logins;
+using Krop.Business.Services.Auths;
 using Krop.Business.Services.Branches;
 using Krop.Business.Services.Brands;
 using Krop.Business.Services.Categories;
@@ -90,7 +90,7 @@ namespace Krop.Business.DependencyResolvers.Autofac
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().SingleInstance();
             builder.RegisterType<UrlHelperFactory>().As<IUrlHelperFactory>().InstancePerLifetimeScope();
 
-            builder.RegisterType<LoginManager>().As<ILoginService>().SingleInstance();
+            builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

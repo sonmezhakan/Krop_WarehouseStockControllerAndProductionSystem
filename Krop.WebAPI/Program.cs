@@ -2,11 +2,16 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Krop.Business.DependencyResolvers.Autofac;
 using Krop.Business.Exceptions.Extensions;
+using Krop.Business.Exceptions.Middlewares;
 using Krop.Business.Exceptions.Middlewares.Transaction;
+using Krop.Common.Helpers.JwtService;
 using Krop.DataAccess.UnitOfWork;
 using Krop.IOC.DependencyResolvers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Krop.WebAPI
 {
@@ -39,11 +44,25 @@ namespace Krop.WebAPI
             builder.Services.AddEmailRegistration();//EmailService
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddScoped<IJwtService, JwtService>();
+            
             builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             builder.Services.AddScoped<IUrlHelperFactory, UrlHelperFactory>();
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = builder.Configuration["TokenOptions:Issuer"],
+                    ValidAudience = builder.Configuration["TokenOptions:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenOptions:SecurityKey"])),
+                };
+            });
 
             var app = builder.Build();
 
@@ -56,9 +75,11 @@ namespace Krop.WebAPI
 
             app.ConfigureCustomExceptionMiddleWare();
             app.UseMiddleware<TransactionMiddleware>();
+            app.UseMiddleware<AuthorizationMiddleware>();
             
             app.UseHttpsRedirection();
 
+            app.UseAuthorization();
             app.UseAuthorization();
 
 

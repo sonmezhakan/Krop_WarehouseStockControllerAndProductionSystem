@@ -197,7 +197,7 @@ namespace Krop.Business.Services.AppUsers
 
             string token = await _userManager.GeneratePasswordResetTokenAsync(result.Data);
             ResetPasswordMailSenderAsync(token, result.Data);
-
+            
             return new SuccessResult();
         }
         #endregion

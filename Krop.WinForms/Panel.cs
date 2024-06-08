@@ -15,6 +15,7 @@ using Krop.WinForms.HelpersClass;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Headers;
 
 namespace Krop.WinForms
 {
@@ -22,7 +23,8 @@ namespace Krop.WinForms
     {
         public readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
-        public Guid AppUserId = Guid.Parse("00f69e9b-a621-4568-d50d-08dc827538a0");
+        public Guid AppUserId;
+        public string token;
 
         public Panel(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
@@ -74,7 +76,7 @@ namespace Krop.WinForms
 
         private void Panel_Load(object sender, EventArgs e)
         {
-
+            _webApiService.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         private void bttnBrandAdd_Click(object sender, EventArgs e)
