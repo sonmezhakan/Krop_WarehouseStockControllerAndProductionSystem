@@ -2,10 +2,10 @@
 {
     public class ErrorResult : Result
     {
-        public ErrorResult(bool success,int statusCode, string message) : base(false,statusCode, message)
+        public ErrorResult(bool success,int status, string detail) : base(false, status, detail)
         {
         }
-        public ErrorResult(int statusCode,string message) : base(false,statusCode)
+        public ErrorResult(int status,string detail) : base(false,status, detail)
         {
 
         }

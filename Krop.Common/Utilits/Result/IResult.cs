@@ -3,8 +3,8 @@
     public interface IResult
     {
         public bool Success { get; }
-        public string Message { get; }
+        public string Detail { get; }
 
-        public int StatusCode { get; }
+        public int Status { get; }
     }
 }

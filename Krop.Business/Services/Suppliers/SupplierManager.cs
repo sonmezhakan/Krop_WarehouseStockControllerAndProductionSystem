@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Suppliers.Rules;
 using Krop.Business.Features.Suppliers.Validations;
-using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.Suppliers;
 using Krop.Entities.Entities;
 
@@ -14,41 +14,48 @@ namespace Krop.Business.Services.Suppliers
         private readonly ISupplierRepository _supplierRepository;
         private readonly IMapper _mapper;
         private readonly SupplierBusinessRules _supplierBusinessRules;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SupplierManager(ISupplierRepository supplierRepository,IMapper mapper,SupplierBusinessRules supplierBusinessRules)
+        public SupplierManager(ISupplierRepository supplierRepository,IMapper mapper,SupplierBusinessRules supplierBusinessRules,IUnitOfWork unitOfWork)
         {
             _supplierRepository = supplierRepository;
             _mapper = mapper;
             _supplierBusinessRules = supplierBusinessRules;
+            _unitOfWork = unitOfWork;
         }
         #region Add
-        [ValidationAspect(typeof(CreateSupplierValidation))]
+       
         public async Task<IResult> AddAsync(CreateSupplierDTO createSupplierDTO)
         {
             Supplier result = _mapper.Map<Supplier>(createSupplierDTO);
             await _supplierRepository.AddAsync(result);
-
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
         #endregion
         #region Update
-        [ValidationAspect(typeof(UpdateSupplierValidator))]
+        
         public async Task<IResult> UpdateAsync(UpdateSupplierDTO updateSupplierDTO)
         {
-            var supplier = await _supplierBusinessRules.CheckBySupplierId(updateSupplierDTO.Id);
+            var result = await _supplierBusinessRules.CheckBySupplierId(updateSupplierDTO.Id);
+            if (!result.Success)
+                return result;
 
-            supplier = _mapper.Map(updateSupplierDTO,supplier);
+            Supplier supplier = _mapper.Map(updateSupplierDTO,result.Data);
             await _supplierRepository.UpdateAsync(supplier);
-
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
         #endregion
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id)
         {
-            var supplier = await _supplierBusinessRules.CheckBySupplierId(id);
+            var result = await _supplierBusinessRules.CheckBySupplierId(id);
+            if (!result.Success)
+                return result;
 
-            await _supplierRepository.DeleteAsync(supplier);
+            await _supplierRepository.DeleteAsync(result.Data);
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
         #endregion
@@ -71,10 +78,12 @@ namespace Krop.Business.Services.Suppliers
         #region Search
         public async Task<IDataResult<GetSupplierDTO>> GetByIdAsync(Guid id)
         {
-            var supplier = await _supplierBusinessRules.CheckBySupplierId(id);
+            var result = await _supplierBusinessRules.CheckBySupplierId(id);
+            if (!result.Success)
+                return new ErrorDataResult<GetSupplierDTO>(result.Status,result.Detail);
 
             return new SuccessDataResult<GetSupplierDTO>(
-                _mapper.Map<GetSupplierDTO>(supplier));
+                _mapper.Map<GetSupplierDTO>(result.Data));
         }
    
         #endregion

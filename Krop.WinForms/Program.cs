@@ -1,5 +1,6 @@
 using Krop.IOC.DependencyResolvers;
 using Krop.WinForms.DependencyResolvers;
+using Krop.WinForms.Forms.Logins;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -22,7 +23,7 @@ namespace Krop.WinForms
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            var mainForm = serviceProvider.GetRequiredService<Panel>();
+            var mainForm = serviceProvider.GetRequiredService<frmLogin>();
             Application.Run(mainForm);
         }
 

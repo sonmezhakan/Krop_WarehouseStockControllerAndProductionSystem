@@ -197,6 +197,7 @@
             // 
             // productListControl
             // 
+            productListControl.ContextMenuStrip = contextMenuStrip1;
             productListControl.Dock = DockStyle.Fill;
             productListControl.Location = new Point(0, 38);
             productListControl.Name = "productListControl";

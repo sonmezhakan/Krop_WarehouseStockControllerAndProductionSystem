@@ -109,6 +109,7 @@
             lblServerName = new Label();
             lblCompanyName = new Label();
             panel1 = new System.Windows.Forms.Panel();
+            settingBttnAppUser = new Button();
             tabControl1.SuspendLayout();
             HomeTabPage.SuspendLayout();
             StocksTabPage.SuspendLayout();
@@ -123,6 +124,7 @@
             UsersTabPage.SuspendLayout();
             DepartmentTabPage.SuspendLayout();
             AppUserRolePage.SuspendLayout();
+            SettingsTabPage.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
             // 
@@ -1388,6 +1390,7 @@
             // 
             // SettingsTabPage
             // 
+            SettingsTabPage.Controls.Add(settingBttnAppUser);
             SettingsTabPage.Location = new Point(4, 26);
             SettingsTabPage.Name = "SettingsTabPage";
             SettingsTabPage.Size = new Size(1876, 65);
@@ -1505,6 +1508,25 @@
             panel1.Size = new Size(1884, 896);
             panel1.TabIndex = 2;
             // 
+            // settingBttnAppUser
+            // 
+            settingBttnAppUser.BackColor = Color.Transparent;
+            settingBttnAppUser.Dock = DockStyle.Left;
+            settingBttnAppUser.FlatAppearance.BorderColor = Color.White;
+            settingBttnAppUser.FlatAppearance.BorderSize = 0;
+            settingBttnAppUser.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            settingBttnAppUser.FlatStyle = FlatStyle.Flat;
+            settingBttnAppUser.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            settingBttnAppUser.Image = (Image)resources.GetObject("settingBttnAppUser.Image");
+            settingBttnAppUser.Location = new Point(0, 0);
+            settingBttnAppUser.Name = "settingBttnAppUser";
+            settingBttnAppUser.Size = new Size(120, 65);
+            settingBttnAppUser.TabIndex = 31;
+            settingBttnAppUser.Text = "Kullanıcı Ayarlarım";
+            settingBttnAppUser.TextImageRelation = TextImageRelation.ImageAboveText;
+            settingBttnAppUser.UseVisualStyleBackColor = false;
+            settingBttnAppUser.Click += settingBttnAppUser_Click;
+            // 
             // Panel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1531,6 +1553,7 @@
             UsersTabPage.ResumeLayout(false);
             DepartmentTabPage.ResumeLayout(false);
             AppUserRolePage.ResumeLayout(false);
+            SettingsTabPage.ResumeLayout(false);
             panelBottom.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -1617,5 +1640,6 @@
         private Button departmentBttnAdd;
         private Button departmentBttnCart;
         private Button departmentBttnList;
+        private Button settingBttnAppUser;
     }
 }

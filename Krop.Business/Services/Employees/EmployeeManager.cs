@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Krop.Business.Exceptions.Middlewares.Transaction;
+using Krop.Business.Features.Employees.Constants;
 using Krop.Business.Features.Employees.Rules;
-using Krop.Business.Features.Employees.Validations;
-using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.Employees;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
 
 namespace Krop.Business.Services.Employees
@@ -15,34 +18,42 @@ namespace Krop.Business.Services.Employees
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
         private readonly EmployeeBusinessRules _employeeBusinessRules;
+        private readonly IUnitOfWork _unitOfWork;
 
-
-        public EmployeeManager(IEmployeeRepository employeeRepository, IMapper mapper, EmployeeBusinessRules employeeBusinessRules)
+        public EmployeeManager(IEmployeeRepository employeeRepository, IMapper mapper, EmployeeBusinessRules employeeBusinessRules,IUnitOfWork unitOfWork)
         {
             _employeeRepository = employeeRepository;
             _mapper = mapper;
             _employeeBusinessRules = employeeBusinessRules;
+            _unitOfWork = unitOfWork;
         }
         #region Add
-        [ValidationAspect(typeof(CreateEmployeeValidator))]
+        
+        [TransactionScope]
         public async Task<IResult> AddAsync(CreateEmployeeDTO createEmployeeDTO)
         {
-            await _employeeBusinessRules.EmployeeCannotBeDuplicatedWhenInserted(createEmployeeDTO.AppUserId);//AppUserId Rule
+            var result = BusinessRules.Run(await _employeeBusinessRules.EmployeeCannotBeDuplicatedWhenInserted(createEmployeeDTO.AppUserId));
+            if (!result.Success)
+                return result;
             
             await _employeeRepository.AddAsync(
                 _mapper.Map<Employee>(createEmployeeDTO));
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
         #endregion
         #region Update
+        [TransactionScope]
         public async Task<IResult> UpdateAsync(UpdateEmployeeDTO updateEmployeeDTO)
         {
-            var employee = await _employeeBusinessRules.CheckByEmployeeId(updateEmployeeDTO.AppUserId);
+            var result = await _employeeBusinessRules.CheckByEmployeeId(updateEmployeeDTO.AppUserId);
+            if (!result.Success)
+                return result;
 
-            employee = _mapper.Map(updateEmployeeDTO, employee);
+            Employee employee = _mapper.Map(updateEmployeeDTO, result.Data);
 
             await _employeeRepository.UpdateAsync(employee);
-
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
         #endregion
@@ -71,10 +82,12 @@ namespace Krop.Business.Services.Employees
         #region Search
         public async Task<IDataResult<GetEmployeeDTO>> GetByIdAsync(Guid id)
         {
-            var employee = await _employeeBusinessRules.CheckByEmployeeId(id);
+            var result = await _employeeBusinessRules.CheckByEmployeeId(id);
+            if (!result.Success)
+                return new ErrorDataResult<GetEmployeeDTO>(result.Status,result.Detail);
 
             return new SuccessDataResult<GetEmployeeDTO>(
-                _mapper.Map<GetEmployeeDTO>(employee));
+                _mapper.Map<GetEmployeeDTO>(result.Data));
         }
 
         public async Task<IDataResult<GetEmployeeCartDTO>> GetByIdCartAsync(Guid Id)
@@ -85,6 +98,8 @@ namespace Krop.Business.Services.Employees
                     d=>d.Department,
                     b=>b.Branch
                 });
+            if (employee is null)
+                return new ErrorDataResult<GetEmployeeCartDTO>(StatusCodes.Status404NotFound,EmployeeMessages.EmployeeNotFound);
 
             return new SuccessDataResult<GetEmployeeCartDTO>(
                 _mapper.Map<GetEmployeeCartDTO>(employee));

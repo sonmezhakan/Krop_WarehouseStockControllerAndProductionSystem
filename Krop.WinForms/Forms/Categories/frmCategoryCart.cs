@@ -16,6 +16,7 @@ namespace Krop.WinForms.Categories
         private async void frmCategoryCart_Load(object sender, EventArgs e)
         {
             await categoryComboBoxControl.CategoryList(_webApiService);
+            categoryComboBoxControl.CategorySelect(Id);
         }
     }
 }

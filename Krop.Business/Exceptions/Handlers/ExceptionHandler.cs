@@ -12,7 +12,7 @@ namespace Krop.Business.Exceptions.Handlers
                 
                 BusinessException businessException => HandleException(businessException),//Hata tipi BusinessException ise HandleExceptiona parametre olarak gönder.
                 NotFoundException notFoundException => HandleException(notFoundException),
-
+                TransactionException transactionException => HandleException(transactionException),
                 ValidationException ValidationException => HandleException(ValidationException),//Hata tipi ValidationException(FluentValidation) ise HandleExceptiona parametre olarak gönder.
                 _ => HandleException(exception)//Belirtilen hata tipleri yok ise HandleExceptiona parametre olarak exception ver.
             };
@@ -22,7 +22,7 @@ namespace Krop.Business.Exceptions.Handlers
         protected abstract Task HandleException(NotFoundException notFoundException);
 
         protected abstract Task HandleException(ValidationException validationException);//ValidationException(FluentValidation)
-
+        protected abstract Task HandleException(TransactionException transactionException);
         protected abstract Task HandleException(Exception exception);
     }
 }

@@ -1,48 +1,65 @@
-﻿using Krop.Business.Features.Employees.ExceptionHelpers;
+﻿using Krop.Business.Features.Employees.Constants;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Features.Employees.Rules
 {
     public class EmployeeBusinessRules
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly EmployeeExceptionHelper _employeeExceptionHelper;
 
-        public EmployeeBusinessRules(IEmployeeRepository employeeRepository,EmployeeExceptionHelper employeeExceptionHelper)
+        public EmployeeBusinessRules(IEmployeeRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
-            _employeeExceptionHelper = employeeExceptionHelper;
         }
 
-        public async Task<Employee> CheckByEmployeeId(Guid id)
+        public async Task<IDataResult<Employee>> CheckByEmployeeId(Guid id)
         {
             var result = await _employeeRepository.GetAsync(e => e.AppUserId == id);
             if (result is null)
-                _employeeExceptionHelper.ThrowEmployeeNotFound();
+                return new ErrorDataResult<Employee>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound);
 
-            return result;
+            return new SuccessDataResult<Employee>(result);
         }
-        public async Task EmployeeCannotBeDuplicatedWhenInserted(Guid Id)
+        public async Task<IResult> EmployeeCannotBeDuplicatedWhenInserted(Guid Id)
         {
             bool result = await _employeeRepository.AnyAsync(x=>x.AppUserId == Id);
             if (result)
-               _employeeExceptionHelper.ThrowEmployeeExists();
+                return new ErrorResult(StatusCodes.Status400BadRequest, EmployeeMessages.EmployeeExists);
+
+            return new SuccessResult();
         }
-        public async Task CheckEmployeeBranch(Guid Id,Guid branchId)
+        public async Task<IResult> CheckEmployeeBranch(Guid Id,Guid branchId)
         {
             bool result = await _employeeRepository.AnyAsync(
                 predicate:x=>x.AppUserId == Id && x.BranchId == branchId && x.WorkingStatu == true);
 
             if (!result)
-                _employeeExceptionHelper.ThrowNotBranchAuthority();
+                return new ErrorResult(StatusCodes.Status401Unauthorized, EmployeeMessages.EmployeeNotBranchAuthority);
+
+            return new SuccessResult();
+
         }
-        public async Task CheckEmployeeSenderAndSentBranch(Guid Id, Guid senderBranchId,Guid sentBranchId)
+        public async Task<IResult> CheckEmployeeSenderAndSentBranch(Guid Id, Guid senderBranchId,Guid sentBranchId)
         {
             bool result = await _employeeRepository.AnyAsync(predicate: x => x.AppUserId == Id && (x.BranchId == senderBranchId || x.BranchId == sentBranchId));
 
             if (!result)
-                _employeeExceptionHelper.ThrowNotBranchAuthority();
+                return new ErrorResult(StatusCodes.Status401Unauthorized, EmployeeMessages.EmployeeNotBranchAuthority);
+
+            return new SuccessResult();
         }
+        public async Task<IResult> CheckAppUserIfEmployee(Guid appUserId)
+        {
+            bool result = await _employeeRepository.AnyAsync(x => x.AppUserId == appUserId && x.WorkingStatu == true);
+            if (!result)
+                return new ErrorResult(StatusCodes.Status403Forbidden, EmployeeMessages.EmployeeNotFound);
+
+            return new SuccessResult();
+        }
+
+
     }
 }

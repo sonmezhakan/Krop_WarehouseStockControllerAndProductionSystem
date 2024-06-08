@@ -1,66 +1,71 @@
-﻿using Krop.Business.Features.Categories.ExceptionHelpers;
+﻿using Krop.Business.Features.Categories.Constants;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Features.Categories.Rules
 {
     public class CategoryBusinessRules
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly CategoryExceptionHelper _categoryExceptionHelper;
 
-        public CategoryBusinessRules(ICategoryRepository categoryRepository,CategoryExceptionHelper categoryExceptionHelper)
+        public CategoryBusinessRules(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
-            _categoryExceptionHelper = categoryExceptionHelper;
         }
 
-        public async Task<Category> CheckByCategoryId(Guid id)
+        public async Task<IDataResult<Category>> CheckByCategoryId(Guid id)
         {
             var result = await _categoryRepository.GetAsync(c=>c.Id == id);
             if (result is null)
-                _categoryExceptionHelper.ThrowCategoryNotFoundException();
+                return new ErrorDataResult<Category>(StatusCodes.Status404NotFound, CategoryMessages.CategoryNotFound);
 
-            return result;
+            return new SuccessDataResult<Category>(result);
         }
-        public async Task<Category> CheckByCategoryName(string categoryName)
+        public async Task<IDataResult<Category>> CheckByCategoryName(string categoryName)
         {
             var result = await _categoryRepository.GetAsync(c => c.CategoryName == categoryName);
-            if (result is null)
-                _categoryExceptionHelper.ThrowCategoryNotFoundException();
+            if(result is null)
+                return new ErrorDataResult<Category>(StatusCodes.Status404NotFound, CategoryMessages.CategoryNotFound);
 
-            return result;
+            return new SuccessDataResult<Category>(result);
         }
 
-        public async Task CategoryNameCannotBeDuplicatedWhenInserted(string categoryName)
+        public async Task<IResult> CategoryNameCannotBeDuplicatedWhenInserted(string categoryName)
         {
            bool result =  await _categoryRepository.AnyAsync(c => c.CategoryName == categoryName);
 
             if (result)
-                _categoryExceptionHelper.ThrowCategoryNameExistsdException();
+                return new ErrorResult(StatusCodes.Status400BadRequest,CategoryMessages.CategoryNameExists);
+
+            return new SuccessResult();
         }
-        public async Task CategoryNameRangeCannotBeDuplicatedWhenInserted(List<string> categoryNames)//CategoryNameRange
+        public async Task<IResult> CategoryNameRangeCannotBeDuplicatedWhenInserted(List<string> categoryNames)//CategoryNameRange
         {
             bool result = false;
             foreach (var categoryName in categoryNames)
             {
                 if(categoryNames.Where(x=>x == categoryName).Count() > 1)//Çoklu olarak ekleme yapılacak liste içerisinde aynı isim olup olmadığı kontrol ediliyor.
-                    _categoryExceptionHelper.ThrowCategoryNameExistsdException();
+                    return new ErrorResult(StatusCodes.Status400BadRequest, CategoryMessages.CategoryNameExists); ;
 
                 result = await _categoryRepository.AnyAsync(c => c.CategoryName == categoryName);//Çoklu olarak ekleme yapılacak kategori isimlerinin veritabanında olup olmadığı kontrol ediliyor.
                 if (result)
-                    _categoryExceptionHelper.ThrowCategoryNameExistsdException();
-            }  
+                    return new ErrorResult(StatusCodes.Status400BadRequest, CategoryMessages.CategoryNameExists);
+            }
+
+            return new SuccessResult();
         }
-        public async Task CategoryNameCannotBeDuplicatedWhenUpdated(string oldCategoryName, string newCategoryName)
+        public async Task<IResult> CategoryNameCannotBeDuplicatedWhenUpdated(string oldCategoryName, string newCategoryName)
         {
            if(oldCategoryName != newCategoryName)
             {
                 bool result = await _categoryRepository.AnyAsync(c => c.CategoryName == newCategoryName);
 
                 if (result)
-                    _categoryExceptionHelper.ThrowCategoryNameExistsdException();
+                    return new ErrorResult(StatusCodes.Status400BadRequest, CategoryMessages.CategoryNameExists);
             }
+            return new SuccessResult();
         }
     }
 }

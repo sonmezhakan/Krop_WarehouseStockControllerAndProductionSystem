@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Krop.Business.Exceptions.Middlewares;
+using Microsoft.AspNetCore.Builder;
 
 namespace Krop.Business.Exceptions.Extensions
 {

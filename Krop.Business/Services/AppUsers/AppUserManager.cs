@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using Krop.Business.Exceptions.Middlewares.Transaction;
+using Krop.Business.Features.AppUsers.Constants;
 using Krop.Business.Features.AppUsers.Rules;
-using Krop.Business.Features.AppUsers.Validations;
-using Krop.Business.Services.AppUserRoles;
-using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.EmailService;
 using Krop.Common.Models;
+using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DTO.Dtos.AppUsers;
 using Krop.Entities.Entities;
@@ -19,57 +19,66 @@ using System.Web;
 
 namespace Krop.Business.Services.AppUsers
 {
-    public class AppUserManager:IAppUserService
+    public partial class AppUserManager:IAppUserService
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         private readonly AppUserBusinessRules _appUserBusinessRules;
-        private readonly IAppUserRoleService _appUserRoleService;
         private readonly IEmailService _emailService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AppUserManager(UserManager<AppUser> userManager,IMapper mapper,AppUserBusinessRules appUserBusinessRules,IAppUserRoleService appUserRoleService,IEmailService emailService,
-            IUrlHelperFactory urlHelperFactory, IHttpContextAccessor httpContextAccessor )
+        public AppUserManager(UserManager<AppUser> userManager,IMapper mapper,AppUserBusinessRules appUserBusinessRules,IEmailService emailService,
+            IUrlHelperFactory urlHelperFactory, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _mapper = mapper;
             _appUserBusinessRules = appUserBusinessRules;
-            _appUserRoleService = appUserRoleService;
             _emailService = emailService;
             _urlHelperFactory = urlHelperFactory;
             _httpContextAccessor = httpContextAccessor;
         }
 
         #region Add
-        [ValidationAspect(typeof(CreateAppUserValidator))]
+        
+        [TransactionScope]
         public async Task<IResult> AddAsync(CreateAppUserDTO createAppUserDTO)
         {
-            await _appUserBusinessRules.AppUserNameCannotBeDuplicatedWhenInserted(createAppUserDTO.UserName);//Username Rule
-            await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenInserted(createAppUserDTO.Email);//Email Rule
-            await _appUserBusinessRules.AppUserPhoneNumberCannotBeDuplicatedWhenInserted(createAppUserDTO.PhoneNumber);//PhoneNumber Rule
-           if(createAppUserDTO.NationalNumber is not null)
-                await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenInserted(createAppUserDTO.NationalNumber);//NationalNumber Rule
+            var result = BusinessRules.Run(
+                await _appUserBusinessRules.AppUserNameCannotBeDuplicatedWhenInserted(createAppUserDTO.UserName), 
+                await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenInserted(createAppUserDTO.Email),
+                 await _appUserBusinessRules.AppUserPhoneNumberCannotBeDuplicatedWhenInserted(createAppUserDTO.PhoneNumber),
+                 await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenInserted(createAppUserDTO.NationalNumber));
+            if(!result.Success)
+                return result;
+
 
             AppUser appUser = _mapper.Map<AppUser>(createAppUserDTO);
-            await _userManager.CreateAsync(appUser);
+            await _userManager.CreateAsync(appUser,createAppUserDTO.Password);
 
-            await ActivationMailSender(appUser);
+            await ActivationMailSenderAsync(appUser);
 
             return new SuccessResult();
         }
         #endregion
         #region Update
-        [ValidationAspect(typeof(UpdateAppUserValidator))]
+        
+        [TransactionScope]
         //Şifre güncelleme işlemi burada yapılmıyor!
         public async Task<IResult> UpdateAsync(UpdateAppUserDTO updateAppUserDTO)
         {
-            var appUser = await _appUserBusinessRules.CheckByAppUserId(updateAppUserDTO.Id);//AppUser Rule
+            var result = await _appUserBusinessRules.CheckByIdAsync(updateAppUserDTO.Id);
+            if (!result.Success)
+                return result;
 
-            await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenUpdated(appUser.Email, updateAppUserDTO.Email);//Email Rule
-            await _appUserBusinessRules.AppUserPhoneNumberCannotBeDuplicatedWhenUpdated(appUser.PhoneNumber, updateAppUserDTO.PhoneNumber);//PhoneNumber Rule
-           if(updateAppUserDTO.NationalNumber is not null)
-                await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenUpdated(appUser.Person.NationalNumber, updateAppUserDTO.NationalNumber);//NationalNumber Rule
+            AppUser appUser = result.Data;
+
+            var resultBusinessRules = BusinessRules.Run(
+                await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenUpdated(appUser.Email, updateAppUserDTO.Email),
+                await _appUserBusinessRules.AppUserPhoneNumberCannotBeDuplicatedWhenUpdated(appUser.PhoneNumber, updateAppUserDTO.PhoneNumber),
+                await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenUpdated(appUser.Person.NationalNumber, updateAppUserDTO.NationalNumber));//BusinessRule
+            if (!resultBusinessRules.Success)
+                return result;
 
             appUser = _mapper.Map(updateAppUserDTO,appUser);
             await _userManager.UpdateAsync(appUser);//Kullanıcı bilgileri güncelleniyor
@@ -88,13 +97,15 @@ namespace Krop.Business.Services.AppUsers
         }
 
         //Sadece şifre güncelleme işlemi yapılıyor.
-        [ValidationAspect(typeof(UpdatePasswordAppUserValidator))]
+        
         public async Task<IResult> UpdatePasswordAsync(UpdateAppUserPasswordDTO updateAppUserPasswordDTO)
         {
-            var appUser = await _appUserBusinessRules.CheckByAppUserId(updateAppUserPasswordDTO.Id);
+            var result = await _appUserBusinessRules.CheckByIdAsync(updateAppUserPasswordDTO.Id);
+            if (!result.Success)
+                return result;
 
-            await _userManager.RemovePasswordAsync(appUser);//Şifre ilk önce siliniyor.
-            await _userManager.AddPasswordAsync(appUser, updateAppUserPasswordDTO.Password);//Yeni şifre oluşturuluyor.
+            await _userManager.RemovePasswordAsync(result.Data);//Şifre ilk önce siliniyor.
+            await _userManager.AddPasswordAsync(result.Data, updateAppUserPasswordDTO.Password);//Yeni şifre oluşturuluyor.
 
             return new SuccessResult();
         }
@@ -107,33 +118,95 @@ namespace Krop.Business.Services.AppUsers
             return new SuccessDataResult<IEnumerable<GetAppUserDTO>>(
                 _mapper.Map<IEnumerable<GetAppUserDTO>>(result));
         }
+        public async Task<IDataResult<IEnumerable<GetAppUserComboBoxDTO>>> GetAllComboBoxAsync()
+        {
+            IEnumerable<AppUser> appUsers = await _userManager.Users.Select(x => new AppUser
+            {
+                Id = x.Id,
+                UserName = x.UserName
+            }).ToListAsync();
+
+            return new SuccessDataResult<IEnumerable<GetAppUserComboBoxDTO>>(
+                _mapper.Map<IEnumerable<GetAppUserComboBoxDTO>>(appUsers));
+        }
         #endregion
         #region Search
         public async Task<IDataResult<GetAppUserDTO>> GetByIdAsync(Guid id)
         {
-            var appUser = await _appUserBusinessRules.CheckByAppUserId(id);
+            var result = await _appUserBusinessRules.CheckByIdAsync(id);
+            if (!result.Success)
+                return new ErrorDataResult<GetAppUserDTO>(result.Status, result.Detail);
 
             return new SuccessDataResult<GetAppUserDTO>(
-                _mapper.Map<GetAppUserDTO>(appUser));
+                _mapper.Map<GetAppUserDTO>(result.Data));
         }
 
         public async Task<IDataResult<GetAppUserDTO>> GetByUserNameAsync(string userName)
         {
-            var appUser = await _appUserBusinessRules.CheckByAppUserName(userName);
+            var result = await _appUserBusinessRules.CheckByUserNameAsync(userName);
+            if (!result.Success)
+                return new ErrorDataResult<GetAppUserDTO>(result.Status,result.Detail);
 
             return new SuccessDataResult<GetAppUserDTO>(
-                _mapper.Map<GetAppUserDTO>(appUser));
+                _mapper.Map<GetAppUserDTO>(result.Data));
         }
 
         public async Task<IResult> AnyByIdAsync(Guid id)
         {
-            await _appUserBusinessRules.CheckByAppUserId(id);
+            var result = await _userManager.Users.AnyAsync(x => x.Id == id);
+            if (!result)
+                new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
             return new SuccessResult();
         }
         #endregion
+        #region Activation
+        public async Task<IResult> ConfirmationAsync(Guid Id, string token)
+        {
+            var result = await _appUserBusinessRules.CheckByIdAsync(Id);
+            if (!result.Success)
+                return result;
 
-        private async Task ActivationMailSender(AppUser appUser)
+            var decodeToken = HttpUtility.UrlDecode(token);
+            var resultActivation = await _userManager.ConfirmEmailAsync(result.Data, decodeToken);
+
+            if (!resultActivation.Succeeded)
+                return new ErrorResult(StatusCodes.Status400BadRequest, "Aktivasyon Başarısız!");
+
+            return new SuccessResult("Aktivasyon Başarılı!");
+        }
+        public async Task<IResult> ConfirmationMailSenderAsync(Guid Id)
+        {
+            var result = await _appUserBusinessRules.CheckByIdAsync(Id);
+            if (!result.Success)
+                return result;
+
+            await _appUserBusinessRules.CheckEmailConfirmed(result.Data);
+
+            await ActivationMailSenderAsync(result.Data);
+
+            return new SuccessResult();
+        }
+        #endregion
+        #region ResetPasswordMailSender
+        public async Task<IResult> ResetPasswordMailSenderAsync(Guid Id)
+        {
+            var result = await _appUserBusinessRules.CheckByIdAsync(Id);
+            if (!result.Success)
+                return result;
+
+            string token = await _userManager.GeneratePasswordResetTokenAsync(result.Data);
+            ResetPasswordMailSenderAsync(token, result.Data);
+
+            return new SuccessResult();
+        }
+        #endregion
+    }
+
+    #region Custom Metot
+    public partial class AppUserManager
+    {
+        private async Task ActivationMailSenderAsync(AppUser appUser)
         {
             string token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
             string encodeToken = HttpUtility.UrlEncode(token);
@@ -142,7 +215,7 @@ namespace Krop.Business.Services.AppUsers
             var actionContext = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<IActionContextAccessor>().ActionContext;
             var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
 
-            string confirmationUrl = urlHelper.Action("Confirmation","Account", new {Id = appUser.Id, token = encodeToken}, request.Scheme);
+            string confirmationUrl = urlHelper.Action("Confirmation", "Account", new { Id = appUser.Id, token = encodeToken }, request.Scheme);
 
             EmailViewModel emailViewModel = new EmailViewModel
             {
@@ -157,50 +230,8 @@ namespace Krop.Business.Services.AppUsers
 
             await _emailService.SendMailAsync(emailViewModel);
         }
-
-        public async Task<IResult> ConfirmationAsync(Guid Id, string token)
+        private async Task ResetPasswordMailSenderAsync(string token, AppUser appUser)
         {
-
-            AppUser appUser = await _appUserBusinessRules.CheckByAppUserId(Id);
-
-            var decodeToken = HttpUtility.UrlDecode(token);
-            var result = await _userManager.ConfirmEmailAsync(appUser, decodeToken);
-
-            if (!result.Succeeded)
-                return new ErrorResult(400,"Aktivasyon Başarısız!");
-
-            return new SuccessResult(200,"Kayıt Başarılı!");
-        }
-
-        public async Task<IDataResult<IEnumerable<GetAppUserComboBoxDTO>>> GetAllComboBoxAsync()
-        {
-            IEnumerable<AppUser> appUsers = await _userManager.Users.Select(x => new AppUser
-            {
-                Id = x.Id,
-                UserName = x.UserName
-            }).ToListAsync();
-
-            return new SuccessDataResult<IEnumerable<GetAppUserComboBoxDTO>>(
-                _mapper.Map<IEnumerable<GetAppUserComboBoxDTO>>(appUsers));
-        }
-
-        public async Task<IResult> ConfirmationMailSenderAsync(Guid Id)
-        {
-            AppUser appUser = await _appUserBusinessRules.CheckByAppUserId(Id);
-
-            await _appUserBusinessRules.CheckEmailConfirmed(appUser);
-
-            await ActivationMailSender(appUser);
-
-            return new SuccessResult();
-        }
-
-        public async Task<IResult> ResetPasswordMailSenderAsync(Guid Id)
-        {
-            AppUser appUser = await _appUserBusinessRules.CheckByAppUserId(Id);
-
-            string token = await _userManager.GeneratePasswordResetTokenAsync(appUser);
-
             string encodeToken = HttpUtility.UrlEncode(token);
 
             var request = _httpContextAccessor.HttpContext.Request;
@@ -221,8 +252,7 @@ namespace Krop.Business.Services.AppUsers
             };
 
             await _emailService.SendMailAsync(emailViewModel);
-
-            return new SuccessResult();
         }
     }
+    #endregion
 }

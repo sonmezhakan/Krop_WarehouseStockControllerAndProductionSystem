@@ -22,13 +22,13 @@ namespace Krop.WebAPI.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        [HttpPost]
+        /*[HttpPost("AddRange")]
         public async Task<IActionResult> AddRange([FromBody] List<CreateCategoryDTO> createCategoryDTOs, CancellationToken cancellationToken)
         {
             var result = await _categoryService.AddRangeAsync(createCategoryDTOs);
 
             return result.Success ? Ok(result) : BadRequest(result);
-        }
+        }*/
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCategoryDTO updateCategoryDTO, CancellationToken cancellationToken)
         {

@@ -2,19 +2,19 @@
 {
     public class Result:IResult
     {
-        public Result(bool success,int statusCode, string message):this(success,statusCode)
+        public Result(bool success,int status, string detail) :this(success, status)
         {
-            Message = message;
+            Detail = detail;
         }
-        public Result(bool success, int statusCode)
+        public Result(bool success, int status)
         {
             Success = success;
-            StatusCode = statusCode;
+            Status = status;
         }
 
-        public Result(int statusCode)
+        public Result(int status)
         {
-            StatusCode = statusCode;
+            Status = status;
         }
         public Result(bool success)
         {
@@ -23,7 +23,7 @@
 
         public bool Success{ get; }
 
-        public string Message { get; }
-        public int StatusCode { get; }
+        public string Detail { get; }
+        public int Status { get; }
     }
 }

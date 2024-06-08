@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
+using Krop.Business.Exceptions.Middlewares.Transaction;
 using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Features.Productions.Rules;
-using Krop.Business.Features.Productions.Validations;
 using Krop.Business.Services.ProductionStockExits;
 using Krop.Business.Services.StockInputs;
 using Krop.Business.Services.Stocks;
-using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.Productions;
 using Krop.DTO.Dtos.StockInputs;
 using Krop.Entities.Entities;
@@ -27,8 +28,10 @@ namespace Krop.Business.Services.Productions
         private readonly IProductionStockExitService _productionStockExitService;
         private readonly IStockInputRepository _stockInputRepository;
         private readonly IProductionStockExitRepository _productionStockExitRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductionManager(IProductionRepository productionRepository, IMapper mapper, EmployeeBusinessRules employeeBusinessRules,IProductReceiptRepository productReceiptRepository,IStockService stockService, IStockInputService stockInputService, ProductionBusinessRules productionBusinessRules,IProductionStockExitService productionStockExitService, IStockInputRepository stockInputRepository,IProductionStockExitRepository productionStockExitRepository)
+        public ProductionManager(IProductionRepository productionRepository, IMapper mapper, EmployeeBusinessRules employeeBusinessRules,IProductReceiptRepository productReceiptRepository,IStockService stockService, IStockInputService stockInputService, ProductionBusinessRules productionBusinessRules,IProductionStockExitService productionStockExitService, IStockInputRepository stockInputRepository,IProductionStockExitRepository productionStockExitRepository,
+            IUnitOfWork unitOfWork)
         {
             _productionRepository = productionRepository;
             _mapper = mapper;
@@ -40,11 +43,16 @@ namespace Krop.Business.Services.Productions
             _productionStockExitService = productionStockExitService;
             _stockInputRepository = stockInputRepository;
             _productionStockExitRepository = productionStockExitRepository;
+            _unitOfWork = unitOfWork;
         }
-        [ValidationAspect(typeof(CreateProductionValidator))]
+        
+        
+        [TransactionScope]
         public async Task<IResult> AddAsync(CreateProductionDTO createProductionDTO)
         {
-            await _employeeBusinessRules.CheckEmployeeBranch(createProductionDTO.AppUserId, createProductionDTO.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            var result = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(createProductionDTO.AppUserId, createProductionDTO.BranchId));//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            if (!result.Success)
+                return result;
 
             Production production = _mapper.Map<Production>(createProductionDTO);
             await _productionRepository.AddAsync(production);
@@ -52,7 +60,7 @@ namespace Krop.Business.Services.Productions
             var productionStockExits = await ProductionStockExitAdded(_mapper.Map<GetProductionDTO>(createProductionDTO),production.Id);
 
             await StockDeleted(productionStockExits,createProductionDTO.BranchId);
-           
+            
             await _stockInputService.AddAsync(new CreateStockInputDTO
             {
                 BranchId = createProductionDTO.BranchId,
@@ -62,41 +70,47 @@ namespace Krop.Business.Services.Productions
                 Quantity = createProductionDTO.ProductionQuantity,
                 ProductionId = production.Id
             });
-
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
 
         
-        [ValidationAspect(typeof(UpdateProductionValidator))]
+        
+        [TransactionScope]
         public async Task<IResult> UpdateAsync(UpdateProductionDTO updateProductionDTO)
         {
-            var result = await _productionBusinessRules.CheckByProductionId(updateProductionDTO.Id);
+            var businessRuleResult = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(updateProductionDTO.AppUserId, updateProductionDTO.BranchId));//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            if (!businessRuleResult.Success)
+                return businessRuleResult;
 
-            await _employeeBusinessRules.CheckEmployeeBranch(updateProductionDTO.AppUserId, updateProductionDTO.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            var result = await _productionBusinessRules.CheckByProductionId(updateProductionDTO.Id);
+            if (!result.Success)
+                return result;
 
             var oldProductionStockExits = await _productionStockExitRepository.GetAllAsync(x => x.ProductionId == updateProductionDTO.Id);//Önceki üretimde stokdan çıkarılan ürünlerin listesi getiriliyor.
 
-            await StockAdded(oldProductionStockExits.ToList(), result.BranchId);
+            await StockAdded(oldProductionStockExits.ToList(), result.Data.BranchId);
             await ProductionStockExitDeleted(oldProductionStockExits.ToList());
 
-            await _stockService.StockDeleteAsync(result.BranchId, result.ProductId, result.ProductionQuantity);//Üretilen ürün stoktan düşürülüyor.
+            await _stockService.StockDeleteAsync(result.Data.BranchId, result.Data.ProductId, result.Data.ProductionQuantity);//Üretilen ürün stoktan düşürülüyor.
 
-            var newProductionStockExits = await ProductionStockExitAdded(_mapper.Map<GetProductionDTO>(updateProductionDTO),result.Id);
+            var newProductionStockExits = await ProductionStockExitAdded(_mapper.Map<GetProductionDTO>(updateProductionDTO),result.Data.Id);
 
             await StockDeleted(newProductionStockExits,updateProductionDTO.BranchId);
            
             await _stockService.StockAddedAsync(updateProductionDTO.BranchId, updateProductionDTO.ProductId, updateProductionDTO.ProductionQuantity);//Üretilecek ürünün miktarı stoğa ekleniyor.
 
-            var stockInput = await _stockInputRepository.GetAsync(x => x.ProductionId == result.Id);
+            var stockInput = await _stockInputRepository.GetAsync(x => x.ProductionId == result.Data.Id);
             stockInput.Quantity = updateProductionDTO.ProductionQuantity;
             await _stockInputRepository.UpdateAsync(stockInput);//Stok Giriş listesindeki üretimden oluşan ürün girişinin miktarı güncelleniyor.
 
             result = _mapper.Map(updateProductionDTO, result);
-            await _productionRepository.UpdateAsync(result);//Üretim deki üretim miktarı güncelleniyor.
+            await _productionRepository.UpdateAsync(result.Data);//Üretim deki üretim miktarı güncelleniyor.
 
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
-
+        [TransactionScope]
         public async Task<IResult> DeleteAsync(Guid id, Guid appUserId)
         {
             var result = await _productionRepository.GetAsync(x => x.Id == id,
@@ -105,7 +119,9 @@ namespace Krop.Business.Services.Productions
                     si=>si.StockInput
                 });
 
-            await _employeeBusinessRules.CheckEmployeeBranch(appUserId, result.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            var businessRuleResult = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(appUserId, result.BranchId));//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            if (!businessRuleResult.Success)
+                return businessRuleResult;
 
             var productionStockExits = await _productionStockExitRepository.GetAllAsync(x => x.ProductionId == id);
 
@@ -116,15 +132,21 @@ namespace Krop.Business.Services.Productions
 
             await _productionRepository.DeleteAsync(result);
 
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
 
         public async Task<IDataResult<IEnumerable<GetProductionListDTO>>> GetAllAsync(Guid appUserId)
         {
-            var employee = await _employeeBusinessRules.CheckByEmployeeId(appUserId);
-            await _employeeBusinessRules.CheckEmployeeBranch(appUserId, (Guid)employee.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+           var employee = await _employeeBusinessRules.CheckByEmployeeId(appUserId);
+            if (!employee.Success)
+                return new ErrorDataResult<IEnumerable<GetProductionListDTO>>(employee.Status, employee.Detail); ;
 
-            var result = await _productionRepository.GetAllAsync(x=>x.BranchId == employee.BranchId, includeProperties: new Expression<Func<Production, object>>[]
+           var businessRuleResult = await _employeeBusinessRules.CheckEmployeeBranch(appUserId, (Guid)employee.Data.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            if (!businessRuleResult.Success)
+                return new ErrorDataResult<IEnumerable<GetProductionListDTO>>(businessRuleResult.Status, businessRuleResult.Detail);
+
+            var result = await _productionRepository.GetAllAsync(x=>x.BranchId == employee.Data.BranchId, includeProperties: new Expression<Func<Production, object>>[]
             {
                 p=>p.Product,
                 b=>b.Branch,

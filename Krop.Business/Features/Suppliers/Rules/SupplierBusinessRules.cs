@@ -1,27 +1,27 @@
-﻿using Krop.Business.Features.Suppliers.ExceptionHelpers;
+﻿using Krop.Business.Features.Suppliers.Constants;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Features.Suppliers.Rules
 {
     public class SupplierBusinessRules
     {
         private readonly ISupplierRepository _supplierRepository;
-        private readonly SupplierExceptionHelper _supplierExceptionHelper;
 
-        public SupplierBusinessRules(ISupplierRepository supplierRepository,SupplierExceptionHelper supplierExceptionHelper)
+        public SupplierBusinessRules(ISupplierRepository supplierRepository)
         {
             _supplierRepository = supplierRepository;
-            _supplierExceptionHelper = supplierExceptionHelper;
         }
 
-        public async Task<Supplier> CheckBySupplierId(Guid id)
+        public async Task<IDataResult<Supplier>> CheckBySupplierId(Guid id)
         {
             var result = await _supplierRepository.GetAsync(s => s.Id == id);
             if (result is null)
-                _supplierExceptionHelper.ThrowSupplierNotFound();
+                return new ErrorDataResult<Supplier>(StatusCodes.Status404NotFound, SupplierMessages.SupplierNotFound);
 
-            return result;
+            return new SuccessDataResult<Supplier>(result);
         }
     }
 }

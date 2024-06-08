@@ -35,6 +35,8 @@ namespace Krop.Business.Features.AppUsers.Profiles
                 .ReverseMap();
 
             CreateMap<AppUser, GetAppUserComboBoxDTO>().ReverseMap();
+
+            CreateMap<LoginDTO, AppUser>().ReverseMap();
         }
     }
 }

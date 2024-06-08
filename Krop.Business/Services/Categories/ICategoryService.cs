@@ -12,7 +12,7 @@ namespace Krop.Business.Services.Categories
         //Task<IResult> UpdateRangeAsync(List<UpdateCategoryDTO> updateCategoryDTOs);
 
         Task<IResult> DeleteAsync(Guid id);
-        Task<IResult> DeleteRangeAsync(List<Guid> ids);
+        //Task<IResult> DeleteRangeAsync(List<Guid> ids);
 
         Task<IDataResult<IEnumerable<GetCategoryDTO>>> GetAllAsync();
         Task<IDataResult<GetCategoryDTO>> GetByIdAsync(Guid id);

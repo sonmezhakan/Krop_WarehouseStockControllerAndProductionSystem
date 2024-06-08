@@ -1,53 +1,56 @@
-﻿using Krop.Business.Features.ProductReceipts.ExceptionHelpers;
+﻿using Krop.Business.Features.ProductReceipts.Constants;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Features.ProductReceipts.Rules
 {
     public class ProductReceiptBusinessRules
     {
         private readonly IProductReceiptRepository _productReceiptRepository;
-        private readonly ProductReceiptExceptionHelper _productReceiptExceptionHelper;
 
-        public ProductReceiptBusinessRules(IProductReceiptRepository productReceiptRepository,ProductReceiptExceptionHelper productReceiptExceptionHelper)
+        public ProductReceiptBusinessRules(IProductReceiptRepository productReceiptRepository)
         {
             _productReceiptRepository = productReceiptRepository;
-           _productReceiptExceptionHelper = productReceiptExceptionHelper;
         }
 
-        public async Task ProductReceiptCannotBeDuplicatedWhenInserted(Guid produceProductId,Guid productId)
+        public async Task<IResult> ProductReceiptCannotBeDuplicatedWhenInserted(Guid produceProductId,Guid productId)
         {
             if (produceProductId == productId)
-                _productReceiptExceptionHelper.ThrowProductExists();
+                return new ErrorResult(StatusCodes.Status400BadRequest, ProductReceiptMessages.ProductExists);
 
             var result = await _productReceiptRepository.AnyAsync(x=>x.ProduceProductId == produceProductId && x.ProductId == productId);
 
             if (result)
-                _productReceiptExceptionHelper.ThrowProductReceiptExists();      
+                return new ErrorResult(StatusCodes.Status400BadRequest, ProductReceiptMessages.ProductReceiptExists);
+
+            return new SuccessResult();
         }
-        public async Task ProductReceiptCannotBeDuplicatedWhenUpdated(Guid produceProductId, Guid oldProductId,Guid newProductId)
+        public async Task<IResult> ProductReceiptCannotBeDuplicatedWhenUpdated(Guid produceProductId, Guid oldProductId,Guid newProductId)
         {
             if(oldProductId != newProductId)
             {
                 if (produceProductId == newProductId)
-                    _productReceiptExceptionHelper.ThrowProductExists();
+                    return new ErrorResult(StatusCodes.Status400BadRequest, ProductReceiptMessages.ProductExists);
 
                 var produceProducts = await _productReceiptRepository.GetAllAsync(x => x.ProduceProductId == produceProductId);
 
                 var result = produceProducts.Any(x => x.ProductId == newProductId);
 
                 if (result)
-                    _productReceiptExceptionHelper.ThrowProductReceiptExists();
+                    return new ErrorResult(StatusCodes.Status400BadRequest, ProductReceiptMessages.ProductReceiptExists); 
             }
+            return new SuccessResult();
         }
-        public async Task<ProductReceipt> CheckProductReceipt(Guid produceProductId, Guid productId)
+        public async Task<IDataResult<ProductReceipt>> CheckProductReceipt(Guid produceProductId, Guid productId)
         {
             var result = await _productReceiptRepository.GetAsync(x => x.ProduceProductId == produceProductId && x.ProductId == productId);
 
             if (result == null)
-                _productReceiptExceptionHelper.ThrowProductReceiptNotFound();
+                return new ErrorDataResult<ProductReceipt>(StatusCodes.Status404NotFound, ProductReceiptMessages.ProductreceiptNotFound);
 
-            return result;
+            return new SuccessDataResult<ProductReceipt>(result);
         }
     }
 }

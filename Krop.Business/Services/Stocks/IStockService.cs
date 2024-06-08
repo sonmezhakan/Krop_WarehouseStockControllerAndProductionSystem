@@ -5,8 +5,8 @@ namespace Krop.Business.Services.Stocks
 {
     public interface IStockService
     {
-        Task<List<Stock>> NewBranchAddedProductAsync(Guid branchId);//Yeni Eklenen Şubeye tüm ürünlerin eklenilmesi eklenmesi
-        Task<List<Stock>> NewProductAddedBranchAsync(Guid productId);//Yeni eklenen ürünün tüm şubelere eklenmesi
+        Task NewBranchAddedProductAsync(Guid branchId);//Yeni Eklenen Şubeye tüm ürünlerin eklenilmesi eklenmesi
+        Task NewProductAddedBranchAsync(Guid productId);//Yeni eklenen ürünün tüm şubelere eklenmesi
 
 
         Task<IResult> StockAddedAsync(Guid branchId, Guid productId, int quantity);

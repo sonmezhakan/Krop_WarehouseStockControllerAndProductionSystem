@@ -14,5 +14,7 @@
 
         public const string StockInputNotFound = "Böyle Bir Stok Girişi Bulunamadı!";
 
+        public const string ProductionEntryCannotBeChangedOrDeleted = "Üretilen Ürün Güncellenmez ve Silinemez!";
+
     }
 }

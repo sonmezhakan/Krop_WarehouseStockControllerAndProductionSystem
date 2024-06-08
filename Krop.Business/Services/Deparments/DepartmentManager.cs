@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Departments.Rules;
-using Krop.Business.Features.Departments.Validations;
-using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.Departments;
 using Krop.Entities.Entities;
 
@@ -14,26 +14,30 @@ namespace Krop.Business.Services.Deparments
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
         private readonly DepartmentBusinessRules _departmentBusinessRules;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentManager(IDepartmentRepository departmentRepository, IMapper mapper, DepartmentBusinessRules departmentBusinessRules)
+        public DepartmentManager(IDepartmentRepository departmentRepository, IMapper mapper, DepartmentBusinessRules departmentBusinessRules,IUnitOfWork unitOfWork)
         {
             _departmentRepository = departmentRepository;
             _mapper = mapper;
             _departmentBusinessRules = departmentBusinessRules;
+            _unitOfWork = unitOfWork;
         }
 
         #region Add
-        [ValidationAspect(typeof(CreateDepartmentValidator))]
+       
         public async Task<IResult> AddAsync(CreateDepartmentDTO createDepartmentDTO)
         {
-            await _departmentBusinessRules.DepartmentNameCannotBeDuplicatedWhenInserted(createDepartmentDTO.DepartmentName);//DepartmentName Rule
+            var result = BusinessRules.Run(await _departmentBusinessRules.DepartmentNameCannotBeDuplicatedWhenInserted(createDepartmentDTO.DepartmentName));
+            if (!result.Success)
+                return result;
 
             await _departmentRepository.AddAsync(
                 _mapper.Map<Department>(createDepartmentDTO));
-
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
-        [ValidationAspect(typeof(CreateDepartmentValidator))]
+        /*[ValidationAspect(typeof(CreateDepartmentValidator))]
         public async Task<IResult> AddRangeAsync(List<CreateDepartmentDTO> createDepartmentDTOs)
         {
             createDepartmentDTOs.ForEach(async d =>
@@ -43,23 +47,28 @@ namespace Krop.Business.Services.Deparments
 
             await _departmentRepository.AddRangeAsync(
                 _mapper.Map<List<Department>>(createDepartmentDTOs));
-
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
-        }
+        }*/
         #endregion
         #region Update
-        [ValidationAspect(typeof(UpdateDepartmentValidator))]
+        
         public async Task<IResult> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO)
         {
-            var department = await _departmentBusinessRules.CheckByDepartmentId(updateDepartmentDTO.Id);//DepartmentId Rule
-            await _departmentBusinessRules.DepartmentNameCannotBeDuplicateWhenUpdated(department.DepartmentName, updateDepartmentDTO.DepartmentName);//DepartmentName Rule
+            var department = await _departmentBusinessRules.CheckByDepartmentId(updateDepartmentDTO.Id);
+            if (!department.Success)
+                return department;
+
+            var result = BusinessRules.Run(await _departmentBusinessRules.DepartmentNameCannotBeDuplicateWhenUpdated(department.Data.DepartmentName, updateDepartmentDTO.DepartmentName));
+            if (!result.Success)
+                return result;
 
             await _departmentRepository.UpdateAsync(
-                _mapper.Map(updateDepartmentDTO, department));
-
+                _mapper.Map(updateDepartmentDTO, department.Data));
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
-        [ValidationAspect(typeof(UpdateDepartmentValidator))]
+       /* [ValidationAspect(typeof(UpdateDepartmentValidator))]
         public async Task<IResult> UpdateRangeAsync(List<UpdateDepartmentDTO> updateDepartmentDTOs)
         {
             updateDepartmentDTOs.ForEach(async d =>
@@ -72,19 +81,21 @@ namespace Krop.Business.Services.Deparments
                 _mapper.Map<List<Department>>(updateDepartmentDTOs));
 
             return new SuccessResult();
-        }
+        }*/
         #endregion
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id)
         {
             var department = await _departmentBusinessRules.CheckByDepartmentId(id);
+            if (!department.Success)
+                return department;
 
-            await _departmentRepository.DeleteAsync(department);
-
+            await _departmentRepository.DeleteAsync(department.Data);
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
 
-        public async Task<IResult> DeleteRangeAsync(List<Guid> ids)
+        /*public async Task<IResult> DeleteRangeAsync(List<Guid> ids)
         {
             List<Department> departments = new();
             ids.ForEach(async d =>
@@ -97,7 +108,7 @@ namespace Krop.Business.Services.Deparments
             await _departmentRepository.DeleteRangeAsync(departments);
 
             return new SuccessResult();
-        }
+        }*/
         #endregion
         #region Listed
         public async Task<IDataResult<IEnumerable<GetDepartmentDTO>>> GetAllAsync()
@@ -120,17 +131,21 @@ namespace Krop.Business.Services.Deparments
         public async Task<IDataResult<GetDepartmentDTO>> GetByDepartmentName(string departmentName)
         {
             var department = await _departmentBusinessRules.CheckByDepartmentName(departmentName);
+            if (!department.Success)
+                return new ErrorDataResult<GetDepartmentDTO>(department.Status,department.Detail);
 
             return new SuccessDataResult<GetDepartmentDTO>(
-                _mapper.Map<GetDepartmentDTO>(department));
+                _mapper.Map<GetDepartmentDTO>(department.Data));
         }
 
         public async Task<IDataResult<GetDepartmentDTO>> GetById(Guid id)
         {
             var department = await _departmentBusinessRules.CheckByDepartmentId(id);
+            if (!department.Success)
+                return new ErrorDataResult<GetDepartmentDTO>(department.Status, department.Detail);
 
             return new SuccessDataResult<GetDepartmentDTO>(
-                _mapper.Map<GetDepartmentDTO>(department));
+                _mapper.Map<GetDepartmentDTO>(department.Data));
         }
 
         

@@ -29,6 +29,13 @@ namespace Krop.Business.Exceptions.Handlers
 
             return Response.WriteAsync(details);
         }
+        protected override Task HandleException(TransactionException transactionException)
+        {
+            Response.StatusCode = StatusCodes.Status400BadRequest;
+            string details = new TransactionProblemDetails(transactionException.Message).AsJson();
+
+            return Response.WriteAsync(details);
+        }
 
         protected override Task HandleException(Exception exception)
         {

@@ -2,6 +2,6 @@
 {
     public class ProductionMessages
     {
-        public const string ProductionNotFound = "Üretilen Ürün İşlemi Bulunamadı!";
+        public const string ProductionNotFound = "Üretilen Ürün İşlemi Bulunamadı!";  
     }
 }

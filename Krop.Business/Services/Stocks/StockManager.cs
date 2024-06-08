@@ -22,12 +22,13 @@ namespace Krop.Business.Services.Stocks
         }
 
         #region New Branch Added Product
-        public async Task<List<Stock>> NewBranchAddedProductAsync(Guid branchId)
+
+        public async Task NewBranchAddedProductAsync(Guid branchId)
         {
             var productGuids = await _productRepository.GetAllProductIdAsync();//Tüm ürünlerin idlerini getir
 
             if (productGuids.Count() <= 0)
-                return null;//Eğer ürün yok ise null dön.
+                return;//Eğer ürün yok ise işlemi bitir
 
             List<Stock> stocks = new();
             for (int i = 0; i < productGuids.Count(); i++)//Tüm ürünlerin idlerini dönerek stocks listesine ekler.
@@ -36,20 +37,19 @@ namespace Krop.Business.Services.Stocks
                 {
                     BranchId = branchId,
                     ProductId = productGuids[i]
-                }); ;
+                });
             }
-
-            return stocks;//Stocks listesini geri döndürür.
+            await _stockRepository.AddRangeAsync(stocks);
         }
 
         #endregion
         #region New Product Added Branch
-        public async Task<List<Stock>> NewProductAddedBranchAsync(Guid productId)
+        public async Task NewProductAddedBranchAsync(Guid productId)
         {
             var branchIds = await _branchRepository.GetAllBranchIdAsync();//Tüm şubelerin idlerini getiriyoruz.
 
             if(branchIds is null)
-                return null;//şube yok ise null dön.
+                return;//şube yok ise işlemi bitir.
 
             List<Stock> stocks = new();
             for (int i = 0; i < branchIds.Count(); i++)//tüm şubelerde dönerek yeni ürünü stocks listesine ekliyor.
@@ -61,7 +61,7 @@ namespace Krop.Business.Services.Stocks
                 });
             }
 
-            return stocks;//stocks listesini geri döndürüyor.
+            await _stockRepository.AddRangeAsync(stocks);
         }
 
         #endregion
@@ -135,21 +135,25 @@ namespace Krop.Business.Services.Stocks
         public async Task<IResult> StockAddedAsync(Guid branchId,Guid productId,int quantity)//Stok Girişi Yapılıp, Stok Güncelleniyor.
         {
             var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
+            if (!result.Success)
+                return result;
 
-            result.UnitsInStock += quantity;
+            result.Data.UnitsInStock += quantity;
 
-            await _stockRepository.UpdateAsync(result);
+            await _stockRepository.UpdateAsync(result.Data);
 
             return new SuccessResult();
         }
         public async Task<IResult> StockUpdateAsync(Guid branchId, Guid productId, int oldQuantity,int newQuantity)//Stok Güncellenmesi
         {
             var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
+            if (!result.Success)
+                return result;
 
-            result.UnitsInStock -= oldQuantity;
-            result.UnitsInStock += newQuantity;
+            result.Data.UnitsInStock -= oldQuantity;
+            result.Data.UnitsInStock += newQuantity;
 
-            await _stockRepository.UpdateAsync(result);
+            await _stockRepository.UpdateAsync(result.Data);
 
             return new SuccessResult();
         }
@@ -157,10 +161,12 @@ namespace Krop.Business.Services.Stocks
         public async Task<IResult> StockDeleteAsync(Guid branchId, Guid productId, int quantity)//Stok Silinmesi
         {
             var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
+            if (!result.Success)
+                return result;
 
-            result.UnitsInStock -= quantity;
+            result.Data.UnitsInStock -= quantity;
 
-            await _stockRepository.UpdateAsync(result);
+            await _stockRepository.UpdateAsync(result.Data);
 
             return new SuccessResult();
         }

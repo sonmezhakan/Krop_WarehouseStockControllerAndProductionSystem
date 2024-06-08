@@ -26,15 +26,17 @@ namespace Krop.WinForms.Forms.Productions
             productComboBoxControl.ProductNameComboBox.SelectedIndexChanged += CmbBoxProductName_SelectedIndexChanged;
             productComboBoxControl.ProductCodeComboBox.SelectedIndexChanged += CmbBoxProductCode_SelectedIndexChanged;
 
-            await productReceiptListControl.ProductReceiptList(_webApiService, appUserId);
+            await productionListControl.ProductionList(_webApiService,appUserId);
             productionListControl.DataGridViewProductionList.DoubleClick += dgwProductionList_DoubleClick;
         }
 
-        private void CmbBoxProductName_SelectedIndexChanged(object? sender, EventArgs e)
+        private async void CmbBoxProductName_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.DataSource is not null)
             {
                 productComboBoxControl.ProductCodeComboBox.SelectedValue = productComboBoxControl.ProductNameComboBox.SelectedValue;
+
+                await productReceiptListControl.ProductReceiptList(_webApiService, (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue);
             }
         }
 

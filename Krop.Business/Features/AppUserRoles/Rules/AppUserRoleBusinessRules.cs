@@ -1,6 +1,7 @@
-﻿using Krop.Business.Features.AppUserRoles.ExceptionHelpers;
-using Krop.Business.Features.Categories.ExceptionHelpers;
+﻿using Krop.Business.Features.AppUserRoles.Constants;
+using Krop.Common.Utilits.Result;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,45 +10,46 @@ namespace Krop.Business.Features.AppUserRoles.Rules
     public class AppUserRoleBusinessRules
     {
         private readonly RoleManager<AppUserRole> _roleManager;
-        private readonly AppUserRoleExceptionHelper _appUserRoleExceptionHelper;
 
-        public AppUserRoleBusinessRules(RoleManager<AppUserRole> roleManager,AppUserRoleExceptionHelper appUserRoleExceptionHelper)
+        public AppUserRoleBusinessRules(RoleManager<AppUserRole> roleManager)
         {
             _roleManager = roleManager;
-            _appUserRoleExceptionHelper = appUserRoleExceptionHelper;
         }
-
-
-        public async Task<AppUserRole> CheckByAppUserRoleId(Guid id)
+        public async Task<IDataResult<AppUserRole>> CheckByIdAsync(Guid id)
         {
-            var result = await _roleManager.Roles.FirstOrDefaultAsync(c => c.Id == id);
-            if (result is null)
-                _appUserRoleExceptionHelper.ThrowAppUserRoleNotFound();
+            var result = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
+            if (result == null)
+                return new ErrorDataResult<AppUserRole>(StatusCodes.Status404NotFound, AppUserRoleMessages.AppUserRoleNotFound);
 
-            return result;
+            return new SuccessDataResult<AppUserRole>(result);
         }
-        public async Task<AppUserRole> CheckByAppUserRoleName(string appUserRoleName)
+        public async Task<IDataResult<AppUserRole>> CheckByNameAsync(string name)
         {
-            var result = await _roleManager.Roles.FirstOrDefaultAsync(c => c.Name == appUserRoleName);
-            if (result is null)
-                _appUserRoleExceptionHelper.ThrowAppUserRoleNotFound();
+            var result = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == name);
+            if (result == null)
+                return new ErrorDataResult<AppUserRole>(StatusCodes.Status404NotFound, AppUserRoleMessages.AppUserRoleNotFound);
 
-            return result;
+            return new SuccessDataResult<AppUserRole>(result);
         }
-        public async Task AppUserRoleNameCannotBeDuplicatedWhenInserted(string roleName)
+        public async Task<IResult> AppUserRoleNameCannotBeDuplicatedWhenInserted(string roleName)
         {
-            AppUserRole appUserRole = await _roleManager.FindByNameAsync(roleName);
-            if (appUserRole is not null)
-                _appUserRoleExceptionHelper.ThrowAppUserRoleNameExists();
+            var result = await _roleManager.Roles.AnyAsync(x=>x.Name.Contains(roleName));
+            if (result)
+               return  new ErrorResult(StatusCodes.Status400BadRequest,AppUserRoleMessages.AppUserRoleNameExists);
+
+            return new SuccessResult();
+
         }
-        public async Task AppUserRoleNameCannotBeDuplicatedWhenUpdated(string oldRoleName, string newRoleName)
+        public async Task<IResult> AppUserRoleNameCannotBeDuplicatedWhenUpdated(string oldRoleName, string newRoleName)
         {
             if(oldRoleName != newRoleName)
             {
-                AppUserRole appUserRole = await _roleManager.FindByNameAsync(newRoleName);
-                if (appUserRole is not null)
-                    _appUserRoleExceptionHelper.ThrowAppUserRoleNameExists();
+                bool result  = await _roleManager.Roles.AnyAsync(x=>x.Name.Contains(newRoleName));
+                if (result)
+                    return new ErrorResult(StatusCodes.Status400BadRequest, AppUserRoleMessages.AppUserRoleNameExists);   
             }
+
+            return new SuccessResult();
         }
     }
 }

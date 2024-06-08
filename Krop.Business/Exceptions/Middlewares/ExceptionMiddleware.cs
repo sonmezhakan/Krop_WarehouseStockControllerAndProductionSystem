@@ -1,7 +1,7 @@
 ﻿using Krop.Business.Exceptions.Handlers;
 using Microsoft.AspNetCore.Http;
 
-namespace Krop.Business.Exceptions
+namespace Krop.Business.Exceptions.Middlewares
 {
     public class ExceptionMiddleware
     {

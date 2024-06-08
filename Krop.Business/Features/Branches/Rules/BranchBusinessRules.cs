@@ -1,45 +1,48 @@
-﻿using Krop.Business.Features.Branches.ExceptionHelper;
+﻿using Krop.Business.Features.Branches.Constants;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Features.Branches.Rules
 {
     public class BranchBusinessRules
     {
         private readonly IBranchRepository _branchRepository;
-        private readonly BranchExceptionHelper _branchExceptionHelper;
 
-        public BranchBusinessRules(IBranchRepository branchRepository,BranchExceptionHelper branchExceptionHelper)
+        public BranchBusinessRules(IBranchRepository branchRepository)
         {
             _branchRepository = branchRepository;
-            _branchExceptionHelper = branchExceptionHelper;
         }
 
-        public async Task<Branch> CheckByBranchId(Guid id)
+        public async Task<IDataResult<Branch>> CheckByBranchId(Guid id)
         {
             var result = await _branchRepository.GetAsync(b => b.Id == id);
             if (result is null)
-                _branchExceptionHelper.ThrowBranchNotFound();
+                return new ErrorDataResult<Branch>(StatusCodes.Status404NotFound, BranchMessages.BranchNotFound);
 
-            return result;
+            return new SuccessDataResult<Branch>(result);
         }
-        public async Task BranchNameCannotBeDuplicatedWhenInserted(string branchName)
+        public async Task<IResult> BranchNameCannotBeDuplicatedWhenInserted(string branchName)
         {
             bool result = await _branchRepository.AnyAsync(b=>b.BranchName == branchName);
 
             if (result)
-                _branchExceptionHelper.ThrowBranchNameExists();
+                return new ErrorResult(StatusCodes.Status400BadRequest, BranchMessages.BranchNameExists);
+
+            return new SuccessResult();
         }
 
-        public async Task BranchNameCannotBeDuplicatedWhenInserted(string oldBranchName, string newBranchName)
+        public async Task<IResult> BranchNameCannotBeDuplicatedWhenUpdated(string oldBranchName, string newBranchName)
         {
             if(oldBranchName != newBranchName)
             {
                 bool result = await _branchRepository.AnyAsync(b => b.BranchName == newBranchName);
 
                 if (result)
-                    _branchExceptionHelper.ThrowBranchNameExists();
+                    return new ErrorResult(StatusCodes.Status400BadRequest, BranchMessages.BranchNameExists);
             }
+            return new SuccessResult();
         }
     }
 }

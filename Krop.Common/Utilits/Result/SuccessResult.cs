@@ -2,10 +2,14 @@
 {
     public class SuccessResult : Result
     {
-        public SuccessResult(bool success,int statusCode, string message) : base(true,200, message)
+        public SuccessResult(bool success,int status, string detail) : base(true,200, detail)
         {
         }
-        public SuccessResult(int statusCode,string message):base(true,200)
+        public SuccessResult(int status, string detail) :base(true,status,detail)
+        {
+            
+        }
+        public SuccessResult(string detail) :base(true,200,detail)
         {
             
         }

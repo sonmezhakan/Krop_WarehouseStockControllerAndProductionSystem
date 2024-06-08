@@ -2,11 +2,11 @@
 {
     public class DataResult<T>:Result,IDataResult<T>
     {
-        public DataResult(T data, bool success,int statusCode, string message) : base(success, statusCode, message)
+        public DataResult(T data, bool success,int status, string detail) : base(success, status, detail)
         {
             Data = data;
         }
-        public DataResult(T data, bool success,int statusCode) :base(success, statusCode)
+        public DataResult(T data, bool success,int status) :base(success, status)
         {
             Data = data;   
         }

@@ -52,7 +52,7 @@ namespace Krop.DataAccess.Context
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-            optionsBuilder.UseSqlServer("server=DESKTOP-RL3FR4V;database=KropDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("server=DESKTOP-RL3FR4V;database=KropDB;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;");
 
             base.OnConfiguring(optionsBuilder);
 		}

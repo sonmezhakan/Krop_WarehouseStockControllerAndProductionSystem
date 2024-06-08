@@ -27,7 +27,7 @@ namespace Krop.WinForms.Brands
             {
                 if(DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"brand/delete/{(Guid)brandComboBoxControl.BrandComboBox.SelectedValue}");
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"brand/delete/{(Guid)brandComboBoxControl.BrandComboBox.SelectedValue}");
 
                     if (!response.IsSuccessStatusCode)
                     {

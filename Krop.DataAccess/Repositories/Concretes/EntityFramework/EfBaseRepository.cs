@@ -30,7 +30,6 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             ShadowPropertyAdd(entity); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.Add(entity);
-            _context.SaveChanges();
         }
 
         /// <summary>
@@ -43,8 +42,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyAdd(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.AddRange(entities);
-            _context.SaveChanges();
-        }
+                   }
         #endregion
         #region Update
         /// <summary>
@@ -56,7 +54,6 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             ShadowPropertyUpdated(entity); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.Update(entity);
-            _context.SaveChanges();
         }
 
         /// <summary>
@@ -68,7 +65,6 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyUpdated(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
-            _context.SaveChanges();
         }
         #endregion
         #region Delete
@@ -81,7 +77,6 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             ShadowPropertyDeleted(entity); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.Update(entity);
-            _context.SaveChanges();
         }
 
         /// <summary>
@@ -93,7 +88,6 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyDeleted(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
-            _context.SaveChanges();
         }
         #endregion
         #region GetAll
@@ -143,7 +137,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             ShadowPropertyAdd(entity); //ShadowPropertylerin değerleri atanıyor.
 
             await _entities.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
         }
 
         public async Task AddRangeAsync(List<T> entities)
@@ -151,7 +145,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyAdd(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             await _entities.AddRangeAsync(entities);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
         }
         #endregion
         #region UpdateAsync
@@ -164,7 +158,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             ShadowPropertyUpdated(entity);//ShadowPropertylerin değerleri atanıyor.
 
             _entities.Update(entity);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -176,7 +170,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyUpdated(e); });//ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
-            await _context.SaveChangesAsync();
+           // await _context.SaveChangesAsync();
         }
         #endregion
         #region DeleteAsync
@@ -189,7 +183,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             ShadowPropertyDeleted(entity);
 
             _entities.Update(entity);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -201,7 +195,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyDeleted(e); });
 
             _entities.UpdateRange(entities);
-            await _context.SaveChangesAsync();
+           // await _context.SaveChangesAsync();
         }
         #endregion
         #region GetAllAsync

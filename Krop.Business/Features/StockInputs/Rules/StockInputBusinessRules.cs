@@ -1,29 +1,36 @@
-﻿using Krop.Business.Features.StockInputs.ExceptionHelpers;
+﻿using Krop.Business.Features.Productions.Constants;
+using Krop.Business.Features.StockInputs.Constants;
+using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Features.StockInputs.Rules
 {
     public class StockInputBusinessRules
     {
         private readonly IStockInputRepository _stockInputRepository;
-        private readonly StockInputExceptionHelper _stockInputExceptionHelper;
 
-        public StockInputBusinessRules(IStockInputRepository stockInputRepository, StockInputExceptionHelper stockInputExceptionHelper)
+        public StockInputBusinessRules(IStockInputRepository stockInputRepository)
         {
             _stockInputRepository = stockInputRepository;
-            _stockInputExceptionHelper = stockInputExceptionHelper;
         }
 
-        public async Task<StockInput> CheckStockInput(Guid Id)
+        public async Task<IDataResult<StockInput>> CheckStockInput(Guid Id)
         {
             var result = await _stockInputRepository.GetAsync(x=>x.Id == Id);
 
             if (result is null)
-                _stockInputExceptionHelper.ThrowStockInputNotFound();
+                return new ErrorDataResult<StockInput>(StatusCodes.Status404NotFound, StockInputMessages.StockInputNotFound);
 
-            return result;
+            return new SuccessDataResult<StockInput>(result);
+        }
+        public async Task<IResult> CheckIfStockInputProduction(StockInput stockInput)
+        {
+            if (stockInput.ProductionId != null && stockInput.ProductionId != Guid.Empty)
+                return new ErrorResult(StatusCodes.Status400BadRequest, StockInputMessages.ProductionEntryCannotBeChangedOrDeleted);
 
+            return new SuccessResult();
         }
     }
 }

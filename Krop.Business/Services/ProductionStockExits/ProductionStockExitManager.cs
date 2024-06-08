@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Krop.Business.Exceptions.Middlewares.Transaction;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DTO.Dtos.ProductionStockExit;
@@ -16,6 +17,7 @@ namespace Krop.Business.Services.ProductionStockExits
             _productionStockExitRepository = productionStockExitRepository;
             _mapper = mapper;
         }
+        [TransactionScope]
         public async Task<IResult> AddRangeAsync(List<CreateProductionStockExitDTO> createProductionStockExitDTOs)
         {
            await _productionStockExitRepository.AddRangeAsync(
@@ -23,6 +25,7 @@ namespace Krop.Business.Services.ProductionStockExits
 
             return new SuccessResult();
         }
+        [TransactionScope]
         public async Task<IResult> UpdateRangeAsync(List<UpdateProductionStockExitDTO> updateProductionStockExitDTOs)
         {
             var result = _mapper.Map<List<ProductionStockExit>>(updateProductionStockExitDTOs);
@@ -31,6 +34,7 @@ namespace Krop.Business.Services.ProductionStockExits
 
             return new SuccessResult();
         }
+        [TransactionScope]
         public async Task<IResult> DeleteAsync(Guid id)
         {
             var result = await _productionStockExitRepository.GetAsync(x => x.Id == id);

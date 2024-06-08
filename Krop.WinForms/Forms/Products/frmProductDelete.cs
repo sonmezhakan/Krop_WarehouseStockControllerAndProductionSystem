@@ -24,7 +24,7 @@ namespace Krop.WinForms.Products
             productComboBoxControl.ProductSelect(Id);
         }
 
-        
+
         private void cmbBoxProductNameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.DataSource is not null)
@@ -40,7 +40,7 @@ namespace Krop.WinForms.Products
         private async void bttnProductDelete_Click(object sender, EventArgs e)
         {
             if (productComboBoxControl.ProductNameComboBox.SelectedValue is not null && productComboBoxControl.ProductCodeComboBox.SelectedValue is not null &&
-                productComboBoxControl.ProductNameComboBox.SelectedValue == productComboBoxControl.ProductNameComboBox.SelectedValue)
+                productComboBoxControl.ProductCodeComboBox.SelectedValue.ToString() == productComboBoxControl.ProductNameComboBox.SelectedValue.ToString())
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
