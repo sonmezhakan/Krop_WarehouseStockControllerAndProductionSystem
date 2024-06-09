@@ -1,8 +1,13 @@
 ﻿
+using AutoMapper;
+using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Features.Stocks.Rules;
+using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DTO.Dtos.Stocks;
 using Krop.Entities.Entities;
+using System.Linq.Expressions;
 
 namespace Krop.Business.Services.Stocks
 {
@@ -12,13 +17,17 @@ namespace Krop.Business.Services.Stocks
         private readonly IProductRepository _productRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly StockBusinessRules _stockBusinessRules;
+        private readonly EmployeeBusinessRules _employeeBusinessRules;
+        private readonly IMapper _mapper;
 
-        public StockManager(IStockRepository stockRepository,IProductRepository productRepository,IBranchRepository branchRepository,StockBusinessRules stockBusinessRules)
+        public StockManager(IStockRepository stockRepository,IProductRepository productRepository,IBranchRepository branchRepository,StockBusinessRules stockBusinessRules, EmployeeBusinessRules employeeBusinessRules,IMapper mapper)
         {
             _stockRepository = stockRepository;
             _productRepository = productRepository;
             _branchRepository = branchRepository;
             _stockBusinessRules = stockBusinessRules;
+            _employeeBusinessRules = employeeBusinessRules;
+            _mapper = mapper;
         }
 
         #region New Branch Added Product
@@ -169,6 +178,32 @@ namespace Krop.Business.Services.Stocks
             await _stockRepository.UpdateAsync(result.Data);
 
             return new SuccessResult();
+        }
+
+        #endregion
+
+        #region Stock Listed
+
+        public async Task<IDataResult<IEnumerable<GetStockListDTO>>> GetAllFilteredAppUserAsync(Guid appUserId)
+        {
+            var businessRule = BusinessRules.Run(await _employeeBusinessRules.CheckAppUserIfEmployee(appUserId));
+            if (!businessRule.Success)
+                return new ErrorDataResult<IEnumerable<GetStockListDTO>>(businessRule.Status, businessRule.Detail);
+
+            var getEmployee = await _employeeBusinessRules.CheckByEmployeeId(appUserId);
+            if (!getEmployee.Success)
+                return new ErrorDataResult<IEnumerable<GetStockListDTO>>(getEmployee.Status,getEmployee.Detail);
+
+            var result = await _stockRepository.GetAllAsync(predicate: x => x.BranchId == getEmployee.Data.BranchId,
+            includeProperties: new Expression<Func<Stock, object>>[]
+            {
+                p=>p.Product,
+                b=>b.Branch
+            }
+            );
+
+            return new SuccessDataResult<IEnumerable<GetStockListDTO>> (
+                _mapper.Map<IEnumerable<GetStockListDTO>>(result));
         }
         #endregion
     }

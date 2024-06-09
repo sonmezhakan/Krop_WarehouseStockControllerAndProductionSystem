@@ -15,6 +15,14 @@ namespace Krop.Business.Features.Employees.Rules
             _employeeRepository = employeeRepository;
         }
 
+        public async Task<IResult> CheckEmployeeWorkingAsync(Guid appUserId)
+        {
+            var result = await _employeeRepository.AnyAsync(x => x.AppUserId == appUserId && x.WorkingStatu == true);
+            if(!result)
+                return new ErrorResult(StatusCodes.Status400BadRequest,EmployeeMessages.EmployeeNotFound);
+
+            return new SuccessResult();
+        }
         public async Task<IDataResult<Employee>> CheckByEmployeeId(Guid id)
         {
             var result = await _employeeRepository.GetAsync(e => e.AppUserId == id);

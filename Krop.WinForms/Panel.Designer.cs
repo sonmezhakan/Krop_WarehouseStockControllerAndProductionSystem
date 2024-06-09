@@ -34,8 +34,6 @@
             homeBttnExit = new Button();
             button1 = new Button();
             StocksTabPage = new TabPage();
-            stockBttnTransfer = new Button();
-            stockBttnInput = new Button();
             ProductionTabPage = new TabPage();
             productionBttnProduce = new Button();
             productionBttnList = new Button();
@@ -100,6 +98,7 @@
             bttnAppUserRoleAdd = new Button();
             bttnAppUserRoleList = new Button();
             SettingsTabPage = new TabPage();
+            settingBttnAppUser = new Button();
             ExitPageTab = new TabPage();
             panelBottom = new System.Windows.Forms.Panel();
             lblDate = new Label();
@@ -109,7 +108,9 @@
             lblServerName = new Label();
             lblCompanyName = new Label();
             panel1 = new System.Windows.Forms.Panel();
-            settingBttnAppUser = new Button();
+            stockBttnList = new Button();
+            stockBttnTransfer = new Button();
+            stockBttnInput = new Button();
             tabControl1.SuspendLayout();
             HomeTabPage.SuspendLayout();
             StocksTabPage.SuspendLayout();
@@ -206,50 +207,13 @@
             // 
             StocksTabPage.Controls.Add(stockBttnTransfer);
             StocksTabPage.Controls.Add(stockBttnInput);
+            StocksTabPage.Controls.Add(stockBttnList);
             StocksTabPage.Location = new Point(4, 26);
             StocksTabPage.Name = "StocksTabPage";
             StocksTabPage.Size = new Size(1876, 65);
             StocksTabPage.TabIndex = 2;
             StocksTabPage.Text = "Stoklar";
             StocksTabPage.UseVisualStyleBackColor = true;
-            // 
-            // stockBttnTransfer
-            // 
-            stockBttnTransfer.BackColor = Color.Transparent;
-            stockBttnTransfer.Dock = DockStyle.Left;
-            stockBttnTransfer.FlatAppearance.BorderColor = Color.White;
-            stockBttnTransfer.FlatAppearance.BorderSize = 0;
-            stockBttnTransfer.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            stockBttnTransfer.FlatStyle = FlatStyle.Flat;
-            stockBttnTransfer.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            stockBttnTransfer.Image = (Image)resources.GetObject("stockBttnTransfer.Image");
-            stockBttnTransfer.Location = new Point(84, 0);
-            stockBttnTransfer.Name = "stockBttnTransfer";
-            stockBttnTransfer.Size = new Size(70, 65);
-            stockBttnTransfer.TabIndex = 12;
-            stockBttnTransfer.Text = "Transfer";
-            stockBttnTransfer.TextImageRelation = TextImageRelation.ImageAboveText;
-            stockBttnTransfer.UseVisualStyleBackColor = false;
-            stockBttnTransfer.Click += stockBttnTransfer_Click;
-            // 
-            // stockBttnInput
-            // 
-            stockBttnInput.BackColor = Color.Transparent;
-            stockBttnInput.Dock = DockStyle.Left;
-            stockBttnInput.FlatAppearance.BorderColor = Color.White;
-            stockBttnInput.FlatAppearance.BorderSize = 0;
-            stockBttnInput.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            stockBttnInput.FlatStyle = FlatStyle.Flat;
-            stockBttnInput.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            stockBttnInput.Image = (Image)resources.GetObject("stockBttnInput.Image");
-            stockBttnInput.Location = new Point(0, 0);
-            stockBttnInput.Name = "stockBttnInput";
-            stockBttnInput.Size = new Size(84, 65);
-            stockBttnInput.TabIndex = 11;
-            stockBttnInput.Text = "Giriş";
-            stockBttnInput.TextImageRelation = TextImageRelation.ImageAboveText;
-            stockBttnInput.UseVisualStyleBackColor = false;
-            stockBttnInput.Click += stockBttnInput_Click;
             // 
             // ProductionTabPage
             // 
@@ -1398,6 +1362,25 @@
             SettingsTabPage.Text = "Ayarlar";
             SettingsTabPage.UseVisualStyleBackColor = true;
             // 
+            // settingBttnAppUser
+            // 
+            settingBttnAppUser.BackColor = Color.Transparent;
+            settingBttnAppUser.Dock = DockStyle.Left;
+            settingBttnAppUser.FlatAppearance.BorderColor = Color.White;
+            settingBttnAppUser.FlatAppearance.BorderSize = 0;
+            settingBttnAppUser.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            settingBttnAppUser.FlatStyle = FlatStyle.Flat;
+            settingBttnAppUser.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            settingBttnAppUser.Image = (Image)resources.GetObject("settingBttnAppUser.Image");
+            settingBttnAppUser.Location = new Point(0, 0);
+            settingBttnAppUser.Name = "settingBttnAppUser";
+            settingBttnAppUser.Size = new Size(120, 65);
+            settingBttnAppUser.TabIndex = 31;
+            settingBttnAppUser.Text = "Kullanıcı Ayarlarım";
+            settingBttnAppUser.TextImageRelation = TextImageRelation.ImageAboveText;
+            settingBttnAppUser.UseVisualStyleBackColor = false;
+            settingBttnAppUser.Click += settingBttnAppUser_Click;
+            // 
             // ExitPageTab
             // 
             ExitPageTab.Location = new Point(4, 26);
@@ -1508,24 +1491,62 @@
             panel1.Size = new Size(1884, 896);
             panel1.TabIndex = 2;
             // 
-            // settingBttnAppUser
+            // stockBttnList
             // 
-            settingBttnAppUser.BackColor = Color.Transparent;
-            settingBttnAppUser.Dock = DockStyle.Left;
-            settingBttnAppUser.FlatAppearance.BorderColor = Color.White;
-            settingBttnAppUser.FlatAppearance.BorderSize = 0;
-            settingBttnAppUser.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
-            settingBttnAppUser.FlatStyle = FlatStyle.Flat;
-            settingBttnAppUser.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            settingBttnAppUser.Image = (Image)resources.GetObject("settingBttnAppUser.Image");
-            settingBttnAppUser.Location = new Point(0, 0);
-            settingBttnAppUser.Name = "settingBttnAppUser";
-            settingBttnAppUser.Size = new Size(120, 65);
-            settingBttnAppUser.TabIndex = 31;
-            settingBttnAppUser.Text = "Kullanıcı Ayarlarım";
-            settingBttnAppUser.TextImageRelation = TextImageRelation.ImageAboveText;
-            settingBttnAppUser.UseVisualStyleBackColor = false;
-            settingBttnAppUser.Click += settingBttnAppUser_Click;
+            stockBttnList.BackColor = Color.Transparent;
+            stockBttnList.Dock = DockStyle.Left;
+            stockBttnList.FlatAppearance.BorderColor = Color.White;
+            stockBttnList.FlatAppearance.BorderSize = 0;
+            stockBttnList.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            stockBttnList.FlatStyle = FlatStyle.Flat;
+            stockBttnList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            stockBttnList.Image = (Image)resources.GetObject("stockBttnList.Image");
+            stockBttnList.Location = new Point(0, 0);
+            stockBttnList.Name = "stockBttnList";
+            stockBttnList.Size = new Size(70, 65);
+            stockBttnList.TabIndex = 13;
+            stockBttnList.Text = "Liste";
+            stockBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
+            stockBttnList.UseVisualStyleBackColor = false;
+            stockBttnList.Click += stockBttnList_Click;
+            // 
+            // stockBttnTransfer
+            // 
+            stockBttnTransfer.BackColor = Color.Transparent;
+            stockBttnTransfer.Dock = DockStyle.Left;
+            stockBttnTransfer.FlatAppearance.BorderColor = Color.White;
+            stockBttnTransfer.FlatAppearance.BorderSize = 0;
+            stockBttnTransfer.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            stockBttnTransfer.FlatStyle = FlatStyle.Flat;
+            stockBttnTransfer.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            stockBttnTransfer.Image = (Image)resources.GetObject("stockBttnTransfer.Image");
+            stockBttnTransfer.Location = new Point(154, 0);
+            stockBttnTransfer.Name = "stockBttnTransfer";
+            stockBttnTransfer.Size = new Size(70, 65);
+            stockBttnTransfer.TabIndex = 15;
+            stockBttnTransfer.Text = "Transfer";
+            stockBttnTransfer.TextImageRelation = TextImageRelation.ImageAboveText;
+            stockBttnTransfer.UseVisualStyleBackColor = false;
+            stockBttnTransfer.Click += stockBttnTransfer_Click;
+            // 
+            // stockBttnInput
+            // 
+            stockBttnInput.BackColor = Color.Transparent;
+            stockBttnInput.Dock = DockStyle.Left;
+            stockBttnInput.FlatAppearance.BorderColor = Color.White;
+            stockBttnInput.FlatAppearance.BorderSize = 0;
+            stockBttnInput.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            stockBttnInput.FlatStyle = FlatStyle.Flat;
+            stockBttnInput.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            stockBttnInput.Image = (Image)resources.GetObject("stockBttnInput.Image");
+            stockBttnInput.Location = new Point(70, 0);
+            stockBttnInput.Name = "stockBttnInput";
+            stockBttnInput.Size = new Size(84, 65);
+            stockBttnInput.TabIndex = 14;
+            stockBttnInput.Text = "Giriş";
+            stockBttnInput.TextImageRelation = TextImageRelation.ImageAboveText;
+            stockBttnInput.UseVisualStyleBackColor = false;
+            stockBttnInput.Click += stockBttnInput_Click;
             // 
             // Panel
             // 
@@ -1612,8 +1633,6 @@
         private Label lblDatabaseName;
         private Label lblServerName;
         private Button homeBttnExit;
-        private Button stockBttnTransfer;
-        private Button stockBttnInput;
         private Button productionBttnProduce;
         private Button productionBttnList;
         private System.Windows.Forms.Panel panel1;
@@ -1641,5 +1660,8 @@
         private Button departmentBttnCart;
         private Button departmentBttnList;
         private Button settingBttnAppUser;
+        private Button stockBttnTransfer;
+        private Button stockBttnInput;
+        private Button stockBttnList;
     }
 }

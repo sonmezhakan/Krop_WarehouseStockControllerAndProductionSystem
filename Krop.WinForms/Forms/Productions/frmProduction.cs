@@ -124,7 +124,7 @@ namespace Krop.WinForms.Forms.Productions
                     return;
                 }
 
-                await productReceiptListControl.ProductReceiptList(_webApiService, appUserId);
+                await productionListControl.ProductionList(_webApiService, appUserId);
             }
             else
             {
@@ -156,7 +156,7 @@ namespace Krop.WinForms.Forms.Productions
                             return;
                         }
 
-                        await productReceiptListControl.ProductReceiptList(_webApiService, appUserId);
+                        await productionListControl.ProductionList(_webApiService, appUserId);
                         id = default;
                     }
                 }
@@ -184,7 +184,7 @@ namespace Krop.WinForms.Forms.Productions
                         return;
                     }
 
-                    await productReceiptListControl.ProductReceiptList(_webApiService, appUserId);
+                    await productionListControl.ProductionList(_webApiService, appUserId);
                     id = default;
                 }
             }

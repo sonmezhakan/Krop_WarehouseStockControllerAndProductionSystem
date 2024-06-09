@@ -104,8 +104,8 @@ namespace Krop.Business.Services.Productions
             stockInput.Quantity = updateProductionDTO.ProductionQuantity;
             await _stockInputRepository.UpdateAsync(stockInput);//Stok Giriş listesindeki üretimden oluşan ürün girişinin miktarı güncelleniyor.
 
-            result = _mapper.Map(updateProductionDTO, result);
-            await _productionRepository.UpdateAsync(result.Data);//Üretim deki üretim miktarı güncelleniyor.
+            Production production = _mapper.Map(updateProductionDTO, result.Data);
+            await _productionRepository.UpdateAsync(production);//Üretim deki üretim miktarı güncelleniyor.
 
             await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
@@ -128,7 +128,7 @@ namespace Krop.Business.Services.Productions
             await ProductionStockExitDeleted(productionStockExits.ToList());
             await StockAdded(productionStockExits.ToList(),result.BranchId);
 
-            await _stockInputService.DeleteAsync(result.StockInput.Id,appUserId);
+            await _stockInputService.DeleteAsync(result.StockInput.Id,appUserId,true);
 
             await _productionRepository.DeleteAsync(result);
 

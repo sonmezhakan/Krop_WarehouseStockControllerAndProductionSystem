@@ -17,26 +17,26 @@ namespace Krop.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CreateProductionDTO createProductionDTO)
+        public async Task<IActionResult> Add([FromBody] CreateProductionDTO createProductionDTO, CancellationToken cancellationToken)
         {
             var result = await _productionService.AddAsync(createProductionDTO);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateProductionDTO updateProductionDTO)
+        public async Task<IActionResult> Update([FromBody] UpdateProductionDTO updateProductionDTO, CancellationToken cancellationToken)
         {
             var result = await _productionService.UpdateAsync(updateProductionDTO);
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpDelete("{id}/{appUserId}")]
-        public async Task<IActionResult> Delete(Guid id, Guid appUserId)
+        public async Task<IActionResult> Delete(Guid id, Guid appUserId, CancellationToken cancellationToken)
         {
             var result = await _productionService.DeleteAsync(id, appUserId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{appUserId}")]
-        public async Task<IActionResult> GetAll(Guid appUserId)
+        public async Task<IActionResult> GetAll(Guid appUserId,CancellationToken cancellationToken)
         {
             var result = await _productionService.GetAllAsync(appUserId);
             return result.Success ? Ok(result) : BadRequest(result);

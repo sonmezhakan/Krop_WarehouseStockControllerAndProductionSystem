@@ -20,7 +20,11 @@ namespace Krop.WinForms.Forms.Logins
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
-
+            if(Properties.Settings.Default.UserName != null)
+            {
+                checkRemmemberMe.Checked = true;
+                txtUserName.Text = Properties.Settings.Default.UserName;
+            }
         }
 
         private async void bttnLogin_Click(object sender, EventArgs e)

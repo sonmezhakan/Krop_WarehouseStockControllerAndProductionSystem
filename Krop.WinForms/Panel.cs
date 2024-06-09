@@ -10,6 +10,7 @@ using Krop.WinForms.Forms.Employees;
 using Krop.WinForms.Forms.Productions;
 using Krop.WinForms.Forms.Settings.AppUserSettings;
 using Krop.WinForms.Forms.StockInputs;
+using Krop.WinForms.Forms.Stocks;
 using Krop.WinForms.Forms.StockTransfers;
 using Krop.WinForms.HelpersClass;
 using Krop.WinForms.Products;
@@ -356,6 +357,13 @@ namespace Krop.WinForms
             frmAppUserSetting frmAppUserSetting = _serviceProvider.GetRequiredService<frmAppUserSetting>();
             frmAppUserSetting.appUserId = AppUserId;
             FormController.FormOpenController(frmAppUserSetting);
+        }
+
+        private void stockBttnList_Click(object sender, EventArgs e)
+        {
+            frmStockList frmStockList = _serviceProvider.GetRequiredService<frmStockList>();
+            frmStockList.appUserId = AppUserId;
+            FormController.FormOpenController(frmStockList);
         }
     }
 }

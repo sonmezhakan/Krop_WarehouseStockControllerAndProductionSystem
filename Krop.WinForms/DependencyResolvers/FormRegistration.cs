@@ -10,6 +10,7 @@ using Krop.WinForms.Forms.Logins;
 using Krop.WinForms.Forms.Productions;
 using Krop.WinForms.Forms.Settings.AppUserSettings;
 using Krop.WinForms.Forms.StockInputs;
+using Krop.WinForms.Forms.Stocks;
 using Krop.WinForms.Forms.StockTransfers;
 using Krop.WinForms.Products;
 using Krop.WinForms.Suppliers;
@@ -89,6 +90,9 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmProduction>();
 
             services.AddTransient<frmAppUserSetting>();
+
+            services.AddTransient<frmStockList>();
+            services.AddTransient<frmBelowCriticalAmountStockList>();
             return services;
         }
     }

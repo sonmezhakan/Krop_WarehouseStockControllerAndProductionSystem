@@ -8,7 +8,7 @@ namespace Krop.Business.Services.StockInputs
         Task<IDataResult<IEnumerable<GetStockInputListDTO>>> GetAllAsync(Guid appUserId);
         Task<IDataResult<GetStockInputDTO>> GetByIdAsync(Guid id);
         Task<IResult> AddAsync(CreateStockInputDTO createStockInputDTO);
-        Task<IResult> UpdateAsync(UpdateStockInputDTO updateStockInputDTO);
-        Task<IResult> DeleteAsync(Guid id,Guid appUserId);
+        Task<IResult> UpdateAsync(UpdateStockInputDTO updateStockInputDTO,bool productionUpdated = false);
+        Task<IResult> DeleteAsync(Guid id,Guid appUserId,bool productionDeleted = false);
     }
 }

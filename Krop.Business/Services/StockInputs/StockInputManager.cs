@@ -56,15 +56,18 @@ namespace Krop.Business.Services.StockInputs
         #region Update
         
         [TransactionScope]
-        public async Task<IResult> UpdateAsync(UpdateStockInputDTO updateStockInputDTO)
+        public async Task<IResult> UpdateAsync(UpdateStockInputDTO updateStockInputDTO,bool productionUpdated = false)
         {
             var result = await _stockInputBusinessRules.CheckStockInput(updateStockInputDTO.Id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
             if (result is null)
                 return new ErrorResult(StatusCodes.Status404NotFound, StockInputMessages.StockInputNotFound);
 
+            //stok girişi ekranında işlem güncellenmeye çalışılırsa ve işlem üretimden giriş yapıldıysa işlemin yapılması engelleniyor. Eğer işlem üretim tarafından yapılıyor ise işlemi yapmaya izin verir.
+            if (!productionUpdated && result.Data.ProductId != null)
+                return new ErrorResult(StatusCodes.Status400BadRequest, StockInputMessages.ProductionEntryCannotBeChangedOrDeleted);
+
             var businessRuleResult = BusinessRules.Run(
-               await _employeeBusinessRules.CheckEmployeeBranch(updateStockInputDTO.AppUserId, updateStockInputDTO.BranchId),//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
-               await _stockInputBusinessRules.CheckIfStockInputProduction(result.Data)
+               await _employeeBusinessRules.CheckEmployeeBranch(updateStockInputDTO.AppUserId, updateStockInputDTO.BranchId)//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
                );
             if (!businessRuleResult.Success)
                 return businessRuleResult;
@@ -82,15 +85,18 @@ namespace Krop.Business.Services.StockInputs
         #endregion
         #region Delete
         [TransactionScope]
-        public async Task<IResult> DeleteAsync(Guid id, Guid appUserId)
+        public async Task<IResult> DeleteAsync(Guid id, Guid appUserId,bool productionDeleted = false)
         {
             var result = await _stockInputBusinessRules.CheckStockInput(id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
             if (!result.Success)
                 return result;
 
+            //stok girişi ekranında işlem silinmeye çalışılırsa ve işlem üretimden giriş yapıldıysa işlemin yapılması engelleniyor. Eğer işlem üretim tarafından yapılıyor ise işlemi yapmaya izin verir.
+            if(!productionDeleted && result.Data.ProductId != null)
+                return new ErrorResult(StatusCodes.Status400BadRequest, StockInputMessages.ProductionEntryCannotBeChangedOrDeleted);
+
             var businessRuleResult = BusinessRules.Run(
-               await _employeeBusinessRules.CheckEmployeeBranch(appUserId, result.Data.BranchId),//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
-               await _stockInputBusinessRules.CheckIfStockInputProduction(result.Data)
+               await _employeeBusinessRules.CheckEmployeeBranch(appUserId, result.Data.BranchId)//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
                );
             if (!businessRuleResult.Success)
                 return businessRuleResult;

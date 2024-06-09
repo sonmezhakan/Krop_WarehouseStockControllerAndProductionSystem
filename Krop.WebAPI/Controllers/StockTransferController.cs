@@ -23,14 +23,14 @@ namespace Krop.WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateStockTransferDTO updateStockTransferDTO)
+        public async Task<IActionResult> Update([FromBody] UpdateStockTransferDTO updateStockTransferDTO, CancellationToken cancellationToken)
         {
             var result = await _stockTransferService.UpdateAsync(updateStockTransferDTO);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpDelete("{Id}/{appUserId}")]
-        public async Task<IActionResult> Delete(Guid Id, Guid appUserId)
+        public async Task<IActionResult> Delete(Guid Id, Guid appUserId, CancellationToken cancellationToken)
         {
             var result = await _stockTransferService.DeleteAsync(Id,appUserId);
 
@@ -43,13 +43,13 @@ namespace Krop.WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{appUserId}")]
-        public async Task<IActionResult> AppUserBranchGetAll(Guid appUserId)
+        public async Task<IActionResult> AppUserBranchGetAll(Guid appUserId, CancellationToken cancellationToken)
         {
             var result = await _stockTransferService.AppUserBranchGetAllAsync(appUserId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{Id}/{appUserId}")]
-        public async Task<IActionResult> GetById(Guid Id,Guid appUserId)
+        public async Task<IActionResult> GetById(Guid Id,Guid appUserId, CancellationToken cancellationToken)
         {
             var result = await _stockTransferService.GetByIdAsync(Id,appUserId);
             return result.Success ? Ok(result) : BadRequest(result);

@@ -15,7 +15,7 @@ namespace Krop.WebAPI.Controllers
             _authService = authService;
         }
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO,CancellationToken cancellationToken)
         {
             var result = await _authService.LoginAsync(loginDTO);
             if (!result.Success)
@@ -29,14 +29,14 @@ namespace Krop.WebAPI.Controllers
             return BadRequest(token);
         }
         [HttpGet("{email}")]
-        public async Task<IActionResult> ResetPasswordEmailSender(string email)
+        public async Task<IActionResult> ResetPasswordEmailSender(string email, CancellationToken cancellationToken)
         {
             var result = await _authService.ResetPasswordWinFormEmailSenderAsync(email);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpPost]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO, CancellationToken cancellationToken)
         {
             var result = await _authService.ResetPasswordAsync(resetPasswordDTO);
 

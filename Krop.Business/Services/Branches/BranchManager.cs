@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Krop.Business.Exceptions.Middlewares.Transaction;
+using Krop.Business.Features.AppUsers.Rules;
 using Krop.Business.Features.Branches.Rules;
-using Krop.Business.Features.Branches.Validations;
+using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Services.Stocks;
 using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
@@ -19,14 +20,18 @@ namespace Krop.Business.Services.Branches
         private readonly BranchBusinessRules _branchBusinessRules;
         private readonly IStockService _stockService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly EmployeeBusinessRules _employeeBusinessRules;
+        private readonly AppUserBusinessRules _appUserBusinessRules;
 
-        public BranchManager(IBranchRepository branchRepository, IMapper mapper, BranchBusinessRules branchBusinessRules, IStockService stockService,IUnitOfWork unitOfWork)
+        public BranchManager(IBranchRepository branchRepository, IMapper mapper, BranchBusinessRules branchBusinessRules, IStockService stockService,IUnitOfWork unitOfWork,EmployeeBusinessRules employeeBusinessRules,AppUserBusinessRules appUserBusinessRules)
         {
             _branchRepository = branchRepository;
             _mapper = mapper;
             _branchBusinessRules = branchBusinessRules;
             _stockService = stockService;
             _unitOfWork = unitOfWork;
+            _employeeBusinessRules = employeeBusinessRules;
+            _appUserBusinessRules = appUserBusinessRules;
         }
 
         #region Add
@@ -62,19 +67,6 @@ namespace Krop.Business.Services.Branches
             await _unitOfWork.SaveChangesAsync();
             return new SuccessResult();
         }
-        /*[ValidationAspect(typeof(UpdateBranchValidator))]
-        public async Task<IResult> UpdateRangeAsync(List<UpdateBranchDTO> updateBranchDTOs)
-        {
-            updateBranchDTOs.ForEach(async b =>
-            {
-                await _branchBusinessRules.CheckByBranchId(b.Id);
-            });
-
-            await _branchRepository.UpdateRangeAsync(
-                _mapper.Map<List<Branch>>(updateBranchDTOs));
-
-            return new SuccessResult();
-        }*/
         #endregion
         #region Delete
         [TransactionScope]
@@ -91,22 +83,6 @@ namespace Krop.Business.Services.Branches
             return new SuccessResult();
         }
 
-       /* public async Task<IResult> DeleteRangeAsync(List<Guid> ids)
-        {
-            List<Branch> branches = new();
-
-            ids.ForEach(async b =>
-            {
-                var branch = await _branchBusinessRules.CheckByBranchId(b);
-
-                branches.Add(branch);
-            });
-
-            await _stockService.BranchDeletedRangeProductAsync(ids);//Belirtilen şubelere ait stokdan ürünler sil.
-            await _branchRepository.DeleteRangeAsync(branches);//Şubeleri sil
-
-            return new SuccessResult();
-        }*/
         #endregion
         #region Listed
         public async Task<IDataResult<IEnumerable<GetBranchDTO>>> GetAllAsync()
@@ -116,7 +92,7 @@ namespace Krop.Business.Services.Branches
             return new SuccessDataResult<IEnumerable<GetBranchDTO>>(
                 _mapper.Map<IEnumerable<GetBranchDTO>>(result));
         }
-
+      
         public async Task<IDataResult<IEnumerable<GetBranchComboBoxDTO>>> GetAllComboBoxAsync()
         {
             var result = await _branchRepository.GetAllComboBoxAsync();

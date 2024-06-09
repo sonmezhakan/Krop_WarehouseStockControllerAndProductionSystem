@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Stocks\Dtos\**" />
+    <EmbeddedResource Remove="Features\Stocks\Dtos\**" />
+    <None Remove="Features\Stocks\Dtos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="8.0.0" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
@@ -32,9 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Stocks\Profiles\" />
     <Folder Include="Features\Stocks\Validations\" />
-    <Folder Include="Features\Stocks\Dtos\" />
   </ItemGroup>
 
 </Project>

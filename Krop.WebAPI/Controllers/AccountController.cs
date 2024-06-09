@@ -1,5 +1,7 @@
-﻿using Krop.Business.Services.AppUsers;
+﻿using Krop.Business.Features.AppUsers.Validations;
+using Krop.Business.Services.AppUsers;
 using Krop.DTO.Dtos.AppUsers;
+using Krop.DTO.Dtos.Auths;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers
@@ -32,6 +34,13 @@ namespace Krop.WebAPI.Controllers
         public async Task<IActionResult> Update([FromBody]UpdateAppUserDTO updateAppUserDTO)
         {
             var result = await _appUserService.UpdateAsync(updateAppUserDTO);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdateAppUserPasswordDTO updateAppUserPasswordDTO)
+        {
+            var result = await _appUserService.UpdatePasswordAsync(updateAppUserPasswordDTO);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
