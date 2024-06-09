@@ -8,6 +8,7 @@ using Krop.WinForms.Forms.Departments;
 using Krop.WinForms.Forms.Employees;
 using Krop.WinForms.Forms.Logins;
 using Krop.WinForms.Forms.Productions;
+using Krop.WinForms.Forms.ProductNotifications;
 using Krop.WinForms.Forms.Settings.AppUserSettings;
 using Krop.WinForms.Forms.StockInputs;
 using Krop.WinForms.Forms.Stocks;
@@ -93,6 +94,11 @@ namespace Krop.WinForms.DependencyResolvers
 
             services.AddTransient<frmStockList>();
             services.AddTransient<frmBelowCriticalAmountStockList>();
+
+            services.AddTransient<frmProductNotficationSentList>();
+            services.AddTransient<frmProductNotificationInList>();
+            services.AddTransient<frmProductNotificationAdd>();
+            services.AddTransient<frmProductNotificationUpdate>();
             return services;
         }
     }

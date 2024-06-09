@@ -12,6 +12,7 @@ using Krop.Business.Services.Deparments;
 using Krop.Business.Services.Employees;
 using Krop.Business.Services.Productions;
 using Krop.Business.Services.ProductionStockExits;
+using Krop.Business.Services.ProductNotifications;
 using Krop.Business.Services.ProductReceipts;
 using Krop.Business.Services.Products;
 using Krop.Business.Services.StockInputs;
@@ -85,6 +86,9 @@ namespace Krop.Business.DependencyResolvers.Autofac
 
             builder.RegisterType<ProductionStockExitManager>().As<IProductionStockExitService>().SingleInstance();
             builder.RegisterType<EfProductionStockExitRepository>().As<IProductionStockExitRepository>().SingleInstance();
+
+            builder.RegisterType<ProductNotificationManager>().As<IProductNotificationService>().SingleInstance();
+            builder.RegisterType<EfProductNotificationRepository>().As<IProductNotificationRepository>().SingleInstance();
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().SingleInstance();

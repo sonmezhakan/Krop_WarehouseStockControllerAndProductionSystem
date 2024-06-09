@@ -66,6 +66,6 @@
         #endregion
 
         private ComboBox cmbBoxAppUserSelect;
-        private Label label1;
+        public Label label1;
     }
 }

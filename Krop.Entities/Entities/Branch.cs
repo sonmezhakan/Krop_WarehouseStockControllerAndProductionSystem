@@ -5,7 +5,6 @@ namespace Krop.Entities.Entities
     /// <summary>
     /// Şube adı en fazla 255 karakter olabilir. Boş olamaz!
     /// EmployeeBranch, Stock, StockInput, StockTransfer, Production nesneleri ile ilişkilidir.
-    /// Ayrıca Branch nesnesi Owned Type özelliğini kullanarak Address nesnesindeki tüm propertyleri kendisi de kullanabilmektedir.
     /// </summary>
 	public class Branch:BaseEntity
 	{
@@ -21,6 +20,7 @@ namespace Krop.Entities.Entities
         public virtual ICollection<StockTransfer> SentStockTransfers { get; set; }
         public virtual ICollection<Production> Productions { get; set; }
         public virtual ICollection<ProductionStockExit> ProductionStockExits { get; set; }
+        public virtual ICollection<ProductNotification> ProductNotifications { get; set; }
 
     }
 }

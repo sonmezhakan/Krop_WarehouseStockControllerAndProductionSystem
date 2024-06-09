@@ -16,7 +16,6 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         public async Task HardDeleteAsync(ProductReceipt productReceipt)
         {
              _context.ProductReceipts.Remove(productReceipt);
-            _context.SaveChangesAsync();
         }
     }
 }

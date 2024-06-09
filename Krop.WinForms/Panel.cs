@@ -8,6 +8,7 @@ using Krop.WinForms.Forms.Branches;
 using Krop.WinForms.Forms.Departments;
 using Krop.WinForms.Forms.Employees;
 using Krop.WinForms.Forms.Productions;
+using Krop.WinForms.Forms.ProductNotifications;
 using Krop.WinForms.Forms.Settings.AppUserSettings;
 using Krop.WinForms.Forms.StockInputs;
 using Krop.WinForms.Forms.Stocks;
@@ -365,5 +366,11 @@ namespace Krop.WinForms
             frmStockList.appUserId = AppUserId;
             FormController.FormOpenController(frmStockList);
         }
+
+        private void ProductsTabPage_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

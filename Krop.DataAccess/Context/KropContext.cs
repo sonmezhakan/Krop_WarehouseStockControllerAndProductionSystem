@@ -29,6 +29,7 @@ namespace Krop.DataAccess.Context
         public DbSet<StockTransfer> StockTransfers { get; set; }
         public DbSet<Production> Productions { get; set; }
         public DbSet<ProductionStockExit> ProductionStockExits { get; set; }
+        public DbSet<ProductNotification> ProductNotifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -47,6 +48,8 @@ namespace Krop.DataAccess.Context
             builder.ApplyConfiguration(new StockTransferConfiguration());
             builder.ApplyConfiguration(new  ProductionConfiguration());
             builder.ApplyConfiguration(new ProductionStockExitConfiguration());
+            builder.ApplyConfiguration(new ProductNotificationConfiguration());
+
 			base.OnModelCreating(builder);
 		}
 

@@ -6,7 +6,6 @@ namespace Krop.Entities.Entities
     /// Abstract classtan gelen Id ignore edilip AppUserId Primary Key olarak tanımlanmıştır. 
     /// Başlama tarihi ve Çıkış Tarihi boş olabilir.
     /// Maaş boş olabilir.
-    /// AppUser, Department, Branch, StockInput nesneleri ile ilişkilidir.
     /// </summary>
 	public class Employee:BaseEntity
 	{
@@ -21,6 +20,8 @@ namespace Krop.Entities.Entities
 
         public virtual AppUser AppUser { get; set; }
         public virtual Department Department { get; set; }
-        public virtual Branch Branch { get; set; } 
+        public virtual Branch Branch { get; set; }
+        public virtual ICollection<ProductNotification> SenderProductNotifications { get; set; }
+        public virtual ICollection<ProductNotification> SentProductNotifications { get; set; }
     }
 }

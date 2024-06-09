@@ -7,7 +7,6 @@ namespace Krop.Entities.Entities
     /// Ürün kodu en fazla 255 karakter olabilir. Boş olamaz!
     /// Kritik Miktar ve Fiyat verilmez ise default olarak 0 değeri veriliyor. Boş olabilir!
     /// Açıklama en fazla 1000 karakter olabilir. Boş olabilir!
-    /// Category, Stock,Brand, ProductReceipt, StockInput, StockTransfer, Production nesneleri ile ilişkilidir.
     /// </summary>
 	public class Product:BaseEntity
 	{
@@ -28,6 +27,7 @@ namespace Krop.Entities.Entities
         public virtual ICollection<StockTransfer> StockTransfers { get; set; }
         public virtual ICollection<Production> Productions { get; set; }
         public virtual ICollection<ProductionStockExit> ProductionStockExits { get; set; }
+        public virtual ICollection<ProductNotification> ProductNotifications { get; set; }
     }
 	
 }
