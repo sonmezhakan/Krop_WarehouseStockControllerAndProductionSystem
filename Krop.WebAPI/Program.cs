@@ -1,15 +1,19 @@
 using Autofac;
+using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Krop.Business.DependencyResolvers.Autofac;
 using Krop.Business.Exceptions.Extensions;
 using Krop.Business.Exceptions.Middlewares;
 using Krop.Business.Exceptions.Middlewares.Transaction;
+using Krop.Common.Helpers.Caching;
+using Krop.Common.Helpers.Caching.Redis;
 using Krop.Common.Helpers.JwtService;
 using Krop.DataAccess.UnitOfWork;
 using Krop.IOC.DependencyResolvers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -63,6 +67,9 @@ namespace Krop.WebAPI
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenOptions:SecurityKey"])),
                 };
             });
+            builder.Services.AddStackExchangeRedisCache(options => options.Configuration = "localhost:1453");
+            builder.Services.AddSingleton<ICacheService, DistributedCacheManager>();
+
 
             var app = builder.Build();
 
