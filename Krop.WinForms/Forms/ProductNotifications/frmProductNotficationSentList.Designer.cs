@@ -89,6 +89,7 @@
             dgwProductNotificationSentList.BorderStyle = BorderStyle.None;
             dgwProductNotificationSentList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwProductNotificationSentList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgwProductNotificationSentList.ContextMenuStrip = contextMenuStrip1;
             dgwProductNotificationSentList.Dock = DockStyle.Fill;
             dgwProductNotificationSentList.Location = new Point(0, 38);
             dgwProductNotificationSentList.Name = "dgwProductNotificationSentList";
@@ -103,38 +104,38 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { güncelleToolStripMenuItem, bildirimGüncelleToolStripMenuItem, bildirimSilToolStripMenuItem, toolStripSeparator1, toolStripMenuItem1 });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(165, 98);
+            contextMenuStrip1.Size = new Size(181, 120);
             // 
             // güncelleToolStripMenuItem
             // 
             güncelleToolStripMenuItem.Name = "güncelleToolStripMenuItem";
-            güncelleToolStripMenuItem.Size = new Size(164, 22);
+            güncelleToolStripMenuItem.Size = new Size(180, 22);
             güncelleToolStripMenuItem.Text = "Bildirim Gönder";
             güncelleToolStripMenuItem.Click += güncelleToolStripMenuItem_Click;
             // 
             // bildirimGüncelleToolStripMenuItem
             // 
             bildirimGüncelleToolStripMenuItem.Name = "bildirimGüncelleToolStripMenuItem";
-            bildirimGüncelleToolStripMenuItem.Size = new Size(164, 22);
+            bildirimGüncelleToolStripMenuItem.Size = new Size(180, 22);
             bildirimGüncelleToolStripMenuItem.Text = "Bildirim Güncelle";
             bildirimGüncelleToolStripMenuItem.Click += bildirimGüncelleToolStripMenuItem_Click;
             // 
             // bildirimSilToolStripMenuItem
             // 
             bildirimSilToolStripMenuItem.Name = "bildirimSilToolStripMenuItem";
-            bildirimSilToolStripMenuItem.Size = new Size(164, 22);
+            bildirimSilToolStripMenuItem.Size = new Size(180, 22);
             bildirimSilToolStripMenuItem.Text = "Bildirim Sil";
             bildirimSilToolStripMenuItem.Click += bildirimSilToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(161, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(164, 22);
+            toolStripMenuItem1.Size = new Size(180, 22);
             toolStripMenuItem1.Text = "Yenile";
             // 
             // frmProductNotficationSentList

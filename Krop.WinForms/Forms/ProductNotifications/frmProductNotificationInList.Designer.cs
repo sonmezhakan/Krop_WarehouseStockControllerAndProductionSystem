@@ -33,12 +33,12 @@
             txtSearch = new TextBox();
             panelTop = new System.Windows.Forms.Panel();
             bttnSearch = new Button();
-            dgwProductNotificationInList = new DataGridView();
             contextMenuStrip1 = new ContextMenuStrip(components);
             toolStripMenuItem1 = new ToolStripMenuItem();
+            dgwProductNotificationInList = new DataGridView();
             panelTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwProductNotificationInList).BeginInit();
             contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgwProductNotificationInList).BeginInit();
             SuspendLayout();
             // 
             // txtSearch
@@ -73,6 +73,19 @@
             bttnSearch.Text = "Ara...";
             bttnSearch.UseVisualStyleBackColor = true;
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(181, 48);
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(180, 22);
+            toolStripMenuItem1.Text = "Yenile";
+            toolStripMenuItem1.Click += toolStripMenuItem1_Click;
+            // 
             // dgwProductNotificationInList
             // 
             dgwProductNotificationInList.AllowUserToAddRows = false;
@@ -85,43 +98,32 @@
             dgwProductNotificationInList.BorderStyle = BorderStyle.None;
             dgwProductNotificationInList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwProductNotificationInList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgwProductNotificationInList.ContextMenuStrip = contextMenuStrip1;
             dgwProductNotificationInList.Dock = DockStyle.Fill;
-            dgwProductNotificationInList.Location = new Point(0, 0);
+            dgwProductNotificationInList.Location = new Point(0, 38);
             dgwProductNotificationInList.Name = "dgwProductNotificationInList";
             dgwProductNotificationInList.ReadOnly = true;
             dgwProductNotificationInList.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgwProductNotificationInList.RowTemplate.Height = 25;
             dgwProductNotificationInList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgwProductNotificationInList.Size = new Size(980, 541);
-            dgwProductNotificationInList.TabIndex = 17;
+            dgwProductNotificationInList.Size = new Size(980, 503);
+            dgwProductNotificationInList.TabIndex = 18;
             // 
-            // contextMenuStrip1
-            // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(106, 26);
-            // 
-            // toolStripMenuItem1
-            // 
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(105, 22);
-            toolStripMenuItem1.Text = "Yenile";
-            toolStripMenuItem1.Click += toolStripMenuItem1_Click;
-            // 
-            // frmProductNotificationIn
+            // frmProductNotificationInList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(980, 541);
-            Controls.Add(panelTop);
             Controls.Add(dgwProductNotificationInList);
-            Name = "frmProductNotificationIn";
+            Controls.Add(panelTop);
+            Name = "frmProductNotificationInList";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Gelen Ürün Bildirimleri";
             Load += frmProductNotificationIn_Load;
             panelTop.ResumeLayout(false);
             panelTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgwProductNotificationInList).EndInit();
             contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgwProductNotificationInList).EndInit();
             ResumeLayout(false);
         }
 
@@ -130,8 +132,8 @@
         private TextBox txtSearch;
         private System.Windows.Forms.Panel panelTop;
         private Button bttnSearch;
-        private DataGridView dgwProductNotificationInList;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem toolStripMenuItem1;
+        private DataGridView dgwProductNotificationInList;
     }
 }

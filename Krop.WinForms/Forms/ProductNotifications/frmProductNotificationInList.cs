@@ -1,7 +1,6 @@
 ﻿using Krop.Common.Helpers.WebApiService;
 using Krop.DTO.Dtos.ProductNotifications;
 using Krop.WinForms.HelpersClass;
-using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 
 namespace Krop.WinForms.Forms.ProductNotifications
@@ -12,13 +11,12 @@ namespace Krop.WinForms.Forms.ProductNotifications
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetProductNotificationListDTO> _originalData;
         private BindingList<GetProductNotificationListDTO> _filteredData;
-        private Panel panel;
+        public Guid appUserId;
         public frmProductNotificationInList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             _webApiService = webApiService;
             _serviceProvider = serviceProvider;
-            panel = _serviceProvider.GetRequiredService<Panel>();
         }
 
         private async void frmProductNotificationIn_Load(object sender, EventArgs e)
@@ -28,21 +26,21 @@ namespace Krop.WinForms.Forms.ProductNotifications
         private void DgwProduuctNotificationSentListSettings()
         {
             dgwProductNotificationInList.Columns[0].HeaderText = "Id";
-            dgwProductNotificationInList.Columns[1].HeaderText = "Gönderen Çalışan";
-            dgwProductNotificationInList.Columns[2].HeaderText = "Gönderilen Çalışan";
+            dgwProductNotificationInList.Columns[1].HeaderText = "Bildirim Gönderen Çalışan";
+            dgwProductNotificationInList.Columns[2].HeaderText = "Bildirim Gönderilen Çalışan";
             dgwProductNotificationInList.Columns[3].HeaderText = "Şube Adı";
             dgwProductNotificationInList.Columns[4].HeaderText = "Ürün Adı";
-            dgwProductNotificationInList.Columns[6].HeaderText = "Ürün Kodu";
-            dgwProductNotificationInList.Columns[7].HeaderText = "Stok Miktarı";
-            dgwProductNotificationInList.Columns[8].HeaderText = "Kritik Miktar";
-            dgwProductNotificationInList.Columns[9].HeaderText = "Açıklama";
-            dgwProductNotificationInList.Columns[10].HeaderText = "Gönderilen Tarih";
+            dgwProductNotificationInList.Columns[5].HeaderText = "Ürün Kodu";
+            dgwProductNotificationInList.Columns[6].HeaderText = "Stok Miktarı";
+            dgwProductNotificationInList.Columns[7].HeaderText = "Kritik Miktar";
+            dgwProductNotificationInList.Columns[8].HeaderText = "Açıklama";
+            dgwProductNotificationInList.Columns[9].HeaderText = "Gönderilen Tarih";
 
             dgwProductNotificationInList.Columns[0].Visible = false;
         }
         private async Task ProductNotificationSentList()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetInAll/{panel.AppUserId}");
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetInAll/{appUserId}");
             if (!response.IsSuccessStatusCode)
             {
                 await ResponseController.ErrorResponseController(response);

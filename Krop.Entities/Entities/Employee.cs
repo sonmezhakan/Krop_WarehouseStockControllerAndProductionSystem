@@ -21,7 +21,6 @@ namespace Krop.Entities.Entities
         public virtual AppUser AppUser { get; set; }
         public virtual Department Department { get; set; }
         public virtual Branch Branch { get; set; }
-        public virtual ICollection<ProductNotification> SenderProductNotifications { get; set; }
-        public virtual ICollection<ProductNotification> SentProductNotifications { get; set; }
+       
     }
 }

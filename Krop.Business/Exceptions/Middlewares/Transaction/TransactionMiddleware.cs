@@ -26,7 +26,7 @@ namespace Krop.Business.Exceptions.Middlewares.Transaction
                 try
                 {
                     await _next(context);
-                    await dbContext.SaveChangesAsync();
+                    //await dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception)

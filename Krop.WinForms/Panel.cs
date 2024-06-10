@@ -372,5 +372,25 @@ namespace Krop.WinForms
 
         }
 
+        private void productNotificationBttnIn_Click(object sender, EventArgs e)
+        {
+            frmProductNotificationInList frmProductNotificationInList = _serviceProvider.GetRequiredService<frmProductNotificationInList>();
+            frmProductNotificationInList.appUserId = AppUserId;
+            FormController.FormOpenController(frmProductNotificationInList);
+        }
+
+        private void productNotificationBttnSent_Click(object sender, EventArgs e)
+        {
+            frmProductNotficationSentList frmProductNotficationSentList = _serviceProvider.GetRequiredService<frmProductNotficationSentList>();
+            frmProductNotficationSentList.appUserId = AppUserId;
+            FormController.FormOpenController(frmProductNotficationSentList);
+        }
+
+        private void productNotificationBttnAdd_Click(object sender, EventArgs e)
+        {
+            frmProductNotificationAdd frmProductNotificationAdd = _serviceProvider.GetRequiredService<frmProductNotificationAdd>();
+            frmProductNotificationAdd.appUserId = AppUserId;
+            FormController.FormOpenController(frmProductNotificationAdd);
+        }
     }
 }

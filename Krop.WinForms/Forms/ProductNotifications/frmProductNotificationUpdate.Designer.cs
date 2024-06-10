@@ -124,7 +124,10 @@
             ClientSize = new Size(242, 400);
             Controls.Add(panelBottom);
             Controls.Add(panelMid);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "frmProductNotificationUpdate";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Ürün Bildirimi Güncelle";
             Load += frmProductNotificationUpdate_Load;
             panelBottom.ResumeLayout(false);

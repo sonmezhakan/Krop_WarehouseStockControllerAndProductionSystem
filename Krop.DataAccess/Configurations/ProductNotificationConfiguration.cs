@@ -22,14 +22,14 @@ namespace Krop.DataAccess.Configurations
                 .WithMany(x => x.ProductNotifications)
                 .HasForeignKey(x => x.BranchId);
 
-            builder.HasOne(x => x.SenderEmployee)
+            builder.HasOne(x => x.SenderAppUser)
                 .WithMany(x => x.SenderProductNotifications)
-                .HasForeignKey(x => x.SenderEmployeId)
+                .HasForeignKey(x => x.SenderAppUserId)
                 .OnDelete(DeleteBehavior.Restrict);
             
-            builder.HasOne(x => x.SentEmployee)
+            builder.HasOne(x => x.SentAppUser)
                 .WithMany(x => x.SentProductNotifications)
-                .HasForeignKey(x => x.SentEmployeId)
+                .HasForeignKey(x => x.SentAppUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.Configure(builder);

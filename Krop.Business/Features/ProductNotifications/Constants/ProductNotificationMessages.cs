@@ -10,5 +10,7 @@
         public const string DescriptionMaxLenght = "Açıklama En Fazla 1000 Karakter Olabilir!";
 
         public const string ProductNotificationNotFound = "Ürün Bildirimi Bulunamadı!";
+        public const string NotificationSenderAndSentPersonCannotBeSameError = "Bildirimi Gönderen Kişi ile Gönderilen Kişi Aynı Olamaz!";
+        public const string PersonPerformingActionSamePersonTryingDeleteError = "Bildirimi Yapan ile Silmeye Çalışan Kişi Aynı Değil!";
     }
 }

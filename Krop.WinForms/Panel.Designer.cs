@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Panel));
             tabControl1 = new TabControl();
             HomeTabPage = new TabPage();
@@ -47,6 +48,10 @@
             productBttnAdd = new Button();
             productBttnCard = new Button();
             productBttnList = new Button();
+            productNotificationTabPage = new TabPage();
+            productNotificationBttnAdd = new Button();
+            productNotificationBttnSent = new Button();
+            productNotificationBttnIn = new Button();
             CategoriesTabPage = new TabPage();
             categoryBttnDelete = new Button();
             categoryBttnUpdate = new Button();
@@ -103,6 +108,8 @@
             SettingsTabPage = new TabPage();
             settingBttnAppUser = new Button();
             ExitPageTab = new TabPage();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            asdasdToolStripMenuItem = new ToolStripMenuItem();
             panelBottom = new System.Windows.Forms.Panel();
             lblDate = new Label();
             lblUserName = new Label();
@@ -116,6 +123,7 @@
             StocksTabPage.SuspendLayout();
             ProductionTabPage.SuspendLayout();
             ProductsTabPage.SuspendLayout();
+            productNotificationTabPage.SuspendLayout();
             CategoriesTabPage.SuspendLayout();
             BranchPage.SuspendLayout();
             BrandPage.SuspendLayout();
@@ -126,6 +134,7 @@
             DepartmentTabPage.SuspendLayout();
             AppUserRolePage.SuspendLayout();
             SettingsTabPage.SuspendLayout();
+            contextMenuStrip1.SuspendLayout();
             panelBottom.SuspendLayout();
             SuspendLayout();
             // 
@@ -135,6 +144,7 @@
             tabControl1.Controls.Add(StocksTabPage);
             tabControl1.Controls.Add(ProductionTabPage);
             tabControl1.Controls.Add(ProductsTabPage);
+            tabControl1.Controls.Add(productNotificationTabPage);
             tabControl1.Controls.Add(CategoriesTabPage);
             tabControl1.Controls.Add(BranchPage);
             tabControl1.Controls.Add(BrandPage);
@@ -450,6 +460,75 @@
             productBttnList.TextImageRelation = TextImageRelation.ImageAboveText;
             productBttnList.UseVisualStyleBackColor = false;
             productBttnList.Click += productBttnList_Click;
+            // 
+            // productNotificationTabPage
+            // 
+            productNotificationTabPage.Controls.Add(productNotificationBttnAdd);
+            productNotificationTabPage.Controls.Add(productNotificationBttnSent);
+            productNotificationTabPage.Controls.Add(productNotificationBttnIn);
+            productNotificationTabPage.Location = new Point(4, 26);
+            productNotificationTabPage.Name = "productNotificationTabPage";
+            productNotificationTabPage.Size = new Size(1876, 65);
+            productNotificationTabPage.TabIndex = 15;
+            productNotificationTabPage.Text = "Ürün Bildirimi";
+            productNotificationTabPage.UseVisualStyleBackColor = true;
+            // 
+            // productNotificationBttnAdd
+            // 
+            productNotificationBttnAdd.BackColor = Color.Transparent;
+            productNotificationBttnAdd.Dock = DockStyle.Left;
+            productNotificationBttnAdd.FlatAppearance.BorderColor = Color.White;
+            productNotificationBttnAdd.FlatAppearance.BorderSize = 0;
+            productNotificationBttnAdd.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            productNotificationBttnAdd.FlatStyle = FlatStyle.Flat;
+            productNotificationBttnAdd.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            productNotificationBttnAdd.Image = (Image)resources.GetObject("productNotificationBttnAdd.Image");
+            productNotificationBttnAdd.Location = new Point(269, 0);
+            productNotificationBttnAdd.Name = "productNotificationBttnAdd";
+            productNotificationBttnAdd.Size = new Size(115, 65);
+            productNotificationBttnAdd.TabIndex = 10;
+            productNotificationBttnAdd.Text = "Bildirimde Bulun";
+            productNotificationBttnAdd.TextImageRelation = TextImageRelation.ImageAboveText;
+            productNotificationBttnAdd.UseVisualStyleBackColor = false;
+            productNotificationBttnAdd.Click += productNotificationBttnAdd_Click;
+            // 
+            // productNotificationBttnSent
+            // 
+            productNotificationBttnSent.BackColor = Color.Transparent;
+            productNotificationBttnSent.Dock = DockStyle.Left;
+            productNotificationBttnSent.FlatAppearance.BorderColor = Color.White;
+            productNotificationBttnSent.FlatAppearance.BorderSize = 0;
+            productNotificationBttnSent.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            productNotificationBttnSent.FlatStyle = FlatStyle.Flat;
+            productNotificationBttnSent.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            productNotificationBttnSent.Image = (Image)resources.GetObject("productNotificationBttnSent.Image");
+            productNotificationBttnSent.Location = new Point(116, 0);
+            productNotificationBttnSent.Name = "productNotificationBttnSent";
+            productNotificationBttnSent.Size = new Size(153, 65);
+            productNotificationBttnSent.TabIndex = 9;
+            productNotificationBttnSent.Text = "Gönderilen Bildirimler";
+            productNotificationBttnSent.TextImageRelation = TextImageRelation.ImageAboveText;
+            productNotificationBttnSent.UseVisualStyleBackColor = false;
+            productNotificationBttnSent.Click += productNotificationBttnSent_Click;
+            // 
+            // productNotificationBttnIn
+            // 
+            productNotificationBttnIn.BackColor = Color.Transparent;
+            productNotificationBttnIn.Dock = DockStyle.Left;
+            productNotificationBttnIn.FlatAppearance.BorderColor = Color.White;
+            productNotificationBttnIn.FlatAppearance.BorderSize = 0;
+            productNotificationBttnIn.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            productNotificationBttnIn.FlatStyle = FlatStyle.Flat;
+            productNotificationBttnIn.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            productNotificationBttnIn.Image = (Image)resources.GetObject("productNotificationBttnIn.Image");
+            productNotificationBttnIn.Location = new Point(0, 0);
+            productNotificationBttnIn.Name = "productNotificationBttnIn";
+            productNotificationBttnIn.Size = new Size(116, 65);
+            productNotificationBttnIn.TabIndex = 7;
+            productNotificationBttnIn.Text = "Gelen Bildirimler";
+            productNotificationBttnIn.TextImageRelation = TextImageRelation.ImageAboveText;
+            productNotificationBttnIn.UseVisualStyleBackColor = false;
+            productNotificationBttnIn.Click += productNotificationBttnIn_Click;
             // 
             // CategoriesTabPage
             // 
@@ -1448,6 +1527,18 @@
             ExitPageTab.Text = "Çıkış";
             ExitPageTab.UseVisualStyleBackColor = true;
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { asdasdToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(111, 26);
+            // 
+            // asdasdToolStripMenuItem
+            // 
+            asdasdToolStripMenuItem.Name = "asdasdToolStripMenuItem";
+            asdasdToolStripMenuItem.Size = new Size(110, 22);
+            asdasdToolStripMenuItem.Text = "asdasd";
+            // 
             // panelBottom
             // 
             panelBottom.BackColor = SystemColors.Highlight;
@@ -1566,6 +1657,7 @@
             StocksTabPage.ResumeLayout(false);
             ProductionTabPage.ResumeLayout(false);
             ProductsTabPage.ResumeLayout(false);
+            productNotificationTabPage.ResumeLayout(false);
             CategoriesTabPage.ResumeLayout(false);
             BranchPage.ResumeLayout(false);
             BrandPage.ResumeLayout(false);
@@ -1576,6 +1668,7 @@
             DepartmentTabPage.ResumeLayout(false);
             AppUserRolePage.ResumeLayout(false);
             SettingsTabPage.ResumeLayout(false);
+            contextMenuStrip1.ResumeLayout(false);
             panelBottom.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -1664,5 +1757,11 @@
         private Button stockBttnTransfer;
         private Button stockBttnInput;
         private Button stockBttnList;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem asdasdToolStripMenuItem;
+        private TabPage productNotificationTabPage;
+        private Button productNotificationBttnAdd;
+        private Button productNotificationBttnSent;
+        private Button productNotificationBttnIn;
     }
 }

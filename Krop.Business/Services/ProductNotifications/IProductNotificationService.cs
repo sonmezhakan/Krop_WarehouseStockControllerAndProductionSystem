@@ -5,13 +5,13 @@ namespace Krop.Business.Services.ProductNotifications
 {
     public interface IProductNotificationService
     {
-        Task<IDataResult<IEnumerable<GetProductNotificationListDTO>>> GetInAllAsync(Guid employeeId);
-        Task<IDataResult<IEnumerable<GetProductNotificationListDTO>>> GetSentAllAsync(Guid employeeId);
+        Task<IDataResult<IEnumerable<GetProductNotificationListDTO>>> GetInAllAsync(Guid inAppUserId);
+        Task<IDataResult<IEnumerable<GetProductNotificationListDTO>>> GetSentAllAsync(Guid sentAppUserId);
 
-        Task<IDataResult<GetProductNotificationDTO>> GetByIdAsync(Guid employeeId);
+        Task<IDataResult<GetProductNotificationDTO>> GetByIdAsync(Guid id);
         Task<IResult> AddAsync(CreateProductNotificationDTO createProductNotificationDTO);
         Task<IResult> UpdateAsync(UpdateProductNotificationDTO updateProductNotificationDTO);
-        Task<IResult> DeleteAsync(Guid id);
+        Task<IResult> DeleteAsync(Guid id,Guid appUserId);
 
     }
 }

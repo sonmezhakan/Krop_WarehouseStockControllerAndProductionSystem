@@ -15,6 +15,9 @@ namespace Krop.Entities.Entities
         public virtual ICollection<StockTransfer> StockTransfers { get; set; }
         public virtual ICollection<Production> Productions { get; set; }
         public virtual ICollection<ProductionStockExit> ProductionStockExits { get; set; }
-        
+
+        public virtual ICollection<ProductNotification> SenderProductNotifications { get; set; }
+        public virtual ICollection<ProductNotification> SentProductNotifications { get; set; }
+
     }
 }

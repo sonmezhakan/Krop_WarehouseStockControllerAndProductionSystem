@@ -13,14 +13,13 @@ namespace Krop.WinForms.Forms.ProductNotifications
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetProductNotificationListDTO> _originalData;
         private BindingList<GetProductNotificationListDTO> _filteredData;
-        private Panel panel;
+        public Guid appUserId;
 
         public frmProductNotficationSentList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             _webApiService = webApiService;
             _serviceProvider = serviceProvider;
-            panel = _serviceProvider.GetRequiredService<Panel>();
         }
 
         private async void frmProductNotficationSentList_Load(object sender, EventArgs e)
@@ -34,17 +33,17 @@ namespace Krop.WinForms.Forms.ProductNotifications
             dgwProductNotificationSentList.Columns[2].HeaderText = "Gönderilen Çalışan";
             dgwProductNotificationSentList.Columns[3].HeaderText = "Şube Adı";
             dgwProductNotificationSentList.Columns[4].HeaderText = "Ürün Adı";
-            dgwProductNotificationSentList.Columns[6].HeaderText = "Ürün Kodu";
-            dgwProductNotificationSentList.Columns[7].HeaderText = "Stok Miktarı";
-            dgwProductNotificationSentList.Columns[8].HeaderText = "Kritik Miktar";
-            dgwProductNotificationSentList.Columns[9].HeaderText = "Açıklama";
-            dgwProductNotificationSentList.Columns[10].HeaderText = "Gönderilen Tarih";
+            dgwProductNotificationSentList.Columns[5].HeaderText = "Ürün Kodu";
+            dgwProductNotificationSentList.Columns[6].HeaderText = "Stok Miktarı";
+            dgwProductNotificationSentList.Columns[7].HeaderText = "Kritik Miktar";
+            dgwProductNotificationSentList.Columns[8].HeaderText = "Açıklama";
+            dgwProductNotificationSentList.Columns[9].HeaderText = "Gönderilen Tarih";
 
             dgwProductNotificationSentList.Columns[0].Visible = false;
         }
         private async Task ProductNotificationSentList()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetSentAll/{panel.AppUserId}");
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetSentAll/{appUserId}");
             if (!response.IsSuccessStatusCode)
             {
                 await ResponseController.ErrorResponseController(response);
@@ -63,6 +62,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
         private void güncelleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmProductNotificationAdd frmProductNotificationAdd = _serviceProvider.GetRequiredService<frmProductNotificationAdd>();
+            frmProductNotificationAdd.appUserId = appUserId;
             FormController.FormOpenController(frmProductNotificationAdd);
         }
 
@@ -70,6 +70,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
         {
             frmProductNotificationUpdate frmProductNotificationUpdate = _serviceProvider.GetRequiredService<frmProductNotificationUpdate>();
             frmProductNotificationUpdate.productNotificationId = (Guid)dgwProductNotificationSentList.SelectedRows[0].Cells[0].Value;
+            frmProductNotificationUpdate.appUserId = appUserId;
             FormController.FormOpenController(frmProductNotificationUpdate);
         }
 
@@ -79,7 +80,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"productNotification/Delete/{(Guid)dgwProductNotificationSentList.SelectedRows[0].Cells[0].Value}");
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"productNotification/Delete/{(Guid)dgwProductNotificationSentList.SelectedRows[0].Cells[0].Value}/{appUserId}");
                     if (!response.IsSuccessStatusCode)
                     {
                         await ResponseController.ErrorResponseController(response);
@@ -130,6 +131,11 @@ namespace Krop.WinForms.Forms.ProductNotifications
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
             Search();
+        }
+
+        private async void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            await ProductNotificationSentList();
         }
     }
 }

@@ -3,6 +3,7 @@ using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
+using System.Reflection;
 
 namespace Krop.Business.Features.ProductNotifications.Rules
 {
@@ -22,6 +23,20 @@ namespace Krop.Business.Features.ProductNotifications.Rules
                 return new ErrorDataResult<ProductNotification>(StatusCodes.Status404NotFound, ProductNotificationMessages.ProductNotificationNotFound);
 
             return new SuccessDataResult<ProductNotification>(result);
+        }
+        public async Task<IResult> CheckNotificationSenderAndSentPersonSame(Guid senderAppUserId,Guid sentAppUserId)
+        {
+            if (senderAppUserId == sentAppUserId)
+                return new ErrorResult(StatusCodes.Status400BadRequest, ProductNotificationMessages.NotificationSenderAndSentPersonCannotBeSameError);
+
+            return new SuccessResult();
+        }
+        public async Task<IResult> CheckPersonPerformingActionSamePersonTryingDelete(Guid deleteAppUserId,Guid transactionAppUserId)
+        {
+            if (deleteAppUserId != transactionAppUserId)
+                return new ErrorResult(StatusCodes.Status400BadRequest, ProductNotificationMessages.PersonPerformingActionSamePersonTryingDeleteError);
+
+            return new SuccessResult();
         }
     }
 }

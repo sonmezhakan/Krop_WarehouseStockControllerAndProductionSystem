@@ -18,8 +18,8 @@ namespace Krop.DataAccess.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SenderEmployeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SentEmployeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SenderAppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SentAppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     SenderNotificationDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     CreatedComputerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -37,23 +37,23 @@ namespace Krop.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_ProductNotifications", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ProductNotifications_AspNetUsers_SenderAppUserId",
+                        column: x => x.SenderAppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductNotifications_AspNetUsers_SentAppUserId",
+                        column: x => x.SentAppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_ProductNotifications_Branches_BranchId",
                         column: x => x.BranchId,
                         principalTable: "Branches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductNotifications_Employees_SenderEmployeId",
-                        column: x => x.SenderEmployeId,
-                        principalTable: "Employees",
-                        principalColumn: "AppUserId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProductNotifications_Employees_SentEmployeId",
-                        column: x => x.SentEmployeId,
-                        principalTable: "Employees",
-                        principalColumn: "AppUserId",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProductNotifications_Products_ProductId",
                         column: x => x.ProductId,
@@ -73,14 +73,14 @@ namespace Krop.DataAccess.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductNotifications_SenderEmployeId",
+                name: "IX_ProductNotifications_SenderAppUserId",
                 table: "ProductNotifications",
-                column: "SenderEmployeId");
+                column: "SenderAppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductNotifications_SentEmployeId",
+                name: "IX_ProductNotifications_SentAppUserId",
                 table: "ProductNotifications",
-                column: "SentEmployeId");
+                column: "SentAppUserId");
         }
 
         /// <inheritdoc />

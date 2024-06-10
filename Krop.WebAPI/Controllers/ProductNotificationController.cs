@@ -28,26 +28,33 @@ namespace Krop.WebAPI.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        [HttpDelete]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("{id}/{appUserId}")]
+        public async Task<IActionResult> Delete(Guid id,Guid appUserId)
         {
-            var result = await _productNotificationService.DeleteAsync(id);
+            var result = await _productNotificationService.DeleteAsync(id,appUserId);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        [HttpGet]
+        [HttpGet("{inEmployeId}")]
         public async Task<IActionResult> GetInAll(Guid inEmployeId)
         {
             var result = await _productNotificationService.GetInAllAsync(inEmployeId);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
-        [HttpGet]
+        [HttpGet("{sentEmployeId}")]
         public async Task<IActionResult> GetSentAll(Guid sentEmployeId)
         {
             var result = await _productNotificationService.GetSentAllAsync(sentEmployeId);
 
             return result.Success ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var result = await _productNotificationService.GetByIdAsync(id);
+
+            return result.Success ? Ok(result):BadRequest(result);
         }
     }
 }

@@ -567,7 +567,7 @@ namespace Krop.DataAccess.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SenderEmployeId")
+                    b.Property<Guid>("SenderAppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("SenderNotificationDate")
@@ -575,7 +575,7 @@ namespace Krop.DataAccess.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<Guid>("SentEmployeId")
+                    b.Property<Guid>("SentAppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedComputerName")
@@ -593,9 +593,9 @@ namespace Krop.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("SenderEmployeId");
+                    b.HasIndex("SenderAppUserId");
 
-                    b.HasIndex("SentEmployeId");
+                    b.HasIndex("SentAppUserId");
 
                     b.ToTable("ProductNotifications");
                 });
@@ -1446,15 +1446,15 @@ namespace Krop.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Krop.Entities.Entities.Employee", "SenderEmployee")
+                    b.HasOne("Krop.Entities.Entities.AppUser", "SenderAppUser")
                         .WithMany("SenderProductNotifications")
-                        .HasForeignKey("SenderEmployeId")
+                        .HasForeignKey("SenderAppUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Krop.Entities.Entities.Employee", "SentEmployee")
+                    b.HasOne("Krop.Entities.Entities.AppUser", "SentAppUser")
                         .WithMany("SentProductNotifications")
-                        .HasForeignKey("SentEmployeId")
+                        .HasForeignKey("SentAppUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1462,9 +1462,9 @@ namespace Krop.DataAccess.Migrations
 
                     b.Navigation("Product");
 
-                    b.Navigation("SenderEmployee");
+                    b.Navigation("SenderAppUser");
 
-                    b.Navigation("SentEmployee");
+                    b.Navigation("SentAppUser");
                 });
 
             modelBuilder.Entity("Krop.Entities.Entities.ProductReceipt", b =>
@@ -1775,6 +1775,10 @@ namespace Krop.DataAccess.Migrations
 
                     b.Navigation("Productions");
 
+                    b.Navigation("SenderProductNotifications");
+
+                    b.Navigation("SentProductNotifications");
+
                     b.Navigation("StockInputs");
 
                     b.Navigation("StockTransfers");
@@ -1812,13 +1816,6 @@ namespace Krop.DataAccess.Migrations
             modelBuilder.Entity("Krop.Entities.Entities.Department", b =>
                 {
                     b.Navigation("Employees");
-                });
-
-            modelBuilder.Entity("Krop.Entities.Entities.Employee", b =>
-                {
-                    b.Navigation("SenderProductNotifications");
-
-                    b.Navigation("SentProductNotifications");
                 });
 
             modelBuilder.Entity("Krop.Entities.Entities.Product", b =>

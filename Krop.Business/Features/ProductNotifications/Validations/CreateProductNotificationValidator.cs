@@ -16,11 +16,11 @@ namespace Krop.Business.Features.ProductNotifications.Validations
                 .NotNull().WithMessage(ProductNotificationMessages.ProductNotNull)
                 .NotEmpty().WithMessage(ProductNotificationMessages.ProductNotNull);
 
-            RuleFor(x => x.SenderEmployeeId)
+            RuleFor(x => x.SenderAppUserId)
                 .NotEmpty().WithMessage(ProductNotificationMessages.SenderEmployeeNotNull)
                 .NotNull().WithMessage(ProductNotificationMessages.SenderEmployeeNotNull);
 
-            RuleFor(x => x.SentEmployeeId)
+            RuleFor(x => x.SentAppUserId)
                 .NotEmpty().WithMessage(ProductNotificationMessages.SentEmployeeNotNull)
                 .NotNull().WithMessage(ProductNotificationMessages.SentEmployeeNotNull);
 

@@ -15,9 +15,9 @@ namespace Krop.Business.Features.ProductNotifications.Profiles
                 .ForMember(dest=>dest.ProductName, opt=>opt.MapFrom(src=>src.Product.ProductName))
                 .ForMember(dest=>dest.ProductCode, opt=>opt.MapFrom(src=>src.Product.ProductCode))
                 .ForMember(dest=>dest.BranchName, opt=>opt.MapFrom(src=>src.Branch.BranchName))
-                .ForMember(dest=>dest.SenderUserName, opt=>opt.MapFrom(src=>src.SenderEmployee.AppUser.UserName))
-                .ForMember(dest=>dest.SentUserName, opt=>opt.MapFrom(src=>src.SentEmployee.AppUser.UserName))
-                .ForMember(dest=>dest.UnitsInStock, opt=>opt.MapFrom(src=>src.Product.Stocks.FirstOrDefault(x=>x.Branch.BranchName == src.Branch.BranchName)))
+                .ForMember(dest=>dest.SenderUserName, opt=>opt.MapFrom(src=>src.SenderAppUser.UserName))
+                .ForMember(dest=>dest.SentUserName, opt=>opt.MapFrom(src=>src.SentAppUser.UserName))
+                .ForMember(dest=>dest.UnitsInStock, opt=>opt.MapFrom(src=>src.Product.Stocks))
                 .ForMember(dest=>dest.CriticalStock, opt=>opt.MapFrom(src=>src.Product.CriticalStock))
                 .ReverseMap();
         }
