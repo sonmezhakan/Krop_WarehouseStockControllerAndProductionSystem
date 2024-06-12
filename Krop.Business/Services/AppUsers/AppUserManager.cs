@@ -2,6 +2,9 @@
 using Krop.Business.Exceptions.Middlewares.Transaction;
 using Krop.Business.Features.AppUsers.Constants;
 using Krop.Business.Features.AppUsers.Rules;
+using Krop.Business.Features.AppUsers.Validations;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Helpers.EmailService;
 using Krop.Common.Models;
 using Krop.Common.Utilits.Business;
@@ -27,9 +30,10 @@ namespace Krop.Business.Services.AppUsers
         private readonly IEmailService _emailService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICacheHelper _cacheHelper;
 
         public AppUserManager(UserManager<AppUser> userManager,IMapper mapper,AppUserBusinessRules appUserBusinessRules,IEmailService emailService,
-            IUrlHelperFactory urlHelperFactory, IHttpContextAccessor httpContextAccessor)
+            IUrlHelperFactory urlHelperFactory, IHttpContextAccessor httpContextAccessor,ICacheHelper cacheHelper)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -37,11 +41,12 @@ namespace Krop.Business.Services.AppUsers
             _emailService = emailService;
             _urlHelperFactory = urlHelperFactory;
             _httpContextAccessor = httpContextAccessor;
+            _cacheHelper = cacheHelper;
         }
 
-        #region Add
-        
+        #region Add  
         [TransactionScope]
+        [ValidationAspect(typeof(CreateAppUserValidator))]
         public async Task<IResult> AddAsync(CreateAppUserDTO createAppUserDTO)
         {
             var result = BusinessRules.Run(
@@ -57,13 +62,13 @@ namespace Krop.Business.Services.AppUsers
             await _userManager.CreateAsync(appUser,createAppUserDTO.Password);
 
             await ActivationMailSenderAsync(appUser);
-
+            await _cacheHelper.RemoveAsync(new string[] { AppUserCacheKeys.AppUserGetAllComboBoxAsync });
             return new SuccessResult();
         }
         #endregion
-        #region Update
-        
+        #region Update     
         [TransactionScope]
+        [ValidationAspect(typeof(UpdateAppUserValidator))]
         //Şifre güncelleme işlemi burada yapılmıyor!
         public async Task<IResult> UpdateAsync(UpdateAppUserDTO updateAppUserDTO)
         {
@@ -93,6 +98,7 @@ namespace Krop.Business.Services.AppUsers
                 await _userManager.AddToRolesAsync(appUser, updateAppUserDTO.Roles);//Yetkileri Ekliyor
             }
 
+            await _cacheHelper.RemoveAsync(new string[] { AppUserCacheKeys.AppUserGetAllComboBoxAsync });
             return new SuccessResult();
         }
 
@@ -120,14 +126,20 @@ namespace Krop.Business.Services.AppUsers
         }
         public async Task<IDataResult<IEnumerable<GetAppUserComboBoxDTO>>> GetAllComboBoxAsync()
         {
-            IEnumerable<AppUser> appUsers = await _userManager.Users.Select(x => new AppUser
-            {
-                Id = x.Id,
-                UserName = x.UserName
-            }).ToListAsync();
-
-            return new SuccessDataResult<IEnumerable<GetAppUserComboBoxDTO>>(
-                _mapper.Map<IEnumerable<GetAppUserComboBoxDTO>>(appUsers));
+            IEnumerable<GetAppUserComboBoxDTO> getAppUserComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
+                AppUserCacheKeys.AppUserGetAllComboBoxAsync,
+                async () =>
+                {
+                    var result = await _userManager.Users.Select(x => new AppUser
+                    {
+                        Id = x.Id,
+                        UserName = x.UserName
+                    }).ToListAsync();
+                    return _mapper.Map<IEnumerable<GetAppUserComboBoxDTO>>(result);
+                },
+                60
+                );
+            return new SuccessDataResult<IEnumerable<GetAppUserComboBoxDTO>>(getAppUserComboBoxDTOs);
         }
         #endregion
         #region Search

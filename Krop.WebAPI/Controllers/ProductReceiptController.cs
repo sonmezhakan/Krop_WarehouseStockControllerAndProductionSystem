@@ -39,7 +39,7 @@ namespace Krop.WebAPI.Controllers
         [HttpGet("{produceProductId}")]
         public async Task<IActionResult> GetAll(Guid produceProductId,CancellationToken cancellationToken)
         {
-            var result = await _productReceiptService.GetAllAsync(produceProductId);
+            var result = await _productReceiptService.GetByProduceIdAsync(produceProductId);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }

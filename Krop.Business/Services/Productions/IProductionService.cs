@@ -5,7 +5,7 @@ namespace Krop.Business.Services.Productions
 {
     public interface IProductionService
     {
-        Task<IDataResult<IEnumerable<GetProductionListDTO>>> GetAllAsync(Guid appUserId);
+        Task<IDataResult<IEnumerable<GetProductionListDTO>>> GetByBranchIdAsync(Guid appUserId);
         Task<IDataResult<GetProductionDTO>> GetByIdAsync(Guid id, Guid appUserId);
         Task<IResult> AddAsync(CreateProductionDTO createProductionDTO);
         Task<IResult> UpdateAsync(UpdateProductionDTO updateProductionDTO);

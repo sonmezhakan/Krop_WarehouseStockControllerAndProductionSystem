@@ -1,15 +1,17 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Features.Productions.Validations;
+using Krop.Business.Features.ProductNotifications.Constants;
 using Krop.Business.Features.ProductNotifications.Rules;
 using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.ProductNotifications;
 using Krop.Entities.Entities;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
 
 namespace Krop.Business.Services.ProductNotifications
@@ -21,14 +23,16 @@ namespace Krop.Business.Services.ProductNotifications
         private readonly IProductNotificationRepository _productNotificationRepository;
         private readonly ProductNotificationBusinessRules _productNotificationBusinessRules;
         private readonly EmployeeBusinessRules _employeeBusinessRules;
+        private readonly ICacheHelper _cacheHelper;
 
-        public ProductNotificationManager(IMapper mapper,IUnitOfWork unitOfWork,IProductNotificationRepository productNotificationRepository,ProductNotificationBusinessRules productNotificationBusinessRules,EmployeeBusinessRules employeeBusinessRules)
+        public ProductNotificationManager(IMapper mapper,IUnitOfWork unitOfWork,IProductNotificationRepository productNotificationRepository,ProductNotificationBusinessRules productNotificationBusinessRules,EmployeeBusinessRules employeeBusinessRules,ICacheHelper cacheHelper)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _productNotificationRepository = productNotificationRepository;
             _productNotificationBusinessRules = productNotificationBusinessRules;
             _employeeBusinessRules = employeeBusinessRules;
+            _cacheHelper = cacheHelper;
         }
         #region Add
         [ValidationAspect(typeof(CreateProductionValidator))]
@@ -45,7 +49,11 @@ namespace Krop.Business.Services.ProductNotifications
                 _mapper.Map<ProductNotification>(createProductNotificationDTO));
 
             await _unitOfWork.SaveChangesAsync();
-
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{ProductNotificationCacheKeys.GetInAllAsync}{createProductNotificationDTO.SenderAppUserId}",
+                $"{ProductNotificationCacheKeys.GetSentAllAsync}{createProductNotificationDTO.SentAppUserId}"
+            });
             return new SuccessResult();
         }
         #endregion
@@ -70,7 +78,12 @@ namespace Krop.Business.Services.ProductNotifications
             await _productNotificationRepository.UpdateAsync(productNotification);
 
             await _unitOfWork.SaveChangesAsync();
-
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{ProductNotificationCacheKeys.GetInAllAsync}{updateProductNotificationDTO.SenderAppUserId}",
+                $"{ProductNotificationCacheKeys.GetSentAllAsync}{updateProductNotificationDTO.SentAppUserId}",
+                $"{ProductNotificationCacheKeys.GetByIdAsync}{updateProductNotificationDTO.Id}"
+            });
             return new SuccessResult();
         }
         #endregion
@@ -92,53 +105,82 @@ namespace Krop.Business.Services.ProductNotifications
 
             await _unitOfWork.SaveChangesAsync();
 
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{ProductNotificationCacheKeys.GetInAllAsync}{appUserId}",
+                $"{ProductNotificationCacheKeys.GetSentAllAsync}{appUserId}",
+                $"{ProductNotificationCacheKeys.GetByIdAsync}{id}"
+            });
             return new SuccessResult();
         }
         #endregion
         #region Listed
         public async Task<IDataResult<IEnumerable<GetProductNotificationListDTO>>> GetInAllAsync(Guid inAppUserId)
         {
-            var result = await _productNotificationRepository.GetAllAsync(predicate:x=>x.SentAppUserId == inAppUserId,
-                includeProperties: new Expression<Func<ProductNotification, object>>[]
+            IEnumerable<GetProductNotificationListDTO> getProductNotificationListDTOs = await _cacheHelper.GetOrAddListAsync(
+                $"{ProductNotificationCacheKeys.GetInAllAsync}{inAppUserId}",
+                async () =>
                 {
-                    p=>p.Product,
-                    b=>b.Branch,
-                    senderEmployee=>senderEmployee.SenderAppUser,
-                    sentEmployee=>sentEmployee.SentAppUser,
-                    s=>s.Product.Stocks
-                });
+                    var result = await _productNotificationRepository.GetAllAsync(predicate: x => x.SentAppUserId == inAppUserId,
+                    includeProperties: new Expression<Func<ProductNotification, object>>[]
+                    {
+                      p=>p.Product,
+                      b=>b.Branch,
+                      senderEmployee=>senderEmployee.SenderAppUser,
+                      sentEmployee=>sentEmployee.SentAppUser,
+                      s=>s.Product.Stocks
+                    });
 
-            var productNotification = await ProductNotificationToGetProductNotificationListDTO(result);
-        
-            return new SuccessDataResult<IEnumerable<GetProductNotificationListDTO>>(productNotification.OrderByDescending(x=>x.SenderNotificationDate));
+                    return await ProductNotificationToGetProductNotificationListDTO(result);
+                },
+                60
+                );
+
+            return new SuccessDataResult<IEnumerable<GetProductNotificationListDTO>>(getProductNotificationListDTOs);
         }
 
         public async Task<IDataResult<IEnumerable<GetProductNotificationListDTO>>> GetSentAllAsync(Guid sentAppUserId)
         {
-            var result = await _productNotificationRepository.GetAllAsync(predicate: x => x.SenderAppUserId == sentAppUserId,
-                 includeProperties: new Expression<Func<ProductNotification, object>>[]
-                 {
-                    p=>p.Product,
-                    b=>b.Branch,
-                    senderEmployee=>senderEmployee.SenderAppUser,
-                    sentEmployee=>sentEmployee.SentAppUser,
-                    s=>s.Product.Stocks
-                 });
+            IEnumerable<GetProductNotificationListDTO> getProductNotificationListDTOs = await _cacheHelper.GetOrAddListAsync(
+                $"{ProductNotificationCacheKeys.GetSentAllAsync}{sentAppUserId}",
+                async () =>
+                {
+                    var result = await _productNotificationRepository.GetAllAsync(predicate: x => x.SenderAppUserId == sentAppUserId,
+                    includeProperties: new Expression<Func<ProductNotification, object>>[]
+                    {
+                       p=>p.Product,
+                       b=>b.Branch,
+                       senderEmployee=>senderEmployee.SenderAppUser,
+                       sentEmployee=>sentEmployee.SentAppUser,
+                      s=>s.Product.Stocks
+                     });
 
-            var productNotification = await ProductNotificationToGetProductNotificationListDTO(result);
+                    return await ProductNotificationToGetProductNotificationListDTO(result);
+                },
+                60
+                );
 
-            return new SuccessDataResult<IEnumerable<GetProductNotificationListDTO>>(productNotification.OrderByDescending(x => x.SenderNotificationDate));
+            return new SuccessDataResult<IEnumerable<GetProductNotificationListDTO>>(getProductNotificationListDTOs);
         }
         #endregion
         #region Search
-        public async Task<IDataResult<GetProductNotificationDTO>> GetByIdAsync(Guid id)
+        public async Task<IDataResult<GetProductNotificationDTO>> GetByIdAsync(Guid id,Guid appUserId)
         {
-            var result = await _productNotificationBusinessRules.CheckProductNotificationId(id);
-            if (!result.Success)
-                return new ErrorDataResult<GetProductNotificationDTO>(result.Status,result.Detail);
+            GetProductNotificationDTO getProductNotificationDTO = await _cacheHelper.GetOrAddAsync(
+                $"{ProductNotificationCacheKeys.GetByIdAsync}{id}",
+                async () =>
+                {
+                    var result = await _productNotificationRepository.GetAsync(x => x.Id == id && (x.SenderAppUserId == appUserId || x.SentAppUserId == appUserId));
 
-            return new SuccessDataResult<GetProductNotificationDTO>(
-                _mapper.Map<GetProductNotificationDTO>(result.Data));
+                    return _mapper.Map<GetProductNotificationDTO>(result);
+                },
+                15
+                );
+            
+            if (getProductNotificationDTO is null)
+                return new ErrorDataResult<GetProductNotificationDTO>(StatusCodes.Status404NotFound,ProductNotificationMessages.ProductNotificationNotFound);
+
+            return new SuccessDataResult<GetProductNotificationDTO>(getProductNotificationDTO);
         }
         #endregion
     }
@@ -146,7 +188,7 @@ namespace Krop.Business.Services.ProductNotifications
     #region Custom Metot
     public partial class ProductNotificationManager
     {
-        private async Task<List<GetProductNotificationListDTO>> ProductNotificationToGetProductNotificationListDTO(IEnumerable<ProductNotification> productNotifications)
+        private async Task<IEnumerable<GetProductNotificationListDTO>> ProductNotificationToGetProductNotificationListDTO(IEnumerable<ProductNotification> productNotifications)
         {
             List<GetProductNotificationListDTO> productNotification = new();
             foreach (var item in productNotifications)
@@ -166,7 +208,7 @@ namespace Krop.Business.Services.ProductNotifications
                 });
             }
 
-            return productNotification;
+            return productNotification.OrderByDescending(x => x.SenderNotificationDate);
         }
     }
     #endregion

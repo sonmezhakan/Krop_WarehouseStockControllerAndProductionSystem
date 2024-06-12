@@ -1,15 +1,22 @@
 ﻿using AutoMapper;
 using Krop.Business.Exceptions.Middlewares.Transaction;
 using Krop.Business.Features.AppUsers.Rules;
+using Krop.Business.Features.Branches.Constants;
 using Krop.Business.Features.Branches.Rules;
+using Krop.Business.Features.Branches.Validations;
 using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Services.Stocks;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Utilits.Business;
+using Krop.Common.Utilits.Caching;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.Branches;
+using Krop.DTO.Dtos.Brands;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Services.Branches
 {
@@ -20,23 +27,22 @@ namespace Krop.Business.Services.Branches
         private readonly BranchBusinessRules _branchBusinessRules;
         private readonly IStockService _stockService;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmployeeBusinessRules _employeeBusinessRules;
-        private readonly AppUserBusinessRules _appUserBusinessRules;
+        private readonly ICacheHelper _cacheHelper;
 
-        public BranchManager(IBranchRepository branchRepository, IMapper mapper, BranchBusinessRules branchBusinessRules, IStockService stockService,IUnitOfWork unitOfWork,EmployeeBusinessRules employeeBusinessRules,AppUserBusinessRules appUserBusinessRules)
+        public BranchManager(IBranchRepository branchRepository, IMapper mapper, BranchBusinessRules branchBusinessRules, IStockService stockService,IUnitOfWork unitOfWork,ICacheHelper cacheHelper)
         {
             _branchRepository = branchRepository;
             _mapper = mapper;
             _branchBusinessRules = branchBusinessRules;
             _stockService = stockService;
             _unitOfWork = unitOfWork;
-            _employeeBusinessRules = employeeBusinessRules;
-            _appUserBusinessRules = appUserBusinessRules;
+            _cacheHelper = cacheHelper;
         }
 
         #region Add
         
         [TransactionScope]
+        [ValidationAspect(typeof(CreateBranchValidator))]
         public async Task<IResult> AddAsync(CreateBranchDTO createBranchDTO)
         {
             var result = BusinessRules.Run(await _branchBusinessRules.BranchNameCannotBeDuplicatedWhenInserted(createBranchDTO.BranchName));//BranchName Rule
@@ -49,12 +55,17 @@ namespace Krop.Business.Services.Branches
             await _branchRepository.AddAsync(branch);
 
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                BranchCacheKeys.GetAllAsync,
+                BranchCacheKeys.GetAllComboBoxAsync,
+            });
             return new SuccessResult();
         }
-        
+
         #endregion
         #region Update
-        
+        [ValidationAspect(typeof(UpdateBranchDTO))]
         public async Task<IResult> UpdateAsync(UpdateBranchDTO updateBranchDTO)
         {
             var branch = await _branchBusinessRules.CheckByBranchId(updateBranchDTO.Id);
@@ -65,6 +76,12 @@ namespace Krop.Business.Services.Branches
                 _mapper.Map(updateBranchDTO, branch.Data));
 
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                BranchCacheKeys.GetAllAsync,
+                BranchCacheKeys.GetAllComboBoxAsync,
+                $"{BranchCacheKeys.GetByIdAsync }{updateBranchDTO.Id }"
+            });
             return new SuccessResult();
         }
         #endregion
@@ -80,6 +97,12 @@ namespace Krop.Business.Services.Branches
             await _branchRepository.DeleteAsync(branch.Data);//Şubeyi sil
 
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                BranchCacheKeys.GetAllAsync,
+                BranchCacheKeys.GetAllComboBoxAsync,
+                $"{BranchCacheKeys.GetByIdAsync }{id }"
+            });
             return new SuccessResult();
         }
 
@@ -87,29 +110,48 @@ namespace Krop.Business.Services.Branches
         #region Listed
         public async Task<IDataResult<IEnumerable<GetBranchDTO>>> GetAllAsync()
         {
-            var result = await _branchRepository.GetAllAsync();
-
-            return new SuccessDataResult<IEnumerable<GetBranchDTO>>(
-                _mapper.Map<IEnumerable<GetBranchDTO>>(result));
+            IEnumerable<GetBranchDTO> getBranchDTOs = await _cacheHelper.GetOrAddListAsync(
+                BranchCacheKeys.GetAllAsync,
+                async () =>
+                {
+                    var result = await _branchRepository.GetAllAsync();
+                    return _mapper.Map<IEnumerable<GetBranchDTO>>(result);
+                },
+                60
+                );
+            return new SuccessDataResult<IEnumerable<GetBranchDTO>>(getBranchDTOs);
         }
       
         public async Task<IDataResult<IEnumerable<GetBranchComboBoxDTO>>> GetAllComboBoxAsync()
         {
-            var result = await _branchRepository.GetAllComboBoxAsync();
-
-            return new SuccessDataResult<IEnumerable<GetBranchComboBoxDTO>>(
-                _mapper.Map<IEnumerable<GetBranchComboBoxDTO>>(result));
+            IEnumerable<GetBranchComboBoxDTO> getBranchComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
+                BranchCacheKeys.GetAllComboBoxAsync,
+                async () =>
+                {
+                    var result = await _branchRepository.GetAllComboBoxAsync();
+                    return _mapper.Map<IEnumerable<GetBranchComboBoxDTO>>(result);
+                },
+                60
+                );
+            return new SuccessDataResult<IEnumerable<GetBranchComboBoxDTO>>(getBranchComboBoxDTOs);
         }
         #endregion
         #region Search
         public async Task<IDataResult<GetBranchDTO>> GetByIdAsync(Guid id)
         {
-            var result = await _branchBusinessRules.CheckByBranchId(id);
-            if (!result.Success)
-                return new ErrorDataResult<GetBranchDTO>(result.Status, result.Detail);
+            GetBranchDTO getBranchDTO = await _cacheHelper.GetOrAddAsync(
+                $"{BranchCacheKeys.GetByIdAsync}{id}",
+                async () =>
+                {
+                    var result = await _branchBusinessRules.CheckByBranchId(id);
+                    return _mapper.Map<GetBranchDTO>(result.Data);
+                },
+                60
+                );
+            if (getBranchDTO is null)
+                return new ErrorDataResult<GetBranchDTO>(StatusCodes.Status404NotFound, BranchMessages.BranchNotFound);
 
-            return new SuccessDataResult<GetBranchDTO>(
-                _mapper.Map<GetBranchDTO>(result.Data));
+            return new SuccessDataResult<GetBranchDTO>(getBranchDTO);
         }
         #endregion
     }

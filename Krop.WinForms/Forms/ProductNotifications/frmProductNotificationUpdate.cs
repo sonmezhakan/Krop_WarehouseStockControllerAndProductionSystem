@@ -49,7 +49,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
         {
             if(productNotificationId != Guid.Empty)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetById/{productNotificationId}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetById/{productNotificationId}/{appUserId}");
                 if(!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);

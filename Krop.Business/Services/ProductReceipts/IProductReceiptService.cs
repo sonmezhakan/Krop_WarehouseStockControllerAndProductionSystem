@@ -5,7 +5,7 @@ namespace Krop.Business.Services.ProductReceipts
 {
     public interface IProductReceiptService
     {
-        Task<IDataResult<IEnumerable<GetProductReceiptListDTO>>> GetAllAsync(Guid produceProductId);
+        Task<IDataResult<IEnumerable<GetProductReceiptListDTO>>> GetByProduceIdAsync(Guid produceProductId);
         /*Task<IDataResult<IEnumerable<GetProductReceiptDTO>>> GetByProduceProductId(Guid produceProductId,Guid branchId);*/
         Task<IResult> AddAsync(CreateProductReceiptDTO createProductReceiptDTO);
         Task<IResult> UpdateAsync(UpdateProductReceiptDTO updateProductReceiptDTO);

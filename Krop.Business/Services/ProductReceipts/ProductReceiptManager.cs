@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Krop.Business.Features.ProductReceipts.Constants;
 using Krop.Business.Features.ProductReceipts.Rules;
-using Krop.Business.Features.ProductReceipts.Validation;
+using Krop.Business.Features.Products.Validations;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
@@ -17,17 +20,18 @@ namespace Krop.Business.Services.ProductReceipts
         private readonly IMapper _mapper;
         private readonly ProductReceiptBusinessRules _productReceiptBusinessRule;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheHelper _cacheHelper;
 
-        public ProductReceiptManager(IProductReceiptRepository productReceiptRepository, IMapper mapper, ProductReceiptBusinessRules productReceiptBusinessRule,IUnitOfWork unitOfWork)
+        public ProductReceiptManager(IProductReceiptRepository productReceiptRepository, IMapper mapper, ProductReceiptBusinessRules productReceiptBusinessRule,IUnitOfWork unitOfWork,ICacheHelper cacheHelper)
         {
             _productReceiptRepository = productReceiptRepository;
             _mapper = mapper;
             _productReceiptBusinessRule = productReceiptBusinessRule;
            _unitOfWork = unitOfWork;
+            _cacheHelper = cacheHelper;
         }
         #region Add
-        
-
+        [ValidationAspect(typeof(CreateProductValidator))]
         public async Task<IResult> AddAsync(CreateProductReceiptDTO createProductReceiptDTO)
         {
             var result = BusinessRules.Run(await _productReceiptBusinessRule.ProductReceiptCannotBeDuplicatedWhenInserted(createProductReceiptDTO.ProduceProductId, createProductReceiptDTO.ProductId));//Business Rule
@@ -38,11 +42,15 @@ namespace Krop.Business.Services.ProductReceipts
                _mapper.Map<ProductReceipt>(createProductReceiptDTO));
 
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{createProductReceiptDTO.ProduceProductId}"
+            });
             return new SuccessResult();
         }
         #endregion
         #region Update
-        
+        [ValidationAspect(typeof(UpdateProductReceiptDTO))]
         public async Task<IResult> UpdateAsync(UpdateProductReceiptDTO updateProductReceiptDTO)
         {
             var getProductReceipt = await _productReceiptBusinessRule.CheckProductReceipt(updateProductReceiptDTO.ProduceProductId, updateProductReceiptDTO.ProductId);
@@ -58,6 +66,11 @@ namespace Krop.Business.Services.ProductReceipts
             await _productReceiptRepository.UpdateAsync(productReceipt);
 
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{getProductReceipt.Data.ProduceProductId}",
+                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{updateProductReceiptDTO.ProduceProductId}"
+            });
             return new SuccessResult();
         }
         #endregion
@@ -71,33 +84,32 @@ namespace Krop.Business.Services.ProductReceipts
             await _productReceiptRepository.HardDeleteAsync(result.Data);
 
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{produceProductId}"
+            });
             return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IDataResult<IEnumerable<GetProductReceiptListDTO>>> GetAllAsync(Guid produceProductId)
+        public async Task<IDataResult<IEnumerable<GetProductReceiptListDTO>>> GetByProduceIdAsync(Guid produceProductId)
         {
-            var result = await _productReceiptRepository.GetAllAsync(predicate: x => x.ProduceProductId == produceProductId,
-                includeProperties: new Expression<Func<ProductReceipt, object>>[]
+            IEnumerable<GetProductReceiptListDTO> getProductReceiptListDTOs = await _cacheHelper.GetOrAddListAsync(
+                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{produceProductId}",
+                async () =>
                 {
-                    p=>p.Product
-                });
+                    var result = await _productReceiptRepository.GetAllAsync(predicate: x => x.ProduceProductId == produceProductId,
+                    includeProperties: new Expression<Func<ProductReceipt, object>>[]
+                    {
+                       p=>p.Product
+                    });
+                    return _mapper.Map<IEnumerable<GetProductReceiptListDTO>>(result);
+                },
+                60
+                );
 
-            return new SuccessDataResult<IEnumerable<GetProductReceiptListDTO>>(_mapper.Map<IEnumerable<GetProductReceiptListDTO>>(result));
+            return new SuccessDataResult<IEnumerable<GetProductReceiptListDTO>>(getProductReceiptListDTOs);
         }
         #endregion
-
-        /*public async Task<IDataResult<IEnumerable<GetProductReceiptDTO>>> GetByProduceProductId(Guid produceProductId,Guid branchId)
-        {
-            var result = await _productReceiptRepository.GetAllAsync(x => x.ProduceProductId == produceProductId,
-                includeProperties: new Expression<Func<ProductReceipt, object>>[]
-                {
-                    x=>x.Product,
-                    x=>x.Product.Stocks.Where(x=>x.BranchId == branchId)
-                });
-
-            return new SuccessDataResult<IEnumerable<GetProductReceiptDTO>>(
-                _mapper.Map<IEnumerable<GetProductReceiptDTO>>(result));
-        }*/
     }
 }

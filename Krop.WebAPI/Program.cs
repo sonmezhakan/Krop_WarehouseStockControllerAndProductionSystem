@@ -5,9 +5,10 @@ using Krop.Business.DependencyResolvers.Autofac;
 using Krop.Business.Exceptions.Extensions;
 using Krop.Business.Exceptions.Middlewares;
 using Krop.Business.Exceptions.Middlewares.Transaction;
-using Krop.Common.Helpers.Caching;
-using Krop.Common.Helpers.Caching.Redis;
+using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Helpers.JwtService;
+using Krop.Common.Utilits.Caching;
+using Krop.Common.Utilits.Caching.Redis;
 using Krop.DataAccess.UnitOfWork;
 using Krop.IOC.DependencyResolvers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -69,7 +70,7 @@ namespace Krop.WebAPI
             });
             builder.Services.AddStackExchangeRedisCache(options => options.Configuration = "localhost:1453");
             builder.Services.AddSingleton<ICacheService, DistributedCacheManager>();
-
+            builder.Services.AddSingleton<ICacheHelper,CacheHelper>();
 
             var app = builder.Build();
 

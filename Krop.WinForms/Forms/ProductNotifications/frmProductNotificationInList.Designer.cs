@@ -77,12 +77,12 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 48);
+            contextMenuStrip1.Size = new Size(106, 26);
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(180, 22);
+            toolStripMenuItem1.Size = new Size(105, 22);
             toolStripMenuItem1.Text = "Yenile";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
