@@ -1,16 +1,16 @@
 ﻿namespace Krop.DTO.Dtos.StockTransfers
 {
-    public record class GetStockTransferListDTO
+    public record  GetStockTransferListDTO
     {
-        public Guid Id { get; set; }
-        public string SenderBranchName { get; set; }
-        public string SentBranchName { get; set; }
-        public string ProductName { get; set; }
-        public string ProductCode { get; set; }
-        public string InvoiceNumber { get; set; }
-        public int Quantity { get; set; }
-        public string Description { get; set; }
-        public DateTime TransferDate { get; set; }
-        public string SenderAppUserName { get; set; }
+        public Guid Id{ get; init; }
+        public string SenderBranchName{ get; init; }
+        public string SentBranchName{ get; init; }
+        public string ProductName{ get; init; }
+        public string ProductCode{ get; init; }
+        public string InvoiceNumber{ get; init; }
+        public int Quantity{ get; init; }
+        public string Description{ get; init; }
+        public DateTime TransferDate{ get; init; }
+        public string SenderAppUserName{ get; init; }
     }
 }

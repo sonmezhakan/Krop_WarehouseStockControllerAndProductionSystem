@@ -72,46 +72,55 @@ namespace Krop.Business.Services.AppUsers
         //Şifre güncelleme işlemi burada yapılmıyor!
         public async Task<IResult> UpdateAsync(UpdateAppUserDTO updateAppUserDTO)
         {
-            var result = await _appUserBusinessRules.CheckByIdAsync(updateAppUserDTO.Id);
-            if (!result.Success)
-                return result;
-
-            AppUser appUser = result.Data;
-
+            var appUser = await _userManager.FindByIdAsync(updateAppUserDTO.Id.ToString());
+            if (appUser is null)
+                return new ErrorResult(StatusCodes.Status404NotFound,AppUserMessages.AppUserNotFound);
+ 
             var resultBusinessRules = BusinessRules.Run(
                 await _appUserBusinessRules.AppUserEmailCannotBeDuplicatedWhenUpdated(appUser.Email, updateAppUserDTO.Email),
                 await _appUserBusinessRules.AppUserPhoneNumberCannotBeDuplicatedWhenUpdated(appUser.PhoneNumber, updateAppUserDTO.PhoneNumber),
                 await _appUserBusinessRules.AppUserNationalNumberCannotBeDuplicatedWhenUpdated(appUser.Person.NationalNumber, updateAppUserDTO.NationalNumber));//BusinessRule
             if (!resultBusinessRules.Success)
-                return result;
+                return resultBusinessRules;
 
             appUser = _mapper.Map(updateAppUserDTO,appUser);
             await _userManager.UpdateAsync(appUser);//Kullanıcı bilgileri güncelleniyor
 
             var currentRoles = await _userManager.GetRolesAsync(appUser);//Kullanıcıya ait yetkiler getiriliyor.
             if (currentRoles.Count() > 0)
-            {
                 await _userManager.RemoveFromRolesAsync(appUser, currentRoles);//Kullanıcıya ait yetkiler siliniyor
-            }
             if (updateAppUserDTO.Roles != null)
-            {
                 await _userManager.AddToRolesAsync(appUser, updateAppUserDTO.Roles);//Yetkileri Ekliyor
-            }
+
 
             await _cacheHelper.RemoveAsync(new string[] { AppUserCacheKeys.AppUserGetAllComboBoxAsync });
             return new SuccessResult();
         }
 
         //Sadece şifre güncelleme işlemi yapılıyor.
-        
+        [ValidationAspect(typeof(UpdatePasswordAppUserValidator))]
         public async Task<IResult> UpdatePasswordAsync(UpdateAppUserPasswordDTO updateAppUserPasswordDTO)
         {
-            var result = await _appUserBusinessRules.CheckByIdAsync(updateAppUserPasswordDTO.Id);
-            if (!result.Success)
-                return result;
+            var result = await _userManager.FindByIdAsync(updateAppUserPasswordDTO.Id.ToString());
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
-            await _userManager.RemovePasswordAsync(result.Data);//Şifre ilk önce siliniyor.
-            await _userManager.AddPasswordAsync(result.Data, updateAppUserPasswordDTO.Password);//Yeni şifre oluşturuluyor.
+            await _userManager.RemovePasswordAsync(result);//Şifre ilk önce siliniyor.
+            await _userManager.AddPasswordAsync(result, updateAppUserPasswordDTO.Password);//Yeni şifre oluşturuluyor.
+
+            return new SuccessResult();
+        }
+        [ValidationAspect(typeof(UpdateAppUserRoleValidatior))]
+        public async Task<IResult> UpdateAppUserRoleAsync(UpdateAppUserUpdateRoleDTO updateAppUserUpdateRoleDTO)
+        {
+            var appUser = await _userManager.FindByIdAsync(updateAppUserUpdateRoleDTO.AppUserId.ToString());
+            if (appUser is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
+            var currentRoles = await _userManager.GetRolesAsync(appUser);
+            if (currentRoles.Count() > 0)
+                await _userManager.RemoveFromRolesAsync(appUser, currentRoles);
+            if (updateAppUserUpdateRoleDTO.Roles.Count() > 0)
+                await _userManager.AddToRolesAsync(appUser, updateAppUserUpdateRoleDTO.Roles);
 
             return new SuccessResult();
         }
@@ -145,42 +154,41 @@ namespace Krop.Business.Services.AppUsers
         #region Search
         public async Task<IDataResult<GetAppUserDTO>> GetByIdAsync(Guid id)
         {
-            var result = await _appUserBusinessRules.CheckByIdAsync(id);
-            if (!result.Success)
-                return new ErrorDataResult<GetAppUserDTO>(result.Status, result.Detail);
+            var result = await _userManager.FindByIdAsync(id.ToString());
+            if (result is null)
+                return new ErrorDataResult<GetAppUserDTO>(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
             return new SuccessDataResult<GetAppUserDTO>(
-                _mapper.Map<GetAppUserDTO>(result.Data));
+                _mapper.Map<GetAppUserDTO>(result));
         }
 
         public async Task<IDataResult<GetAppUserDTO>> GetByUserNameAsync(string userName)
         {
-            var result = await _appUserBusinessRules.CheckByUserNameAsync(userName);
-            if (!result.Success)
-                return new ErrorDataResult<GetAppUserDTO>(result.Status,result.Detail);
+            var result = await _userManager.FindByNameAsync(userName);
+            if (result is null)
+                return new ErrorDataResult<GetAppUserDTO>(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
             return new SuccessDataResult<GetAppUserDTO>(
-                _mapper.Map<GetAppUserDTO>(result.Data));
+                _mapper.Map<GetAppUserDTO>(result));
         }
 
         public async Task<IResult> AnyByIdAsync(Guid id)
         {
             var result = await _userManager.Users.AnyAsync(x => x.Id == id);
-            if (!result)
-                new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
-
-            return new SuccessResult();
+            return result ?
+                new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound):
+                new SuccessResult();
         }
         #endregion
         #region Activation
         public async Task<IResult> ConfirmationAsync(Guid Id, string token)
         {
-            var result = await _appUserBusinessRules.CheckByIdAsync(Id);
-            if (!result.Success)
-                return result;
+            var result = await _userManager.FindByIdAsync(Id.ToString());
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
             var decodeToken = HttpUtility.UrlDecode(token);
-            var resultActivation = await _userManager.ConfirmEmailAsync(result.Data, decodeToken);
+            var resultActivation = await _userManager.ConfirmEmailAsync(result, decodeToken);
 
             if (!resultActivation.Succeeded)
                 return new ErrorResult(StatusCodes.Status400BadRequest, "Aktivasyon Başarısız!");
@@ -189,13 +197,15 @@ namespace Krop.Business.Services.AppUsers
         }
         public async Task<IResult> ConfirmationMailSenderAsync(Guid Id)
         {
-            var result = await _appUserBusinessRules.CheckByIdAsync(Id);
-            if (!result.Success)
-                return result;
+            var result = await _userManager.FindByIdAsync(Id.ToString());
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
-            await _appUserBusinessRules.CheckEmailConfirmed(result.Data);
+            var businessRule = BusinessRules.Run(await _appUserBusinessRules.CheckEmailConfirmed(result.Email));
+            if (businessRule.Success)
+                return new ErrorResult(StatusCodes.Status400BadRequest, AppUserMessages.EmailConfirmed);
 
-            await ActivationMailSenderAsync(result.Data);
+            await ActivationMailSenderAsync(result);
 
             return new SuccessResult();
         }
@@ -203,12 +213,12 @@ namespace Krop.Business.Services.AppUsers
         #region ResetPasswordMailSender
         public async Task<IResult> ResetPasswordMailSenderAsync(Guid Id)
         {
-            var result = await _appUserBusinessRules.CheckByIdAsync(Id);
-            if (!result.Success)
-                return result;
+            var result = await _userManager.FindByIdAsync(Id.ToString());
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
-            string token = await _userManager.GeneratePasswordResetTokenAsync(result.Data);
-            ResetPasswordMailSenderAsync(token, result.Data);
+            string token = await _userManager.GeneratePasswordResetTokenAsync(result);
+           await ResetPasswordMailSenderAsync(token, result);
             
             return new SuccessResult();
         }

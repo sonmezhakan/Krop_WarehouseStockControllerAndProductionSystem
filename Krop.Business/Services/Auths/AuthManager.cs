@@ -1,6 +1,8 @@
 ﻿using Krop.Business.Features.AppUsers.Constants;
 using Krop.Business.Features.AppUsers.Rules;
+using Krop.Business.Features.Auths.Validations;
 using Krop.Business.Features.Employees.Rules;
+using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.EmailService;
 using Krop.Common.Helpers.JwtService;
 using Krop.Common.Models;
@@ -29,24 +31,26 @@ namespace Krop.Business.Services.Auths
             _jwtService = jwtService;
             _emailService = emailService;
         }
+
+        [ValidationAspect(typeof(LoginValidator))]
         public async Task<IDataResult<AppUser>> LoginAsync(LoginDTO loginDTO)
         {
-            var appUser = await _appUserBusinessRules.CheckByUserNameAsync(loginDTO.UserName);
-            if (!appUser.Success)
-                return appUser;
+            var appUser = await _userManager.FindByNameAsync(loginDTO.UserName);
+            if (appUser is null)
+                return new ErrorDataResult<AppUser>(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
             var businessRulesResult = BusinessRules.Run(
-                await _appUserBusinessRules.CheckEmailConfirmed(appUser.Data),
-                await _employeeBusinessRules.CheckAppUserIfEmployee(appUser.Data.Id)
+                await _appUserBusinessRules.CheckEmailConfirmed(appUser.Email),
+                await _employeeBusinessRules.CheckEmployeeWorkingAsync(appUser.Id)
                 );
             if (!businessRulesResult.Success)
                 return new ErrorDataResult<AppUser>(businessRulesResult.Status, businessRulesResult.Detail);
 
-            var result = await _userManager.CheckPasswordAsync(appUser.Data, loginDTO.Password);
+            var result = await _userManager.CheckPasswordAsync(appUser, loginDTO.Password);
             if (!result)
                 return new ErrorDataResult<AppUser>(StatusCodes.Status400BadRequest, AppUserMessages.AppUserLoginError);
 
-            return new SuccessDataResult<AppUser>(appUser.Data);
+            return new SuccessDataResult<AppUser>(appUser);
         }
         public async Task<IDataResult<LoginResponseDTO>> CreateAccessToken(AppUser user)
         {
@@ -61,14 +65,14 @@ namespace Krop.Business.Services.Auths
 
         public async Task<IResult> ResetPasswordWinFormEmailSenderAsync(string email)
         {
-            var result = await _userManager.FindByEmailAsync(email);
-            if (result == null)
-                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
-
-            var businessRule = BusinessRules.Run(await _appUserBusinessRules.CheckEmailConfirmed(result));
+            
+            var businessRule = BusinessRules.Run(
+                await _appUserBusinessRules.CheckByEmailAsync(email),
+                await _appUserBusinessRules.CheckEmailConfirmed(email));
             if (!businessRule.Success)
                 return businessRule;
 
+            var result = await _userManager.FindByEmailAsync(email);
             string token = await _userManager.GeneratePasswordResetTokenAsync(result);
            await ResetPasswordTokenMailSender(result, token);
 
@@ -77,9 +81,13 @@ namespace Krop.Business.Services.Auths
 
         public async Task<IResult> ResetPasswordAsync(ResetPasswordDTO resetPasswordDTO)
         {
+            var businessRule = BusinessRules.Run(
+               await _appUserBusinessRules.CheckByEmailAsync(resetPasswordDTO.Email),
+               await _appUserBusinessRules.CheckEmailConfirmed(resetPasswordDTO.Email));
+            if (!businessRule.Success)
+                return businessRule;
+
             var appUser = await _userManager.FindByEmailAsync(resetPasswordDTO.Email);
-            if (appUser == null)
-                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
             var result =  await _userManager.ResetPasswordAsync(appUser, resetPasswordDTO.Token, resetPasswordDTO.Password);
             if (!result.Succeeded)

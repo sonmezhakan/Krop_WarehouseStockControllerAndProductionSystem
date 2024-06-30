@@ -1,9 +1,9 @@
 ﻿namespace Krop.DTO.Dtos.Products
 {
-    public record class GetProductComboBoxDTO
+    public record  GetProductComboBoxDTO
     {
-        public Guid Id { get; set; }
-        public string ProductName { get; set; }
-        public string ProductCode { get; set; }
+        public Guid Id{ get; init; }
+        public string ProductName{ get; init; }
+        public string ProductCode{ get; init; }
     }
 }

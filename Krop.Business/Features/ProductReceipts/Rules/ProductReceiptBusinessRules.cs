@@ -43,14 +43,5 @@ namespace Krop.Business.Features.ProductReceipts.Rules
             }
             return new SuccessResult();
         }
-        public async Task<IDataResult<ProductReceipt>> CheckProductReceipt(Guid produceProductId, Guid productId)
-        {
-            var result = await _productReceiptRepository.GetAsync(x => x.ProduceProductId == produceProductId && x.ProductId == productId);
-
-            if (result == null)
-                return new ErrorDataResult<ProductReceipt>(StatusCodes.Status404NotFound, ProductReceiptMessages.ProductreceiptNotFound);
-
-            return new SuccessDataResult<ProductReceipt>(result);
-        }
     }
 }

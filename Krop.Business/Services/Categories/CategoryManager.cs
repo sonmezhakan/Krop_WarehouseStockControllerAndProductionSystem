@@ -5,15 +5,12 @@ using Krop.Business.Features.Categories.Validations;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Utilits.Business;
-using Krop.Common.Utilits.Caching;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.Categroies;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace Krop.Business.Services.Categories
 {
@@ -64,9 +61,9 @@ namespace Krop.Business.Services.Categories
             await _categoryRepository.AddRangeAsync(categories);
             await _unitOfWork.SaveChangesAsync();
 
-            await _cacheHelper.RemoveAsync(new string[] 
-            { 
-                CategoryCacheKeys.GetAllAsync , 
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                CategoryCacheKeys.GetAllAsync ,
                 CategoryCacheKeys.GetAllComboBoxAsync});//CacheClear
             return new SuccessResult();
         }
@@ -75,13 +72,15 @@ namespace Krop.Business.Services.Categories
         [ValidationAspect(typeof(UpdateCategoryValidator))]
         public async Task<IResult> UpdateAsync(UpdateCategoryDTO updateCategoryDTO)
         {
-            var result = await _categoryBusinessRules.CheckByCategoryId(updateCategoryDTO.Id);//Category Rule
-            if (!result.Success)
-                return result;
+            var result = await _categoryRepository.GetAsync(x => x.Id == updateCategoryDTO.Id);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, CategoryMessages.CategoryNotFound);
 
-            await _categoryBusinessRules.CategoryNameCannotBeDuplicatedWhenUpdated(result.Data.CategoryName, updateCategoryDTO.CategoryName);//CategoryName Rule
+            var businessRule = BusinessRules.Run(await _categoryBusinessRules.CategoryNameCannotBeDuplicatedWhenUpdated(result.CategoryName, updateCategoryDTO.CategoryName));
+            if(!businessRule.Success)
+                return businessRule;
 
-            Category category = _mapper.Map(updateCategoryDTO, result.Data);
+            Category category = _mapper.Map(updateCategoryDTO, result);
             await _categoryRepository.UpdateAsync(category);
 
             await _unitOfWork.SaveChangesAsync();
@@ -90,7 +89,7 @@ namespace Krop.Business.Services.Categories
             {
                 CategoryCacheKeys.GetAllAsync,
                 CategoryCacheKeys.GetAllComboBoxAsync,
-                $"{CategoryCacheKeys.GetByIdAsync}={updateCategoryDTO.Id}" });//CacheClear
+                $"{CategoryCacheKeys.GetByIdAsync}{updateCategoryDTO.Id}" });//CacheClear
             return new SuccessResult();
         }
 
@@ -98,18 +97,18 @@ namespace Krop.Business.Services.Categories
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id)
         {
-            var result = await _categoryBusinessRules.CheckByCategoryId(id);//Category Rule
-            if (!result.Success)
-                return result;
+            var result = await _categoryRepository.GetAsync(x=>x.Id == id);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, CategoryMessages.CategoryNotFound);
 
-            await _categoryRepository.DeleteAsync(result.Data);
+            await _categoryRepository.DeleteAsync(result);
             await _unitOfWork.SaveChangesAsync();
 
-            await _cacheHelper.RemoveAsync(new string[] 
-            { 
+            await _cacheHelper.RemoveAsync(new string[]
+            {
                 CategoryCacheKeys.GetAllAsync,
                 CategoryCacheKeys.GetAllComboBoxAsync,
-                $"{CategoryCacheKeys.GetByIdAsync}={id}" });//CacheClear
+                $"{CategoryCacheKeys.GetByIdAsync}{id}" });//CacheClear
             return new SuccessResult();
         }
 
@@ -117,11 +116,11 @@ namespace Krop.Business.Services.Categories
         #region Listed
         public async Task<IDataResult<IEnumerable<GetCategoryDTO>>> GetAllAsync()
         {
-            IEnumerable<GetCategoryDTO> categories = await _cacheHelper.GetOrAddListAsync(CategoryCacheKeys.GetAllAsync,
+            IEnumerable<GetCategoryDTO>? categories = await _cacheHelper.GetOrAddListAsync(CategoryCacheKeys.GetAllAsync,
                 async () =>
                 {
                     var result = await _categoryRepository.GetAllAsync();
-                    return _mapper.Map<IEnumerable<GetCategoryDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetCategoryDTO>>(result);
                 },
                 60
                 );
@@ -130,11 +129,11 @@ namespace Krop.Business.Services.Categories
         }
         public async Task<IDataResult<IEnumerable<GetCategoryComboBoxDTO>>> GetAllComboBoxAsync()
         {
-            IEnumerable<GetCategoryComboBoxDTO> categories = await _cacheHelper.GetOrAddListAsync(CategoryCacheKeys.GetAllComboBoxAsync,
+            IEnumerable<GetCategoryComboBoxDTO>? categories = await _cacheHelper.GetOrAddListAsync(CategoryCacheKeys.GetAllComboBoxAsync,
                 async () =>
                 {
                     var result = await _categoryRepository.GetAllComboBoxAsync();
-                    return _mapper.Map<IEnumerable<GetCategoryComboBoxDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetCategoryComboBoxDTO>>(result);
                 },
                 60);
 
@@ -144,19 +143,18 @@ namespace Krop.Business.Services.Categories
         #region Search
         public async Task<IDataResult<GetCategoryDTO>> GetByIdAsync(Guid id)
         {
-            GetCategoryDTO getCategoryDTO = await _cacheHelper.GetOrAddAsync(
-                $"{CategoryCacheKeys.GetByIdAsync}={id}",
+            GetCategoryDTO? getCategoryDTO = await _cacheHelper.GetOrAddAsync(
+                $"{CategoryCacheKeys.GetByIdAsync}{id}",
                 async () =>
             {
-                var result = await _categoryBusinessRules.CheckByCategoryId(id);
-                return _mapper.Map<GetCategoryDTO>(result.Data);
+                var result = await _categoryRepository.GetAsync(x => x.Id == id);
+                return result is null ? null : _mapper.Map<GetCategoryDTO>(result);
             },
             60);
 
-            if (getCategoryDTO is null)
-                return new ErrorDataResult<GetCategoryDTO>(StatusCodes.Status404NotFound, CategoryMessages.CategoryNotFound);
-
-            return new SuccessDataResult<GetCategoryDTO>(getCategoryDTO);
+            return getCategoryDTO is null ?
+                 new ErrorDataResult<GetCategoryDTO>(StatusCodes.Status404NotFound, CategoryMessages.CategoryNotFound) :
+                 new SuccessDataResult<GetCategoryDTO>(getCategoryDTO);
         }
 
         #endregion

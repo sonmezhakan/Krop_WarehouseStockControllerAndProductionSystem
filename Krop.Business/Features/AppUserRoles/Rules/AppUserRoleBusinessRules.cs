@@ -15,22 +15,6 @@ namespace Krop.Business.Features.AppUserRoles.Rules
         {
             _roleManager = roleManager;
         }
-        public async Task<IDataResult<AppUserRole>> CheckByIdAsync(Guid id)
-        {
-            var result = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
-            if (result == null)
-                return new ErrorDataResult<AppUserRole>(StatusCodes.Status404NotFound, AppUserRoleMessages.AppUserRoleNotFound);
-
-            return new SuccessDataResult<AppUserRole>(result);
-        }
-        public async Task<IDataResult<AppUserRole>> CheckByNameAsync(string name)
-        {
-            var result = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Name == name);
-            if (result == null)
-                return new ErrorDataResult<AppUserRole>(StatusCodes.Status404NotFound, AppUserRoleMessages.AppUserRoleNotFound);
-
-            return new SuccessDataResult<AppUserRole>(result);
-        }
         public async Task<IResult> AppUserRoleNameCannotBeDuplicatedWhenInserted(string roleName)
         {
             var result = await _roleManager.Roles.AnyAsync(x=>x.Name.Contains(roleName));

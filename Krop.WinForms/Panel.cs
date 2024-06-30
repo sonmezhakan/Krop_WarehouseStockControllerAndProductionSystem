@@ -25,12 +25,14 @@ namespace Krop.WinForms
     {
         public readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
-        public Guid AppUserId;
-        public string token;
+        public static Guid _appUserId;
+        public string _token;
 
-        public Panel(IWebApiService webApiService, IServiceProvider serviceProvider)
+        public Panel(IWebApiService webApiService, IServiceProvider serviceProvider,Guid appUserId,string token)
         {
             InitializeComponent();
+            _appUserId = appUserId;
+            _token = token;
             _webApiService = webApiService;
             _serviceProvider = serviceProvider;
         }
@@ -78,7 +80,7 @@ namespace Krop.WinForms
 
         private void Panel_Load(object sender, EventArgs e)
         {
-            _webApiService.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _webApiService.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
         }
 
         private void bttnBrandAdd_Click(object sender, EventArgs e)
@@ -335,35 +337,30 @@ namespace Krop.WinForms
         private void stockBttnInput_Click(object sender, EventArgs e)
         {
             frmStockInput frmStockInput = _serviceProvider.GetRequiredService<frmStockInput>();
-            frmStockInput.AppUserId = AppUserId;
             FormController.FormOpenController(frmStockInput);
         }
 
         private void stockBttnTransfer_Click(object sender, EventArgs e)
         {
             frmStockTransfer frmStockTransfer = _serviceProvider.GetRequiredService<frmStockTransfer>();
-            frmStockTransfer.AppUserId = AppUserId;
             FormController.FormOpenController(frmStockTransfer);
         }
 
         private void productionBttnProduce_Click(object sender, EventArgs e)
         {
             frmProduction frmProduction = _serviceProvider.GetRequiredService<frmProduction>();
-            frmProduction.appUserId = AppUserId;
             FormController.FormOpenController(frmProduction);
         }
 
         private void settingBttnAppUser_Click(object sender, EventArgs e)
         {
             frmAppUserSetting frmAppUserSetting = _serviceProvider.GetRequiredService<frmAppUserSetting>();
-            frmAppUserSetting.appUserId = AppUserId;
             FormController.FormOpenController(frmAppUserSetting);
         }
 
         private void stockBttnList_Click(object sender, EventArgs e)
         {
             frmStockList frmStockList = _serviceProvider.GetRequiredService<frmStockList>();
-            frmStockList.appUserId = AppUserId;
             FormController.FormOpenController(frmStockList);
         }
 
@@ -375,22 +372,24 @@ namespace Krop.WinForms
         private void productNotificationBttnIn_Click(object sender, EventArgs e)
         {
             frmProductNotificationInList frmProductNotificationInList = _serviceProvider.GetRequiredService<frmProductNotificationInList>();
-            frmProductNotificationInList.appUserId = AppUserId;
             FormController.FormOpenController(frmProductNotificationInList);
         }
 
         private void productNotificationBttnSent_Click(object sender, EventArgs e)
         {
             frmProductNotficationSentList frmProductNotficationSentList = _serviceProvider.GetRequiredService<frmProductNotficationSentList>();
-            frmProductNotficationSentList.appUserId = AppUserId;
             FormController.FormOpenController(frmProductNotficationSentList);
         }
 
         private void productNotificationBttnAdd_Click(object sender, EventArgs e)
         {
             frmProductNotificationAdd frmProductNotificationAdd = _serviceProvider.GetRequiredService<frmProductNotificationAdd>();
-            frmProductNotificationAdd.appUserId = AppUserId;
             FormController.FormOpenController(frmProductNotificationAdd);
+        }
+        private void userBttnUpdateRole_Click(object sender, EventArgs e)
+        {
+            frmUserUpdateRole frmUserUpdateRole = _serviceProvider.GetRequiredService<frmUserUpdateRole>();
+            FormController.FormOpenController(frmUserUpdateRole);
         }
     }
 }

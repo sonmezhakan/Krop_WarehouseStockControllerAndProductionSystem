@@ -1,8 +1,8 @@
 ﻿namespace Krop.DTO.Dtos.Employees
 {
-    public record class GetEmployeeComboBoxDTO
+    public record  GetEmployeeComboBoxDTO
     {
-        public Guid AppUserId { get; set; }
-        public string UserName { get; set; }
+        public Guid AppUserId{ get; init; }
+        public string UserName{ get; init; }
     }
 }

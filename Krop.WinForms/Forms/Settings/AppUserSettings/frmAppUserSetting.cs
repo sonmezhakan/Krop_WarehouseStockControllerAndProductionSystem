@@ -9,7 +9,6 @@ namespace Krop.WinForms.Forms.Settings.AppUserSettings
     public partial class frmAppUserSetting : Form
     {
         private readonly IWebApiService _webApiService;
-        public Guid appUserId;
 
         public frmAppUserSetting(IWebApiService webApiService)
         {
@@ -19,8 +18,8 @@ namespace Krop.WinForms.Forms.Settings.AppUserSettings
 
         private async void frmAppUserSetting_Load(object sender, EventArgs e)
         {
-            if (appUserId != Guid.Empty)
-                await GetByAppUserId(appUserId);
+            if (Panel._appUserId != Guid.Empty)
+                await GetByAppUserId(Panel._appUserId);
             else
                 Application.Exit();
         }
@@ -55,7 +54,7 @@ namespace Krop.WinForms.Forms.Settings.AppUserSettings
                 {
                     UpdateAppUserPasswordDTO updateAppUserPasswordDTO = new UpdateAppUserPasswordDTO
                     {
-                        Id = appUserId,
+                        Id = Panel._appUserId,
                         Password = txtPassword.Text
                     };
 
@@ -65,7 +64,7 @@ namespace Krop.WinForms.Forms.Settings.AppUserSettings
                 {
                     UpdateAppUserDTO updateAppUserDTO = new UpdateAppUserDTO
                     {
-                        Id = appUserId,
+                        Id = Panel._appUserId,
                         FirstName = txtFirstName.Text,
                         LastName = txtLastName.Text,
                         Email = txtEmail.Text,

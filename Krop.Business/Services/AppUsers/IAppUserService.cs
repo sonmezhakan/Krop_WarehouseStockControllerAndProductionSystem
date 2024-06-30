@@ -18,5 +18,7 @@ namespace Krop.Business.Services.AppUsers
         Task<IResult> ResetPasswordMailSenderAsync(Guid Id);
 
         Task<IDataResult<IEnumerable<GetAppUserComboBoxDTO>>> GetAllComboBoxAsync();
+
+        Task<IResult> UpdateAppUserRoleAsync(UpdateAppUserUpdateRoleDTO updateAppUserUpdateRoleDTO);
     }
 }

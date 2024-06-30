@@ -4,6 +4,7 @@ using Krop.Business.Features.AppUsers.Rules;
 using Krop.Business.Features.Branches.Constants;
 using Krop.Business.Features.Branches.Rules;
 using Krop.Business.Features.Branches.Validations;
+using Krop.Business.Features.Departments.Constants;
 using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Services.Stocks;
 using Krop.Common.Aspects.Autofac.Validation;
@@ -17,6 +18,7 @@ using Krop.DTO.Dtos.Branches;
 using Krop.DTO.Dtos.Brands;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.Business.Services.Branches
 {
@@ -68,12 +70,12 @@ namespace Krop.Business.Services.Branches
         [ValidationAspect(typeof(UpdateBranchDTO))]
         public async Task<IResult> UpdateAsync(UpdateBranchDTO updateBranchDTO)
         {
-            var branch = await _branchBusinessRules.CheckByBranchId(updateBranchDTO.Id);
-            if (!branch.Success)
-                return branch;
+            var branch = await _branchRepository.GetAsync(x=>x.Id == updateBranchDTO.Id);
+            if (branch is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, BranchMessages.BranchNotFound);
 
             await _branchRepository.UpdateAsync(
-                _mapper.Map(updateBranchDTO, branch.Data));
+                _mapper.Map(updateBranchDTO, branch));
 
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
@@ -89,12 +91,12 @@ namespace Krop.Business.Services.Branches
         [TransactionScope]
         public async Task<IResult> DeleteAsync(Guid id)
         {
-            var branch = await _branchBusinessRules.CheckByBranchId(id);
-            if (!branch.Success)
-                return branch;
+            var branch = await _branchRepository.GetAsync(x => x.Id == id);
+            if (branch is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, BranchMessages.BranchNotFound);
 
-            await _stockService.BranchDeletedProductAsync(branch.Data.Id);//Belirtilen şubeye ait stokdan ürünler sil.
-            await _branchRepository.DeleteAsync(branch.Data);//Şubeyi sil
+            await _stockService.BranchDeletedProductAsync(branch.Id);//Belirtilen şubeye ait stokdan ürünler sil.
+            await _branchRepository.DeleteAsync(branch);//Şubeyi sil
 
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
@@ -110,12 +112,12 @@ namespace Krop.Business.Services.Branches
         #region Listed
         public async Task<IDataResult<IEnumerable<GetBranchDTO>>> GetAllAsync()
         {
-            IEnumerable<GetBranchDTO> getBranchDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetBranchDTO>? getBranchDTOs = await _cacheHelper.GetOrAddListAsync(
                 BranchCacheKeys.GetAllAsync,
                 async () =>
                 {
                     var result = await _branchRepository.GetAllAsync();
-                    return _mapper.Map<IEnumerable<GetBranchDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetBranchDTO>>(result);
                 },
                 60
                 );
@@ -124,12 +126,12 @@ namespace Krop.Business.Services.Branches
       
         public async Task<IDataResult<IEnumerable<GetBranchComboBoxDTO>>> GetAllComboBoxAsync()
         {
-            IEnumerable<GetBranchComboBoxDTO> getBranchComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetBranchComboBoxDTO>? getBranchComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
                 BranchCacheKeys.GetAllComboBoxAsync,
                 async () =>
                 {
                     var result = await _branchRepository.GetAllComboBoxAsync();
-                    return _mapper.Map<IEnumerable<GetBranchComboBoxDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetBranchComboBoxDTO>>(result);
                 },
                 60
                 );
@@ -139,19 +141,18 @@ namespace Krop.Business.Services.Branches
         #region Search
         public async Task<IDataResult<GetBranchDTO>> GetByIdAsync(Guid id)
         {
-            GetBranchDTO getBranchDTO = await _cacheHelper.GetOrAddAsync(
+            GetBranchDTO? getBranchDTO = await _cacheHelper.GetOrAddAsync(
                 $"{BranchCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
-                    var result = await _branchBusinessRules.CheckByBranchId(id);
-                    return _mapper.Map<GetBranchDTO>(result.Data);
+                    var branch = await _branchRepository.GetAsync(x => x.Id == id);
+                    return branch is null ? null : _mapper.Map<GetBranchDTO>(branch);
                 },
                 60
                 );
-            if (getBranchDTO is null)
-                return new ErrorDataResult<GetBranchDTO>(StatusCodes.Status404NotFound, BranchMessages.BranchNotFound);
-
-            return new SuccessDataResult<GetBranchDTO>(getBranchDTO);
+                return getBranchDTO is null ?
+                    new ErrorDataResult<GetBranchDTO>(StatusCodes.Status404NotFound, BranchMessages.BranchNotFound):
+                    new SuccessDataResult<GetBranchDTO>(getBranchDTO);
         }
         #endregion
     }

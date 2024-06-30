@@ -1,8 +1,8 @@
 ﻿namespace Krop.DTO.Dtos.Departments
 {
-    public record class GetDepartmentComboBoxDTO
+    public record  GetDepartmentComboBoxDTO
     {
-        public Guid Id { get; set; }
-        public string DepartmentName { get; set; }
+        public Guid Id{ get; init; }
+        public string DepartmentName{ get; init; }
     }
 }

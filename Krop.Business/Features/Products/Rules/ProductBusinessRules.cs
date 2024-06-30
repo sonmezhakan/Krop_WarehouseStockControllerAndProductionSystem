@@ -1,7 +1,6 @@
 ﻿using Krop.Business.Features.Products.Constants;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
-using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace Krop.Business.Features.Products.Rules
@@ -14,23 +13,6 @@ namespace Krop.Business.Features.Products.Rules
         {
             _productRepository = productRepository;
         }
-        public async Task<IDataResult<Product>> CheckByProductId(Guid id)
-        {
-            var result = await _productRepository.GetAsync(p => p.Id == id);
-            if (result is null)
-                return new ErrorDataResult<Product>(StatusCodes.Status404NotFound, ProductMessages.ProductNotFound);
-
-            return new SuccessDataResult<Product>(result);
-        }
-        public async Task<IDataResult<Product>> CheckByProductName(string productName)
-        {
-            var result = await _productRepository.GetAsync(p=>p.ProductCode == productName);
-            if (result is null)
-                return new ErrorDataResult<Product>(StatusCodes.Status404NotFound, ProductMessages.ProductNotFound);
-
-            return new SuccessDataResult<Product>(result);
-        }
-
         public async Task<IResult> ProductNameCannotBeDuplicatedWhenInserted(string productName)
         {
             bool result = await _productRepository.AnyAsync(p => p.ProductName == productName);

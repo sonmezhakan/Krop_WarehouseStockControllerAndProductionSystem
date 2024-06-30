@@ -1,13 +1,13 @@
 ﻿namespace Krop.DTO.Dtos.StockInputs
 {
-    public record class GetStockInputListDTO
+    public record  GetStockInputListDTO
     {
-        private bool _productionStatu;
+        private bool _productionStatu{ get; init; }
 
         public Guid Id { get; init; }
         public string BranchName { get; init; }
         public string ProductName { get; init; }
-        public string ProductCode { get; set; }
+        public string ProductCode{ get; init; }
         public string CompanyName { get; init; }
         public string InvoiceNumber { get; init; }
         public decimal UnitPrice { get; init; }
@@ -15,7 +15,7 @@
         public string Description { get; init; }
         public DateTime InputDate { get; init; }
         public string UserName { get; init; }
-        public Guid ProductionId { get; set; }
+        public Guid ProductionId{ get; init; }
         public bool ProductionStatu
         {
             get
@@ -23,7 +23,7 @@
                 return _productionStatu;
             }
 
-            set
+            init
             {
                 if (ProductionId != Guid.Empty)
                     _productionStatu = true;

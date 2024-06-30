@@ -61,6 +61,10 @@ namespace Krop.Business.Services.ProductNotifications
         [ValidationAspect(typeof(UpdateProductionValidator))]
         public async Task<IResult> UpdateAsync(UpdateProductNotificationDTO updateProductNotificationDTO)
         {
+            var result = await _productNotificationRepository.GetAsync(x => x.Id == updateProductNotificationDTO.Id);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, ProductNotificationMessages.ProductNotificationNotFound);
+
             var businessRule = BusinessRules.Run(
                 await _employeeBusinessRules.CheckEmployeeWorkingAsync(updateProductNotificationDTO.SenderAppUserId),
                 await _employeeBusinessRules.CheckEmployeeWorkingAsync(updateProductNotificationDTO.SentAppUserId),
@@ -69,11 +73,7 @@ namespace Krop.Business.Services.ProductNotifications
             if (!businessRule.Success)
                 return businessRule;
 
-            var result = await _productNotificationBusinessRules.CheckProductNotificationId(updateProductNotificationDTO.Id);
-            if (!result.Success)
-                return result;
-
-            ProductNotification productNotification = _mapper.Map(updateProductNotificationDTO, result.Data);
+            ProductNotification productNotification = _mapper.Map(updateProductNotificationDTO, result);
 
             await _productNotificationRepository.UpdateAsync(productNotification);
 
@@ -90,18 +90,18 @@ namespace Krop.Business.Services.ProductNotifications
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id,Guid appUserId)
         {
-            var result = await _productNotificationBusinessRules.CheckProductNotificationId(id);
-            if (!result.Success)
-                return result;
+            var result = await _productNotificationRepository.GetAsync(x => x.Id == id);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, ProductNotificationMessages.ProductNotificationNotFound);
 
             var businessRule = BusinessRules.Run(
-                await _productNotificationBusinessRules.CheckPersonPerformingActionSamePersonTryingDelete(appUserId, result.Data.SenderAppUserId),
-                 await _employeeBusinessRules.CheckEmployeeBranch(result.Data.BranchId, appUserId),
+                await _productNotificationBusinessRules.CheckPersonPerformingActionSamePersonTryingDelete(appUserId, result.SenderAppUserId),
+                 await _employeeBusinessRules.CheckEmployeeBranch(result.BranchId, appUserId),
                 await _employeeBusinessRules.CheckEmployeeWorkingAsync(appUserId));
             if(!businessRule.Success)
                 return businessRule;
 
-            await _productNotificationRepository.DeleteAsync(result.Data);
+            await _productNotificationRepository.DeleteAsync(result);
 
             await _unitOfWork.SaveChangesAsync();
 
@@ -117,7 +117,7 @@ namespace Krop.Business.Services.ProductNotifications
         #region Listed
         public async Task<IDataResult<IEnumerable<GetProductNotificationListDTO>>> GetInAllAsync(Guid inAppUserId)
         {
-            IEnumerable<GetProductNotificationListDTO> getProductNotificationListDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetProductNotificationListDTO>? getProductNotificationListDTOs = await _cacheHelper.GetOrAddListAsync(
                 $"{ProductNotificationCacheKeys.GetInAllAsync}{inAppUserId}",
                 async () =>
                 {
@@ -131,7 +131,7 @@ namespace Krop.Business.Services.ProductNotifications
                       s=>s.Product.Stocks
                     });
 
-                    return await ProductNotificationToGetProductNotificationListDTO(result);
+                    return result is null ? null : await ProductNotificationToGetProductNotificationListDTO(result);
                 },
                 60
                 );
@@ -141,7 +141,7 @@ namespace Krop.Business.Services.ProductNotifications
 
         public async Task<IDataResult<IEnumerable<GetProductNotificationListDTO>>> GetSentAllAsync(Guid sentAppUserId)
         {
-            IEnumerable<GetProductNotificationListDTO> getProductNotificationListDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetProductNotificationListDTO>? getProductNotificationListDTOs = await _cacheHelper.GetOrAddListAsync(
                 $"{ProductNotificationCacheKeys.GetSentAllAsync}{sentAppUserId}",
                 async () =>
                 {
@@ -155,7 +155,7 @@ namespace Krop.Business.Services.ProductNotifications
                       s=>s.Product.Stocks
                      });
 
-                    return await ProductNotificationToGetProductNotificationListDTO(result);
+                    return result is null ? null : await ProductNotificationToGetProductNotificationListDTO(result);
                 },
                 60
                 );
@@ -166,21 +166,19 @@ namespace Krop.Business.Services.ProductNotifications
         #region Search
         public async Task<IDataResult<GetProductNotificationDTO>> GetByIdAsync(Guid id,Guid appUserId)
         {
-            GetProductNotificationDTO getProductNotificationDTO = await _cacheHelper.GetOrAddAsync(
+            GetProductNotificationDTO? getProductNotificationDTO = await _cacheHelper.GetOrAddAsync(
                 $"{ProductNotificationCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
                     var result = await _productNotificationRepository.GetAsync(x => x.Id == id && (x.SenderAppUserId == appUserId || x.SentAppUserId == appUserId));
 
-                    return _mapper.Map<GetProductNotificationDTO>(result);
+                    return result is null ? null : _mapper.Map<GetProductNotificationDTO>(result);
                 },
                 15
                 );
-            
-            if (getProductNotificationDTO is null)
-                return new ErrorDataResult<GetProductNotificationDTO>(StatusCodes.Status404NotFound,ProductNotificationMessages.ProductNotificationNotFound);
-
-            return new SuccessDataResult<GetProductNotificationDTO>(getProductNotificationDTO);
+                return getProductNotificationDTO is null ?
+                new ErrorDataResult<GetProductNotificationDTO>(StatusCodes.Status404NotFound,ProductNotificationMessages.ProductNotificationNotFound):
+                 new SuccessDataResult<GetProductNotificationDTO>(getProductNotificationDTO);
         }
         #endregion
     }

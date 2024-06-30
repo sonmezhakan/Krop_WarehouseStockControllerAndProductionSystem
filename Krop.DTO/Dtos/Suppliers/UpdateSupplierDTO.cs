@@ -1,16 +1,16 @@
 ﻿namespace Krop.DTO.Dtos.Suppliers
 {
-    public record class UpdateSupplierDTO
+    public record  UpdateSupplierDTO
     {
-        public Guid Id { get; init; }
-        public string CompanyName { get; init; }
-        public string? ContactName { get; init; }
-        public string? ContactTitle { get; init; }
-        public string? PhoneNumber { get; init; }
-        public string? Email { get; init; }
-        public string? Country { get; init; }
-        public string? City { get; init; }
-        public string? Addres { get; init; }
-        public string? WebSite { get; init; }
+        public Guid Id{ get; init; }
+        public string CompanyName{ get; init; }
+        public string? ContactName{ get; init; }
+        public string? ContactTitle{ get; init; }
+        public string? PhoneNumber{ get; init; }
+        public string? Email{ get; init; }
+        public string? Country{ get; init; }
+        public string? City{ get; init; }
+        public string? Addres{ get; init; }
+        public string? WebSite{ get; init; }
     }
 }

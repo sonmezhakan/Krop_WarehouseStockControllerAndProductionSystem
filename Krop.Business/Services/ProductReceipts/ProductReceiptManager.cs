@@ -10,6 +10,7 @@ using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.ProductReceipts;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
 
 namespace Krop.Business.Services.ProductReceipts
@@ -53,22 +54,22 @@ namespace Krop.Business.Services.ProductReceipts
         [ValidationAspect(typeof(UpdateProductReceiptDTO))]
         public async Task<IResult> UpdateAsync(UpdateProductReceiptDTO updateProductReceiptDTO)
         {
-            var getProductReceipt = await _productReceiptBusinessRule.CheckProductReceipt(updateProductReceiptDTO.ProduceProductId, updateProductReceiptDTO.ProductId);
-            if (!getProductReceipt.Success)
-                return getProductReceipt;
+            var getProductReceipt = await _productReceiptRepository.GetAsync(x => x.ProduceProductId == updateProductReceiptDTO.ProductId && x.ProductId == updateProductReceiptDTO.ProductId);
+            if (getProductReceipt is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, ProductReceiptMessages.ProductreceiptNotFound);
 
-            var result = BusinessRules.Run(await _productReceiptBusinessRule.ProductReceiptCannotBeDuplicatedWhenUpdated(updateProductReceiptDTO.ProduceProductId, getProductReceipt.Data.ProductId, updateProductReceiptDTO.ProductId));//Business Rule
+            var result = BusinessRules.Run(await _productReceiptBusinessRule.ProductReceiptCannotBeDuplicatedWhenUpdated(updateProductReceiptDTO.ProduceProductId, getProductReceipt.ProductId, updateProductReceiptDTO.ProductId));//Business Rule
             if (!result.Success)
                 return result;
 
-            ProductReceipt productReceipt = _mapper.Map(updateProductReceiptDTO, getProductReceipt.Data);
+            ProductReceipt productReceipt = _mapper.Map(updateProductReceiptDTO, getProductReceipt);
 
             await _productReceiptRepository.UpdateAsync(productReceipt);
 
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
             {
-                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{getProductReceipt.Data.ProduceProductId}",
+                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{getProductReceipt.ProduceProductId}",
                 $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{updateProductReceiptDTO.ProduceProductId}"
             });
             return new SuccessResult();
@@ -77,11 +78,11 @@ namespace Krop.Business.Services.ProductReceipts
         #region HardDeleted
         public async Task<IResult> DeleteAsync(Guid produceProductId, Guid productId)
         {
-            var result = await _productReceiptBusinessRule.CheckProductReceipt(produceProductId, productId);
-            if (!result.Success)
-                return result;
+            var getProductReceipt = await _productReceiptRepository.GetAsync(x => x.ProduceProductId == produceProductId && x.ProductId == productId);
+            if (getProductReceipt is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, ProductReceiptMessages.ProductreceiptNotFound);
 
-            await _productReceiptRepository.HardDeleteAsync(result.Data);
+            await _productReceiptRepository.HardDeleteAsync(getProductReceipt);
 
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
@@ -94,7 +95,7 @@ namespace Krop.Business.Services.ProductReceipts
         #region Listed
         public async Task<IDataResult<IEnumerable<GetProductReceiptListDTO>>> GetByProduceIdAsync(Guid produceProductId)
         {
-            IEnumerable<GetProductReceiptListDTO> getProductReceiptListDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetProductReceiptListDTO>? getProductReceiptListDTOs = await _cacheHelper.GetOrAddListAsync(
                 $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{produceProductId}",
                 async () =>
                 {
@@ -103,7 +104,7 @@ namespace Krop.Business.Services.ProductReceipts
                     {
                        p=>p.Product
                     });
-                    return _mapper.Map<IEnumerable<GetProductReceiptListDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetProductReceiptListDTO>>(result);
                 },
                 60
                 );

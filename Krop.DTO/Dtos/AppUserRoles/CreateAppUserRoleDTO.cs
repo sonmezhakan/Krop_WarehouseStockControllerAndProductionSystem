@@ -1,7 +1,7 @@
 ﻿namespace Krop.DTO.Dtos.AppUserRoles
 {
-    public record class CreateAppUserRoleDTO
+    public record  CreateAppUserRoleDTO
     {
-        public string Name { get; init; }
+        public string Name{ get; init; }
     }
 }

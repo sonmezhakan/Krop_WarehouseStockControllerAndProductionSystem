@@ -168,7 +168,7 @@
             panelMid.Dock = DockStyle.Fill;
             panelMid.Location = new Point(0, 0);
             panelMid.Name = "panelMid";
-            panelMid.Size = new Size(247, 350);
+            panelMid.Size = new Size(247, 341);
             panelMid.TabIndex = 3;
             // 
             // branchComboBoxControl
@@ -197,7 +197,7 @@
             panelBottom.BorderStyle = BorderStyle.FixedSingle;
             panelBottom.Controls.Add(bttnAdd);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 350);
+            panelBottom.Location = new Point(0, 341);
             panelBottom.Name = "panelBottom";
             panelBottom.Padding = new Padding(0, 0, 10, 0);
             panelBottom.Size = new Size(247, 41);
@@ -221,7 +221,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(247, 391);
+            ClientSize = new Size(247, 382);
             Controls.Add(panelMid);
             Controls.Add(panelBottom);
             FormBorderStyle = FormBorderStyle.FixedSingle;

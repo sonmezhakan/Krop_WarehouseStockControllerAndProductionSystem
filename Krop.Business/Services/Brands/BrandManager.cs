@@ -2,6 +2,7 @@
 using Krop.Business.Features.Brands.Constants;
 using Krop.Business.Features.Brands.Rules;
 using Krop.Business.Features.Brands.Validations;
+using Krop.Business.Features.Categories.Constants;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Utilits.Business;
@@ -43,10 +44,10 @@ namespace Krop.Business.Services.Brands
                 _mapper.Map<Brand>(createBrandDTO));
 
             await _unitOfWork.SaveChangesAsync();
-            await _cacheHelper.RemoveAsync(new string[] 
+            await _cacheHelper.RemoveAsync(new string[]
             {
-                BrandCacheKeys.GetAllAsync, 
-                BrandCacheKeys.GetAllComboBoxAsync 
+                BrandCacheKeys.GetAllAsync,
+                BrandCacheKeys.GetAllComboBoxAsync
             });
             return new SuccessResult();
         }
@@ -56,16 +57,16 @@ namespace Krop.Business.Services.Brands
         [ValidationAspect(typeof(UpdateBrandValidator))]
         public async Task<IResult> UpdateAsync(UpdateBrandDTO updateBrandDTO)
         {
-            var getBrand = await _brandBusinessRules.CheckByBrandId(updateBrandDTO.Id);
-            if (!getBrand.Success)
-                return getBrand;
+            var getBrand = await _brandRepository.GetAsync(x => x.Id == updateBrandDTO.Id);
+            if (getBrand is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, BrandMessages.BrandNotFound);
 
             var result = BusinessRules.Run(
-                await _brandBusinessRules.BrandNameCannotBeDuplicatedWhenUpdated(getBrand.Data.BrandName, updateBrandDTO.BrandName));
+                await _brandBusinessRules.BrandNameCannotBeDuplicatedWhenUpdated(getBrand.BrandName, updateBrandDTO.BrandName));
             if (!result.Success)
                 return result;
 
-            Brand brand = getBrand.Data;
+            Brand brand = getBrand;
             brand = _mapper.Map(updateBrandDTO, brand);
             await _brandRepository.UpdateAsync(brand);
 
@@ -74,7 +75,7 @@ namespace Krop.Business.Services.Brands
             {
                 BrandCacheKeys.GetAllAsync,
                 BrandCacheKeys.GetAllComboBoxAsync,
-                $"{BrandCacheKeys.GetByIdAsync}{updateBrandDTO.Id}" 
+                $"{BrandCacheKeys.GetByIdAsync}{updateBrandDTO.Id}"
             });
             return new SuccessResult();
         }
@@ -82,17 +83,17 @@ namespace Krop.Business.Services.Brands
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id)
         {
-            var getBrand = await _brandBusinessRules.CheckByBrandId(id);
-            if (!getBrand.Success)
-                return getBrand;
+            var getBrand = await _brandRepository.GetAsync(x => x.Id == id);
+            if (getBrand is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, BrandMessages.BrandNotFound);
 
-            await _brandRepository.DeleteAsync(getBrand.Data);
+            await _brandRepository.DeleteAsync(getBrand);
 
             await _unitOfWork.SaveChangesAsync();
-            await _cacheHelper.RemoveAsync(new string[] 
-            { 
-                BrandCacheKeys.GetAllAsync, 
-                BrandCacheKeys.GetAllComboBoxAsync, 
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                BrandCacheKeys.GetAllAsync,
+                BrandCacheKeys.GetAllComboBoxAsync,
                 $"{BrandCacheKeys.GetByIdAsync}{id}" });
             return new SuccessResult();
         }
@@ -100,12 +101,12 @@ namespace Krop.Business.Services.Brands
         #region Listed
         public async Task<IDataResult<IEnumerable<GetBrandDTO>>> GetAllAsync()
         {
-            IEnumerable<GetBrandDTO> getBrandDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetBrandDTO>? getBrandDTOs = await _cacheHelper.GetOrAddListAsync(
                 BrandCacheKeys.GetAllAsync,
                 async () =>
                 {
                     var result = await _brandRepository.GetAllAsync();
-                    return _mapper.Map<IEnumerable<GetBrandDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetBrandDTO>>(result);
                 },
                 60);
 
@@ -113,12 +114,12 @@ namespace Krop.Business.Services.Brands
         }
         public async Task<IDataResult<IEnumerable<GetBrandComboBoxDTO>>> GetAllComboBoxAsync()
         {
-            IEnumerable<GetBrandComboBoxDTO> getBrandComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetBrandComboBoxDTO>? getBrandComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
                 BrandCacheKeys.GetAllComboBoxAsync,
                 async () =>
                 {
                     var result = await _brandRepository.GetAllComboBoxAsync();
-                    return _mapper.Map<IEnumerable<GetBrandComboBoxDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetBrandComboBoxDTO>>(result);
                 },
                 60
                 );
@@ -129,18 +130,17 @@ namespace Krop.Business.Services.Brands
         #region Search
         public async Task<IDataResult<GetBrandDTO>> GetByIdAsync(Guid id)
         {
-            GetBrandDTO getBrandDTO = await _cacheHelper.GetOrAddAsync<GetBrandDTO>($"{BrandCacheKeys.GetByIdAsync}+{id}",
+            GetBrandDTO? getBrandDTO = await _cacheHelper.GetOrAddAsync($"{BrandCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
-                    var result = await _brandBusinessRules.CheckByBrandId(id);
-                    return _mapper.Map<GetBrandDTO>(result.Data);
+                    var result = await _brandRepository.GetAsync(x => x.Id == id);
+                    return _mapper.Map<GetBrandDTO>(result);
                 },
                 60
                 );
-           if (getBrandDTO is null)
-                return new ErrorDataResult<GetBrandDTO>(StatusCodes.Status404NotFound, BrandMessages.BrandNotFound);
-
-            return new SuccessDataResult<GetBrandDTO>(getBrandDTO);
+            return getBrandDTO is null ?
+                 new ErrorDataResult<GetBrandDTO>(StatusCodes.Status404NotFound, BrandMessages.BrandNotFound) :
+                 new SuccessDataResult<GetBrandDTO>(getBrandDTO);
         }
         #endregion
     }

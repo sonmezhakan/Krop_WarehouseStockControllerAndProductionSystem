@@ -1,12 +1,14 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
+using Krop.Business.Features.Employees.Constants;
 using Krop.Business.Features.Employees.Rules;
+using Krop.Business.Features.Stocks.Constants;
 using Krop.Business.Features.Stocks.Rules;
 using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DTO.Dtos.Stocks;
 using Krop.Entities.Entities;
+using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
 
 namespace Krop.Business.Services.Stocks
@@ -19,8 +21,9 @@ namespace Krop.Business.Services.Stocks
         private readonly StockBusinessRules _stockBusinessRules;
         private readonly EmployeeBusinessRules _employeeBusinessRules;
         private readonly IMapper _mapper;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public StockManager(IStockRepository stockRepository,IProductRepository productRepository,IBranchRepository branchRepository,StockBusinessRules stockBusinessRules, EmployeeBusinessRules employeeBusinessRules,IMapper mapper)
+        public StockManager(IStockRepository stockRepository,IProductRepository productRepository,IBranchRepository branchRepository,StockBusinessRules stockBusinessRules, EmployeeBusinessRules employeeBusinessRules,IMapper mapper,IEmployeeRepository employeeRepository)
         {
             _stockRepository = stockRepository;
             _productRepository = productRepository;
@@ -28,6 +31,7 @@ namespace Krop.Business.Services.Stocks
             _stockBusinessRules = stockBusinessRules;
             _employeeBusinessRules = employeeBusinessRules;
             _mapper = mapper;
+            _employeeRepository = employeeRepository;
         }
 
         #region New Branch Added Product
@@ -143,39 +147,39 @@ namespace Krop.Business.Services.Stocks
         #region Stock Update
         public async Task<IResult> StockAddedAsync(Guid branchId,Guid productId,int quantity)//Stok Girişi Yapılıp, Stok Güncelleniyor.
         {
-            var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
-            if (!result.Success)
-                return result;
+            var result = await _stockRepository.GetAsync(x => x.ProductId == productId && x.BranchId == branchId);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, StockMessages.StockNotFound);
 
-            result.Data.UnitsInStock += quantity;
+            result.UnitsInStock += quantity;
 
-            await _stockRepository.UpdateAsync(result.Data);
+            await _stockRepository.UpdateAsync(result);
 
             return new SuccessResult();
         }
         public async Task<IResult> StockUpdateAsync(Guid branchId, Guid productId, int oldQuantity,int newQuantity)//Stok Güncellenmesi
         {
-            var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
-            if (!result.Success)
-                return result;
+            var result = await _stockRepository.GetAsync(x => x.ProductId == productId && x.BranchId == branchId);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, StockMessages.StockNotFound);
 
-            result.Data.UnitsInStock -= oldQuantity;
-            result.Data.UnitsInStock += newQuantity;
+            result.UnitsInStock -= oldQuantity;
+            result.UnitsInStock += newQuantity;
 
-            await _stockRepository.UpdateAsync(result.Data);
+            await _stockRepository.UpdateAsync(result);
 
             return new SuccessResult();
         }
 
         public async Task<IResult> StockDeleteAsync(Guid branchId, Guid productId, int quantity)//Stok Silinmesi
         {
-            var result = await _stockBusinessRules.CheckStockBranchAndProductId(branchId, productId);
-            if (!result.Success)
-                return result;
+            var result = await _stockRepository.GetAsync(x => x.ProductId == productId && x.BranchId == branchId);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, StockMessages.StockNotFound);
 
-            result.Data.UnitsInStock -= quantity;
+            result.UnitsInStock -= quantity;
 
-            await _stockRepository.UpdateAsync(result.Data);
+            await _stockRepository.UpdateAsync(result);
 
             return new SuccessResult();
         }
@@ -183,18 +187,17 @@ namespace Krop.Business.Services.Stocks
         #endregion
 
         #region Stock Listed
-
         public async Task<IDataResult<IEnumerable<GetStockListDTO>>> GetAllFilteredAppUserAsync(Guid appUserId)
         {
-            var businessRule = BusinessRules.Run(await _employeeBusinessRules.CheckAppUserIfEmployee(appUserId));
+            var getEmployee = await _employeeRepository.GetAsync(x=>x.Id == appUserId);
+            if (getEmployee is null)
+                return new ErrorDataResult<IEnumerable<GetStockListDTO>>(StatusCodes.Status404NotFound,EmployeeMessages.EmployeeNotFound);
+
+            var businessRule = await _employeeBusinessRules.CheckEmployeeWorkingAsync(appUserId);
             if (!businessRule.Success)
                 return new ErrorDataResult<IEnumerable<GetStockListDTO>>(businessRule.Status, businessRule.Detail);
 
-            var getEmployee = await _employeeBusinessRules.CheckByEmployeeId(appUserId);
-            if (!getEmployee.Success)
-                return new ErrorDataResult<IEnumerable<GetStockListDTO>>(getEmployee.Status,getEmployee.Detail);
-
-            var result = await _stockRepository.GetAllAsync(predicate: x => x.BranchId == getEmployee.Data.BranchId,
+            var result = await _stockRepository.GetAllAsync(predicate: x => x.BranchId == getEmployee.BranchId,
             includeProperties: new Expression<Func<Stock, object>>[]
             {
                 p=>p.Product,

@@ -2,8 +2,10 @@
 using Krop.Business.Features.Customers.Constants;
 using Krop.Business.Features.Customers.Rules;
 using Krop.Business.Features.Customers.Valdiations;
+using Krop.Business.Features.Departments.Constants;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.CacheHelpers;
+using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.DataAccess.UnitOfWork;
@@ -50,11 +52,11 @@ namespace Krop.Business.Services.Customers
         [ValidationAspect(typeof(UpdateCustomerValidator))]
         public async Task<IResult> UpdateAsync(UpdateCustomerDTO updateCustomerDTO)
         {
-            var result = await _customerBusinessRules.CheckByCustomerId(updateCustomerDTO.Id);
-            if (!result.Success)
-                return result;
+            var result = await _customerRepository.GetAsync(x=>x.Id ==  updateCustomerDTO.Id);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, CustomerMessages.CustomerNotFound);
 
-            Customer customer = _mapper.Map(updateCustomerDTO, result.Data);
+            Customer customer = _mapper.Map(updateCustomerDTO, result);
 
             await _customerRepository.UpdateAsync(customer);
             await _unitOfWork.SaveChangesAsync();
@@ -70,11 +72,11 @@ namespace Krop.Business.Services.Customers
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id)
         {
-            var result = await _customerBusinessRules.CheckByCustomerId(id);
-            if (!result.Success)
-                return result;
+            var result = await _customerRepository.GetAsync(x => x.Id == id);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, CustomerMessages.CustomerNotFound);
 
-            await _customerRepository.DeleteAsync(result.Data);
+            await _customerRepository.DeleteAsync(result);
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
             {
@@ -88,12 +90,12 @@ namespace Krop.Business.Services.Customers
         #region Listed
         public async Task<IDataResult<IEnumerable<GetCustomerDTO>>> GetAllAsync()
         {
-            IEnumerable<GetCustomerDTO> getCustomerDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetCustomerDTO>? getCustomerDTOs = await _cacheHelper.GetOrAddListAsync(
                 CustomerCacheKeys.GetAllAsync,
                 async () =>
                 {
                     var result = await _customerRepository.GetAllAsync();
-                    return _mapper.Map<IEnumerable<GetCustomerDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetCustomerDTO>>(result);
                 },
                 60
                 );
@@ -101,12 +103,12 @@ namespace Krop.Business.Services.Customers
         }
         public async Task<IDataResult<IEnumerable<GetCustomerComboBoxDTO>>> GetAllComboBoxAsync()
         {
-            IEnumerable<GetCustomerComboBoxDTO> getCustomerComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetCustomerComboBoxDTO>? getCustomerComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
                 CustomerCacheKeys.GetAllComboBoxAsync,
                 async () =>
                 {
                     var result = await _customerRepository.GetAllComboBoxAsync();
-                    return _mapper.Map<IEnumerable<GetCustomerComboBoxDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetCustomerComboBoxDTO>>(result);
                 },
                 60
                 );
@@ -116,19 +118,18 @@ namespace Krop.Business.Services.Customers
         #region Search
         public async Task<IDataResult<GetCustomerDTO>> GetByIdAsync(Guid id)
         {
-            GetCustomerDTO getCustomerDTO = await _cacheHelper.GetOrAddAsync(
+            GetCustomerDTO? getCustomerDTO = await _cacheHelper.GetOrAddAsync(
                 $"{CustomerCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
-                    var result = await _customerBusinessRules.CheckByCustomerId(id);
-                    return _mapper.Map<GetCustomerDTO>(result.Data);
+                    var result = await _customerRepository.GetAsync(x=>x.Id == id);
+                    return result is null ? null : _mapper.Map<GetCustomerDTO>(result);
                 },
                 60
                 );
-            if (getCustomerDTO is null)
-                return new ErrorDataResult<GetCustomerDTO>(StatusCodes.Status404NotFound, CustomerMessages.CustomerNotFound);
-
-            return new SuccessDataResult<GetCustomerDTO>(getCustomerDTO);
+                return getCustomerDTO is null ?
+                new ErrorDataResult<GetCustomerDTO>(StatusCodes.Status404NotFound, CustomerMessages.CustomerNotFound):
+                 new SuccessDataResult<GetCustomerDTO>(getCustomerDTO);
         }
 
         #endregion

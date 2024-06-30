@@ -1,6 +1,5 @@
 ﻿using Krop.Business.Features.AppUsers.Constants;
 using Krop.Common.Utilits.Result;
-using Krop.DTO.Dtos.AppUsers;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,21 +14,22 @@ namespace Krop.Business.Features.AppUsers.Rules
         {
             _userManager = userManager;
         }
-        public async Task<IDataResult<AppUser>> CheckByIdAsync(Guid id)
+        public async Task<IResult> CheckByEmailAsync(string email)
         {
-            AppUser appUser = await _userManager.FindByIdAsync(id.ToString());
-            if (appUser == null)
-                return new ErrorDataResult<AppUser>(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
+            var result = await _userManager.Users.AnyAsync(x => x.Email == email);
+            if (!result)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
-            return new SuccessDataResult<AppUser>(appUser);
+            return new SuccessResult();
         }
-        public async Task<IDataResult<AppUser>> CheckByUserNameAsync(string userName)
+        public async Task<IResult> CheckEmailConfirmed(string email)
         {
-            AppUser appUser = await _userManager.FindByNameAsync(userName);
-            if (appUser == null)
-                return new ErrorDataResult<AppUser>(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
+            bool result = await _userManager.Users.AnyAsync(x => x.Email == email && x.EmailConfirmed == true);
 
-            return new SuccessDataResult<AppUser>(appUser);
+            if (!result)
+                return new ErrorResult(StatusCodes.Status400BadRequest, AppUserMessages.AppUserEmailNotConfirm);
+
+            return new SuccessResult(AppUserMessages.EmailConfirmed);
         }
         public async Task<IResult> AppUserNameCannotBeDuplicatedWhenInserted(string userName)
         {
@@ -100,16 +100,6 @@ namespace Krop.Business.Features.AppUsers.Rules
                     return new ErrorResult(StatusCodes.Status400BadRequest, AppUserMessages.AppUserNationalNumberExists);
             }
             return new SuccessResult();
-        }
-
-        public async Task<IResult> CheckEmailConfirmed(AppUser appUser)
-        {
-            bool result = await _userManager.IsEmailConfirmedAsync(appUser);
-
-            if (!result)
-                return new ErrorResult(StatusCodes.Status400BadRequest, AppUserMessages.AppUserEmailNotConfirm);
-
-            return new SuccessResult(AppUserMessages.EmailConfirmed);
         }
     }
 }

@@ -4,6 +4,6 @@
     {
         public const string GetAllAsync = "ICategoryService.GetAllAsync";
         public const string GetAllComboBoxAsync = "ICategoryService.GetAllComboBoxAsync";
-        public const string GetByIdAsync = "ICategoryService.GetByIdAsync";
+        public const string GetByIdAsync = "ICategoryService.GetByIdAsync=";
     }
 }

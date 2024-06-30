@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.AppUserRoles.Constants;
 using Krop.Business.Features.AppUserRoles.Rules;
+using Krop.Business.Features.Brands.Constants;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Utilits.Business;
@@ -52,11 +53,11 @@ namespace Krop.Business.Services.AppUserRoles
         [ValidationAspect(typeof(UpdateAppUserRoleDTO))]
         public async Task<IResult> UpdateAsync(UpdateAppUserRoleDTO updateAppUserRoleDTO)
         {
-            var result = await _appUserRoleBusinessRules.CheckByIdAsync(updateAppUserRoleDTO.Id);
-            if (!result.Success)
-                return result;
+            var result = await _roleManager.FindByIdAsync(updateAppUserRoleDTO.Id.ToString());
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserRoleMessages.AppUserRoleNotFound);
 
-            AppUserRole appUserRole = result.Data;
+            AppUserRole appUserRole = result;
 
             appUserRole = _mapper.Map(updateAppUserRoleDTO, appUserRole);
             await _roleManager.UpdateAsync(appUserRole);
@@ -74,11 +75,11 @@ namespace Krop.Business.Services.AppUserRoles
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id)
         {
-            var result = await _appUserRoleBusinessRules.CheckByIdAsync(id);
-            if (!result.Success)
-                return result;
+            var result = await _roleManager.FindByIdAsync(id.ToString());
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserRoleMessages.AppUserRoleNotFound);
 
-            await _roleManager.DeleteAsync(result.Data);
+            await _roleManager.DeleteAsync(result);
 
             await _cacheHelper.RemoveAsync(new string[]
             {
@@ -93,12 +94,12 @@ namespace Krop.Business.Services.AppUserRoles
         #region Listed
         public async Task<IDataResult<IEnumerable<GetAppUserRoleDTO>>> GetAllAsync()
         {
-            IEnumerable<GetAppUserRoleDTO> getAppUserRoleDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetAppUserRoleDTO>? getAppUserRoleDTOs = await _cacheHelper.GetOrAddListAsync(
                 AppUserRoleCacheKeys.GetAllAsync,
                 async () =>
                 {
                     var result = await _roleManager.Roles.ToListAsync();
-                    return _mapper.Map<IEnumerable<GetAppUserRoleDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetAppUserRoleDTO>>(result);
                 },
                 60
                 );
@@ -109,36 +110,35 @@ namespace Krop.Business.Services.AppUserRoles
         #region Search
         public async Task<IDataResult<GetAppUserRoleDTO>> GetByIdAsync(Guid id)
         {
-            GetAppUserRoleDTO getAppUserRoleDTO = await _cacheHelper.GetOrAddAsync(
+            GetAppUserRoleDTO? getAppUserRoleDTO = await _cacheHelper.GetOrAddAsync(
                 $"{AppUserRoleCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
-                    var result = await _appUserRoleBusinessRules.CheckByIdAsync(id);
-                    return  _mapper.Map<GetAppUserRoleDTO>(result.Data);
+                    var result = await _roleManager.FindByIdAsync(id.ToString());
+                    return result is null ? null : _mapper.Map<GetAppUserRoleDTO>(result);
                 },
                 60
                 );
-            if (getAppUserRoleDTO is null)
-                return new ErrorDataResult<GetAppUserRoleDTO>(StatusCodes.Status400BadRequest, AppUserRoleMessages.AppUserRoleNotFound);
 
-            return new SuccessDataResult<GetAppUserRoleDTO>(getAppUserRoleDTO);
+                return getAppUserRoleDTO is null ? 
+                new ErrorDataResult<GetAppUserRoleDTO>(StatusCodes.Status404NotFound, AppUserRoleMessages.AppUserRoleNotFound):
+                new SuccessDataResult<GetAppUserRoleDTO>(getAppUserRoleDTO);
         }
 
         public async Task<IDataResult<GetAppUserRoleDTO>> GetByRoleNameAsync(string roleName)
         {
-            GetAppUserRoleDTO getAppUserRoleDTO = await _cacheHelper.GetOrAddAsync(
+            GetAppUserRoleDTO? getAppUserRoleDTO = await _cacheHelper.GetOrAddAsync(
                 $"{AppUserRoleCacheKeys.GetByNameAsync}{roleName}",
                 async () =>
                 {
                     var result = await _roleManager.FindByNameAsync(roleName);
-                    return _mapper.Map<GetAppUserRoleDTO>(result);
+                    return result is null ? null : _mapper.Map<GetAppUserRoleDTO>(result);
                 },
                 60                
-                );
-            if (getAppUserRoleDTO is null)
-                new ErrorDataResult<GetAppUserRoleDTO>(StatusCodes.Status400BadRequest,AppUserRoleMessages.AppUserRoleNotFound);
-
-            return new SuccessDataResult<GetAppUserRoleDTO>(getAppUserRoleDTO);
+                ); 
+            return getAppUserRoleDTO is null ?
+                new ErrorDataResult<GetAppUserRoleDTO>(StatusCodes.Status404NotFound, AppUserRoleMessages.AppUserRoleNotFound) :
+                new SuccessDataResult<GetAppUserRoleDTO>(getAppUserRoleDTO);
         }
         #endregion
     }

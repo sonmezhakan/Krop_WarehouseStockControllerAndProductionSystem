@@ -1,13 +1,13 @@
 ﻿namespace Krop.DTO.Dtos.Productions
 {
-    public record class UpdateProductionDTO
+    public record  UpdateProductionDTO
     {
-        public Guid Id { get; set; }
-        public Guid ProductId { get; set; }
-        public Guid BranchId { get; set; }
-        public Guid AppUserId { get; set; }
-        public int ProductionQuantity { get; set; }
-        public DateTime ProductionDate { get; set; }
-        public string? Description { get; set; }
+        public Guid Id{ get; init; }
+        public Guid ProductId{ get; init; }
+        public Guid BranchId{ get; init; }
+        public Guid AppUserId{ get; init; }
+        public int ProductionQuantity{ get; init; }
+        public DateTime ProductionDate{ get; init; }
+        public string? Description{ get; init; }
     }
 }

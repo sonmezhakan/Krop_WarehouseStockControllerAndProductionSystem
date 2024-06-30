@@ -1,8 +1,8 @@
 ﻿namespace Krop.DTO.Dtos.Customers
 {
-    public record class GetCustomerComboBoxDTO
+    public record  GetCustomerComboBoxDTO
     {
-        public Guid Id { get; init; }
-        public string CompanyName { get; init; }
+        public Guid Id{ get; init; }
+        public string CompanyName{ get; init; }
     }
 }

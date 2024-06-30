@@ -45,7 +45,7 @@ namespace Krop.WebAPI.Controllers
         [HttpGet("{appUserId}")]
         public async Task<IActionResult> AppUserBranchGetAll(Guid appUserId, CancellationToken cancellationToken)
         {
-            var result = await _stockTransferService.AppUserBranchGetAllAsync(appUserId);
+            var result = await _stockTransferService.GetAppUserBranchIdListAsync(appUserId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{Id}/{appUserId}")]

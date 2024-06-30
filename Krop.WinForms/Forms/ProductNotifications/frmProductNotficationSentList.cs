@@ -13,7 +13,6 @@ namespace Krop.WinForms.Forms.ProductNotifications
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetProductNotificationListDTO> _originalData;
         private BindingList<GetProductNotificationListDTO> _filteredData;
-        public Guid appUserId;
 
         public frmProductNotficationSentList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
@@ -43,7 +42,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
         }
         private async Task ProductNotificationSentList()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetSentAll/{appUserId}");
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetSentAll/{Panel._appUserId}");
             if (!response.IsSuccessStatusCode)
             {
                 await ResponseController.ErrorResponseController(response);
@@ -62,7 +61,6 @@ namespace Krop.WinForms.Forms.ProductNotifications
         private void güncelleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmProductNotificationAdd frmProductNotificationAdd = _serviceProvider.GetRequiredService<frmProductNotificationAdd>();
-            frmProductNotificationAdd.appUserId = appUserId;
             FormController.FormOpenController(frmProductNotificationAdd);
         }
 
@@ -70,7 +68,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
         {
             frmProductNotificationUpdate frmProductNotificationUpdate = _serviceProvider.GetRequiredService<frmProductNotificationUpdate>();
             frmProductNotificationUpdate.productNotificationId = (Guid)dgwProductNotificationSentList.SelectedRows[0].Cells[0].Value;
-            frmProductNotificationUpdate.appUserId = appUserId;
+            frmProductNotificationUpdate.appUserId = Panel._appUserId;
             FormController.FormOpenController(frmProductNotificationUpdate);
         }
 
@@ -80,7 +78,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"productNotification/Delete/{(Guid)dgwProductNotificationSentList.SelectedRows[0].Cells[0].Value}/{appUserId}");
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"productNotification/Delete/{(Guid)dgwProductNotificationSentList.SelectedRows[0].Cells[0].Value}/{Panel._appUserId}");
                     if (!response.IsSuccessStatusCode)
                     {
                         await ResponseController.ErrorResponseController(response);

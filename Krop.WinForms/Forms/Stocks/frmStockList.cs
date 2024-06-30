@@ -11,7 +11,6 @@ namespace Krop.WinForms.Forms.Stocks
     {
         private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
-        public Guid appUserId;
 
         public frmStockList(IWebApiService webApiService,IServiceProvider serviceProvider)
         {
@@ -29,7 +28,7 @@ namespace Krop.WinForms.Forms.Stocks
             await branchComboBoxControl.BranchList(_webApiService);
             branchComboBoxControl.BranchComboBox.SelectedIndexChanged += BranchComboBox_SelectedIndexChanged;
 
-            await stockListControl.StockList(_webApiService, appUserId);
+            await stockListControl.StockList(_webApiService, Panel._appUserId);
         }
 
         private async void BranchComboBox_SelectedIndexChanged(object? sender, EventArgs e)

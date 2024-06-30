@@ -14,7 +14,6 @@ namespace Krop.WinForms.Forms.StockTransfers
         private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
         public Guid Id;
-        public Guid AppUserId;
 
         public frmStockTransfer(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
@@ -34,7 +33,7 @@ namespace Krop.WinForms.Forms.StockTransfers
             productComboBoxControl.ProductNameComboBox.SelectedIndexChanged += CmbBoxProductName_SelectedIndexChanged;
             productComboBoxControl.ProductCodeComboBox.SelectedIndexChanged += CmbBoxProductCode_SelectedIndexChanged;
 
-            await stockTransferListControl.StockTransferList(_webApiService, AppUserId);
+            await stockTransferListControl.StockTransferList(_webApiService, Panel._appUserId);
             stockTransferListControl.DataGridViewStockTransferList.DoubleClick += dgwStockTransferList_DoubleClick;
         }
 
@@ -98,7 +97,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                     Quantity = int.Parse(txtQuantity.Text),
                     Description = txtDescription.Text,
                     TransferDate = transferDateTimePicker.Value,
-                    TransactorAppUserId = AppUserId
+                    TransactorAppUserId = Panel._appUserId
                 };
 
                 HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("stockTransfer/Add", createStockTransferDTO);
@@ -109,7 +108,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                     return;
                 }
 
-                await stockTransferListControl.StockTransferList(_webApiService, AppUserId);
+                await stockTransferListControl.StockTransferList(_webApiService, Panel._appUserId);
             }
             else
             {
@@ -136,7 +135,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                             Quantity = int.Parse(txtQuantity.Text),
                             Description = txtDescription.Text,
                             TransferDate = transferDateTimePicker.Value,
-                            TransactorAppUserId = AppUserId
+                            TransactorAppUserId = Panel._appUserId
                         };
 
                         HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("stockTransfer/Update", updateStockTransferDTO);
@@ -147,7 +146,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                             return;
                         }
 
-                        await stockTransferListControl.StockTransferList(_webApiService, AppUserId);
+                        await stockTransferListControl.StockTransferList(_webApiService, Panel._appUserId);
                         Id = default;
                     }
                 }
@@ -168,7 +167,7 @@ namespace Krop.WinForms.Forms.StockTransfers
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"stockTransfer/Delete/{Id}/{AppUserId}");
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"stockTransfer/Delete/{Id}/{Panel._appUserId}");
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -176,7 +175,7 @@ namespace Krop.WinForms.Forms.StockTransfers
                         return;
                     }
 
-                    await stockTransferListControl.StockTransferList(_webApiService, AppUserId);
+                    await stockTransferListControl.StockTransferList(_webApiService, Panel._appUserId);
                     Id = default;
                 }
             }
@@ -217,7 +216,7 @@ namespace Krop.WinForms.Forms.StockTransfers
         {
             Id = (Guid)stockTransferListControl.DataGridViewStockTransferList.SelectedRows[0].Cells[0].Value;
 
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"stockTransfer/GetById/{Id}/{AppUserId}");
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"stockTransfer/GetById/{Id}/{Panel._appUserId}");
 
             if (!response.IsSuccessStatusCode)
             {

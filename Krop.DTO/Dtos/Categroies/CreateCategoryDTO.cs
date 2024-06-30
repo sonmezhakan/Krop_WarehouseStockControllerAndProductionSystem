@@ -1,7 +1,7 @@
 ﻿namespace Krop.DTO.Dtos.Categroies
 {
-    public record CreateCategoryDTO
+    public record  CreateCategoryDTO
     {
-        public string CategoryName { get; init; }
+        public string CategoryName{ get; init; }
     }
 }

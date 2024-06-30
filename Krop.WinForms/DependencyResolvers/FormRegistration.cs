@@ -73,6 +73,7 @@ namespace Krop.WinForms.DependencyResolvers
             services.AddTransient<frmAppUserUpdate>();
             services.AddTransient<frmAppUserList>();
             services.AddTransient<frmAppUserCart>();
+            services.AddTransient<frmUserUpdateRole>();
 
             services.AddTransient<frmDepartmentAdd>();
             services.AddTransient<frmDepartmentUpdate>();

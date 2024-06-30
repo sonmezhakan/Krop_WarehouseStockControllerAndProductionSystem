@@ -90,6 +90,7 @@
             employeeBttnCard = new Button();
             employeeBttnList = new Button();
             UsersTabPage = new TabPage();
+            userBttnUpdateRole = new Button();
             userBttnUpdate = new Button();
             userBttnAdd = new Button();
             userBttnCard = new Button();
@@ -1204,6 +1205,7 @@
             // 
             // UsersTabPage
             // 
+            UsersTabPage.Controls.Add(userBttnUpdateRole);
             UsersTabPage.Controls.Add(userBttnUpdate);
             UsersTabPage.Controls.Add(userBttnAdd);
             UsersTabPage.Controls.Add(userBttnCard);
@@ -1214,6 +1216,25 @@
             UsersTabPage.TabIndex = 7;
             UsersTabPage.Text = "Kullanıcılar";
             UsersTabPage.UseVisualStyleBackColor = true;
+            // 
+            // userBttnUpdateRole
+            // 
+            userBttnUpdateRole.BackColor = Color.Transparent;
+            userBttnUpdateRole.Dock = DockStyle.Left;
+            userBttnUpdateRole.FlatAppearance.BorderColor = Color.White;
+            userBttnUpdateRole.FlatAppearance.BorderSize = 0;
+            userBttnUpdateRole.FlatAppearance.MouseOverBackColor = SystemColors.GradientActiveCaption;
+            userBttnUpdateRole.FlatStyle = FlatStyle.Flat;
+            userBttnUpdateRole.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            userBttnUpdateRole.Image = (Image)resources.GetObject("userBttnUpdateRole.Image");
+            userBttnUpdateRole.Location = new Point(327, 0);
+            userBttnUpdateRole.Name = "userBttnUpdateRole";
+            userBttnUpdateRole.Size = new Size(95, 65);
+            userBttnUpdateRole.TabIndex = 28;
+            userBttnUpdateRole.Text = "Yetki İşlemleri";
+            userBttnUpdateRole.TextImageRelation = TextImageRelation.ImageAboveText;
+            userBttnUpdateRole.UseVisualStyleBackColor = false;
+            userBttnUpdateRole.Click += userBttnUpdateRole_Click;
             // 
             // userBttnUpdate
             // 
@@ -1763,5 +1784,6 @@
         private Button productNotificationBttnAdd;
         private Button productNotificationBttnSent;
         private Button productNotificationBttnIn;
+        private Button userBttnUpdateRole;
     }
 }

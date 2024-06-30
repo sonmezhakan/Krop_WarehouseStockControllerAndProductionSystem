@@ -1,8 +1,8 @@
 ﻿namespace Krop.DTO.Dtos.AppUsers
 {
-    public record class UpdateAppUserPasswordDTO
+    public record  UpdateAppUserPasswordDTO
     {
-        public Guid Id { get; init; }
-        public string Password { get; init; }
+        public Guid Id{ get; init; }
+        public string Password{ get; init; }
     }
 }

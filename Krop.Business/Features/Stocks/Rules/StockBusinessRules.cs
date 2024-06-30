@@ -15,7 +15,7 @@ namespace Krop.Business.Features.Stocks.Rules
             _stockRepository = stockRepository;
         }
         
-        public async Task<IDataResult<Stock>> CheckStockBranchAndProductId(Guid branchId,Guid productId)
+        /*public async Task<IDataResult<Stock>> CheckStockBranchAndProductId(Guid branchId,Guid productId)
         {
             var result = await _stockRepository.GetAsync(x => x.ProductId == productId && x.BranchId == branchId);
 
@@ -23,6 +23,6 @@ namespace Krop.Business.Features.Stocks.Rules
                 return new ErrorDataResult<Stock>(StatusCodes.Status404NotFound, StockMessages.StockNotFound);
 
             return new SuccessDataResult<Stock>(result);
-        }
+        }*/
     }
 }

@@ -54,16 +54,16 @@ namespace Krop.Business.Services.Deparments
         [ValidationAspect(typeof(UpdateDepartmentValidator))]
         public async Task<IResult> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO)
         {
-            var department = await _departmentBusinessRules.CheckByDepartmentId(updateDepartmentDTO.Id);
-            if (!department.Success)
-                return department;
+            var department = await _departmentRepository.GetAsync(x => x.Id == updateDepartmentDTO.Id);
+            if (department is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, DepartmentMessages.DepartmentNotFound);
 
-            var result = BusinessRules.Run(await _departmentBusinessRules.DepartmentNameCannotBeDuplicateWhenUpdated(department.Data.DepartmentName, updateDepartmentDTO.DepartmentName));
+            var result = BusinessRules.Run(await _departmentBusinessRules.DepartmentNameCannotBeDuplicateWhenUpdated(department.DepartmentName, updateDepartmentDTO.DepartmentName));
             if (!result.Success)
                 return result;
 
             await _departmentRepository.UpdateAsync(
-                _mapper.Map(updateDepartmentDTO, department.Data));
+                _mapper.Map(updateDepartmentDTO, department));
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
             {
@@ -78,11 +78,11 @@ namespace Krop.Business.Services.Deparments
         #region Delete
         public async Task<IResult> DeleteAsync(Guid id)
         {
-            var department = await _departmentBusinessRules.CheckByDepartmentId(id);
-            if (!department.Success)
-                return department;
+            var department = await _departmentRepository.GetAsync(x=>x.Id == id);
+            if (department is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, DepartmentMessages.DepartmentNotFound);
 
-            await _departmentRepository.DeleteAsync(department.Data);
+            await _departmentRepository.DeleteAsync(department);
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
             {
@@ -96,12 +96,12 @@ namespace Krop.Business.Services.Deparments
         #region Listed
         public async Task<IDataResult<IEnumerable<GetDepartmentDTO>>> GetAllAsync()
         {
-            IEnumerable<GetDepartmentDTO> getDepartmentDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetDepartmentDTO>? getDepartmentDTOs = await _cacheHelper.GetOrAddListAsync(
                 DepartmentCacheKeys.GetAllAsync,
                 async () =>
                 {
                     var result = await _departmentRepository.GetAllAsync();
-                    return _mapper.Map<IEnumerable<GetDepartmentDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetDepartmentDTO>>(result);
                 },
                 60
                 );
@@ -111,12 +111,12 @@ namespace Krop.Business.Services.Deparments
 
         public async Task<IDataResult<IEnumerable<GetDepartmentComboBoxDTO>>> GetAllComboBoxAsync()
         {
-            IEnumerable<GetDepartmentComboBoxDTO> getDepartmentComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetDepartmentComboBoxDTO>? getDepartmentComboBoxDTOs = await _cacheHelper.GetOrAddListAsync(
                 DepartmentCacheKeys.GetAllComboBoxAsync,
                 async () =>
                 {
                     var result = await _departmentRepository.GetAllComboBoxAsync();
-                    return _mapper.Map<IEnumerable<GetDepartmentComboBoxDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetDepartmentComboBoxDTO>>(result);
                 },
                 60
                 );
@@ -127,19 +127,18 @@ namespace Krop.Business.Services.Deparments
         #region Search
         public async Task<IDataResult<GetDepartmentDTO>> GetById(Guid id)
         {
-            GetDepartmentDTO getDepartmentDTO = await _cacheHelper.GetOrAddAsync(
+            GetDepartmentDTO? getDepartmentDTO = await _cacheHelper.GetOrAddAsync(
                 $"{DepartmentCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
-                    var result = await _departmentBusinessRules.CheckByDepartmentId(id);
-                    return _mapper.Map<GetDepartmentDTO>(result.Data);
+                    var result = await _departmentRepository.GetAsync(x=>x.Id == id);
+                    return result is null ? null : _mapper.Map<GetDepartmentDTO>(result);
                 },
                 60
                 );
-            if (getDepartmentDTO is null)
-                return new ErrorDataResult<GetDepartmentDTO>(StatusCodes.Status404NotFound, DepartmentMessages.DepartmentNotFound);
-
-            return new SuccessDataResult<GetDepartmentDTO>(getDepartmentDTO);
+                return getDepartmentDTO is null ?
+                new ErrorDataResult<GetDepartmentDTO>(StatusCodes.Status404NotFound, DepartmentMessages.DepartmentNotFound):
+                new SuccessDataResult<GetDepartmentDTO>(getDepartmentDTO);
         }  
         #endregion
     }

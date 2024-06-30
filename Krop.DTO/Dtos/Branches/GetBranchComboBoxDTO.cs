@@ -1,8 +1,8 @@
 ﻿namespace Krop.DTO.Dtos.Branches
 {
-    public record class GetBranchComboBoxDTO
+    public record  GetBranchComboBoxDTO
     {
-        public Guid Id { get; set; }
-        public string BranchName { get; set; }
+        public Guid Id{ get; init; }
+        public string BranchName{ get; init; }
     }
 }

@@ -11,7 +11,6 @@ namespace Krop.WinForms.Forms.ProductNotifications
         private readonly IServiceProvider _serviceProvider;
         private BindingList<GetProductNotificationListDTO> _originalData;
         private BindingList<GetProductNotificationListDTO> _filteredData;
-        public Guid appUserId;
         public frmProductNotificationInList(IWebApiService webApiService, IServiceProvider serviceProvider)
         {
             InitializeComponent();
@@ -40,7 +39,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
         }
         private async Task ProductNotificationSentList()
         {
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetInAll/{appUserId}");
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"productNotification/GetInAll/{Panel._appUserId}");
             if (!response.IsSuccessStatusCode)
             {
                 await ResponseController.ErrorResponseController(response);

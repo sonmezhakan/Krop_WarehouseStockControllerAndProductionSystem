@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Krop.Business.Exceptions.Middlewares.Transaction;
+using Krop.Business.Features.Employees.Constants;
 using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Features.Productions.Constants;
 using Krop.Business.Features.Productions.Rules;
@@ -12,9 +13,11 @@ using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
+using Krop.DataAccess.Repositories.Concretes.EntityFramework;
 using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.Productions;
 using Krop.DTO.Dtos.StockInputs;
+using Krop.DTO.Dtos.Stocks;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Linq.Expressions;
@@ -35,9 +38,10 @@ namespace Krop.Business.Services.Productions
         private readonly IProductionStockExitRepository _productionStockExitRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICacheHelper _cacheHelper;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public ProductionManager(IProductionRepository productionRepository, IMapper mapper, EmployeeBusinessRules employeeBusinessRules,IProductReceiptRepository productReceiptRepository,IStockService stockService, IStockInputService stockInputService, ProductionBusinessRules productionBusinessRules,IProductionStockExitService productionStockExitService, IStockInputRepository stockInputRepository,IProductionStockExitRepository productionStockExitRepository,
-            IUnitOfWork unitOfWork, ICacheHelper cacheHelper)
+            IUnitOfWork unitOfWork, ICacheHelper cacheHelper,IEmployeeRepository employeeRepository)
         {
             _productionRepository = productionRepository;
             _mapper = mapper;
@@ -51,8 +55,8 @@ namespace Krop.Business.Services.Productions
             _productionStockExitRepository = productionStockExitRepository;
             _unitOfWork = unitOfWork;
             _cacheHelper = cacheHelper;
+            _employeeRepository = employeeRepository;
         }
-
 
         #region Add
         [TransactionScope]
@@ -96,34 +100,34 @@ namespace Krop.Business.Services.Productions
             if (!businessRuleResult.Success)
                 return businessRuleResult;
 
-            var result = await _productionBusinessRules.CheckByProductionId(updateProductionDTO.Id);
-            if (!result.Success)
-                return result;
+            var result = await _productionRepository.GetAsync(x=>x.Id == updateProductionDTO.Id);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound,ProductionMessages.ProductionNotFound);
 
             var oldProductionStockExits = await _productionStockExitRepository.GetAllAsync(x => x.ProductionId == updateProductionDTO.Id);//Önceki üretimde stokdan çıkarılan ürünlerin listesi getiriliyor.
 
-            await StockAdded(oldProductionStockExits.ToList(), result.Data.BranchId);
+            await StockAdded(oldProductionStockExits.ToList(), result.BranchId);
             await ProductionStockExitDeleted(oldProductionStockExits.ToList());
 
-            await _stockService.StockDeleteAsync(result.Data.BranchId, result.Data.ProductId, result.Data.ProductionQuantity);//Üretilen ürün stoktan düşürülüyor.
+            await _stockService.StockDeleteAsync(result.BranchId, result.ProductId, result.ProductionQuantity);//Üretilen ürün stoktan düşürülüyor.
 
-            var newProductionStockExits = await ProductionStockExitAdded(_mapper.Map<GetProductionDTO>(updateProductionDTO), result.Data.Id);
+            var newProductionStockExits = await ProductionStockExitAdded(_mapper.Map<GetProductionDTO>(updateProductionDTO), result.Id);
 
             await StockDeleted(newProductionStockExits, updateProductionDTO.BranchId);
 
             await _stockService.StockAddedAsync(updateProductionDTO.BranchId, updateProductionDTO.ProductId, updateProductionDTO.ProductionQuantity);//Üretilecek ürünün miktarı stoğa ekleniyor.
 
-            var stockInput = await _stockInputRepository.GetAsync(x => x.ProductionId == result.Data.Id);
+            var stockInput = await _stockInputRepository.GetAsync(x => x.ProductionId == result.Id);
             stockInput.Quantity = updateProductionDTO.ProductionQuantity;
             await _stockInputRepository.UpdateAsync(stockInput);//Stok Giriş listesindeki üretimden oluşan ürün girişinin miktarı güncelleniyor.
 
-            Production production = _mapper.Map(updateProductionDTO, result.Data);
+            Production production = _mapper.Map(updateProductionDTO, result);
             await _productionRepository.UpdateAsync(production);//Üretim deki üretim miktarı güncelleniyor.
 
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
             {
-                $"{ProductionCacheKeys.GetByBranchIdAsync}{result.Data.BranchId}",//old
+                $"{ProductionCacheKeys.GetByBranchIdAsync}{result.BranchId}",//old
                 $"{ProductionCacheKeys.GetByBranchIdAsync}{updateProductionDTO.BranchId}",//new
                 $"{ProductionCacheKeys.GetByIdAsync}{updateProductionDTO.Id}",//new
             });
@@ -139,6 +143,8 @@ namespace Krop.Business.Services.Productions
                 {
                     si=>si.StockInput
                 });
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, ProductionMessages.ProductionNotFound);
 
             var businessRuleResult = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(appUserId, result.BranchId));//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
             if (!businessRuleResult.Success)
@@ -165,26 +171,26 @@ namespace Krop.Business.Services.Productions
         #region List
         public async Task<IDataResult<IEnumerable<GetProductionListDTO>>> GetByBranchIdAsync(Guid appUserId)
         {
-            var employee = await _employeeBusinessRules.CheckByEmployeeId(appUserId);
-            if (!employee.Success)
-                return new ErrorDataResult<IEnumerable<GetProductionListDTO>>(employee.Status, employee.Detail); ;
+            var employee = await _employeeRepository.GetAsync(x => x.Id == appUserId);
+            if (employee is null)
+                return new ErrorDataResult<IEnumerable<GetProductionListDTO>>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound);
 
-            var businessRuleResult = await _employeeBusinessRules.CheckEmployeeBranch(appUserId, (Guid)employee.Data.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            var businessRuleResult = await _employeeBusinessRules.CheckEmployeeBranch(appUserId, (Guid)employee.BranchId);//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
             if (!businessRuleResult.Success)
                 return new ErrorDataResult<IEnumerable<GetProductionListDTO>>(businessRuleResult.Status, businessRuleResult.Detail);
 
             #region Cache
-            IEnumerable<GetProductionListDTO> getProductionListDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetProductionListDTO>? getProductionListDTOs = await _cacheHelper.GetOrAddListAsync(
                 ProductionCacheKeys.GetByBranchIdAsync,
                 async () =>
                 {
-                    var result = await _productionRepository.GetAllAsync(x => x.BranchId == employee.Data.BranchId, includeProperties: new Expression<Func<Production, object>>[]
+                    var result = await _productionRepository.GetAllAsync(x => x.BranchId == employee.BranchId, includeProperties: new Expression<Func<Production, object>>[]
                         {
                              p=>p.Product,
                              b=>b.Branch,
                              au=>au.AppUser
                          });
-                    return _mapper.Map<IEnumerable<GetProductionListDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetProductionListDTO>>(result);
                 },
                 60
                 );
@@ -196,19 +202,18 @@ namespace Krop.Business.Services.Productions
         #region Search
         public async Task<IDataResult<GetProductionDTO>> GetByIdAsync(Guid id, Guid appUserId)
         {
-            GetProductionDTO getProductionDTO = await _cacheHelper.GetOrAddAsync(
+            GetProductionDTO? getProductionDTO = await _cacheHelper.GetOrAddAsync(
                 $"{ProductionCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
                     var result = await _productionRepository.GetAsync(x => x.Id == id && x.AppUserId == appUserId);
-                    return _mapper.Map<GetProductionDTO>(result);
+                    return result is null ? null : _mapper.Map<GetProductionDTO>(result);
                 },
                 30
                 );
-            if (getProductionDTO is null)
-                return new ErrorDataResult<GetProductionDTO>(StatusCodes.Status404NotFound, ProductionMessages.ProductionNotFound);
-
-            return new SuccessDataResult<GetProductionDTO>(getProductionDTO);
+                return getProductionDTO is null ?
+                new ErrorDataResult<GetProductionDTO>(StatusCodes.Status404NotFound, ProductionMessages.ProductionNotFound):
+                new SuccessDataResult<GetProductionDTO>(getProductionDTO);
         }
         #endregion
     }

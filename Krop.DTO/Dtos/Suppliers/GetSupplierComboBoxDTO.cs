@@ -1,8 +1,8 @@
 ﻿namespace Krop.DTO.Dtos.Suppliers
 {
-    public record class GetSupplierComboBoxDTO
+    public record  GetSupplierComboBoxDTO
     {
-        public Guid Id { get; set; }
-        public string CompanyName { get; set; }
+        public Guid Id{ get; init; }
+        public string CompanyName{ get; init; }
     }
 }

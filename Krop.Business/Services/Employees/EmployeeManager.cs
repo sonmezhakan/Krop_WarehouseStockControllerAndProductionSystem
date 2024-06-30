@@ -12,7 +12,6 @@ using Krop.DataAccess.UnitOfWork;
 using Krop.DTO.Dtos.Employees;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
 namespace Krop.Business.Services.Employees
@@ -58,11 +57,11 @@ namespace Krop.Business.Services.Employees
         [ValidationAspect(typeof(UpdateEmployeeValidator))]
         public async Task<IResult> UpdateAsync(UpdateEmployeeDTO updateEmployeeDTO)
         {
-            var result = await _employeeBusinessRules.CheckByEmployeeId(updateEmployeeDTO.AppUserId);
-            if (!result.Success)
-                return result;
+            var result = await _employeeRepository.GetAsync(e => e.AppUserId == updateEmployeeDTO.AppUserId);
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound);
 
-            Employee employee = _mapper.Map(updateEmployeeDTO, result.Data);
+            Employee employee = _mapper.Map(updateEmployeeDTO, result);
 
             await _employeeRepository.UpdateAsync(employee);
             await _unitOfWork.SaveChangesAsync();
@@ -79,7 +78,7 @@ namespace Krop.Business.Services.Employees
         #region Listed
         public async Task<IDataResult<IEnumerable<GetEmployeeListDTO>>> GetAllAsync()
         {
-            IEnumerable<GetEmployeeListDTO> getEmployeeListDTOs = await _cacheHelper.GetOrAddListAsync(
+            IEnumerable<GetEmployeeListDTO>? getEmployeeListDTOs = await _cacheHelper.GetOrAddListAsync(
                 EmployeeCacheKeys.GetAllAsync,
                 async () =>
                 {
@@ -89,7 +88,7 @@ namespace Krop.Business.Services.Employees
                              d=>d.Department,
                              b=>b.Branch
                          });
-                    return _mapper.Map<IEnumerable<GetEmployeeListDTO>>(result);
+                    return result is null ? null : _mapper.Map<IEnumerable<GetEmployeeListDTO>>(result);
                 },
                 60
                 );
@@ -115,24 +114,23 @@ namespace Krop.Business.Services.Employees
         #region Search
         public async Task<IDataResult<GetEmployeeDTO>> GetByIdAsync(Guid id)
         {
-            GetEmployeeDTO getEmployeeDTO = await _cacheHelper.GetOrAddAsync(
+            GetEmployeeDTO? getEmployeeDTO = await _cacheHelper.GetOrAddAsync(
                 $"{EmployeeCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
-                    var result = await _employeeBusinessRules.CheckByEmployeeId(id);
-                    return _mapper.Map<GetEmployeeDTO>(result.Data);
+                    var result = await _employeeRepository.GetAsync(x=>x.Id == id);
+                    return result is null ? null : _mapper.Map<GetEmployeeDTO>(result);
                 },
-            60
+                60
                 );
-            if (getEmployeeDTO is null)
-                return new ErrorDataResult<GetEmployeeDTO>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound);
-
-            return new SuccessDataResult<GetEmployeeDTO>(getEmployeeDTO);
+                return getEmployeeDTO is null ?
+                new ErrorDataResult<GetEmployeeDTO>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound):
+                new SuccessDataResult<GetEmployeeDTO>(getEmployeeDTO);
         }
 
         public async Task<IDataResult<GetEmployeeCartDTO>> GetByIdCartAsync(Guid Id)
         {
-            GetEmployeeCartDTO getEmployeeCartDTO = await _cacheHelper.GetOrAddAsync(
+            GetEmployeeCartDTO? getEmployeeCartDTO = await _cacheHelper.GetOrAddAsync(
                 $"{EmployeeCacheKeys.GetByIdCartAsync}{Id}",
                 async () =>
                 {
@@ -142,14 +140,13 @@ namespace Krop.Business.Services.Employees
                     d=>d.Department,
                     b=>b.Branch
                 });
-                    return _mapper.Map<GetEmployeeCartDTO>(result);
+                    return result is null ? null : _mapper.Map<GetEmployeeCartDTO>(result);
                 },
                 60
                 );
-            if (getEmployeeCartDTO is null)
-                return new ErrorDataResult<GetEmployeeCartDTO>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound);
-
-            return new SuccessDataResult<GetEmployeeCartDTO>(getEmployeeCartDTO);
+                return getEmployeeCartDTO is null ?
+                    new ErrorDataResult<GetEmployeeCartDTO>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound):
+                    new SuccessDataResult<GetEmployeeCartDTO>(getEmployeeCartDTO);
         }
         #endregion
     }

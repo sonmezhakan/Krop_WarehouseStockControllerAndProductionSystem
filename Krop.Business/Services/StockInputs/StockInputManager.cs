@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Krop.Business.Exceptions.Middlewares.Transaction;
+using Krop.Business.Features.Employees.Constants;
 using Krop.Business.Features.Employees.Rules;
 using Krop.Business.Features.StockInputs.Constants;
 using Krop.Business.Features.StockInputs.Rules;
 using Krop.Business.Features.StockInputs.Validation;
 using Krop.Business.Services.Stocks;
+using Krop.Common.Aspects.Autofac.Validation;
+using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Utilits.Business;
 using Krop.Common.Utilits.Result;
 using Krop.DataAccess.Repositories.Abstracts;
@@ -24,9 +27,11 @@ namespace Krop.Business.Services.StockInputs
         private readonly IStockService _stockService;
         private readonly StockInputBusinessRules _stockInputBusinessRules;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheHelper _cacheHelper;
+        private readonly IEmployeeRepository _employeeRepository;
 
         public StockInputManager(IStockInputRepository stockInputRepository, IMapper mapper,
-            EmployeeBusinessRules employeeBusinessRules, IStockService stockService, StockInputBusinessRules stockInputBusinessRules, IUnitOfWork unitOfWork
+            EmployeeBusinessRules employeeBusinessRules, IStockService stockService, StockInputBusinessRules stockInputBusinessRules, IUnitOfWork unitOfWork, ICacheHelper cacheHelper, IEmployeeRepository employeeRepository
             )
         {
             _stockInputRepository = stockInputRepository;
@@ -35,10 +40,12 @@ namespace Krop.Business.Services.StockInputs
             _stockService = stockService;
             _stockInputBusinessRules = stockInputBusinessRules;
             _unitOfWork = unitOfWork;
+            _cacheHelper = cacheHelper;
+            _employeeRepository = employeeRepository;
         }
         #region Add
-       
         [TransactionScope]
+        [ValidationAspect(typeof(UpdateStockInputValidator))]
         public async Task<IResult> AddAsync(CreateStockInputDTO createStockInputDTO)
         {
             var result = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(createStockInputDTO.AppUserId, createStockInputDTO.BranchId));//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor. 
@@ -46,24 +53,28 @@ namespace Krop.Business.Services.StockInputs
                 return result;
 
             await _stockService.StockAddedAsync(createStockInputDTO.BranchId, createStockInputDTO.ProductId, createStockInputDTO.Quantity);//Stoğa ekliyor
-            
+
             await _stockInputRepository.AddAsync(
                 _mapper.Map<StockInput>(createStockInputDTO));
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{StockInputCacheKeys.GetByAppUserBranchIdAsync}{createStockInputDTO.BranchId}",
+            });
             return new SuccessResult();
         }
         #endregion
         #region Update
-        
         [TransactionScope]
-        public async Task<IResult> UpdateAsync(UpdateStockInputDTO updateStockInputDTO,bool productionUpdated = false)
+        [ValidationAspect(typeof(UpdateStockInputValidator))]
+        public async Task<IResult> UpdateAsync(UpdateStockInputDTO updateStockInputDTO, bool productionUpdated = false)
         {
-            var result = await _stockInputBusinessRules.CheckStockInput(updateStockInputDTO.Id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
+            var result = await _stockInputRepository.GetAsync(x=>x.Id == updateStockInputDTO.Id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
             if (result is null)
                 return new ErrorResult(StatusCodes.Status404NotFound, StockInputMessages.StockInputNotFound);
 
             //stok girişi ekranında işlem güncellenmeye çalışılırsa ve işlem üretimden giriş yapıldıysa işlemin yapılması engelleniyor. Eğer işlem üretim tarafından yapılıyor ise işlemi yapmaya izin verir.
-            if (!productionUpdated && result.Data.ProductId != null)
+            if (!productionUpdated && result.ProductId != null)
                 return new ErrorResult(StatusCodes.Status400BadRequest, StockInputMessages.ProductionEntryCannotBeChangedOrDeleted);
 
             var businessRuleResult = BusinessRules.Run(
@@ -72,55 +83,69 @@ namespace Krop.Business.Services.StockInputs
             if (!businessRuleResult.Success)
                 return businessRuleResult;
 
-            await _stockService.StockDeleteAsync(result.Data.BranchId, result.Data.ProductId, result.Data.Quantity);//Şube değişikliği veya ürün değişikliği yapılırsa diye ilk önce stoktan miktarı çıkarmamız gerekiyor.
+            await _stockService.StockDeleteAsync(result.BranchId, result.ProductId, result.Quantity);//Şube değişikliği veya ürün değişikliği yapılırsa diye ilk önce stoktan miktarı çıkarmamız gerekiyor.
             await _stockService.StockAddedAsync(updateStockInputDTO.BranchId, updateStockInputDTO.ProductId, updateStockInputDTO.Quantity);//Stoğa ekliyor
 
-            StockInput stockInput = _mapper.Map(updateStockInputDTO, result.Data);//Veritabanındaki bilgileri güncellenecek bilgiler ile değiştiriyor
+            StockInput stockInput = _mapper.Map(updateStockInputDTO, result);//Veritabanındaki bilgileri güncellenecek bilgiler ile değiştiriyor
 
             await _stockInputRepository.UpdateAsync(stockInput);//Stok girişi işlemini güncelliyor.
 
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{StockInputCacheKeys.GetByAppUserBranchIdAsync}{result.BranchId}",
+                $"{StockInputCacheKeys.GetByIdAsync}{updateStockInputDTO.Id}"
+            });
             return new SuccessResult();
         }
         #endregion
         #region Delete
         [TransactionScope]
-        public async Task<IResult> DeleteAsync(Guid id, Guid appUserId,bool productionDeleted = false)
+        public async Task<IResult> DeleteAsync(Guid id, Guid appUserId, bool productionDeleted = false)
         {
-            var result = await _stockInputBusinessRules.CheckStockInput(id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
-            if (!result.Success)
-                return result;
+            var result = await _stockInputRepository.GetAsync(x => x.Id == id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor. Eğer stok giriş yapılmış ise StockInput olarak getiriyor.
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, StockInputMessages.StockInputNotFound);
 
             //stok girişi ekranında işlem silinmeye çalışılırsa ve işlem üretimden giriş yapıldıysa işlemin yapılması engelleniyor. Eğer işlem üretim tarafından yapılıyor ise işlemi yapmaya izin verir.
-            if(!productionDeleted && result.Data.ProductId != null)
+            if (!productionDeleted && result.ProductId != null)
                 return new ErrorResult(StatusCodes.Status400BadRequest, StockInputMessages.ProductionEntryCannotBeChangedOrDeleted);
 
             var businessRuleResult = BusinessRules.Run(
-               await _employeeBusinessRules.CheckEmployeeBranch(appUserId, result.Data.BranchId)//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+               await _employeeBusinessRules.CheckEmployeeBranch(appUserId, result.BranchId)//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
                );
             if (!businessRuleResult.Success)
                 return businessRuleResult;
 
-            await _stockService.StockDeleteAsync(result.Data.BranchId, result.Data.ProductId, result.Data.Quantity);//Şube değişikliği veya ürün değişikliği yapılırsa diye ilk önce stoktan miktarı çıkarmamız gerekiyor.
+            await _stockService.StockDeleteAsync(result.BranchId, result.ProductId, result.Quantity);//Şube değişikliği veya ürün değişikliği yapılırsa diye ilk önce stoktan miktarı çıkarmamız gerekiyor.
 
-            await _stockInputRepository.DeleteAsync(result.Data);//Stok girişinden siliyor.
+            await _stockInputRepository.DeleteAsync(result);//Stok girişinden siliyor.
 
             await _unitOfWork.SaveChangesAsync();
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                $"{StockInputCacheKeys.GetByAppUserBranchIdAsync}{result.BranchId}",
+                $"{StockInputCacheKeys.GetByIdAsync}{id}"
+            });
             return new SuccessResult();
         }
         #endregion
         #region Listed
-        public async Task<IDataResult<IEnumerable<GetStockInputListDTO>>> GetAllAsync(Guid appUserId)
+        public async Task<IDataResult<IEnumerable<GetStockInputListDTO>>> GetByAppUserBranchIdAsync(Guid appUserId)
         {
-            var employee = await _employeeBusinessRules.CheckByEmployeeId(appUserId);
-            if (!employee.Success)
-                return new ErrorDataResult<IEnumerable<GetStockInputListDTO>>(employee.Status, employee.Detail);
+            var employee = await _employeeRepository.GetAsync(x=>x.Id == appUserId);
+            if (employee is null)
+                return new ErrorDataResult<IEnumerable<GetStockInputListDTO>>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound);
 
-            var businessRuleResult = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(appUserId, (Guid)employee.Data.BranchId));//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
+            var businessRuleResult = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(appUserId, (Guid)employee.BranchId));//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
             if (!businessRuleResult.Success)
                 return new ErrorDataResult<IEnumerable<GetStockInputListDTO>>(businessRuleResult.Status, businessRuleResult.Detail);
 
-            var result = await _stockInputRepository.GetAllAsync(predicate: x=>x.BranchId == employee.Data.BranchId,
+            IEnumerable<GetStockInputListDTO>? getStockInputListDTOs = await _cacheHelper.GetOrAddListAsync(
+                $"{StockInputCacheKeys.GetByAppUserBranchIdAsync}{employee.BranchId}",
+                async () =>
+                {
+                    var result = await _stockInputRepository.GetAllAsync(predicate: x => x.BranchId == employee.BranchId,
                 includeProperties: new Expression<Func<StockInput, object>>[]
             {
                 p=>p.Product,
@@ -128,20 +153,29 @@ namespace Krop.Business.Services.StockInputs
                 b=>b.Branch,
                 au=>au.AppUser
             });
+                    return result is null ? null : _mapper.Map<IEnumerable<GetStockInputListDTO>>(result);
+                },
+                10
+                );
 
-            return new SuccessDataResult<IEnumerable<GetStockInputListDTO>>(
-                _mapper.Map<IEnumerable<GetStockInputListDTO>>(result));
+            return new SuccessDataResult<IEnumerable<GetStockInputListDTO>>(getStockInputListDTOs);
         }
         #endregion
         #region Search
         public async Task<IDataResult<GetStockInputDTO>> GetByIdAsync(Guid id)
         {
-            var result = await _stockInputBusinessRules.CheckStockInput(id);//Stok Girişi yapılıp yapılmadığı kontrol ediliyor.
-            if (!result.Success)
-                return new ErrorDataResult<GetStockInputDTO>(result.Status, result.Detail);
-
-            return new SuccessDataResult<GetStockInputDTO>(
-                _mapper.Map<GetStockInputDTO>(result.Data));
+            GetStockInputDTO? getStockInputDTO = await _cacheHelper.GetOrAddAsync(
+                $"{StockInputCacheKeys.GetByIdAsync}{id}",
+                async () =>
+                {
+                    var result = await _stockInputRepository.GetAsync(x=>x.Id == id);
+                    return result is null ? null : _mapper.Map<GetStockInputDTO>(result);
+                },
+                10
+                ); 
+                return getStockInputDTO is null ?
+                    new ErrorDataResult<GetStockInputDTO>(StatusCodes.Status404NotFound, StockInputMessages.StockInputNotFound):
+                     new SuccessDataResult<GetStockInputDTO>(getStockInputDTO);
         }
         #endregion
     }

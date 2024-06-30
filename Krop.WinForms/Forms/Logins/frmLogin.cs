@@ -49,9 +49,7 @@ namespace Krop.WinForms.Forms.Logins
 
             var result = await ResponseController.SuccessDataResponseController<LoginResponseDTO>(response);
 
-            Panel panel = new Panel(_webApiService, _serviceProvider);
-            panel.AppUserId = result.Data.Id;
-            panel.token = result.Data.Token;
+            Panel panel = new Panel(_webApiService, _serviceProvider,result.Data.Id,result.Data.Token);
             this.Hide();
             panel.Show();
         }

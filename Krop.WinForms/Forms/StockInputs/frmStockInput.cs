@@ -13,7 +13,6 @@ namespace Krop.WinForms.Forms.StockInputs
 {
     public partial class frmStockInput : Form
     {
-        internal Guid AppUserId;
         private Guid Id;
         private readonly IWebApiService _webApiService;
         private readonly IServiceProvider _serviceProvider;
@@ -36,7 +35,7 @@ namespace Krop.WinForms.Forms.StockInputs
 
             await branchComboBoxControl.BranchList(_webApiService);
 
-            await stockInputListControl.StockInputList(_webApiService, AppUserId);
+            await stockInputListControl.StockInputList(_webApiService, Panel._appUserId);
             stockInputListControl.DataGridViewStockInputList.DoubleClick += dgwStockInputList_DoubleClick;
         }
         private void cmbBoxProductName_SelectedIndexChanged(object? sender, EventArgs e)
@@ -143,7 +142,7 @@ namespace Krop.WinForms.Forms.StockInputs
                     BranchId = (Guid)branchComboBoxControl.BranchComboBox.SelectedValue,
                     ProductId = (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue,
                     SupplierId = (Guid)supplierComboBoxControl.SupplierComboBox.SelectedValue,
-                    AppUserId = AppUserId,
+                    AppUserId = Panel._appUserId,
                     InvoiceNumber = txtInvoiceNumber.Text,
                     UnitPrice = decimal.Parse(txtUnitPrice.Text),
                     Quantity = int.Parse(txtQuantity.Text),
@@ -158,7 +157,7 @@ namespace Krop.WinForms.Forms.StockInputs
                     await ResponseController.ErrorResponseController(response);
                     return;
                 }
-                await stockInputListControl.StockInputList(_webApiService, AppUserId);
+                await stockInputListControl.StockInputList(_webApiService, Panel._appUserId);
             }
             else
             {
@@ -180,7 +179,7 @@ namespace Krop.WinForms.Forms.StockInputs
                             BranchId = (Guid)branchComboBoxControl.BranchComboBox.SelectedValue,
                             ProductId = (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue,
                             SupplierId = (Guid)supplierComboBoxControl.SupplierComboBox.SelectedValue,
-                            AppUserId = AppUserId,
+                            AppUserId = Panel._appUserId,
                             InvoiceNumber = txtInvoiceNumber.Text,
                             UnitPrice = decimal.Parse(txtUnitPrice.Text),
                             Quantity = int.Parse(txtQuantity.Text),
@@ -195,7 +194,7 @@ namespace Krop.WinForms.Forms.StockInputs
                             await ResponseController.ErrorResponseController(response);
                             return;
                         }
-                        await stockInputListControl.StockInputList(_webApiService, AppUserId);
+                        await stockInputListControl.StockInputList(_webApiService, Panel._appUserId);
                         Id = default;
                     }
                 }
@@ -221,14 +220,14 @@ namespace Krop.WinForms.Forms.StockInputs
         {
             if (Id != Guid.Empty)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"StockInput/Delete/{Id}/{AppUserId}");
+                HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"StockInput/Delete/{Id}/{Panel._appUserId}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);
                     return;
                 }
 
-                await stockInputListControl.StockInputList(_webApiService, AppUserId);
+                await stockInputListControl.StockInputList(_webApiService, Panel._appUserId);
                 Id = default;
             }
             else

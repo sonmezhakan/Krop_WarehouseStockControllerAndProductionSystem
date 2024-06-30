@@ -86,5 +86,12 @@ namespace Krop.WebAPI.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
+        [HttpPut]
+        public async Task<IActionResult> UserUpdateRole([FromBody]UpdateAppUserUpdateRoleDTO updateAppUserUpdateRoleDTO)
+        {
+            var result = await _appUserService.UpdateAppUserRoleAsync(updateAppUserUpdateRoleDTO);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
     }
 }

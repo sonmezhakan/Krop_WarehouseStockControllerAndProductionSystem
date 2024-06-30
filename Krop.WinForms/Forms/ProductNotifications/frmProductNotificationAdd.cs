@@ -8,7 +8,6 @@ namespace Krop.WinForms.Forms.ProductNotifications
     public partial class frmProductNotificationAdd : Form
     {
         private readonly IWebApiService _webApiService;
-        public Guid appUserId;
         public frmProductNotificationAdd(IWebApiService webApiService)
         {
             InitializeComponent();
@@ -50,7 +49,7 @@ namespace Krop.WinForms.Forms.ProductNotifications
                 {
                     BranchId = (Guid)branchComboBoxControl.BranchComboBox.SelectedValue,
                     ProductId = (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue,
-                    SenderAppUserId = appUserId,
+                    SenderAppUserId = Panel._appUserId,
                     SentAppUserId = (Guid)employeeComboBoxControl.EmployeeComboBox.SelectedValue,
                     Description = txtDescription.Text
                 });

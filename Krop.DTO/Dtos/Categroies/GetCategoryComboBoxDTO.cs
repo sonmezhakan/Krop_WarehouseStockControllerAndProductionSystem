@@ -1,8 +1,8 @@
 ﻿namespace Krop.DTO.Dtos.Categroies
 {
-    public record GetCategoryComboBoxDTO
+    public record  GetCategoryComboBoxDTO
     {
-        public Guid Id { get; init; }
-        public string CategoryName { get; init; }
+        public Guid Id{ get; init; }
+        public string CategoryName{ get; init; }
     }
 }

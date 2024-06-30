@@ -8,7 +8,6 @@ namespace Krop.WinForms.Forms.Productions
 {
     public partial class frmProduction : Form
     {
-        public Guid appUserId;
         private Guid id;
         private readonly IWebApiService _webApiService;
 
@@ -26,7 +25,7 @@ namespace Krop.WinForms.Forms.Productions
             productComboBoxControl.ProductNameComboBox.SelectedIndexChanged += CmbBoxProductName_SelectedIndexChanged;
             productComboBoxControl.ProductCodeComboBox.SelectedIndexChanged += CmbBoxProductCode_SelectedIndexChanged;
 
-            await productionListControl.ProductionList(_webApiService,appUserId);
+            await productionListControl.ProductionList(_webApiService, Panel._appUserId);
             productionListControl.DataGridViewProductionList.DoubleClick += dgwProductionList_DoubleClick;
         }
 
@@ -110,7 +109,7 @@ namespace Krop.WinForms.Forms.Productions
             {
                 HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("production/Add", new CreateProductionDTO
                 {
-                    AppUserId = appUserId,
+                    AppUserId = Panel._appUserId,
                     BranchId = (Guid)branchComboBoxControl.BranchComboBox.SelectedValue,
                     ProductId = (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue,
                     ProductionDate = productionDateTimePicker.Value,
@@ -124,7 +123,7 @@ namespace Krop.WinForms.Forms.Productions
                     return;
                 }
 
-                await productionListControl.ProductionList(_webApiService, appUserId);
+                await productionListControl.ProductionList(_webApiService, Panel._appUserId);
             }
             else
             {
@@ -143,7 +142,7 @@ namespace Krop.WinForms.Forms.Productions
                         HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("production/Update",new UpdateProductionDTO
                         {
                             Id = id,
-                            AppUserId = appUserId,
+                            AppUserId = Panel._appUserId,
                             BranchId = (Guid)branchComboBoxControl.BranchComboBox.SelectedValue,
                             ProductId = (Guid)productComboBoxControl.ProductNameComboBox.SelectedValue,
                             Description = txtDescription.Text,
@@ -156,7 +155,7 @@ namespace Krop.WinForms.Forms.Productions
                             return;
                         }
 
-                        await productionListControl.ProductionList(_webApiService, appUserId);
+                        await productionListControl.ProductionList(_webApiService, Panel._appUserId);
                         id = default;
                     }
                 }
@@ -177,14 +176,14 @@ namespace Krop.WinForms.Forms.Productions
             {
                 if (DialogResultHelper.DeleteDialogResult() == DialogResult.Yes)
                 {
-                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"production/Delete/{id}/{appUserId}");
+                    HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"production/Delete/{id}/{Panel._appUserId}");
                     if (!response.IsSuccessStatusCode)
                     {
                         await ResponseController.ErrorResponseController(response);
                         return;
                     }
 
-                    await productionListControl.ProductionList(_webApiService, appUserId);
+                    await productionListControl.ProductionList(_webApiService, Panel._appUserId);
                     id = default;
                 }
             }
@@ -212,7 +211,7 @@ namespace Krop.WinForms.Forms.Productions
         private async void dgwProductionList_DoubleClick(object sender, EventArgs e)
         {
             id = (Guid)productionListControl.DataGridViewProductionList.SelectedRows[0].Cells[0].Value;
-            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"production/getById/{id}/{appUserId}");
+            HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"production/getById/{id}/{Panel._appUserId}");
             if (!response.IsSuccessStatusCode)
             {
                 await ResponseController.ErrorResponseController(response);

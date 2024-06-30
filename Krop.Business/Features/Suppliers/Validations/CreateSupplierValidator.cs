@@ -4,9 +4,9 @@ using Krop.DTO.Dtos.Suppliers;
 
 namespace Krop.Business.Features.Suppliers.Validations
 {
-    public class CreateSupplierValidation : AbstractValidator<CreateSupplierDTO>
+    public class CreateSupplierValidator : AbstractValidator<CreateSupplierDTO>
     {
-        public CreateSupplierValidation()
+        public CreateSupplierValidator()
         {
             //CustomerName, ContactName, ContactTitle
             RuleFor(x => x.CompanyName)

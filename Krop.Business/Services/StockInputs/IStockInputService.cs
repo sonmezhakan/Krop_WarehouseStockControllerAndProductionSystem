@@ -5,7 +5,7 @@ namespace Krop.Business.Services.StockInputs
 {
     public interface IStockInputService
     {
-        Task<IDataResult<IEnumerable<GetStockInputListDTO>>> GetAllAsync(Guid appUserId);
+        Task<IDataResult<IEnumerable<GetStockInputListDTO>>> GetByAppUserBranchIdAsync(Guid appUserId);
         Task<IDataResult<GetStockInputDTO>> GetByIdAsync(Guid id);
         Task<IResult> AddAsync(CreateStockInputDTO createStockInputDTO);
         Task<IResult> UpdateAsync(UpdateStockInputDTO updateStockInputDTO,bool productionUpdated = false);
