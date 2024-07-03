@@ -1,0 +1,61 @@
+﻿@model List<GetDepartmentDTO>
+@{
+    ViewData["Title"] = "Departman Listesi";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+}
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial"/>
+                <div class="card-body">
+                    <table id="departmentList" class="table table-striped" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Departman Adı</th>
+                                <th>Açıklama</th>
+                                <th>
+                                    <a class="btn btn-success" asp-controller="Department" asp-action="Create">Ekle</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model != null)
+                            {
+                               @foreach(var item in Model)
+                               {
+                                    <tr>
+                                        <td>@item.DepartmentName</td>
+                                        <td>@item.Description</td>
+                                        <td>
+                                            <div class="form-group">
+                                                <a class="btn btn-warning" asp-controller="Department" asp-action="Update" asp-route-id="@item.Id">Güncelle</a>
+                                                <a class="btn btn-danger" asp-controller="Department" asp-action="Delete" asp-route-id="@item.Id">Sil</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                               }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function(){
+        intitializeDataTable('departmentList', 0, 'asc');
+    }
+</script>

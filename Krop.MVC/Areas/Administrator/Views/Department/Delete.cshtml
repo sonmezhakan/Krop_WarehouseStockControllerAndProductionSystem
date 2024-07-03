@@ -1,0 +1,45 @@
+﻿@model DeleteDepartmentVM
+@{
+    ViewData["Title"] = "Departman Sil";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    @if(Model.GetDepartmentComboBoxDTO != null)
+                    {
+                        <form method="post">
+                            <div class="form-group">
+                                <label>Departmanlar</label>
+                                <select name="id" class="choices form-select">
+                                    <option disabled selected>Departman Seçiniz!</option>
+                                    @foreach (var item in Model.GetDepartmentComboBoxDTO)
+                                    {
+                                        @if(Model.Id != null && Model.Id == item.Id)
+                                        {
+                                            <option value="@item.Id" selected>@item.DepartmentName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.DepartmentName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-danger btn-block">Sil</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

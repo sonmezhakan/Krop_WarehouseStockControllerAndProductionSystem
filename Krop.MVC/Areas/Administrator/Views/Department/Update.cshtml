@@ -1,0 +1,70 @@
+﻿@model UpdateDepartmentVM
+@{
+    ViewData["Title"] = "Departman Güncelle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    @if (Model.GetDepartmentComboBoxDTO != null)
+                    {
+                        <form method="post">
+                            <input type="hidden" asp-for="@Model.UpdateDepartmentDTO.Id"/>
+                            <div class="form-group">
+                                <label>Departmanlar</label>
+                                <select id="departmentSelect" class="choices form-select">
+                                    <option disabled selected>Departman Seçiniz</option>
+                                    @foreach (var item in Model.GetDepartmentComboBoxDTO)
+                                    {
+                                        @if (Model.UpdateDepartmentDTO != null && Model.UpdateDepartmentDTO.Id == item.Id)
+                                        {
+                                            <option value="@item.Id" selected>@item.DepartmentName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.DepartmentName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Departman Adı</label>
+                                <input type="text" class="form-control" asp-for="@Model.UpdateDepartmentDTO.DepartmentName" placeholder="Departman Adı" />
+                            </div>
+                            <div class="form-group">
+                                <label>Açıklama</label>
+                                <textarea rows="4" class="form-control" asp-for="@Model.UpdateDepartmentDTO.Description" placeholder="Açıklama"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-warning btn-block">Güncelle</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        $("#departmentSelect").change(function () {
+            const departmentId = document.getElementById("departmentSelect").value;
+            const path = "Departman/Guncelle/" + departmentId;
+            redirectToSelectedPage(path);
+        })
+
+    }
+</script>

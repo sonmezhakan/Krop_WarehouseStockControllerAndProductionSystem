@@ -19,39 +19,38 @@
             <div class="card">
                 <partial name="Partials/_SuccessErrorAlertPartial"></partial>
                 <div class="card-body">
-                    @if(Model.UpdateCategoryDTO != null || Model.GetCategoryDTO != null)
+                    @if (Model.UpdateCategoryDTO != null || Model.GetCategoryDTO != null)
                     {
                         <form method="post">
                             <input type="hidden" asp-for="@Model.UpdateCategoryDTO.Id" />
                             <div class="form-group">
                                 <label>Kategoriler</label>
                                 <select class="choices form-select" id="categorySelect">
-                                    @if (Model.GetCategoryDTO != null && Model.GetCategoryDTO.Count() > 0)
+                                    <option disabled selected>Kategori Seçiniz!</option>
+                                    @foreach (var item in Model.GetCategoryDTO)
                                     {
-                                        @foreach (var item in Model.GetCategoryDTO)
+                                        @if (Model.UpdateCategoryDTO != null && Model.UpdateCategoryDTO.Id == item.Id)
                                         {
-                                            @if(Model.UpdateCategoryDTO != null && Model.UpdateCategoryDTO.Id == item.Id)
-                                            {
-                                                <option value="@item.Id" selected>@item.CategoryName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@item.Id">@item.CategoryName</option>
-                                            }
+                                            <option value="@item.Id" selected>@item.CategoryName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.CategoryName</option>
                                         }
                                     }
+
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Kategori Adı</label>
-                                <input type="text" class="form-control" asp-for="@Model.UpdateCategoryDTO.CategoryName" placeholder="Kategori Adı"/>
+                                <input type="text" class="form-control" asp-for="@Model.UpdateCategoryDTO.CategoryName" placeholder="Kategori Adı" />
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-warning btn-block">Update</button>
+                                <button type="submit" class="btn btn-warning btn-block">Güncelle</button>
                             </div>
                         </form>
                     }
-                    
+
                 </div>
             </div>
         </div>
@@ -61,7 +60,7 @@
     window.onload = function () {
         $("#categorySelect").change(function () {
             const categoryId = document.getElementById("categorySelect").value;
-            const path = "Administrator/Category/Update/" + categoryId;
+            const path = "Kategori/Guncelle/" + categoryId;
             redirectToSelectedPage(path);
         })
     }

@@ -24,6 +24,7 @@
                             <div class="form-group">
                                 <label>Kategoriler</label>
                                 <select name="id" class="choices form-select">
+                                    <option disabled selected>Kategori Seçiniz!</option>
                                     @foreach (var item in Model.GetCategoryDTO)
                                     {
                                         @if (Model.Id != null && Model.Id == item.Id)

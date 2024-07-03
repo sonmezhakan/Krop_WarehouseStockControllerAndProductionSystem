@@ -2,13 +2,13 @@
 using Krop.Common.Helpers.WebApiService;
 using Krop.Common.Models;
 using Krop.DTO.Dtos.Categroies;
-using Krop.MVC.Models;
 using Krop.ViewModel.ViewModel.Category;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.MVC.Areas.Administrator.Controllers
 {
     [Area("Administrator")]
+    [Route("Kategori")]
     public class CategoryController : Controller
     {
         private readonly IWebApiService _webApiService;
@@ -17,7 +17,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
         {
             _webApiService = webApiService;
         }
-        [HttpGet]
+        [HttpGet("Listele")]
         public async Task<IActionResult> Index()
         {
             HttpResponseMessage response = await _webApiService.httpClient.GetAsync("category/getall");
@@ -31,12 +31,12 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             return View(resultSuccess.Data);
         }
 
-        [HttpGet]
+        [HttpGet("Ekle")]
         public async Task<IActionResult> Create()
         {
             return View();
         }
-        [HttpPost]
+        [HttpPost("Ekle")]
         public async Task<IActionResult> Create(CreateCategoryDTO createCategoryDTO)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("category/add", createCategoryDTO);
@@ -50,7 +50,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             TempData["Success"] = "Eklme İşlemi Başarılı!";
             return View();
         }
-        [HttpGet]
+        [HttpGet("Guncelle/{id?}")]
         public async Task<IActionResult> Update(Guid? id)
         {
             var getallComboBox = await CategorySelectList();
@@ -79,7 +79,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                 GetCategoryDTO = getallComboBox
             });
         }
-        [HttpPost]
+        [HttpPost("Guncelle/{id?}")]
         public async Task<IActionResult> Update(UpdateCategoryVM updateCategoryVM)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("category/update", updateCategoryVM.UpdateCategoryDTO);
@@ -97,7 +97,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             TempData["Success"] = "Güncelleme İşlemi Başarılı!";
             return RedirectToAction("Update","Category", new {id =updateCategoryVM.UpdateCategoryDTO.Id});
         }
-        [HttpGet]
+        [HttpGet("Sil/{id?}")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             var getallComboBox = await CategorySelectList();
@@ -108,7 +108,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                 Id = id ?? null
             });
         }
-        [HttpPost]
+        [HttpPost("Sil/{id?}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"category/Delete/{id}");

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Krop.MVC.Areas.Administrator.Controllers
 {
     [Area("Administrator")]
+    [Route("Marka")]
     public class BrandController : Controller
     {
         private readonly IWebApiService _webApiService;
@@ -16,20 +17,17 @@ namespace Krop.MVC.Areas.Administrator.Controllers
         {
             _webApiService = webApiService;
         }
-        [HttpGet]
-        [Route("Marka/Liste")]
+        [HttpGet("Listele")]
         public async Task<IActionResult> Index()
         {
             return View(await BrandList());
         }
-        [HttpGet]
-        [Route("Marka/Ekle")]
+        [HttpGet("Ekle")]
         public async Task<IActionResult> Create()
         {
             return View();
         }
-        [HttpPost]
-        [Route("Marka/Ekle")]
+        [HttpPost("Ekle")]
         public async Task<IActionResult> Create(CreateBrandDTO createBrandDTO)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("brand/add", createBrandDTO);
@@ -42,8 +40,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             TempData["Success"] = "Marka Ekleme İşlemi Başarılı!";
             return View();
         }
-        [HttpGet]
-        [Route("Marka/Guncelle/{id?}")]
+        [HttpGet("Guncelle/{id?}")]
         public async Task<IActionResult> Update(Guid? id)
         {
             var getBrandSelectList = await GetBrandSelectList();
@@ -71,8 +68,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                 GetBrandComboBoxDTO = getBrandSelectList
             });
         }
-        [HttpPost]
-        [Route("Marka/Guncelle")]
+        [HttpPost("Guncelle/{id?}")]
         public async Task<IActionResult> Update(UpdateBrandVM updateBrandVM)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("brand/update", updateBrandVM.UpdateBrandDTO);
@@ -89,7 +85,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             TempData["Success"] = "Güncelleme İşlemi Başarılı!";
             return RedirectToAction("Update", "Brand", new { id = updateBrandVM.UpdateBrandDTO.Id });
         }
-        [HttpGet("Marka/Sil/{id?}")]
+        [HttpGet("Sil/{id?}")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             return View(new DeleteBrandVM
@@ -98,7 +94,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                 Id = id ?? null
             });
         }
-        [HttpPost("Marka/Sil/{id}")]
+        [HttpPost("Sil/{id?}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"brand/delete/{id}");
