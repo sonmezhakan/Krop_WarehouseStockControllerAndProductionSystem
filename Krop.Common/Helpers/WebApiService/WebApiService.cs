@@ -1,7 +1,4 @@
 ﻿
-
-using Microsoft.Extensions.Configuration;
-
 namespace Krop.Common.Helpers.WebApiService
 {
     public class WebApiService : IWebApiService

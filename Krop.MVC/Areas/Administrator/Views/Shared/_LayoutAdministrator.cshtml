@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Krop</title>
+
+    @RenderSection("Styles", false)
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/compiled/css/app.css" />
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/compiled/css/app-dark.css" />
+
+</head>
+<body>
+    <script src="~/themes/mazer-theme/dist/assets/static/js/initTheme.js"></script>
+    <div id="app">
+        <partial name="_SidebarPartial" />
+
+        <div id="main">
+            <header class="mb-3">
+                <partial name="_HeaderPartial" />
+            </header>
+
+            @RenderBody()
+            </div>
+        
+    </div>
+    </div>
+
+    <footer class="footer">
+        <partial name="_FooterPartial" />
+    </footer>
+
+    <script src="~/themes/mazer-theme/dist/assets/extensions/jquery/jquery.min.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/static/js/components/dark.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/compiled/js/app.js"></script> 
+    @RenderSection("Scripts",false);
+
+</body>
+
+</html>

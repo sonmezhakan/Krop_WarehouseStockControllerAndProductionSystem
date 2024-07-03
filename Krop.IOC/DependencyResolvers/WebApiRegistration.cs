@@ -7,6 +7,7 @@ namespace Krop.IOC.DependencyResolvers
     {
         public static IServiceCollection AddWebApiRegistration(this IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddScoped<IWebApiService, WebApiService>();
 
             return services;

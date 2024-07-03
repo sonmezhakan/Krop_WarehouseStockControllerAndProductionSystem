@@ -1,0 +1,49 @@
+﻿@model DeleteCategoryVM
+@{
+    ViewData["Title"] = "Kategori Sil";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlerPartial"></partial>
+                <div class="card-body">
+                    @if (Model.GetCategoryDTO != null && Model.GetCategoryDTO.Count() > 0)
+                    {
+                       <form method="post">
+                            <div class="form-group">
+                                <select name="id" class="choices form-select">
+                                    @foreach (var item in Model.GetCategoryDTO)
+                                    {
+                                        @if (Model.Id != null && Model.Id == item.Id)
+                                        {
+                                            <option value="@item.Id" selected>@item.CategoryName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.CategoryName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-danger btn-block">Sil</button>
+                            </div>
+                       </form>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

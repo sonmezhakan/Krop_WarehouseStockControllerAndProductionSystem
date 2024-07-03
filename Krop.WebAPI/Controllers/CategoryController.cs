@@ -1,6 +1,5 @@
 ﻿using Krop.Business.Services.Categories;
 using Krop.DTO.Dtos.Categroies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

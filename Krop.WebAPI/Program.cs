@@ -72,8 +72,19 @@ namespace Krop.WebAPI
             builder.Services.AddSingleton<ICacheService, DistributedCacheManager>();
             builder.Services.AddSingleton<ICacheHelper,CacheHelper>();
 
-            var app = builder.Build();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:7037")
+                                .AllowAnyMethod()
+                                .AllowAnyHeader();
+                    });
+            });
 
+            var app = builder.Build();
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -90,6 +101,7 @@ namespace Krop.WebAPI
             app.UseAuthorization();
             app.UseAuthorization();
 
+            app.UseCors("AllowSpecificOrigin");
 
             app.MapControllers();
 
