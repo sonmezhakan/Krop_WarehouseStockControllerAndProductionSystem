@@ -4,7 +4,7 @@ namespace Krop.ViewModel.ViewModel.Category
 {
     public record UpdateCategoryVM
     {
-        public List<GetCategoryDTO>? GetCategoryDTO { get; set; }
+        public List<GetCategoryDTO>? GetCategoryDTO { get; init; }
         public UpdateCategoryDTO? UpdateCategoryDTO { get; init; }
     }
 }

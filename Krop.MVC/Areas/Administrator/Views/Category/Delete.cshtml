@@ -16,12 +16,13 @@
     <div class="row">
         <div class="col">
             <div class="card">
-                <partial name="Partials/_SuccessErrorAlerPartial"></partial>
+                <partial name="Partials/_SuccessErrorAlertPartial"></partial>
                 <div class="card-body">
                     @if (Model.GetCategoryDTO != null && Model.GetCategoryDTO.Count() > 0)
                     {
                        <form method="post">
                             <div class="form-group">
+                                <label>Kategoriler</label>
                                 <select name="id" class="choices form-select">
                                     @foreach (var item in Model.GetCategoryDTO)
                                     {

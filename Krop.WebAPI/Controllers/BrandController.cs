@@ -51,7 +51,7 @@ namespace Krop.WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _brandService.GetByIdAsync(id);
 

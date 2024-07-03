@@ -86,11 +86,13 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             if(!response.IsSuccessStatusCode)
             {
                 var result = await JsonHelper.DeserializeAsync<ErrorResponseViewModel>(response);
-                var getallComboBox = await CategorySelectList();
                 TempData["Error"] = result.Detail;
 
-                updateCategoryVM.GetCategoryDTO = getallComboBox;
-                return View(updateCategoryVM);
+                return View(new UpdateCategoryVM
+                {
+                    GetCategoryDTO = await CategorySelectList(),
+                    UpdateCategoryDTO = updateCategoryVM.UpdateCategoryDTO
+            });
             }
             TempData["Success"] = "Güncelleme İşlemi Başarılı!";
             return RedirectToAction("Update","Category", new {id =updateCategoryVM.UpdateCategoryDTO.Id});

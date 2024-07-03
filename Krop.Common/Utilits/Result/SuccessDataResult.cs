@@ -12,7 +12,7 @@
         {
             
         }
-        public SuccessDataResult(DTO.Dtos.Brands.GetBrandDTO? getBrandDTO) :base(default,true,200)
+        public SuccessDataResult() :base(default,true,200)
         {
             
         }

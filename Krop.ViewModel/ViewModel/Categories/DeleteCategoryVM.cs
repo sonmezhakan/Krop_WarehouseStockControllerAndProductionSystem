@@ -4,7 +4,7 @@ namespace Krop.ViewModel.ViewModel.Category
 {
     public record DeleteCategoryVM
     {
-        public List<GetCategoryDTO>? GetCategoryDTO { get; set; }
+        public List<GetCategoryDTO>? GetCategoryDTO { get; init; }
         public Guid? Id { get; init; }
     }
 }

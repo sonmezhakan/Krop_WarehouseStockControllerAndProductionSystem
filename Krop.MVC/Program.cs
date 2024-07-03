@@ -36,14 +36,14 @@ namespace Krop.MVC
             {
                 endpoints.MapControllerRoute(
                   name: "areas",
-                  pattern: "{area:exists}/{controller=Category}/{action=Index}/{id?}"
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
 
                 endpoints.MapControllerRoute(
-                  name: "areas",
-                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                 name:"Ekle",
+				 pattern:"Ekle",
+				 defaults: new {controller="Brand", action="Create"}
                 );
-                
             });
             app.MapControllerRoute(
 

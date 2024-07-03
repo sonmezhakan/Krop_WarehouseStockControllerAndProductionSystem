@@ -1,0 +1,73 @@
+﻿@model UpdateBrandVM
+@{
+    ViewData["Title"] = "Marka Güncelle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial"></partial>
+                <div class="card-body">
+                   @if(Model.GetBrandComboBoxDTO != null)
+                    {
+                        <form method="post">
+                            <input type="hidden" asp-for="@Model.UpdateBrandDTO.Id"/>
+                            <div class="form-group">
+                                <label>Markalar</label>
+                                <select id="brandSelect" class="choices form-select">
+                                    <option disabled selected>Marka Seç</option>
+                                    @foreach (var item in Model.GetBrandComboBoxDTO)
+                                    {
+                                        @if(Model.UpdateBrandDTO != null && Model.UpdateBrandDTO.Id == item.Id)
+                                        {
+                                            <option value="@item.Id" selected>@item.BrandName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.BrandName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Marka Adı</label>
+                                <input type="text" class="form-control" asp-for="@Model.UpdateBrandDTO.BrandName" placeholder="Marka Adı"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" asp-for="@Model.UpdateBrandDTO.Email" placeholder="Email" />
+                            </div>
+                            <div class="form-group">
+                                <label>Telefon Numarası</label>
+                                <input type="text" class="form-control" asp-for="@Model.UpdateBrandDTO.PhoneNumber" placeholder="Telefon Numarası" />
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-warning btn-block">Güncelle</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function(){
+        $("#brandSelect").change(function () {
+            const brandId = document.getElementById("brandSelect").value;
+            const path = "Marka/Guncelle/" + brandId;
+            redirectToSelectedPage(path);
+        })
+    }
+</script>

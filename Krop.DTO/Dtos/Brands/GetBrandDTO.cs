@@ -1,6 +1,6 @@
 ﻿namespace Krop.DTO.Dtos.Brands
 {
-    public record  GetBrandDTO
+    public record GetBrandDTO
     {
         public Guid Id{ get; init; }
         public string BrandName{ get; init; }
