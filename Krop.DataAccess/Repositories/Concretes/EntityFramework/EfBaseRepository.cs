@@ -207,6 +207,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             {
                 query = query.Include(includeProperty);
             }
+            query.IgnoreQueryFilters();
             if (predicate is null)
                 return await query.ToListAsync();
 

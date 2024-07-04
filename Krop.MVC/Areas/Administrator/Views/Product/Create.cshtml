@@ -1,0 +1,75 @@
+﻿@model CreateProductVM
+@{
+    ViewData["Title"] = "Ürün Ekle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial"></partial>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label>Ürün Adı</label>
+                            <input type="text" class="form-control" asp-for="CreateProductDTO.ProductName" placeholder="Ürün Adı"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Ürün Kodu</label>
+                            <input type="text" class="form-control" asp-for="CreateProductDTO.ProductCode" placeholder="Ürün Kodu"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Kategoriler</label>
+                            <select asp-for="CreateProductDTO.CategoryId" class="choices form-select">
+                                <option disabled selected>Kategori Seçiniz!</option>
+                                @if(Model.GetCategoryDTO != null)
+                                {
+                                    @foreach (var item in Model.GetCategoryDTO)
+                                    {
+                                        <option value="@item.Id">@item.CategoryName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Markalar</label>
+                            <select asp-for="CreateProductDTO.BrandId" class="choices form-select">
+                                <option disabled selected>Marka Seçiniz!</option>
+                                @if(Model.GetBrandComboBoxDTO != null)
+                                {
+                                    @foreach (var item in Model.GetBrandComboBoxDTO)
+                                    {
+                                        <option value="@item.Id">@item.BrandName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Fiyat (₺)</label>
+                            <input type="text" class="form-control" asp-for="CreateProductDTO.UnitPrice" placeholder="Fiyat"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Kritik Miktar</label>
+                            <input type="text" class="form-control" asp-for="CreateProductDTO.CriticalStock" placeholder="Kritik Miktar"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            <textarea rows="4" class="form-control" asp-for="CreateProductDTO.Description" placeholder="Açıklama"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Resim</label>
+                            <input type="file" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block">Ekle</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

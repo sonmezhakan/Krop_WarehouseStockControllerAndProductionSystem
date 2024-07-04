@@ -7,5 +7,6 @@ namespace Krop.DataAccess.Repositories.Abstracts
     {
         Task<List<Guid>> GetAllProductIdAsync();
         Task<List<Product>> GetAllComboBoxAsync();
+        Task<List<Product>> GetAllWithIncludesAsync();
     }
 }

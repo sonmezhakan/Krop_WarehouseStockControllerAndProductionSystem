@@ -1,0 +1,132 @@
+﻿@model UpdateProductVM
+@{
+    ViewData["Title"] = "Ürün Güncelle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial"></partial>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label>Ürünler</label>
+                            <select asp-for="UpdateProductDTO.Id" id="productNameSelect" class="choices form-select">
+                                <option disabled selected>Ürün Adı Seçiniz!</option>
+                                @if(Model.GetProductComboBoxDTO != null)
+                                {
+                                    @foreach (var item in Model.GetProductComboBoxDTO)
+                                    {
+                                        @if(Model.UpdateProductDTO != null && Model.UpdateProductDTO.Id == item.Id)
+                                        {
+                                            <option value="@item.Id" selected>@item.ProductName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.ProductName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                            <select asp-for="UpdateProductDTO.Id" id="productCodeSelect" class="choices form-select">
+                                <option disabled selected>Ürün Kodu Seçiniz!</option>
+                                @if (Model.GetProductComboBoxDTO != null)
+                                {
+                                    @foreach (var item in Model.GetProductComboBoxDTO)
+                                    {
+                                        @if (Model.UpdateProductDTO != null && Model.UpdateProductDTO.Id == item.Id)
+                                        {
+                                            <option value="@item.Id" selected>@item.ProductCode</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.ProductCode</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ürün Adı</label>
+                            <input type="text" class="form-control" asp-for="@Model.UpdateProductDTO.ProductName" placeholder="Ürün Adı" />
+                        </div>
+                        <div class="form-group">
+                            <label>Ürün Kodu</label>
+                            <input type="text" class="form-control" asp-for="@Model.UpdateProductDTO.ProductCode" placeholder="Ürün Kodu" />
+                        </div>
+                        <div class="form-group">
+                            <label>Kategoriler</label>
+                            <select asp-for="UpdateProductDTO.CategoryId" class="choices form-select">
+                                <option disabled selected>Kategori Seçiniz!</option>
+                                @if (Model.GetCategoryDTO != null)
+                                {
+                                    @foreach (var item in Model.GetCategoryDTO)
+                                    {
+                                        <option value="@item.Id">@item.CategoryName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Markalar</label>
+                            <select asp-for="UpdateProductDTO.BrandId" class="choices form-select">
+                                <option disabled selected>Marka Seçiniz!</option>
+                                @if (Model.GetBrandComboBoxDTO != null)
+                                {
+                                    @foreach (var item in Model.GetBrandComboBoxDTO)
+                                    {
+                                        <option value="@item.Id">@item.BrandName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Fiyat (₺)</label>
+                            <input type="text" class="form-control" asp-for="@Model.UpdateProductDTO.UnitPrice" placeholder="Fiyat" />
+                        </div>
+                        <div class="form-group">
+                            <label>Kritik Miktar</label>
+                            <input type="text" class="form-control" asp-for="@Model.UpdateProductDTO.CriticalStock" placeholder="Kritik Miktar" />
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            <textarea rows="4" class="form-control" asp-for="@Model.UpdateProductDTO.Description" placeholder="Açıklama"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Resim</label>
+                            <input type="file" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-warning btn-block">Güncelle</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        $("#productNameSelect").change(function () {
+            const productId = document.getElementById("productNameSelect").value;
+            const path = "urun/guncelle/" + productId;
+            redirectToSelectedPage(path);
+        });
+        $("#productCodeSelect").change(function () {
+            const productId = document.getElementById("productCodeSelect").value;
+            const path = "urun/guncelle/" + productId;
+            redirectToSelectedPage(path);
+        });
+    }
+</script>

@@ -117,11 +117,7 @@ namespace Krop.Business.Services.Products
                 ProductCacheKeys.GetAllAsync,
                 async () =>
                 {
-                    var result = await _productRepository.GetAllAsync(includeProperties: new Expression<Func<Product, object>>[]
-                      {
-                         c=>c.Category,
-                        b=>b.Brand//Include
-                     });
+                    var result = await _productRepository.GetAllWithIncludesAsync();
                     return result is null ? null : _mapper.Map<IEnumerable<GetProductListDTO>>(result);
                 },
                 60

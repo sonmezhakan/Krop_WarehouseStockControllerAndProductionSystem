@@ -1,0 +1,73 @@
+﻿@model List<GetProductListDTO>
+@{
+    ViewData["Title"] = "Ürün Listesi";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+}
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial"></partial>
+                <div class="card-body">
+                    <table id="productList" class="table table-striped" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Resim</th>
+                                <th>Ürün Adı</th>
+                                <th>Ürün Kodu</th>
+                                <th>Kategori Adı</th>
+                                <th>Marka Adı</th>
+                                <th>Fiyat</th>
+                                <th>Kritik Miktar</th>
+                                <th>Açıklama</th>
+                                <th>
+                                    <a class="btn btn-success" asp-controller="Product" asp-action="Create">Ekle</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model != null)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td>@item.ProductName</td>
+                                        <td>@item.ProductCode</td>
+                                        <td>@item.CategoryName</td>
+                                        <td>@item.BrandName</td>
+                                        <td>@item.UnitPrice</td>
+                                        <td>@item.CriticalStock</td>
+                                        <td>@item.Description</td>
+                                        <td>
+                                            <div class="form-group">
+                                                <a class="btn btn-warning" asp-controller="Product" asp-action="Update" asp-route-id="@item.Id">Güncelle</a>
+                                                <a class="btn btn-danger" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id">Sil</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        intitializeDataTable('productList', 0, 'asc');
+    }
+</script>

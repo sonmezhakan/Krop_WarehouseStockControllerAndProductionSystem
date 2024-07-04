@@ -1,6 +1,7 @@
 ﻿using Krop.DataAccess.Context;
 using Krop.DataAccess.Repositories.Abstracts;
 using Krop.Entities.Entities;
+using Krop.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
@@ -29,6 +30,17 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         public async Task<List<Guid>> GetAllProductIdAsync()
         {
             return await _context.Products.Select(p => p.Id).ToListAsync();
+        }
+
+        public Task<List<Product>> GetAllWithIncludesAsync()
+        {
+            IQueryable<Product> products = _context.Products
+                .Where(p=> EF.Property<DataStatu>(p,"DataStatu") != DataStatu.Deleted)
+                .Include(c=>c.Category)
+                .Include(b=>b.Brand)
+                .IgnoreQueryFilters();
+
+            return products.ToListAsync();
         }
     }
 }
