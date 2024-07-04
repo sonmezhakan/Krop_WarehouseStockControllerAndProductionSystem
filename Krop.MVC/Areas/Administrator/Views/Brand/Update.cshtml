@@ -22,10 +22,9 @@
                    @if(Model.GetBrandComboBoxDTO != null)
                     {
                         <form method="post">
-                            <input type="hidden" asp-for="@Model.UpdateBrandDTO.Id"/>
                             <div class="form-group">
                                 <label>Markalar</label>
-                                <select id="brandSelect" class="choices form-select">
+                                <select asp-for="UpdateBrandDTO.Id" id="brandSelect" class="choices form-select">
                                     <option disabled selected>Marka Seç</option>
                                     @foreach (var item in Model.GetBrandComboBoxDTO)
                                     {

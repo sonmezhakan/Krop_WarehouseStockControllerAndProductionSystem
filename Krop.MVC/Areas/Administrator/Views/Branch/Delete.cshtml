@@ -1,6 +1,6 @@
-﻿@model DeleteCategoryVM
+﻿@model DeleteBranchVM
 @{
-    ViewData["Title"] = "Kategori Sil";
+    ViewData["Title"] = "Şube Sil";
     Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
 }
 @section Styles {
@@ -18,32 +18,31 @@
             <div class="card">
                 <partial name="Partials/_SuccessErrorAlertPartial"></partial>
                 <div class="card-body">
-                    @if (Model.GetCategoryDTO != null && Model.GetCategoryDTO.Count() > 0)
-                    {
-                       <form method="post">
-                            <div class="form-group">
-                                <label>Kategoriler</label>
-                                <select asp-for="Id" class="choices form-select">
-                                    <option disabled selected>Kategori Seçiniz!</option>
-                                    @foreach (var item in Model.GetCategoryDTO)
+                    <form method="post">
+                        <div class="form-group">
+                            <label>Şubeler</label>
+                            <select asp-for="Id" class="choices form-select">
+                                <option disabled selected>Şube Seçiniz!</option>
+                                @if (Model.GetBranchComboBoxDTO != null)
+                                {
+                                    @foreach (var item in Model.GetBranchComboBoxDTO)
                                     {
                                         @if (Model.Id != null && Model.Id == item.Id)
                                         {
-                                            <option value="@item.Id" selected>@item.CategoryName</option>
+                                            <option value="@item.Id" selected>@item.BranchName</option>
                                         }
                                         else
                                         {
-                                            <option value="@item.Id">@item.CategoryName</option>
+                                            <option value="@item.Id">@item.BranchName</option>
                                         }
                                     }
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-danger btn-block">Sil</button>
-                            </div>
-                       </form>
-
-                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-danger btn-block">Sil</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

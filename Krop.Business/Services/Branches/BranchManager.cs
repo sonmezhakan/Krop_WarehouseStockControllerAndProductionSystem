@@ -67,12 +67,16 @@ namespace Krop.Business.Services.Branches
 
         #endregion
         #region Update
-        [ValidationAspect(typeof(UpdateBranchDTO))]
+        [ValidationAspect(typeof(UpdateBranchValidator))]
         public async Task<IResult> UpdateAsync(UpdateBranchDTO updateBranchDTO)
         {
             var branch = await _branchRepository.GetAsync(x=>x.Id == updateBranchDTO.Id);
             if (branch is null)
                 return new ErrorResult(StatusCodes.Status404NotFound, BranchMessages.BranchNotFound);
+
+            var result = BusinessRules.Run(await _branchBusinessRules.BranchNameCannotBeDuplicatedWhenUpdated(branch.BranchName,updateBranchDTO.BranchName));//BranchName Rule
+            if (!result.Success)
+                return result;
 
             await _branchRepository.UpdateAsync(
                 _mapper.Map(updateBranchDTO, branch));

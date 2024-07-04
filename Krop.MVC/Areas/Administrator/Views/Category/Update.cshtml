@@ -22,10 +22,9 @@
                     @if (Model.UpdateCategoryDTO != null || Model.GetCategoryDTO != null)
                     {
                         <form method="post">
-                            <input type="hidden" asp-for="@Model.UpdateCategoryDTO.Id" />
                             <div class="form-group">
                                 <label>Kategoriler</label>
-                                <select class="choices form-select" id="categorySelect">
+                                <select asp-for="UpdateCategoryDTO.Id" class="choices form-select" id="categorySelect">
                                     <option disabled selected>Kategori Seçiniz!</option>
                                     @foreach (var item in Model.GetCategoryDTO)
                                     {

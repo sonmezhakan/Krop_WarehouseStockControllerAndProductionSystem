@@ -23,7 +23,7 @@
                     <form method="post">
                         <div class="form-group">
                             <label>Markalar</label>
-                            <select name="id" class="choices form-select" id="brandSelect">
+                            <select asp-for="Id" class="choices form-select" id="brandSelect">
                                 <option>Marka Seçiniz</option>
                                 @foreach (var item in Model.GetBrandComboBoxDTO)
                                 {
