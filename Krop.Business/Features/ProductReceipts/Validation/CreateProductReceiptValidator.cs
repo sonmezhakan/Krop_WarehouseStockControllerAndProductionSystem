@@ -18,7 +18,8 @@ namespace Krop.Business.Features.ProductReceipts.Validation
 
             RuleFor(x => x.Quantity)
                 .NotEmpty().WithMessage(ProductReceiptMessages.QuantityNotNull)
-                .NotNull().WithMessage(ProductReceiptMessages.QuantityNotNull);
+                .NotNull().WithMessage(ProductReceiptMessages.QuantityNotNull)
+                .InclusiveBetween(1, int.MaxValue).WithMessage(ProductReceiptMessages.QuantityMinAndMaxLenght);
         }
     }
 }

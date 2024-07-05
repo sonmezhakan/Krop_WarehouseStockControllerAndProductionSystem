@@ -1,0 +1,219 @@
+﻿@model CreateProductReceiptVM
+@{
+    ViewData["Title"] = "Ürün Reçetesine Ürün Ekle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    <div class="row d-flex">
+                        <div class="col-md-4">
+
+                            <form method="post">
+                                <div class="form-group">
+                                    <label>Reçetesi Seçilecek Ürün</label>
+                                    <div class="row d-flex">
+                                        <div class="col-md-6">
+                                            <select id="produceProductNameSelect" class="choices form-select" asp-for="@Model.CreateProductReceiptDTO.ProduceProductId">
+                                                <option value="" disabled selected>Ürün Seçiniz!</option>
+                                                @if (Model.GetProductComboBoxDTOs != null)
+                                                {
+                                                    @foreach (var item in Model.GetProductComboBoxDTOs)
+                                                    {
+                                                        @if (Model.ProduceProductId != null && Model.ProduceProductId == item.Id)
+                                                        {
+                                                            <option value="@item.Id" selected>@item.ProductName</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.ProductName</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select id="produceProductCodeSelect" class="choices form-select" asp-for="@Model.CreateProductReceiptDTO.ProduceProductId">
+                                                <option value="" disabled selected>Ürün Seçiniz!</option>
+                                                @if (Model.GetProductComboBoxDTOs != null)
+                                                {
+                                                    @foreach (var item in Model.GetProductComboBoxDTOs)
+                                                    {
+                                                        @if (Model.ProduceProductId != null && Model.ProduceProductId == item.Id)
+                                                        {
+                                                            <option value="@item.Id" selected>@item.ProductCode</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.ProductCode</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Reçeteye Eklenicek Ürün</label>
+                                    <div class="row d-flex">
+                                        <div class="col-md-6">
+                                            <select id="productNameSelect" class="choices form-select" asp-for="@Model.CreateProductReceiptDTO.ProductId">
+                                                <option value="" disabled selected>Ürün Adı Seçiniz!</option>
+                                                @if (Model.GetProductComboBoxDTOs != null)
+                                                {
+                                                    @foreach (var item in Model.GetProductComboBoxDTOs)
+                                                    {
+                                                        @if (Model.ProductId != null && Model.ProductId == item.Id)
+                                                        {
+                                                            <option value="@item.Id" selected>@item.ProductName</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.ProductName</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select id="productCodeSelect" class="choices form-select" asp-for="@Model.CreateProductReceiptDTO.ProductId">
+                                                <option value="" disabled selected>Ürün Kodu Seçiniz!</option>
+                                                @if (Model.GetProductComboBoxDTOs != null)
+                                                {
+                                                    @foreach (var item in Model.GetProductComboBoxDTOs)
+                                                    {
+                                                        @if (Model.ProductId != null && Model.ProductId == item.Id)
+                                                        {
+                                                            <option value="@item.Id" selected>@item.ProductCode</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.ProductCode</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kullanılacak Miktar</label>
+                                    <input type="text" class="form-control" asp-for="@Model.CreateProductReceiptDTO.Quantity" placeholder="Kullanılacak Miktar" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success btn-block">Ekle</button>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="col-md-8">
+                            <table id="productReceiptList" class="table table-striped" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Ürün Adı</th>
+                                        <th>Ürün Kodu</th>
+                                        <th>Kullanılacak Miktar</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.GetProductReceiptListDTOs != null)
+                                    {
+                                        @foreach (var item in Model.GetProductReceiptListDTOs)
+                                        {
+                                            <tr>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.ProductCode</td>
+                                                <td>@item.Quantity</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <a class="btn btn-warning" asp-controller="ProductReceipt" asp-action="Update" asp-route-produceProductId="@Model.ProduceProductId" asp-route-productId="@item.ProductId">Güncelle</a>
+                                                        <form method="post" asp-controller="ProductReceipt" asp-action="Delete" asp-route-produceProductId="@Model.ProduceProductId" asp-route-productId="@item.ProductId">
+                                                            <button type="submit" class="btn btn-danger">Sil</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            $("#produceProductNameSelect").change(function () {
+                const produceProductId = document.getElementById("produceProductNameSelect").value;
+                const productId = document.getElementById("productNameSelect").value;
+                if (productId != "") {
+                    const path = "Urun-Recetesi/Ekle?produceProductId=" + produceProductId + "&productId=" + productId;
+                    redirectToSelectedPage(path);
+                }
+                else {
+                    const path = "Urun-Recetesi/Ekle?produceProductId=" + produceProductId;
+                    redirectToSelectedPage(path);
+                }
+
+            });
+            $("#produceProductCodeSelect").change(function () {
+                const produceProductId = document.getElementById("produceProductCodeSelect").value;
+                const path = "Urun-Recetesi?produceProductId=" + produceProductId;
+                const productId = document.getElementById("productNameSelect").value;
+                if (productId != "") {
+                    const path = "Urun-Recetesi/Ekle?produceProductId=" + produceProductId + "&productId=" + productId;
+                    redirectToSelectedPage(path);
+                }
+                else {
+                    const path = "Urun-Recetesi/Ekle?produceProductId=" + produceProductId;
+                    redirectToSelectedPage(path);
+                }
+            });
+
+            $("#productNameSelect").change(function () {
+                const productId = document.getElementById("productNameSelect").value;
+                const produceProductId = document.getElementById("produceProductNameSelect").value;
+                if (produceProductId != "") {
+                    const path = "Urun-Recetesi/Ekle?produceProductId=" + produceProductId + "&productId=" + productId;
+                    redirectToSelectedPage(path);
+                }
+                else {
+                    const path = "Urun-Recetesi/Ekle?productId=" + productId;
+                    redirectToSelectedPage(path);
+                }
+            });
+            $("#productCodeSelect").change(function () {
+                const productId = document.getElementById("productCodeSelect").value;
+                const produceProductId = document.getElementById("produceProductNameSelect").value;
+                if (produceProductId != "") {
+                    const path = "Urun-Recetesi/Ekle?produceProductId=" + produceProductId + "&productId=" + productId;
+                    redirectToSelectedPage(path);
+                }
+                else {
+                    const path = "Urun-Recetesi/Ekle?productId=" + productId;
+                    redirectToSelectedPage(path);
+                }
+            });
+
+            intitializeDataTable('productReceiptList', 0, 'asc');
+        }
+    </script>

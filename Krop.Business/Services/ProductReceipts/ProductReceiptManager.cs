@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.ProductReceipts.Constants;
 using Krop.Business.Features.ProductReceipts.Rules;
+using Krop.Business.Features.ProductReceipts.Validation;
 using Krop.Business.Features.Products.Validations;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.CacheHelpers;
@@ -23,16 +24,16 @@ namespace Krop.Business.Services.ProductReceipts
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICacheHelper _cacheHelper;
 
-        public ProductReceiptManager(IProductReceiptRepository productReceiptRepository, IMapper mapper, ProductReceiptBusinessRules productReceiptBusinessRule,IUnitOfWork unitOfWork,ICacheHelper cacheHelper)
+        public ProductReceiptManager(IProductReceiptRepository productReceiptRepository, IMapper mapper, ProductReceiptBusinessRules productReceiptBusinessRule, IUnitOfWork unitOfWork, ICacheHelper cacheHelper)
         {
             _productReceiptRepository = productReceiptRepository;
             _mapper = mapper;
             _productReceiptBusinessRule = productReceiptBusinessRule;
-           _unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
             _cacheHelper = cacheHelper;
         }
         #region Add
-        [ValidationAspect(typeof(CreateProductValidator))]
+        [ValidationAspect(typeof(CreateProductReceiptValidator))]
         public async Task<IResult> AddAsync(CreateProductReceiptDTO createProductReceiptDTO)
         {
             var result = BusinessRules.Run(await _productReceiptBusinessRule.ProductReceiptCannotBeDuplicatedWhenInserted(createProductReceiptDTO.ProduceProductId, createProductReceiptDTO.ProductId));//Business Rule
@@ -51,10 +52,10 @@ namespace Krop.Business.Services.ProductReceipts
         }
         #endregion
         #region Update
-        [ValidationAspect(typeof(UpdateProductReceiptDTO))]
+        [ValidationAspect(typeof(UpdateProductReceiptValidator))]
         public async Task<IResult> UpdateAsync(UpdateProductReceiptDTO updateProductReceiptDTO)
         {
-            var getProductReceipt = await _productReceiptRepository.GetAsync(x => x.ProduceProductId == updateProductReceiptDTO.ProductId && x.ProductId == updateProductReceiptDTO.ProductId);
+            var getProductReceipt = await _productReceiptRepository.GetAsync(x => x.ProduceProductId == updateProductReceiptDTO.ProduceProductId && x.ProductId == updateProductReceiptDTO.ProductId);
             if (getProductReceipt is null)
                 return new ErrorResult(StatusCodes.Status404NotFound, ProductReceiptMessages.ProductreceiptNotFound);
 
@@ -70,7 +71,8 @@ namespace Krop.Business.Services.ProductReceipts
             await _cacheHelper.RemoveAsync(new string[]
             {
                 $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{getProductReceipt.ProduceProductId}",
-                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{updateProductReceiptDTO.ProduceProductId}"
+                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{updateProductReceiptDTO.ProduceProductId}",
+                $"IProductReceiptService.GetByProduceProductIdAndProductIdAsync/produceProductId={updateProductReceiptDTO.ProduceProductId}/productId={updateProductReceiptDTO.ProductId}"
             });
             return new SuccessResult();
         }
@@ -87,7 +89,8 @@ namespace Krop.Business.Services.ProductReceipts
             await _unitOfWork.SaveChangesAsync();
             await _cacheHelper.RemoveAsync(new string[]
             {
-                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{produceProductId}"
+                $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{produceProductId}",
+                $"IProductReceiptService.GetByProduceProductIdAndProductIdAsync/produceProductId={produceProductId}/productId={productId}"
             });
             return new SuccessResult();
         }
@@ -99,7 +102,7 @@ namespace Krop.Business.Services.ProductReceipts
                 $"{ProductReceiptCacheKeys.GetByProduceIdAsync}{produceProductId}",
                 async () =>
                 {
-                    var result = await _productReceiptRepository.GetAllAsync(predicate: x => x.ProduceProductId == produceProductId,
+                    var result = await _productReceiptRepository.GetAllWithIncludesAsync(predicate: x => x.ProduceProductId == produceProductId,
                     includeProperties: new Expression<Func<ProductReceipt, object>>[]
                     {
                        p=>p.Product
@@ -112,5 +115,26 @@ namespace Krop.Business.Services.ProductReceipts
             return new SuccessDataResult<IEnumerable<GetProductReceiptListDTO>>(getProductReceiptListDTOs);
         }
         #endregion
+        #region Search
+        public async Task<IDataResult<GetProductReceiptDTO>> GetByProduceProductIdAndProductIdAsync(Guid produceProductId, Guid productId)
+        {
+            GetProductReceiptDTO? getProductReceiptDTO = await _cacheHelper.GetOrAddAsync(
+                $"IProductReceiptService.GetByProduceProductIdAndProductIdAsync/produceProductId={produceProductId}/productId={productId}",
+                async () =>
+                {
+                    var result = await _productReceiptRepository.GetIcludesAsync(predicate: x => x.ProduceProductId == produceProductId && x.ProductId == productId,
+                        includeProperties: new Expression<Func<ProductReceipt, object>>[]
+                        {
+                            p=>p.Product
+                        });
+                    return result is null ? null : _mapper.Map<GetProductReceiptDTO>(result);
+                },
+                15
+                );
+            return getProductReceiptDTO is null ?
+                new ErrorDataResult<GetProductReceiptDTO>(StatusCodes.Status404NotFound, ProductReceiptMessages.ProductreceiptNotFound) :
+                new SuccessDataResult<GetProductReceiptDTO>(getProductReceiptDTO);
+        }
     }
+    #endregion
 }

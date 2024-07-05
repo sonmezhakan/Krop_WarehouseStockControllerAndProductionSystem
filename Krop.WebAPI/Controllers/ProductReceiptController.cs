@@ -43,5 +43,12 @@ namespace Krop.WebAPI.Controllers
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("{produceProductId}/{productId}")]
+        public async Task<IActionResult> GetByProduceProductIdAndProductId(Guid produceProductId, Guid productId,CancellationToken cancellationToken)
+        {
+            var result = await _productReceiptService.GetByProduceProductIdAndProductIdAsync(produceProductId, productId);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
     }
 }
