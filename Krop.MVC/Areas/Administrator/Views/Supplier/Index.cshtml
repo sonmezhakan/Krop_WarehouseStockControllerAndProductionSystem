@@ -1,0 +1,72 @@
+﻿@model List<GetSupplierDTO>
+@{
+    ViewData["Title"] = "Tedarikçi Listesi";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+}
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial"></partial>
+                <div class="card-body">
+                    <table id="supplierList" class="table table-striped" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Firma Adı</th>
+                                <th>İletişim Kurulacak Kişinin Adı</th>
+                                <th>İletişim Kurulacak Kişinin Departmanı</th>
+                                <th>Telefon Numarası</th>
+                                <th>Email</th>
+                                <th>Ülke</th>
+                                <th>Şehir</th>
+                                <th>Adres</th>
+                                <th>Web Site<th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model != null)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.CompanyName</td>
+                                        <td>@item.ContactName</td>
+                                        <td>@item.ContactTitle</td>
+                                        <td>@item.PhoneNumber</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.Country</td>
+                                        <td>@item.City</td>
+                                        <td>@item.Addres</td>
+                                        <td>@item.WebSite</td>
+                                        <td>
+                                            <div class="form-group">
+                                                <a class="btn btn-warning" asp-controller="Supplier" asp-action="Update" asp-route-id="@item.Id">Güncelle</a>
+                                                <a class="btn btn-danger" asp-controller="Supplier" asp-action="Delete" asp-route-id="@item.Id">Sil</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function(){
+        intitializeDataTable('supplierList', 0, 'asc');
+    }
+</script>
