@@ -1,0 +1,48 @@
+﻿@model DeleteAppUserRoleVM
+@{
+    ViewData["Title"] = "Yetki Sil";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    <form method="post">
+                        <select class="choices form-select" asp-for="Id">
+                            <option disabled selected>Yetki Seçiniz!</option>
+                            @if (Model.GetAppUserRoleDTOs != null)
+                            {
+                                @foreach (var item in Model.GetAppUserRoleDTOs)
+                                {
+                                    @if (Model.Id != null && Model.Id == item.Id)
+                                    {
+                                        <option value="@item.Id" selected>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-danger btn-block">Sil</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

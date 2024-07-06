@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Krop.Business.Features.AppUserRoles.Constants;
 using Krop.Business.Features.AppUserRoles.Rules;
+using Krop.Business.Features.AppUserRoles.Validations;
 using Krop.Business.Features.Brands.Constants;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.CacheHelpers;
@@ -30,7 +31,7 @@ namespace Krop.Business.Services.AppUserRoles
         }
 
         #region Add      
-        [ValidationAspect(typeof(CreateAppUserRoleDTO))]
+        [ValidationAspect(typeof(CreateAppUserRoleValidator))]
         public async Task<IResult> AddAsync(CreateAppUserRoleDTO createAppUserRoleDTO)
         {
             var result = BusinessRules.Run(await _appUserRoleBusinessRules.AppUserRoleNameCannotBeDuplicatedWhenInserted(createAppUserRoleDTO.Name));
@@ -50,7 +51,7 @@ namespace Krop.Business.Services.AppUserRoles
 
         #endregion
         #region Update
-        [ValidationAspect(typeof(UpdateAppUserRoleDTO))]
+        [ValidationAspect(typeof(UpdateAppUserRoleValidator))]
         public async Task<IResult> UpdateAsync(UpdateAppUserRoleDTO updateAppUserRoleDTO)
         {
             var result = await _roleManager.FindByIdAsync(updateAppUserRoleDTO.Id.ToString());

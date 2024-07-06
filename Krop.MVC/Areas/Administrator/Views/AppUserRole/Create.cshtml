@@ -1,0 +1,29 @@
+﻿@model CreateAppUserRoleDTO
+@{
+    ViewData["Title"] = "Yetki Ekle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label>Yetki Adı</label>
+                            <input type="text" class="form-control" asp-for="Name" placeholder="Yetki Adı"/>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block">Ekle</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
