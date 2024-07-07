@@ -3,6 +3,7 @@ using Krop.Business.Exceptions.Middlewares.Transaction;
 using Krop.Business.Features.AppUsers.Constants;
 using Krop.Business.Features.AppUsers.Rules;
 using Krop.Business.Features.AppUsers.Validations;
+using Krop.Business.Features.Employees.Constants;
 using Krop.Common.Aspects.Autofac.Validation;
 using Krop.Common.Helpers.CacheHelpers;
 using Krop.Common.Helpers.EmailService;
@@ -62,7 +63,12 @@ namespace Krop.Business.Services.AppUsers
             await _userManager.CreateAsync(appUser,createAppUserDTO.Password);
 
             await ActivationMailSenderAsync(appUser);
-            await _cacheHelper.RemoveAsync(new string[] { AppUserCacheKeys.AppUserGetAllComboBoxAsync });
+            await _cacheHelper.RemoveAsync(new string[] 
+            { 
+                AppUserCacheKeys.AppUserGetAllComboBoxAsync,
+                EmployeeCacheKeys.GetAllAsync,
+                EmployeeCacheKeys.GetAllComboBoxAsync
+            });
             return new SuccessResult();
         }
         #endregion
@@ -93,7 +99,14 @@ namespace Krop.Business.Services.AppUsers
                 await _userManager.AddToRolesAsync(appUser, updateAppUserDTO.Roles);//Yetkileri Ekliyor
 
 
-            await _cacheHelper.RemoveAsync(new string[] { AppUserCacheKeys.AppUserGetAllComboBoxAsync });
+            await _cacheHelper.RemoveAsync(new string[]
+            {
+                AppUserCacheKeys.AppUserGetAllComboBoxAsync,
+                EmployeeCacheKeys.GetAllAsync,
+                EmployeeCacheKeys.GetAllComboBoxAsync,
+               $"{EmployeeCacheKeys.GetByIdAsync}{updateAppUserDTO.Id}",
+               $"{EmployeeCacheKeys.GetByIdCartAsync}{updateAppUserDTO.Id}"
+            });
             return new SuccessResult();
         }
 

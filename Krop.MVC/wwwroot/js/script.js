@@ -4,6 +4,8 @@
 function intitializeDataTable(tableId, orderColumn, orderStatu) {
     $('#' + tableId).DataTable({
         destroy: true,
+        "scrollX": true,
+        responsive: true,
         "order": [[orderColumn, orderStatu]],
         language: {
             lengthMenu: "Sayfa başına _MENU_ göster",
@@ -13,7 +15,6 @@ function intitializeDataTable(tableId, orderColumn, orderStatu) {
     })
 }
 function redirectToSelectedPage(pathParts) {
-    const fullUrl = window.location.href;
     const protocol = window.location.protocol;
     const host = window.location.host;
 

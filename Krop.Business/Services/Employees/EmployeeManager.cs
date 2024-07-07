@@ -82,7 +82,7 @@ namespace Krop.Business.Services.Employees
                 EmployeeCacheKeys.GetAllAsync,
                 async () =>
                 {
-                    var result = await _employeeRepository.GetAllAsync(includeProperties: new Expression<Func<Employee, object>>[]
+                    var result = await _employeeRepository.GetAllWithIncludesAsync(includeProperties: new Expression<Func<Employee, object>>[]
                          {
                              a=>a.AppUser,
                              d=>d.Department,
@@ -118,7 +118,7 @@ namespace Krop.Business.Services.Employees
                 $"{EmployeeCacheKeys.GetByIdAsync}{id}",
                 async () =>
                 {
-                    var result = await _employeeRepository.GetAsync(x=>x.Id == id);
+                    var result = await _employeeRepository.GetAsync(x=>x.AppUserId == id);
                     return result is null ? null : _mapper.Map<GetEmployeeDTO>(result);
                 },
                 60
@@ -134,7 +134,7 @@ namespace Krop.Business.Services.Employees
                 $"{EmployeeCacheKeys.GetByIdCartAsync}{Id}",
                 async () =>
                 {
-                    var result = await _employeeRepository.GetAsync(predicate: x => x.AppUserId == Id,
+                    var result = await _employeeRepository.GetIcludesAsync(predicate: x => x.AppUserId == Id,
                 includeProperties: new Expression<Func<Employee, object>>[]
                 {
                     d=>d.Department,

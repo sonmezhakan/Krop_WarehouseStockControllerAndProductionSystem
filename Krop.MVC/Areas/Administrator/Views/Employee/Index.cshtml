@@ -1,0 +1,104 @@
+﻿@model List<GetEmployeeListDTO>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+    <style>
+        div.row {
+            width: 100%;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+    </style>
+}
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Error"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    <table id="employeeList" class="table table-striped" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Kullanıcı Adı</th>
+                                <th>Ad Soyad</th>
+                                <th>Şube</th>
+                                <th>Departman</th>
+                                <th>Maaş</th>
+                                <th>İşe Giriş Tarihi</th>
+                                <th>İşten Çıkış Tarihi</th>
+                                <th>Çalışma Durumu</th>
+                                <th>Kimlik Numarası</th>
+                                <th>Telefon Numarası</th>
+                                <th>Email</th>
+                                <th>Ülke</th>
+                                <th>Şehir</th>
+                                <th>Adres</th>
+                                <th>
+                                    <div class="form-group">
+                                        <a class="btn btn-success" asp-controller="Employee" asp-action="Create">Ekle</a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model != null)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Username</td>
+                                        <td>@item.FirstName @item.LastName</td>
+                                        <td>@item.BranchName</td>
+                                        <td>@item.DepartmentName</td>
+                                        <td>@item.Salary</td>
+                                        <td>@item.StartDateOfWork</td>
+                                        <td>@item.EndDateOfWork</td>
+                                        <td>
+                                            @if (@item.WorkingStatu == true)
+                                            {
+                                                <span class="badge bg-success">Aktif</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Pasif</span>
+                                            }
+                                        </td>
+                                        <td>@item.NationalNumber</td>
+                                        <td>@item.PhoneNumber</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.Country</td>
+                                        <td>@item.City</td>
+                                        <td>@item.Adress</td>
+                                        <td>
+                                            <div class="form-group">
+                                                <a class="btn btn-warning btn-block" asp-controller="AppUser" asp-action="Update" asp-route-id="@item.AppUserId">Kullanıcı Bilgilerini Güncelle</a>
+                                                <a class="btn btn-info btn-block" asp-controller="Employee" asp-action="Update" asp-route-appUserId="@item.AppUserId">Çalışan Bilgilerini Güncelle</a>
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function(){
+        intitializeDataTable('employeeList', 0, 'asc');
+    }
+</script>
