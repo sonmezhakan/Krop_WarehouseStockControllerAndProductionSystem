@@ -3,7 +3,13 @@
     ViewData["Title"] = "Departman Sil";
     Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
 }
-
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/static/js/pages/form-element-select.js"></script>
+}
 <div class="page-heading">
     <h1>@ViewData["Title"]</h1>
 </div>

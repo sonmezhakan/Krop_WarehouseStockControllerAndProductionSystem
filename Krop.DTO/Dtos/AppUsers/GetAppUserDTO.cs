@@ -15,5 +15,6 @@
         public string Country{ get; init; }
         public string City{ get; init; }
         public string Addres{ get; init; }
+        public List<string> Roles { get; set; }
     }
 }

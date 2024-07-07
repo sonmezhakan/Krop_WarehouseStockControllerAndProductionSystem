@@ -11,7 +11,7 @@
 
         public const string AppUserIdNotEmptyAndNull = "Id Boş Olamaz!";
         public const string AppUserPasswordNotEmptyAndNull = "Şifre Boş Olamaz!";
-        public const string AppUserPasswordMinAndMaxLenght = "Şifre Minimum 3, Maksimum 64 Karakter Olabilir!\n Şifrenizde 1 Büyük, 1 Küçük, 1 Rakam ve 1 Sembol Kullanılmalıdır!";
+        public const string AppUserPasswordMinAndMaxLenght = "Şifre Minimum 8, Maksimum 64 Karakter Olabilir!\n Şifrenizde 1 Büyük, 1 Küçük, 1 Rakam ve 1 Sembol Kullanılmalıdır!";
 
         public const string AppUserLoginError = "Kullanıcı Adı veya Şifre Hatalı!";
         public const string AppUserEmailNotConfirm = "Hesabını Mail Adresiniz Üzerinden Aktifleştiriniz!";

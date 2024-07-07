@@ -1,0 +1,146 @@
+﻿@model UpdateAppUserVM
+@{
+    ViewData["Title"] = "Kullanıcı Güncelle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/static/js/pages/form-element-select.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial"/>
+                <div class="card-body">
+                    <form method="post">
+                       <div class="row">
+                           <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Kullanıcılar</label>
+                                    <select id="appUserSelect" class="choices form-select" asp-for="UpdateAppUserDTO.Id">
+                                        <option diasbled selected>Kullanıcı Seçiniz!</option>
+                                        @if (Model.GetAppUserComboBoxDTOs != null)
+                                        {
+                                            @foreach (var item in Model.GetAppUserComboBoxDTOs)
+                                            {
+                                                @if (Model.UpdateAppUserDTO != null && Model.UpdateAppUserDTO.Id == item.Id)
+                                                {
+                                                    <option value="@item.Id" selected>@item.UserName</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">@item.UserName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Şifre</label>
+                                    <input type="password" class="form-control" asp-for="UpdateAppUserPasswordDTO.Password" placeholder="Şifre" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" asp-for="@Model.UpdateAppUserDTO.Email" placeholder="Email" />
+                                </div>
+                                <div class="form-group">
+                                    <div class="row d-flex">
+                                        <div class="col-md-6">
+                                            <label>Ad</label>
+                                            <input type="text" class="form-control" asp-for="@Model.UpdateAppUserDTO.FirstName" placeholder="Ad" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Soyad</label>
+                                            <input type="text" class="form-control" asp-for="@Model.UpdateAppUserDTO.LastName" placeholder="Soyad" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kimlik Numarası</label>
+                                    <input type="text" class="form-control" asp-for="@Model.UpdateAppUserDTO.NationalNumber" placeholder="Kimlik Numarası" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Telefon Numarası</label>
+                                    <input type="text" class="form-control" asp-for="@Model.UpdateAppUserDTO.PhoneNumber" placeholder="Telefon Numarası" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Ülke</label>
+                                    <input type="text" class="form-control" asp-for="@Model.UpdateAppUserDTO.Country" placeholder="Ülke" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Şehir</label>
+                                    <input type="text" class="form-control" asp-for="@Model.UpdateAppUserDTO.City" placeholder="Şehir" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Adres</label>
+                                    <textarea rows="3" class="form-control" asp-for="@Model.UpdateAppUserDTO.Addres"></textarea>
+                                </div>
+                           </div>
+                           <div class="col-md-6">
+                               <div class="form-group">
+                                    <select id="roleSelect" class="choices form-select multiple-remove" multiple="multiple" asp-for=@Model.UpdateAppUserDTO.Roles>
+                                        <optgroup label="Yetkiler">
+                                            @if (Model.GetAppUserRoleDTOs != null)
+                                            {
+                                                @foreach (var item in Model.GetAppUserRoleDTOs)
+                                                {
+                                                    @if (Model.UpdateAppUserDTO != null && Model.UpdateAppUserDTO.Roles != null)
+                                                    {
+                                                        @foreach (var role in Model.UpdateAppUserDTO.Roles)
+                                                        {
+                                                            @if (role == item.Name)
+                                                            {
+                                                                <option value="@item.Name" selected>@item.Name</option>
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Name">@item.Name</option>
+                                                    }
+                                                }
+                                            }
+                                        </optgroup>
+                                    </select>
+                               </div>
+                           </div>
+                       </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-warning btn-block">Güncelle</button>
+                        </div>
+                        @if(@Model.UpdateAppUserDTO != null)
+                        {
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a class="btn btn-info btn-block" asp-controller="AppUser" asp-action="ConfirmationMailSender" asp-route-id="@Model.UpdateAppUserDTO.Id">Aktivasyon Maili Gönder</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="btn btn-dark btn-block" asp-controller="AppUser" asp-action="ResetPasswordMailSender" asp-route-id="@Model.UpdateAppUserDTO.Id">Şifre Sıfırlama Maili Gönder</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        $("#appUserSelect").change(function () {
+            const appUserId = document.getElementById("appUserSelect").value;
+            const path = "Kullanici/Guncelle/" + appUserId;
+            redirectToSelectedPage(path);
+        });
+    }
+</script>

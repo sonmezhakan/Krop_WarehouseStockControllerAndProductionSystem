@@ -158,8 +158,9 @@ namespace Krop.Business.Services.AppUsers
             if (result is null)
                 return new ErrorDataResult<GetAppUserDTO>(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
 
-            return new SuccessDataResult<GetAppUserDTO>(
-                _mapper.Map<GetAppUserDTO>(result));
+            var getDto = _mapper.Map<GetAppUserDTO>(result);
+            getDto.Roles = (List<string>)await _userManager.GetRolesAsync(result);
+            return new SuccessDataResult<GetAppUserDTO>(getDto);
         }
 
         public async Task<IDataResult<GetAppUserDTO>> GetByUserNameAsync(string userName)

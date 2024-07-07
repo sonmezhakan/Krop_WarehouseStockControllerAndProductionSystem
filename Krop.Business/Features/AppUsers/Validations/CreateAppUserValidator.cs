@@ -15,6 +15,13 @@ namespace Krop.Business.Features.AppUsers.Validations
                 .MinimumLength(3).WithMessage(AppUserMessages.UserNameMinAndMaxLenght)
                 .MaximumLength(64).WithMessage(AppUserMessages.UserNameMinAndMaxLenght);
 
+            //Password
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage(AppUserMessages.AppUserPasswordNotEmptyAndNull)
+                .NotNull().WithMessage(AppUserMessages.AppUserPasswordNotEmptyAndNull)
+                .MinimumLength(8).WithMessage(AppUserMessages.AppUserPasswordMinAndMaxLenght)
+                .MaximumLength(64).WithMessage(AppUserMessages.AppUserPasswordMinAndMaxLenght);
+
             //Email
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage(AppUserMessages.EmailNotNull)

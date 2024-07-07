@@ -50,7 +50,8 @@ namespace Krop.DataAccess.Configurations
 					.HasColumnName("Addres")
 					.HasMaxLength(255);
 				});
-            #endregion
+			#endregion
+
             base.Configure(builder);
         }
 	}

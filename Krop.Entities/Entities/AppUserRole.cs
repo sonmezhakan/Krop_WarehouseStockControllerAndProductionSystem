@@ -4,6 +4,5 @@ namespace Krop.Entities.Entities
 {
 	public class AppUserRole: BaseAppUserRoleEntity
 	{
-
     }
 }
