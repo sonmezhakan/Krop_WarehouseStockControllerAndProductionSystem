@@ -14,12 +14,8 @@ using Krop.DTO.Dtos.AppUsers;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Web;
 
 namespace Krop.Business.Services.AppUsers
 {
@@ -195,20 +191,7 @@ namespace Krop.Business.Services.AppUsers
         }
         #endregion
         #region Activation
-        public async Task<IResult> ConfirmationAsync(Guid Id, string token)
-        {
-            var result = await _userManager.FindByIdAsync(Id.ToString());
-            if (result is null)
-                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
-
-            var decodeToken = HttpUtility.UrlDecode(token);
-            var resultActivation = await _userManager.ConfirmEmailAsync(result, decodeToken);
-
-            if (!resultActivation.Succeeded)
-                return new ErrorResult(StatusCodes.Status400BadRequest, "Aktivasyon Başarısız!");
-
-            return new SuccessResult("Aktivasyon Başarılı!");
-        }
+        
         public async Task<IResult> ConfirmationMailSenderAsync(Guid Id)
         {
             var result = await _userManager.FindByIdAsync(Id.ToString());
@@ -224,19 +207,6 @@ namespace Krop.Business.Services.AppUsers
             return new SuccessResult();
         }
         #endregion
-        #region ResetPasswordMailSender
-        public async Task<IResult> ResetPasswordMailSenderAsync(Guid Id)
-        {
-            var result = await _userManager.FindByIdAsync(Id.ToString());
-            if (result is null)
-                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
-
-            string token = await _userManager.GeneratePasswordResetTokenAsync(result);
-           await ResetPasswordMailSenderAsync(token, result);
-            
-            return new SuccessResult();
-        }
-        #endregion
     }
 
     #region Custom Metot
@@ -245,13 +215,9 @@ namespace Krop.Business.Services.AppUsers
         private async Task ActivationMailSenderAsync(AppUser appUser)
         {
             string token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
-            string encodeToken = HttpUtility.UrlEncode(token);
+            string encodeToken = Uri.EscapeDataString(token);
 
-            var request = _httpContextAccessor.HttpContext.Request;
-            var actionContext = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<IActionContextAccessor>().ActionContext;
-            var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
-
-            string confirmationUrl = urlHelper.Action("Confirmation", "Account", new { Id = appUser.Id, token = encodeToken }, request.Scheme);
+            string url = $"https://localhost:7037/auth/Aktivasyon/{appUser.Id}/{encodeToken}";
 
             EmailViewModel emailViewModel = new EmailViewModel
             {
@@ -261,30 +227,7 @@ namespace Krop.Business.Services.AppUsers
                             <br>
                             <h4>Aktivasyonu Tamamlamak İçin Aşağıdaki Linke Tıklayınız!</h4>
                             <br>
-                            {confirmationUrl}"
-            };
-
-            await _emailService.SendMailAsync(emailViewModel);
-        }
-        private async Task ResetPasswordMailSenderAsync(string token, AppUser appUser)
-        {
-            string encodeToken = HttpUtility.UrlEncode(token);
-
-            var request = _httpContextAccessor.HttpContext.Request;
-            var actionContext = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<IActionContextAccessor>().ActionContext;
-            var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
-
-            string resetPasswordUrl = urlHelper.Action("ResetPassword", "Account", new { Id = appUser.Id, token = encodeToken }, request.Scheme);
-
-            EmailViewModel emailViewModel = new EmailViewModel
-            {
-                toEmail = appUser.Email,
-                subject = "Şifre Sıfırlama!",
-                htmlBody = $@"<b><h2>{appUser.UserName} Şifre Sıfırlama!</h2></b>
-                            <br>
-                            <h4>Şifreyi Sıfırlamak İçin Aşağıdaki Linke Tıklayınız!</h4>
-                            <br>
-                            {resetPasswordUrl}"
+                            {url}"
             };
 
             await _emailService.SendMailAsync(emailViewModel);

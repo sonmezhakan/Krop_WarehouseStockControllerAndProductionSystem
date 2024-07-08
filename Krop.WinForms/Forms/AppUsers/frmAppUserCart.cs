@@ -79,7 +79,7 @@ namespace Krop.WinForms.Forms.AppUsers
         {
             if (appUserComboBoxControl.AppUserComboBox.SelectedValue is not null)
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"account/ResetPasswordMailSender/{(Guid)appUserComboBoxControl.AppUserComboBox.SelectedValue}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"Auth/ResetPasswordMailSender/{(Guid)appUserComboBoxControl.AppUserComboBox.SelectedValue}");
 
                 if (!response.IsSuccessStatusCode)
                 {

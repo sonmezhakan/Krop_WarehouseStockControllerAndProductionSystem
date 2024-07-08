@@ -65,13 +65,13 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             return RedirectToAction("Create", "ProductReceipt", new { produceProductId = createProductReceiptVM.CreateProductReceiptDTO.ProduceProductId });
         }
         [HttpGet("Guncelle/{produceProductId?}/{productId?}")]
-        public async Task<IActionResult> Update(Guid? produceProductId,Guid? productId)
-       {
+        public async Task<IActionResult> Update(Guid? produceProductId, Guid? productId)
+        {
             TempData["DeleteAction"] = "Update";
             if ((produceProductId != null && produceProductId != Guid.Empty) && (productId != null && productId != Guid.Empty))
             {
                 HttpResponseMessage response = await GetByProduceProductIdAndProductId((Guid)produceProductId, (Guid)productId);
-                if(!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
                     var resultError = await JsonHelper.DeserializeAsync<ErrorResponseViewModel>(response);
                     TempData["Error"] = resultError.Detail;
@@ -91,7 +91,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                     ProduceProductId = produceProductId
                 });
             }
-            else if(produceProductId != null && produceProductId != Guid.Empty)
+            else if (produceProductId != null && produceProductId != Guid.Empty)
             {
                 return View(new UpdateProductReceiptVM
                 {
@@ -100,7 +100,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                     ProduceProductId = produceProductId
                 });
             }
-            
+
             return View(new UpdateProductReceiptVM
             {
                 GetProductComboBoxDTOs = await ProductSelectList()
@@ -123,13 +123,14 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                 });
             }
             TempData["Success"] = "Ürün Reteçesi Güncellendi!";
-            return RedirectToAction("Update", "ProductReceipt", new {
-                produceProductId=updateProductReceiptVM.UpdateProductReceiptDTO.ProduceProductId,
-                productId= updateProductReceiptVM.UpdateProductReceiptDTO.ProductId
+            return RedirectToAction("Update", "ProductReceipt", new
+            {
+                produceProductId = updateProductReceiptVM.UpdateProductReceiptDTO.ProduceProductId,
+                productId = updateProductReceiptVM.UpdateProductReceiptDTO.ProductId
             });
         }
         [HttpPost("Sil/{produceProductId}/{productId}")]
-        public async Task<IActionResult> Delete(Guid produceProductId,Guid productId)
+        public async Task<IActionResult> Delete(Guid produceProductId, Guid productId)
         {
             HttpResponseMessage response = await _webApiService.httpClient.DeleteAsync($"productReceipt/delete/{produceProductId}/{productId}");
             if (!response.IsSuccessStatusCode)
@@ -166,6 +167,6 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             var resultSuccess = await JsonHelper.DeserializeAsync<SuccessDataResponseViewModel<List<GetProductReceiptListDTO>>>(response);
             return resultSuccess.Data;
         }
-        private async Task<HttpResponseMessage> GetByProduceProductIdAndProductId(Guid produceProductId,Guid productId) => await _webApiService.httpClient.GetAsync($"productReceipt/GetByProduceProductIdAndProductId/{produceProductId}/{productId}");
+        private async Task<HttpResponseMessage> GetByProduceProductIdAndProductId(Guid produceProductId, Guid productId) => await _webApiService.httpClient.GetAsync($"productReceipt/GetByProduceProductIdAndProductId/{produceProductId}/{productId}");
     }
 }

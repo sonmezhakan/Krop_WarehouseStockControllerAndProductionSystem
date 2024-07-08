@@ -12,6 +12,8 @@ using Krop.DTO.Dtos.Auths;
 using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Policy;
+using System.Web;
 
 namespace Krop.Business.Services.Auths
 {
@@ -32,6 +34,7 @@ namespace Krop.Business.Services.Auths
             _emailService = emailService;
         }
 
+        #region Login
         [ValidationAspect(typeof(LoginValidator))]
         public async Task<IDataResult<AppUser>> LoginAsync(LoginDTO loginDTO)
         {
@@ -52,6 +55,8 @@ namespace Krop.Business.Services.Auths
 
             return new SuccessDataResult<AppUser>(appUser);
         }
+        #endregion
+        #region Create Token
         public async Task<IDataResult<LoginResponseDTO>> CreateAccessToken(AppUser user)
         {
             var claims = await _userManager.GetRolesAsync(user);
@@ -62,10 +67,11 @@ namespace Krop.Business.Services.Auths
                 Token = accessToken
             });
         }
-
+        #endregion
+        #region ResetPassword
         public async Task<IResult> ResetPasswordWinFormEmailSenderAsync(string email)
         {
-            
+
             var businessRule = BusinessRules.Run(
                 await _appUserBusinessRules.CheckByEmailAsync(email),
                 await _appUserBusinessRules.CheckEmailConfirmed(email));
@@ -74,12 +80,27 @@ namespace Krop.Business.Services.Auths
 
             var result = await _userManager.FindByEmailAsync(email);
             string token = await _userManager.GeneratePasswordResetTokenAsync(result);
-           await ResetPasswordTokenMailSender(result, token);
+            await ResetPasswordTokenMailSender(result, token);
+
+            return new SuccessResult();
+        }
+        public async Task<IResult> ResetPasswordEmailSenderAsync(string email)
+        {
+
+            var businessRule = BusinessRules.Run(
+                await _appUserBusinessRules.CheckByEmailAsync(email),
+                await _appUserBusinessRules.CheckEmailConfirmed(email));
+            if (!businessRule.Success)
+                return businessRule;
+
+            var result = await _userManager.FindByEmailAsync(email);
+            string token = await _userManager.GeneratePasswordResetTokenAsync(result);
+            await ResetPasswordMailSenderAsync(token, result);
 
             return new SuccessResult();
         }
 
-        public async Task<IResult> ResetPasswordAsync(ResetPasswordDTO resetPasswordDTO)
+        public async Task<IResult> ResetPasswordAsync(MailResetPasswordDTO resetPasswordDTO)
         {
             var businessRule = BusinessRules.Run(
                await _appUserBusinessRules.CheckByEmailAsync(resetPasswordDTO.Email),
@@ -89,30 +110,94 @@ namespace Krop.Business.Services.Auths
 
             var appUser = await _userManager.FindByEmailAsync(resetPasswordDTO.Email);
 
-            var result =  await _userManager.ResetPasswordAsync(appUser, resetPasswordDTO.Token, resetPasswordDTO.Password);
+            var result = await _userManager.ResetPasswordAsync(appUser, resetPasswordDTO.Token, resetPasswordDTO.Password);
             if (!result.Succeeded)
-                return new ErrorResult(StatusCodes.Status400BadRequest,AppUserMessages.PasswordResetFailed);
+                return new ErrorResult(StatusCodes.Status400BadRequest, AppUserMessages.PasswordResetFailed);
+
+            return new SuccessResult();
+
+        }
+        public async Task<IResult> IdResetPasswordAsync(IdResetPasswordDTO idResetPasswordDTO)
+        {
+            var appUser = await _userManager.FindByIdAsync(idResetPasswordDTO.Id.ToString());
+
+            var tokenDecode = Uri.UnescapeDataString(idResetPasswordDTO.Token);
+
+            var result = await _userManager.ResetPasswordAsync(appUser, tokenDecode, idResetPasswordDTO.Password);
+            if (!result.Succeeded)
+                return new ErrorResult(StatusCodes.Status400BadRequest, AppUserMessages.PasswordResetFailed);
 
             return new SuccessResult();
         }
+
+        public async Task<IResult> ResetPasswordMailSenderAsync(Guid Id)
+        {
+            var result = await _userManager.FindByIdAsync(Id.ToString());
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
+
+            string token = await _userManager.GeneratePasswordResetTokenAsync(result);
+            await ResetPasswordMailSenderAsync(token, result);
+
+            return new SuccessResult();
+        }
+        #endregion
+        #region confirmation
+        public async Task<IResult> ConfirmationAsync(Guid Id, string token)
+        {
+            var result = await _userManager.FindByIdAsync(Id.ToString());
+            if (result is null)
+                return new ErrorResult(StatusCodes.Status404NotFound, AppUserMessages.AppUserNotFound);
+
+            var decodeToken = Uri.UnescapeDataString(token);
+            var resultActivation = await _userManager.ConfirmEmailAsync(result, decodeToken);
+
+            if (!resultActivation.Succeeded)
+                return new ErrorResult(StatusCodes.Status400BadRequest, "Aktivasyon Başarısız!");
+
+            return new SuccessResult("Aktivasyon Başarılı!");
+        }
+        #endregion
     }
 
+    #region CustomMetot
     public partial class AuthManager
     {
         private async Task ResetPasswordTokenMailSender(AppUser appUser, string token)
         {
-                EmailViewModel emailViewModel = new EmailViewModel
-                {
-                    toEmail = appUser.Email,
-                    subject = "Şifre Sıfırlama!",
-                    htmlBody = $@"<b><h2>{appUser.UserName} Şifre Sıfırlama!</h2></b>
+            EmailViewModel emailViewModel = new EmailViewModel
+            {
+                toEmail = appUser.Email,
+                subject = "Şifre Sıfırlama!",
+                htmlBody = $@"<b><h2>{appUser.UserName} Şifre Sıfırlama!</h2></b>
                             <br>
                             <h4>Şifreyi Sıfırlamak Kodu</h4>
                             <br>
                             {token}"
-                };
+            };
 
-                await _emailService.SendMailAsync(emailViewModel);
+            await _emailService.SendMailAsync(emailViewModel);
+        }
+
+        private async Task ResetPasswordMailSenderAsync(string token, AppUser appUser)
+        {
+            string encodeToken = Uri.EscapeDataString(token);
+
+            string url = $"https://localhost:7037/auth/Sifre-Sifirlama/{appUser.Id}/{encodeToken}";
+
+            EmailViewModel emailViewModel = new EmailViewModel
+            {
+                toEmail = appUser.Email,
+                subject = "Şifre Sıfırlama!",
+                htmlBody = $@"<b><h2>{appUser.UserName} Şifre Sıfırlama!</h2></b>
+                            <br>
+                            <h4>Şifreyi Sıfırlamak İçin Aşağıdaki Linke Tıklayınız!</h4>
+                            <br>
+                            {url}"
+            };
+
+            await _emailService.SendMailAsync(emailViewModel);
         }
     }
+    #endregion
 }

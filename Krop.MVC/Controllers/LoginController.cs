@@ -20,7 +20,7 @@ namespace Krop.MVC.Controllers
             _webApiService = webApiService;
             _signInManager = signInManager;
         }
-        [HttpGet("")]
+        [HttpGet]
         public  IActionResult Index()
         {     
             if (User.Identity.IsAuthenticated)
@@ -29,7 +29,7 @@ namespace Krop.MVC.Controllers
             }
             return View();
         }
-        [HttpPost("")]
+        [HttpPost]
         public async Task<IActionResult> Index(LoginDTO loginDTO)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("Auth/Login", loginDTO);
@@ -55,12 +55,6 @@ namespace Krop.MVC.Controllers
 
             return RedirectToAction("Index", "Home", new {area="Administrator"});
         }
-        [HttpGet("Cikis")]
-        public async Task<IActionResult> SingOut()
-        {
-            await _signInManager.SignOutAsync();
-            Response.Cookies.Delete("authToken");
-            return View();
-        }
+        
     }
 }

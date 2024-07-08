@@ -23,7 +23,7 @@ namespace Krop.WinForms.Forms.Logins
         {
             if (!string.IsNullOrWhiteSpace(txtEmail.Text))
             {
-                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"Auth/ResetPasswordEmailSender/{txtEmail.Text}");
+                HttpResponseMessage response = await _webApiService.httpClient.GetAsync($"Auth/ResetPasswordTokenEmailSender/{txtEmail.Text}");
                 if (!response.IsSuccessStatusCode)
                 {
                     await ResponseController.ErrorResponseController(response);
@@ -41,7 +41,7 @@ namespace Krop.WinForms.Forms.Logins
         {
             if (!string.IsNullOrWhiteSpace(txtEmail.Text) && !string.IsNullOrWhiteSpace(txtPassword.Text) && !string.IsNullOrWhiteSpace(txtResetToken.Text))
             {
-                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("auth/ResetPassword", new ResetPasswordDTO
+                HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("auth/ResetPassword", new MailResetPasswordDTO
                 {
                     Email = txtEmail.Text,
                     Password = txtPassword.Text,

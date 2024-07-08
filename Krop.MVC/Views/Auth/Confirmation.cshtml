@@ -1,0 +1,55 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Aktivasyon</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .activation-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+            .activation-container h1 {
+                margin-bottom: 20px;
+                font-size: 24px;
+                color: #333;
+            }
+    </style>
+</head>
+<body>
+    <div class="activation-container">
+        <h1>
+            @if(TempData["ActivationError"] != null)
+            {
+                @TempData["ActivationError"]
+            }
+            else if(TempData["ActivationSuccess"] != null)
+            {
+                @TempData["ActivationSuccess"]
+            }
+
+        </h1>
+    </div>
+</body>
+</html>

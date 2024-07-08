@@ -16,13 +16,7 @@ namespace Krop.WebAPI.Controllers
         {
             _appUserService = appUserService;
         }
-        [HttpGet]
-        public async Task<IActionResult> Confirmation(Guid Id,string token)
-        {
-            var result  = await _appUserService.ConfirmationAsync(Id, token);
-
-            return result.Success ? Ok(result) : BadRequest(result);
-        }
+        
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] CreateAppUserDTO createAppUserDTO)
         {
@@ -62,13 +56,6 @@ namespace Krop.WebAPI.Controllers
         public async Task<IActionResult> ConfirmationMailSender(Guid Id)
         {
             var result = await _appUserService.ConfirmationMailSenderAsync(Id);
-
-            return result.Success ? Ok(result) : BadRequest(result);
-        }
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> ResetPasswordMailSender(Guid Id)
-        {
-            var result = await _appUserService.ResetPasswordMailSenderAsync(Id);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }
