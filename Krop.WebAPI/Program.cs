@@ -11,6 +11,7 @@ using Krop.Common.Utilits.Caching;
 using Krop.Common.Utilits.Caching.Redis;
 using Krop.DataAccess.UnitOfWork;
 using Krop.IOC.DependencyResolvers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -54,7 +55,11 @@ namespace Krop.WebAPI
             builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             builder.Services.AddScoped<IUrlHelperFactory, UrlHelperFactory>();
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -67,7 +72,9 @@ namespace Krop.WebAPI
                     ValidAudience = builder.Configuration["TokenOptions:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenOptions:SecurityKey"])),
                 };
-            });
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+
             builder.Services.AddStackExchangeRedisCache(options => options.Configuration = "localhost:1453");
             builder.Services.AddSingleton<ICacheService, DistributedCacheManager>();
             builder.Services.AddSingleton<ICacheHelper,CacheHelper>();
@@ -98,7 +105,7 @@ namespace Krop.WebAPI
             
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors("AllowSpecificOrigin");

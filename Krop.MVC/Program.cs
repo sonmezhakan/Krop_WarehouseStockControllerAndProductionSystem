@@ -1,4 +1,5 @@
 using Krop.IOC.DependencyResolvers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Krop.MVC
 {
@@ -11,8 +12,39 @@ namespace Krop.MVC
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
 
+			builder.Services.AddHttpClient();
 			builder.Services.AddWebApiRegistration();
+			builder.Services.AddDbContextRegistration();
+			builder.Services.AddIdentityServiceRegistration();
 
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(options =>
+				{
+					options.Cookie.Name = "Login";
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.Cookie.IsEssential = true;
+                    options.LoginPath = new PathString("/Giris");
+					options.LogoutPath = new PathString("/Giris/Cikis");
+                    options.AccessDeniedPath = "/Home/AccessDenied";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(600);
+
+                });
+			builder.Services.ConfigureApplicationCookie(options =>
+			{
+                options.Cookie.Name = "Login";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.IsEssential = true;
+                options.LoginPath = new PathString("/Giris");
+                options.LogoutPath = new PathString("/Giris/Cikis");
+                options.AccessDeniedPath = "/Home/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(600);
+            });
+
+			builder.Services.AddSession();
             var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
@@ -28,21 +60,16 @@ namespace Krop.MVC
 
 			app.UseRouting();
 
-			app.UseAuthorization();
-			app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
+			app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
-
-                endpoints.MapControllerRoute(
-                 name:"Ekle",
-				 pattern:"Ekle",
-				 defaults: new {controller="Brand", action="Create"}
                 );
             });
             app.MapControllerRoute(

@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.MVC.Areas.Administrator.Controllers
 {
+    [Area("Administrator")]
+    [Authorize]
     public class HomeController : Controller
     {
-        [Area("Administrator")]
+        
         public IActionResult Index()
         {
             return View();
