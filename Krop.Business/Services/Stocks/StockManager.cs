@@ -197,7 +197,7 @@ namespace Krop.Business.Services.Stocks
             if (!businessRule.Success)
                 return new ErrorDataResult<IEnumerable<GetStockListDTO>>(businessRule.Status, businessRule.Detail);
 
-            var result = await _stockRepository.GetAllAsync(predicate: x => x.BranchId == getEmployee.BranchId,
+            var result = await _stockRepository.GetAllWithIncludesAsync(predicate: x => x.BranchId == getEmployee.BranchId,
             includeProperties: new Expression<Func<Stock, object>>[]
             {
                 p=>p.Product,

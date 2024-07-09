@@ -121,7 +121,7 @@ namespace Krop.Business.Services.ProductNotifications
                 $"{ProductNotificationCacheKeys.GetInAllAsync}{inAppUserId}",
                 async () =>
                 {
-                    var result = await _productNotificationRepository.GetAllAsync(predicate: x => x.SentAppUserId == inAppUserId,
+                    var result = await _productNotificationRepository.GetAllWithIncludesAsync(predicate: x => x.SentAppUserId == inAppUserId,
                     includeProperties: new Expression<Func<ProductNotification, object>>[]
                     {
                       p=>p.Product,
@@ -145,7 +145,7 @@ namespace Krop.Business.Services.ProductNotifications
                 $"{ProductNotificationCacheKeys.GetSentAllAsync}{sentAppUserId}",
                 async () =>
                 {
-                    var result = await _productNotificationRepository.GetAllAsync(predicate: x => x.SenderAppUserId == sentAppUserId,
+                    var result = await _productNotificationRepository.GetAllWithIncludesAsync(predicate: x => x.SenderAppUserId == sentAppUserId,
                     includeProperties: new Expression<Func<ProductNotification, object>>[]
                     {
                        p=>p.Product,

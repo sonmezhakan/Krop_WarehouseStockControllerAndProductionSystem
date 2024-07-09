@@ -138,7 +138,7 @@ namespace Krop.Business.Services.Productions
         [TransactionScope]
         public async Task<IResult> DeleteAsync(Guid id, Guid appUserId)
         {
-            var result = await _productionRepository.GetAsync(x => x.Id == id,
+            var result = await _productionRepository.GetIcludesAsync(x => x.Id == id,
                 includeProperties: new Expression<Func<Production, object>>[]
                 {
                     si=>si.StockInput
@@ -184,7 +184,7 @@ namespace Krop.Business.Services.Productions
                 ProductionCacheKeys.GetByBranchIdAsync,
                 async () =>
                 {
-                    var result = await _productionRepository.GetAllAsync(x => x.BranchId == employee.BranchId, includeProperties: new Expression<Func<Production, object>>[]
+                    var result = await _productionRepository.GetAllWithIncludesAsync(x => x.BranchId == employee.BranchId, includeProperties: new Expression<Func<Production, object>>[]
                         {
                              p=>p.Product,
                              b=>b.Branch,

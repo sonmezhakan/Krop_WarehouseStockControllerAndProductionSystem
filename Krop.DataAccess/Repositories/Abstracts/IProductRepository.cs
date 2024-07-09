@@ -8,9 +8,5 @@ namespace Krop.DataAccess.Repositories.Abstracts
     {
         Task<List<Guid>> GetAllProductIdAsync();
         Task<List<Product>> GetAllComboBoxAsync();
-        Task<List<Product>> GetAllWithIncludesAsync(Expression<Func<Product, bool>> predicate = null, 
-            params Expression<Func<Product, object>>[] includeProperties);
-        Task<Product> GetIcludesAsync(Expression<Func<Product, bool>> predicate = null, 
-            params Expression<Func<Product, object>>[] includeProperties);
     }
 }

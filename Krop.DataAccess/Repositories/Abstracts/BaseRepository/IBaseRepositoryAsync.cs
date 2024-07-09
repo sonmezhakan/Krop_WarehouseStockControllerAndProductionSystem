@@ -5,9 +5,8 @@ namespace Krop.DataAccess.Repositories.Abstracts.BaseRepository
 {
     public interface IBaseRepositoryAsync<T> where T : class, IEntity<Guid>, new()
     {
-        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null,
-            params Expression<Func<T, object>>[] includeProperties);
-        Task<T> GetAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties);
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null);
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate = null);
         Task<T> FindAsync(Guid id);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate = null);
 
@@ -19,6 +18,11 @@ namespace Krop.DataAccess.Repositories.Abstracts.BaseRepository
 
         Task DeleteAsync(T entity);
         Task DeleteRangeAsync(List<T> entities);
+
+        Task<IEnumerable<T>> GetAllWithIncludesAsync(Expression<Func<T, bool>> predicate = null,
+            params Expression<Func<T, object>>[] includeProperties);
+        Task<T> GetIcludesAsync(Expression<Func<T, bool>> predicate = null,
+            params Expression<Func<T, object>>[] includeProperties);
 
     }
 }

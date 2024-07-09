@@ -15,35 +15,6 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         {
             _context = context;
         }
-        public Task<List<StockInput>> GetAllWithIncludesAsync(Expression<Func<StockInput, bool>> predicate = null,
-            params Expression<Func<StockInput, object>>[] includeProperties)
-        {
-            IQueryable<StockInput> stockInputs = _context.StockInputs
-                .IgnoreQueryFilters()
-                .Where(p => EF.Property<DataStatu>(p, "DataStatu") != DataStatu.Deleted);
-
-            foreach (var includeProperty in includeProperties)
-            {
-                stockInputs = stockInputs.Include(includeProperty);
-            }
-            if (predicate != null)
-                stockInputs.Where(predicate);
-
-            return stockInputs.ToListAsync();
-        }
-
-        public async Task<StockInput> GetIcludesAsync(Expression<Func<StockInput, bool>> predicate = null,
-            params Expression<Func<StockInput, object>>[] includeProperties)
-        {
-            IQueryable<StockInput> stockInputs = _context.StockInputs
-                .IgnoreQueryFilters()
-                .Where(p => EF.Property<DataStatu>(p, "DataStatu") != DataStatu.Deleted);
-            foreach (var includeProperty in includeProperties)
-            {
-                stockInputs = stockInputs.Include(includeProperty);
-            }
-
-            return await stockInputs.FirstOrDefaultAsync(predicate);
-        }
+        
     }
 }

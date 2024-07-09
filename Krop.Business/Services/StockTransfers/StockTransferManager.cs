@@ -46,7 +46,8 @@ namespace Krop.Business.Services.StockTransfers
         [ValidationAspect(typeof(CreateStockTransferValidator))]
         public async Task<IResult> AddAsync(CreateStockTransferDTO createStockTransferDTO)
         {
-            var result = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(createStockTransferDTO.TransactorAppUserId, createStockTransferDTO.SenderBranchId));
+            var result = BusinessRules.Run(await _employeeBusinessRules.CheckEmployeeBranch(createStockTransferDTO.TransactorAppUserId, createStockTransferDTO.SenderBranchId),
+                await _stockTransferBusinessRules.SenderBranchAndSentBranchExists(createStockTransferDTO.SenderBranchId,createStockTransferDTO.SentBranchId));
             if (!result.Success)
                 return result;
 
@@ -74,7 +75,8 @@ namespace Krop.Business.Services.StockTransfers
 
             var businessRuleResult = BusinessRules.Run(
                 await _employeeBusinessRules.CheckEmployeeBranch(updateStockTransferDTO.TransactorAppUserId, updateStockTransferDTO.SenderBranchId),//Çalışanın şube çalışıp çalışmadığı kontrolü yapılıyor.
-                await _employeeBusinessRules.CheckEmployeeBranch(updateStockTransferDTO.TransactorAppUserId, result.SenderBranchId)//Güncellenecek işlemdeki şubede çalışanın çalışıp çalışmadığı kontrol ediliyor.
+                await _employeeBusinessRules.CheckEmployeeBranch(updateStockTransferDTO.TransactorAppUserId, result.SenderBranchId),//Güncellenecek işlemdeki şubede çalışanın çalışıp çalışmadığı kontrol ediliyor.
+                await _stockTransferBusinessRules.SenderBranchAndSentBranchExists(updateStockTransferDTO.SenderBranchId, updateStockTransferDTO.SentBranchId)
                 );
             if (!businessRuleResult.Success)
                 return businessRuleResult;
@@ -131,7 +133,7 @@ namespace Krop.Business.Services.StockTransfers
         #region Listed
         public async Task<IDataResult<IEnumerable<GetStockTransferListDTO>>> GetAllAsync()
         {
-            var result = await _stockTransferRepository.GetAllAsync(
+            var result = await _stockTransferRepository.GetAllWithIncludesAsync(
                 includeProperties: new Expression<Func<StockTransfer, object>>[]
                 {
                    senderBranch=>senderBranch.SenderBranch,
@@ -154,7 +156,7 @@ namespace Krop.Business.Services.StockTransfers
                $"{StockTransferCacheKeys.GetAppUserBranchIdListAsync}{employee.BranchId}",
                async () =>
                {
-                   var result = await _stockTransferRepository.GetAllAsync(predicate: x => x.SenderBranchId == employee.BranchId || x.SentBranchId == employee.BranchId,
+                   var result = await _stockTransferRepository.GetAllWithIncludesAsync(predicate: x => x.SenderBranchId == employee.BranchId || x.SentBranchId == employee.BranchId,
             includeProperties: new Expression<Func<StockTransfer, object>>[]
                 {
                     senderBranch=>senderBranch.SenderBranch,
@@ -188,8 +190,7 @@ namespace Krop.Business.Services.StockTransfers
                 return new ErrorDataResult<GetStockTransferDTO>(StatusCodes.Status404NotFound, StockTransferMessages.StockTransferNotFound);
 
             var result = BusinessRules.Run(
-                await _employeeBusinessRules.CheckEmployeeBranch(appUserId,getStockTransferDTO.SenderBranchId),
-                await _employeeBusinessRules.CheckEmployeeBranch(appUserId,getStockTransferDTO.SentBranchId)
+                await _employeeBusinessRules.CheckEmployeeBranch(appUserId,getStockTransferDTO.SenderBranchId)
                 );
             if (!result.Success)
                 return new ErrorDataResult<GetStockTransferDTO>(result.Status,result.Detail);

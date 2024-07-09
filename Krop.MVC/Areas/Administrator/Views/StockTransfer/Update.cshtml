@@ -1,0 +1,161 @@
+﻿@using System.Security.Claims
+@model UpdateStockTransferVM
+@{
+    ViewData["Title"] = "Stok Transfer Güncelle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/flatpickr/flatpickr.min.css">
+}
+@section Scripts {
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/extensions/flatpickr/flatpickr.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/static/js/pages/date-picker.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    <form method="post" asp-route-UpdateStockTransferDTO.Id="@Model.UpdateStockTransferDTO.Id" asp-route-UpdateStockTransferDTO.TransactorAppUserId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
+                        <div class="form-group">
+                            <div class="row d-flex">
+                                <div class="col-md-6">
+                                    <label>Ürün Adı</label>
+                                    <select id="productNameSelect" class="choices form-select" asp-for="UpdateStockTransferDTO.ProductId">
+                                        <option disabled selected>Ürün Adı Seçiniz!</option>
+                                        @if (Model.GetProductComboBoxDTOs != null)
+                                        {
+                                            @foreach (var item in Model.GetProductComboBoxDTOs)
+                                            {
+                                                 @if(Model.UpdateStockTransferDTO != null && Model.UpdateStockTransferDTO.ProductId == item.Id)
+                                                {
+                                                    <option value="@item.Id" selected>@item.ProductName</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">@item.ProductName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Ürün Kodu</label>
+                                    <select id="productCodeSelect" class="choices form-select" asp-for="UpdateStockTransferDTO.ProductId">
+                                        <option disabled selected>Ürün Kodu Seçiniz!</option>
+                                        @if (Model.GetProductComboBoxDTOs != null)
+                                        {
+                                            @foreach (var item in Model.GetProductComboBoxDTOs)
+                                            {
+                                                @if (Model.UpdateStockTransferDTO != null && Model.UpdateStockTransferDTO.ProductId == item.Id)
+                                                {
+                                                    <option value="@item.Id" selected>@item.ProductCode</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">@item.ProductCode</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Transfer Yapan Şube</label>
+                            <select id="senderBranchSelect" class="choices form-select" asp-for="UpdateStockTransferDTO.SenderBranchId">
+                                <option disabled selected>Transfer Yapan Şube Seçiniz!</option>
+                                @if (Model.GetBranchComboBoxDTOs != null)
+                                {
+                                    @foreach (var item in Model.GetBranchComboBoxDTOs)
+                                    {
+                                        @if(Model.UpdateStockTransferDTO != null && Model.UpdateStockTransferDTO.SenderBranchId == item.Id)
+                                        {
+                                            <option value="@item.Id" selected>@item.BranchName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.BranchName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Transfer Yapılan Şube</label>
+                            <select id="sentBranchSelect" class="choices form-select" asp-for="UpdateStockTransferDTO.SentBranchId">
+                                <option disabled selected>Transfer Yapılan Şube Seçiniz!</option>
+                                @if (Model.GetBranchComboBoxDTOs != null)
+                                {
+                                    @foreach (var item in Model.GetBranchComboBoxDTOs)
+                                    {
+                                        @if (Model.UpdateStockTransferDTO != null && Model.UpdateStockTransferDTO.SentBranchId == item.Id)
+                                        {
+                                            <option value="@item.Id" selected>@item.BranchName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.BranchName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Fatura No</label>
+                            <input type="text" class="form-control" asp-for="@Model.UpdateStockTransferDTO.InvoiceNumber" placeholder="Fatura No" />
+                        </div>
+                        <div class="form-group">
+                            <label>Transfer Edilen Adet</label>
+                            <input type="text" class="form-control" asp-for="@Model.UpdateStockTransferDTO.Quantity" placeholder="Transfer Edilen Adet" />
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            <textarea rows="4" class="form-control" asp-for="@Model.UpdateStockTransferDTO.Description" placeholder="Açıklama"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Transfer Tarihi</label>
+                            <input type="date" class="form-control flatpickr-no-config flatpickr-input" asp-for="@Model.UpdateStockTransferDTO.TransferDate" placeholder="Transfer Tarihi">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-warning btn-block">Güncelle</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const productNameSelect = new Choices('#productNameSelect', {
+            shouldSort: false
+        });
+        const productCodeSelect = new Choices('#productCodeSelect', {
+            shouldSort: false
+        });
+        const senderBranchSelect = new Choices('#senderBranchSelect', {
+            shouldSort: false
+        });
+        const sentBranchSelect = new Choices('#sentBranchSelect', {
+            shouldSort: false
+        });
+
+        document.getElementById('productNameSelect').addEventListener('change', function () {
+            const selectedValue = this.value;
+            productCodeSelect.setChoiceByValue(selectedValue);
+        });
+
+        document.getElementById('productCodeSelect').addEventListener('change', function () {
+            const selectedValue = this.value;
+            productNameSelect.setChoiceByValue(selectedValue);
+        });
+    });
+</script>

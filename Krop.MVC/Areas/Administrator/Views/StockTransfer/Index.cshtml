@@ -1,0 +1,80 @@
+﻿@model List<GetStockTransferListDTO>
+@{
+    ViewData["Title"] = "Stok Transfer Listesi";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+}
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/2.0.8/sorting/date-de.js"></script>
+
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    <table id="stockTransferList" class="table table-striped" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Transfer Yapan Şube</th>
+                                <th>Transfer Yapılan Şube</th>
+                                <th>Ürün Adı</th>
+                                <th>Ürün Kodu</th>
+                                <th>Fatura No</th>
+                                <th>Adet</th>
+                                <th>Açıklama</th>
+                                <th>Transfer Tarihi</th>
+                                <th>Çalışan</th>
+                                <th>
+                                    <div class="form-group">
+                                        <a class="btn btn-success" asp-controller="StockTransfer" asp-action="Create">Ekle</a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model != null)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.SenderBranchName</td>
+                                        <td>@item.SentBranchName</td>
+                                        <td>@item.ProductName</td>
+                                        <td>@item.ProductCode</td>
+                                        <td>@item.InvoiceNumber</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.TransferDate</td>
+                                        <td>@item.SenderAppUserName</td>
+                                        <td>
+                                            <div class="form-group">
+                                                <a class="btn btn-warning btn block" asp-controller="StockTransfer" asp-action="Update" asp-route-id="@item.Id">Güncelle</a>
+                                                <a class="btn btn-danger btn block" asp-controller="StockTransfer" asp-action="Delete" asp-route-id="@item.Id">Sil</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        intitializeDataTable('stockTransferList', 7, 'desc');
+    }
+</script>

@@ -1,6 +1,7 @@
 ﻿using Krop.Common.Helpers.IpAddress;
 using Krop.DataAccess.Context;
 using Krop.DataAccess.Repositories.Abstracts.BaseRepository;
+using Krop.Entities.Entities;
 using Krop.Entities.Enums;
 using Krop.Entities.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +43,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyAdd(e); }); //ShadowPropertylerin değerleri atanıyor.
 
             _entities.AddRange(entities);
-                   }
+        }
         #endregion
         #region Update
         /// <summary>
@@ -91,17 +92,12 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         }
         #endregion
         #region GetAll
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate = null,
-            params Expression<Func<T, object>>[] includeProperties)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> predicate = null)
         {
             IQueryable<T> query = _entities;
-            foreach (var includeProperty in includeProperties)
-            {
-                query = query.Include(includeProperty);
-            }
-            if (predicate is null)
-                return query.ToList();
-            return query.Where(predicate).AsNoTracking().ToList();
+            return predicate is null ?
+                 query.ToList() :
+             query.Where(predicate).AsNoTracking().ToList();
         }
         #endregion
         #region Find
@@ -109,15 +105,9 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             => _entities.Find(id);
         #endregion
         #region Predicate Search
-        public T Get(Expression<Func<T, bool>> predicate = null,
-            params Expression<Func<T, object>>[] includeProperties)
+        public T Get(Expression<Func<T, bool>> predicate = null)
         {
             IQueryable<T> query = _entities;
-
-            foreach (var item in includeProperties)
-            {
-                query = query.Include(item);
-            }
 
             return query.FirstOrDefault(predicate);
         }
@@ -170,7 +160,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyUpdated(e); });//ShadowPropertylerin değerleri atanıyor.
 
             _entities.UpdateRange(entities);
-           // await _context.SaveChangesAsync();
+            // await _context.SaveChangesAsync();
         }
         #endregion
         #region DeleteAsync
@@ -195,23 +185,35 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             entities.ForEach(e => { ShadowPropertyDeleted(e); });
 
             _entities.UpdateRange(entities);
-           // await _context.SaveChangesAsync();
+            // await _context.SaveChangesAsync();
         }
         #endregion
         #region GetAllAsync
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null,
+        public Task<IEnumerable<T>> GetAllWithIncludesAsync(Expression<Func<T, bool>> predicate = null,
             params Expression<Func<T, object>>[] includeProperties)
         {
-            IQueryable<T> query = _entities;
+            IQueryable<T> queries = _entities
+                .IgnoreQueryFilters()
+                .Where(p => EF.Property<DataStatu>(p, "DataStatu") != DataStatu.Deleted);
+
             foreach (var includeProperty in includeProperties)
             {
-                query = query.Include(includeProperty);
+                queries = queries.Include(includeProperty);
             }
-            query.IgnoreQueryFilters();
-            if (predicate is null)
-                return await query.ToListAsync();
+            if (predicate != null)
+            {
+                queries.Where(predicate);
+            }
 
-            return await query.Where(predicate).AsNoTracking().ToListAsync();
+            return queries.AsNoTracking().ToListAsync().ContinueWith(t => t.Result.AsEnumerable());
+        }
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null)
+        {
+            IQueryable<T> query = _entities;
+
+            return predicate is null ?
+                await query.ToListAsync() :
+                 await query.Where(predicate).AsNoTracking().ToListAsync();
         }
         #endregion
         #region FindAsync
@@ -222,17 +224,24 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate = null)
             => await _entities.AnyAsync(predicate);
 
-        public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null,
-            params Expression<Func<T, object>>[] includeProperties)
+        public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null)
         {
             IQueryable<T> query = _entities;
 
-            foreach (var item in includeProperties)
+            return await query.FirstOrDefaultAsync(predicate);
+        }
+        public async Task<T> GetIcludesAsync(Expression<Func<T, bool>> predicate = null,
+            params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> queries = _entities
+                .IgnoreQueryFilters()
+                .Where(p => EF.Property<DataStatu>(p, "DataStatu") != DataStatu.Deleted);
+            foreach (var includeProperty in includeProperties)
             {
-                query = query.Include(item);
+                queries = queries.Include(includeProperty);
             }
 
-            return await query.FirstOrDefaultAsync(predicate);
+            return await queries.FirstOrDefaultAsync(predicate);
         }
         #endregion
 
