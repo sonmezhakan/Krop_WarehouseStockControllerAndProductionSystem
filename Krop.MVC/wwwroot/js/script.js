@@ -8,11 +8,13 @@ function intitializeDataTable(tableId, orderColumn, orderStatu) {
         responsive: true,
         "order": [[orderColumn, orderStatu]],
         language: {
-            lengthMenu: "Sayfa başına _MENU_ göster",
-            search: "Arama",
-            info: "Gösterilen _START_ ile _END_ arası. Toplamda _TOTAL_ bulunmaktadır."
-        }
-    })
+            url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/tr.json'
+        },
+        columnDefs: [
+            { type: 'de_datetime', targets: orderColumn }
+        ]
+    });
+    
 }
 function redirectToSelectedPage(pathParts) {
     const protocol = window.location.protocol;

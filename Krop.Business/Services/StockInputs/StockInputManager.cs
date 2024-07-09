@@ -74,7 +74,7 @@ namespace Krop.Business.Services.StockInputs
                 return new ErrorResult(StatusCodes.Status404NotFound, StockInputMessages.StockInputNotFound);
 
             //stok girişi ekranında işlem güncellenmeye çalışılırsa ve işlem üretimden giriş yapıldıysa işlemin yapılması engelleniyor. Eğer işlem üretim tarafından yapılıyor ise işlemi yapmaya izin verir.
-            if (!productionUpdated && result.ProductId != null)
+            if (result.ProductionId != null && result.ProductionId != Guid.Empty)
                 return new ErrorResult(StatusCodes.Status400BadRequest, StockInputMessages.ProductionEntryCannotBeChangedOrDeleted);
 
             var businessRuleResult = BusinessRules.Run(
@@ -108,7 +108,7 @@ namespace Krop.Business.Services.StockInputs
                 return new ErrorResult(StatusCodes.Status404NotFound, StockInputMessages.StockInputNotFound);
 
             //stok girişi ekranında işlem silinmeye çalışılırsa ve işlem üretimden giriş yapıldıysa işlemin yapılması engelleniyor. Eğer işlem üretim tarafından yapılıyor ise işlemi yapmaya izin verir.
-            if (!productionDeleted && result.ProductId != null)
+            if (result.ProductionId != null && result.ProductionId != Guid.Empty)
                 return new ErrorResult(StatusCodes.Status400BadRequest, StockInputMessages.ProductionEntryCannotBeChangedOrDeleted);
 
             var businessRuleResult = BusinessRules.Run(
@@ -133,7 +133,7 @@ namespace Krop.Business.Services.StockInputs
         #region Listed
         public async Task<IDataResult<IEnumerable<GetStockInputListDTO>>> GetByAppUserBranchIdAsync(Guid appUserId)
         {
-            var employee = await _employeeRepository.GetAsync(x=>x.Id == appUserId);
+            var employee = await _employeeRepository.GetAsync(x=>x.AppUserId == appUserId);
             if (employee is null)
                 return new ErrorDataResult<IEnumerable<GetStockInputListDTO>>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound);
 
@@ -145,7 +145,7 @@ namespace Krop.Business.Services.StockInputs
                 $"{StockInputCacheKeys.GetByAppUserBranchIdAsync}{employee.BranchId}",
                 async () =>
                 {
-                    var result = await _stockInputRepository.GetAllAsync(predicate: x => x.BranchId == employee.BranchId,
+                    var result = await _stockInputRepository.GetAllWithIncludesAsync(predicate: x => x.BranchId == employee.BranchId,
                 includeProperties: new Expression<Func<StockInput, object>>[]
             {
                 p=>p.Product,
@@ -158,7 +158,7 @@ namespace Krop.Business.Services.StockInputs
                 10
                 );
 
-            return new SuccessDataResult<IEnumerable<GetStockInputListDTO>>(getStockInputListDTOs);
+            return new SuccessDataResult<IEnumerable<GetStockInputListDTO>>(getStockInputListDTOs.OrderByDescending(x=>x.InputDate));
         }
         #endregion
         #region Search

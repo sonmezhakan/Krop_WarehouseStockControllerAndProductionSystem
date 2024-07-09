@@ -14,11 +14,13 @@ namespace Krop.MVC.Controllers
     {
         private readonly IWebApiService _webApiService;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public LoginController(IWebApiService webApiService,SignInManager<AppUser> signInManager)
+        public LoginController(IWebApiService webApiService,SignInManager<AppUser> signInManager,UserManager<AppUser> userManager)
         {
             _webApiService = webApiService;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
         [HttpGet]
         public  IActionResult Index()
@@ -44,7 +46,15 @@ namespace Krop.MVC.Controllers
 
             await _signInManager.PasswordSignInAsync(loginDTO.UserName, loginDTO.Password, false, false);
 
-             var cookieOptions = new CookieOptions
+            var user = await _userManager.FindByNameAsync(loginDTO.UserName);
+
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+    };
+
+            await _signInManager.SignInWithClaimsAsync(user, isPersistent: false, claims);
+            var cookieOptions = new CookieOptions
              {
                  HttpOnly = true,
                  Secure = true,

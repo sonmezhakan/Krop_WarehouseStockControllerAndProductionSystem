@@ -2,6 +2,8 @@
 {
     public record  GetStockInputDTO
     {
+        public Guid Id { get; init; }
+        public Guid AppUserId { get; init; }
         public Guid ProductId{ get; init; }
         public Guid SupplierId{ get; init; }
         public Guid BranchId{ get; init; }
