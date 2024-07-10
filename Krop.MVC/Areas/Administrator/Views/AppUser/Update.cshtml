@@ -18,11 +18,36 @@
     <div class="row">
         <div class="col">
             <div class="card">
-                <partial name="Partials/_SuccessErrorAlertPartial"/>
+                @if (TempData["SuccessUserInformation"] != null)
+                {
+                    <div class="alert alert-success">
+                        <span>@TempData["SuccessUserInformation"]</span>
+                    </div>
+                }
+                else if (TempData["ErrorUserInformation"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <span>@TempData["ErrorUserInformation"]</span>
+                    </div>
+                }
+
+                @if (TempData["SuccessUserPassword"] != null)
+                {
+                    <div class="alert alert-success">
+                        <span>@TempData["SuccessUserPassword"]</span>
+                    </div>
+                }
+                else if (TempData["ErrorUserPassword"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <span>@TempData["ErrorUserPassword"]</span>
+                    </div>
+                }
+                
                 <div class="card-body">
                     <form method="post">
-                       <div class="row">
-                           <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Kullanıcılar</label>
                                     <select id="appUserSelect" class="choices form-select" asp-for="UpdateAppUserDTO.Id">
@@ -83,24 +108,18 @@
                                     <label>Adres</label>
                                     <textarea rows="3" class="form-control" asp-for="@Model.UpdateAppUserDTO.Addres"></textarea>
                                 </div>
-                           </div>
-                           <div class="col-md-6">
-                               <div class="form-group">
-                                    <select id="roleSelect" class="choices form-select multiple-remove" multiple="multiple" asp-for=@Model.UpdateAppUserDTO.Roles>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select id="roleSelect" class="choices form-select multiple-remove" multiple="multiple" asp-for=UpdateAppUserDTO.Roles>
                                         <optgroup label="Yetkiler">
                                             @if (Model.GetAppUserRoleDTOs != null)
                                             {
                                                 @foreach (var item in Model.GetAppUserRoleDTOs)
                                                 {
-                                                    @if (Model.UpdateAppUserDTO != null && Model.UpdateAppUserDTO.Roles != null)
+                                                    @if (Model.UpdateAppUserDTO != null && Model.UpdateAppUserDTO.Roles.Contains(item.Name))
                                                     {
-                                                        @foreach (var role in Model.UpdateAppUserDTO.Roles)
-                                                        {
-                                                            @if (role == item.Name)
-                                                            {
-                                                                <option value="@item.Name" selected>@item.Name</option>
-                                                            }
-                                                        }
+                                                        <option value="@item.Name" selected>@item.Name</option>
                                                     }
                                                     else
                                                     {
@@ -110,13 +129,13 @@
                                             }
                                         </optgroup>
                                     </select>
-                               </div>
-                           </div>
-                       </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-warning btn-block">Güncelle</button>
                         </div>
-                        @if(@Model.UpdateAppUserDTO != null)
+                        @if (@Model.UpdateAppUserDTO != null)
                         {
                             <div class="form-group">
                                 <div class="row">

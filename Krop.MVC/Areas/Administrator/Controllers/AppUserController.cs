@@ -89,7 +89,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                 if (!response.IsSuccessStatusCode)
                 {
                     var resultError = await JsonHelper.DeserializeAsync<ErrorResponseViewModel>(response);
-                    TempData["Error"] = resultError.Detail;
+                    TempData["ErrorUserInformation"] = resultError.Detail;
                     return View(new UpdateAppUserVM
                     {
                         GetAppUserComboBoxDTOs = await AppUserSelectList(),
@@ -97,14 +97,15 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                         UpdateAppUserDTO = updateAppUserVM.UpdateAppUserDTO
                     });
                 }
+                TempData["SuccessUserInformation"] = "Kullanıcı Güncelleme İşlemi Başarılı!";
             }
-            if(updateAppUserVM.UpdateAppUserPasswordDTO != null)
+            if(updateAppUserVM.UpdateAppUserPasswordDTO.Password != null)
             {
                 HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("account/updatePassword", new UpdateAppUserPasswordDTO { Id = updateAppUserVM.UpdateAppUserDTO.Id, Password = updateAppUserVM.UpdateAppUserPasswordDTO.Password});
                 if(!response.IsSuccessStatusCode)
                 {
                     var resultError = await JsonHelper.DeserializeAsync<ErrorResponseViewModel>(response);
-                    TempData["Error"] = resultError.Detail;
+                    TempData["ErrorUserPassword"] = resultError.Detail;
                     return View(new UpdateAppUserVM
                     {
                         GetAppUserComboBoxDTOs = await AppUserSelectList(),
@@ -112,9 +113,9 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                         UpdateAppUserDTO = updateAppUserVM.UpdateAppUserDTO
                     });
                 }
+                TempData["SuccessUserPassword"] = "Kullanıcı Şifre Güncelleme İşlemi Başarılı!";
             }
             
-            TempData["Success"] = "Kullanıcı Güncelleme İşlemi Başarılı!";
             return RedirectToAction("Update", "AppUser", new { id = updateAppUserVM.UpdateAppUserDTO.Id });
         }
         [HttpGet("Aktivasyon-Maili-Gonder/{id}")]

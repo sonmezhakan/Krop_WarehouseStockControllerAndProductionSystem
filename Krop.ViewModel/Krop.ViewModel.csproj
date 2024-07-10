@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Krop.DTO\Krop.DTO.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\Stocks\" />
+  </ItemGroup>
+
 </Project>

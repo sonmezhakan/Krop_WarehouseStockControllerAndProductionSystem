@@ -189,7 +189,7 @@ namespace Krop.Business.Services.Stocks
         #region Stock Listed
         public async Task<IDataResult<IEnumerable<GetStockListDTO>>> GetAllFilteredAppUserAsync(Guid appUserId)
         {
-            var getEmployee = await _employeeRepository.GetAsync(x=>x.Id == appUserId);
+            var getEmployee = await _employeeRepository.GetAsync(x=>x.AppUserId == appUserId);
             if (getEmployee is null)
                 return new ErrorDataResult<IEnumerable<GetStockListDTO>>(StatusCodes.Status404NotFound,EmployeeMessages.EmployeeNotFound);
 

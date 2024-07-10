@@ -1,0 +1,109 @@
+﻿@model List<GetStockListDTO>
+@{
+    ViewData["Title"] = "Stok Listesi";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+    string branchName = Model != null ? Model[0].BranchName : null;
+}
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+}
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"] - @branchName</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <table id="stockList" class="table table-striped table-bordered" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Şube</th>
+                                    <th>Ürün Adı</th>
+                                    <th>Ürün Kodu</th>
+                                    <th>Stok Miktarı</th>
+                                    <th>Kritik Miktar</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.BranchName</td>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.ProductCode</td>
+                                            <td>@item.UnitsInStock</td>
+                                            <td>@item.CriticalStock</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-heading">
+    <h1>Kritik Miktarın Altındakiler - @branchName</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <table id="stockListCritical" class="table table-striped table-bordered" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Şube</th>
+                                    <th>Ürün Adı</th>
+                                    <th>Ürün Kodu</th>
+                                    <th>Stok Miktarı</th>
+                                    <th>Kritik Miktar</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                       @if(item.UnitsInStock < item.CriticalStock)
+                                        {
+                                            <tr>
+                                                <td>@item.BranchName</td>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.ProductCode</td>
+                                                <td>@item.UnitsInStock</td>
+                                                <td>@item.CriticalStock</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        intitializeDataTable('stockList', 3, 'desc');
+        intitializeDataTable('stockListCritical', 3, 'desc');
+    }
+</script>

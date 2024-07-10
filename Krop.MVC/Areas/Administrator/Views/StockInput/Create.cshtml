@@ -125,5 +125,20 @@
             const selectedValue = this.value;
             productNameSelect.setChoiceByValue(selectedValue);
         });
+
+        const branchSelect = new Choices('#branchSelect', {
+            shouldSort: false
+        });
+        document.getElementById('branchSelect').addEventListener('change', function () {
+            const selectedValue = this.value;
+        });
+
+        const supplierSelect = new Choices('#supplierSelect', {
+            shouldSort: false
+        });
+        
+        document.getElementById('supplierSelect').addEventListener('change', function () {
+            const selectedValue = this.value;
+        });
     });
 </script>
