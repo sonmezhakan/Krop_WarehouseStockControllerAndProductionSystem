@@ -1,6 +1,5 @@
 ﻿using Krop.Business.Services.Productions;
 using Krop.DTO.Dtos.Productions;
-using Krop.Entities.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Krop.WebAPI.Controllers

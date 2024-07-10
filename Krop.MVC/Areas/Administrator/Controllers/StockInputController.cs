@@ -28,18 +28,17 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             var result = await StockInputList();
             return View(result);
         }
-        [HttpGet("Ekle/{productId?}")]
-        public async Task<IActionResult> Create(Guid? productId)
+        [HttpGet("Ekle")]
+        public async Task<IActionResult> Create()
         {
             return View(new CreateStockInputVM
             {
                 GetBranchComboBoxDTOs = await BranchSelectList(),
                 GetProductComboBoxDTOs = await ProductSelectList(),
-                GetSupplierComboBoxDTOs = await SupplierSelectList(),
-                ProductId = productId
+                GetSupplierComboBoxDTOs = await SupplierSelectList()
             });
         }
-        [HttpPost("Ekle/{productId?}")]
+        [HttpPost("Ekle")]
         public async Task<IActionResult> Create(CreateStockInputVM createStockInputVM)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("stockInput/add", createStockInputVM.CreateStockInputDTO);
@@ -58,12 +57,11 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                 GetBranchComboBoxDTOs = await BranchSelectList(),
                 GetProductComboBoxDTOs = await ProductSelectList(),
                 GetSupplierComboBoxDTOs = await SupplierSelectList(),
-                CreateStockInputDTO = createStockInputVM.CreateStockInputDTO,
-                ProductId = createStockInputVM.CreateStockInputDTO.ProductId
+                CreateStockInputDTO = createStockInputVM.CreateStockInputDTO
             });
         }
-        [HttpGet("Guncelle/{id}/{productId?}")]
-        public async Task<IActionResult> Update(Guid id, Guid? productId)
+        [HttpGet("Guncelle/{id}")]
+        public async Task<IActionResult> Update(Guid id)
         {
             if (id != Guid.Empty)
             {
@@ -76,8 +74,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                     {
                         GetBranchComboBoxDTOs = await BranchSelectList(),
                         GetProductComboBoxDTOs = await ProductSelectList(),
-                        GetSupplierComboBoxDTOs = await SupplierSelectList(),
-                        ProductId = productId
+                        GetSupplierComboBoxDTOs = await SupplierSelectList()
                     });
                 }
                 var resultSuccess = await JsonHelper.DeserializeAsync<SuccessDataResponseViewModel<UpdateStockInputDTO>>(response);
@@ -86,19 +83,17 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                     GetBranchComboBoxDTOs = await BranchSelectList(),
                     GetProductComboBoxDTOs = await ProductSelectList(),
                     GetSupplierComboBoxDTOs = await SupplierSelectList(),
-                    UpdateStockInputDTO = resultSuccess.Data,
-                    ProductId = productId ?? resultSuccess.Data.ProductId
+                    UpdateStockInputDTO = resultSuccess.Data
                 });
             }
             return View(new UpdateStockInputVM
             {
                 GetBranchComboBoxDTOs = await BranchSelectList(),
                 GetProductComboBoxDTOs = await ProductSelectList(),
-                GetSupplierComboBoxDTOs = await SupplierSelectList(),
-                ProductId = productId
+                GetSupplierComboBoxDTOs = await SupplierSelectList()
             });
         }
-        [HttpPost("Guncelle/{id}/{productId?}")]
+        [HttpPost("Guncelle/{id}")]
         public async Task<IActionResult> Update(UpdateStockInputVM updateStockInputVM)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PutAsJsonAsync("stockInput/update", updateStockInputVM.UpdateStockInputDTO);
@@ -111,8 +106,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                     GetBranchComboBoxDTOs = await BranchSelectList(),
                     GetProductComboBoxDTOs = await ProductSelectList(),
                     GetSupplierComboBoxDTOs = await SupplierSelectList(),
-                    UpdateStockInputDTO = updateStockInputVM.UpdateStockInputDTO,
-                    ProductId = updateStockInputVM.UpdateStockInputDTO.ProductId
+                    UpdateStockInputDTO = updateStockInputVM.UpdateStockInputDTO
                 });
             }
             TempData["Success"] = "Stok Giriş Güncelleme İşlemi Başarılı!";

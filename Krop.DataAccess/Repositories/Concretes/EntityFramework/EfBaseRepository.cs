@@ -189,7 +189,7 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
         }
         #endregion
         #region GetAllAsync
-        public Task<IEnumerable<T>> GetAllWithIncludesAsync(Expression<Func<T, bool>> predicate = null,
+        public async Task<IEnumerable<T>> GetAllWithIncludesAsync(Expression<Func<T, bool>> predicate = null,
             params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> queries = _entities
@@ -200,20 +200,17 @@ namespace Krop.DataAccess.Repositories.Concretes.EntityFramework
             {
                 queries = queries.Include(includeProperty);
             }
-            if (predicate != null)
-            {
-                queries.Where(predicate);
-            }
-
-            return queries.AsNoTracking().ToListAsync().ContinueWith(t => t.Result.AsEnumerable());
+            return predicate != null ?
+               await queries.Where(predicate).AsNoTracking().ToListAsync():
+               await queries.AsNoTracking().ToListAsync();
         }
         public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null)
         {
-            IQueryable<T> query = _entities;
+            IQueryable<T> queries = _entities;
 
-            return predicate is null ?
-                await query.ToListAsync() :
-                 await query.Where(predicate).AsNoTracking().ToListAsync();
+            return predicate != null ?
+               await queries.Where(predicate).AsNoTracking().ToListAsync() :
+               await queries.AsNoTracking().ToListAsync();
         }
         #endregion
         #region FindAsync

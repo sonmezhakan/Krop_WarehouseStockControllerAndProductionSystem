@@ -171,7 +171,7 @@ namespace Krop.Business.Services.Productions
         #region List
         public async Task<IDataResult<IEnumerable<GetProductionListDTO>>> GetByBranchIdAsync(Guid appUserId)
         {
-            var employee = await _employeeRepository.GetAsync(x => x.Id == appUserId);
+            var employee = await _employeeRepository.GetAsync(x => x.AppUserId == appUserId);
             if (employee is null)
                 return new ErrorDataResult<IEnumerable<GetProductionListDTO>>(StatusCodes.Status404NotFound, EmployeeMessages.EmployeeNotFound);
 
@@ -181,7 +181,7 @@ namespace Krop.Business.Services.Productions
 
             #region Cache
             IEnumerable<GetProductionListDTO>? getProductionListDTOs = await _cacheHelper.GetOrAddListAsync(
-                ProductionCacheKeys.GetByBranchIdAsync,
+                $"{ProductionCacheKeys.GetByBranchIdAsync}{employee.BranchId}",
                 async () =>
                 {
                     var result = await _productionRepository.GetAllWithIncludesAsync(x => x.BranchId == employee.BranchId, includeProperties: new Expression<Func<Production, object>>[]

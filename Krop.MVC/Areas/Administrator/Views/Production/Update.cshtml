@@ -1,0 +1,174 @@
+﻿@using System.Security.Claims
+@model UpdateProductionVM
+@{
+    ViewData["Title"] = "Üretim Güncelle";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/styles/choices.min.css">
+    <link rel="stylesheet" href="~/themes/mazer-theme/dist/assets/extensions/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+}
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/2.0.8/sorting/date-de.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/extensions/flatpickr/flatpickr.js"></script>
+    <script src="~/themes/mazer-theme/dist/assets/static/js/pages/date-picker.js"></script>
+    <script src="~/js/script.js"></script>
+}
+<div class="page-heading">
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <partial name="Partials/_SuccessErrorAlertPartial"></partial>
+                <div class="card-body">
+                    <div class="row d-flex">
+
+                        <div class="col-md-4">
+                            <form method="post">
+                                <input type="hidden" asp-for="UpdateProductionDTO.Id" value="@Model.UpdateProductionDTO.Id" />
+                                <input type="hidden" asp-for="UpdateProductionDTO.AppUserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+                                <div class="form-group">
+                                    <label>Üretim Yapılacak Şube</label>
+                                    <select id="branchSelect" class="choices form-select" asp-for="UpdateProductionDTO.BranchId">
+                                        <option disabled selected>Şube Seçiniz!</option>
+                                        @if (Model.GetBranchComboBoxDTOs != null)
+                                        {
+                                            @foreach (var item in Model.GetBranchComboBoxDTOs)
+                                            {
+                                                <option value="@item.Id">@item.BranchName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row d-flex">
+                                        <div class="col-md-6">
+                                            <label>Üretilecek Ürün Adı</label>
+                                            <select id="productNameSelect" class="choices form-select" asp-for="UpdateProductionDTO.ProductId">
+                                                <option disabled selected>Üretilecek Ürün Adı Seçiniz!</option>
+                                                @if (Model.GetProductComboBoxDTOs != null)
+                                                {
+                                                    @foreach (var item in Model.GetProductComboBoxDTOs)
+                                                    {
+                                                        @if (Model.UpdateProductionDTO != null && Model.UpdateProductionDTO.ProductId == item.Id)
+                                                        {
+                                                            <option value="@item.Id" selected>@item.ProductName</option>
+                                                        }
+                                                       
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Üretilecek Ürün Kodu</label>
+                                            <select id="productCodeSelect" class="choices form-select" asp-for="UpdateProductionDTO.ProductId">
+                                                <option disabled selected>Üretilecek Ürün Kodu Seçiniz!</option>
+                                                @if (Model.GetProductComboBoxDTOs != null)
+                                                {
+                                                    @foreach (var item in Model.GetProductComboBoxDTOs)
+                                                    {
+                                                        @if (Model.UpdateProductionDTO != null && Model.UpdateProductionDTO.ProductId == item.Id)
+                                                        {
+                                                            <option value="@item.Id" selected>@item.ProductCode</option>
+                                                        }
+                                                        
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Üretilecek Adet</label>
+                                    <input type="text" class="form-control" asp-for="@Model.UpdateProductionDTO.ProductionQuantity" placeholder="Üretilecek Adet" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Üretim Tarihi</label>
+                                    <input type="datetime" class="form-control flatpickr-no-config flatpickr-input" asp-for="@Model.UpdateProductionDTO.ProductionDate" placeholder="Üretim Tarihi" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Açıklama</label>
+                                    <textarea rows="3" class="form-control" asp-for="@Model.UpdateProductionDTO.Description" placeholder="Açıklama"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-warning btn-block">Güncelle</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-8">
+                            <table id="productReceiptList" class="table table-striped" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Ürün Adı</th>
+                                        <th>Ürün Kodu</th>
+                                        <th>Kullanılacak Miktar</th>
+                                        <th>
+                                            <div class="form-group">
+                                                <a class="btn btn-success" asp-controller="ProductReceipt" asp-action="Create">Ekle</a>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.GetProductReceiptListDTOs != null)
+                                    {
+                                        @foreach (var item in Model.GetProductReceiptListDTOs)
+                                        {
+                                            <tr>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.ProductCode</td>
+                                                <td>@item.Quantity</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <a class="btn btn-warning btn-block" asp-controller="ProductReceipt" asp-action="Update" asp-route-produceProductId="@Model.UpdateProductionDTO.ProductId" asp-route-productId="@item.ProductId">Güncelle</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const branchSelect = new Choices('#branchSelect', {
+            shouldSort: false
+        });
+
+        document.getElementById('branchSelect',).addEventListener('change', function () {
+            const selectedValue = this.value;
+            branchSelect.setChoiceByValue(seletedValue);
+        });
+
+        const productNameSelect = new Choices('#productNameSelect', {
+            shouldSort: false
+        });
+        const productCodeSelect = new Choices('#productCodeSelect', {
+            shouldSort: false
+        });
+        document.getElementById('productNameSelect').addEventListener('change', function () {
+            const selectedValue = this.value;
+            
+        });
+        document.getElementById('productCodeSelect').addEventListener('change', function () {
+            const selectedValue = this.value;            
+        });
+
+        intitializeDataTable('productReceiptList', 0, 'asc');
+    })
+
+</script>
+

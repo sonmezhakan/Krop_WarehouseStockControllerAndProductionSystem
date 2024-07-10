@@ -20,7 +20,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             _webApiService = webApiService;
         }
         
-        [HttpGet("Listele")]
+       [HttpGet("Listele")]
         public async Task<IActionResult> Index()
         {
             HttpResponseMessage response = await _webApiService.httpClient.GetAsync("product/getall");
@@ -33,7 +33,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
             var resultSuccess = await JsonHelper.DeserializeAsync<SuccessDataResponseViewModel<List<GetProductListDTO>>>(response);
             return View(resultSuccess.Data);
         }
-        [HttpGet("Ekle")]
+        //[HttpGet("Ekle")]
         public async Task<IActionResult> Create()
         {
             return View(new CreateProductVM
@@ -42,7 +42,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                 GetCategoryDTO = await CategorySelectList()
             });
         }
-        [HttpPost("Ekle")]
+        [HttpPost]
         public async Task<IActionResult> Create(CreateProductVM createProductVM)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("product/add", createProductVM.CreateProductDTO);

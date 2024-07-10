@@ -11,6 +11,5 @@ namespace Krop.ViewModel.ViewModels.StockInputs
         public List<GetProductComboBoxDTO>? GetProductComboBoxDTOs { get; init; }
         public List<GetSupplierComboBoxDTO>? GetSupplierComboBoxDTOs { get; init; }
         public UpdateStockInputDTO? UpdateStockInputDTO { get; init; }
-        public Guid? ProductId { get; init; }
     }
 }

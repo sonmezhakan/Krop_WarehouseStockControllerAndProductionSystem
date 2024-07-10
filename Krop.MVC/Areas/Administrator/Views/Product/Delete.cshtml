@@ -8,7 +8,6 @@
 }
 @section Scripts {
     <script src="~/themes/mazer-theme/dist/assets/extensions/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script src="~/themes/mazer-theme/dist/assets/static/js/pages/form-element-select.js"></script>
     <script src="~/js/script.js"></script>
 }
 <div class="page-heading">
@@ -23,7 +22,7 @@
                     <form method="post">
                         <div class="form-group">
                             <label>Ürünler</label>
-                            <select id="productNameSelect" class="choices form-select">
+                            <select id="productNameSelect" asp-for="Id" class="choices form-select">
                                 <option disabled selected>Ürün Adı Seçiniz!</option>
                                 @if (Model.GetProductComboBoxDTO != null)
                                 {
@@ -40,7 +39,7 @@
                                     }
                                 }
                             </select>
-                            <select id="productCodeSelect" class="choices form-select">
+                            <select id="productCodeSelect" asp-for="Id" class="choices form-select">
                                 <option disabled selected>Ürün Kodu Seçiniz!</option>
                                 @if (Model.GetProductComboBoxDTO != null)
                                 {
@@ -68,16 +67,22 @@
     </div>
 </div>
 <script>
-    window.onload = function () {
-        $("#productNameSelect").change(function () {
-            const productId = document.getElementById("productNameSelect").value;
-            const path = "urun/sil/" + productId;
-            redirectToSelectedPage(path);
+    document.addEventListener('DOMContentLoaded', function(){
+        const productNameSelect = new Choices('#productNameSelect', {
+            shouldSort: false
         });
-        $("#productCodeSelect").change(function () {
-            const productId = document.getElementById("productCodeSelect").value;
-            const path = "urun/sil/" + productId;
-            redirectToSelectedPage(path);
+        const productCodeSelect = new Choices('#productCodeSelect', {
+            shouldSort: false
+        });
+
+        document.getElementById('productNameSelect').addEventListener('change', function () {
+            const selectedValue = this.value;
+            productCodeSelect.setChoiceByValue(selectedValue);
+        });
+
+        document.getElementById('productCodeSelect').addEventListener('change', function () {
+            const selectedValue = this.value;
+            productNameSelect.setChoiceByValue(selectedValue);
         })
-    }
+    })
 </script>

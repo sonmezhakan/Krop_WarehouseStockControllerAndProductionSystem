@@ -1,7 +1,6 @@
-﻿@using Krop.DTO.Dtos.StockInputs
-@model List<GetStockInputListDTO>
+﻿@model List<GetProductionListDTO>
 @{
-    ViewData["Title"] = "Stok Giriş Listesi";
+    ViewData["Title"] = "Üretim Listesi";
     Layout = "~/Areas/Administrator/Views/Shared/_LayoutAdministrator.cshtml";
 }
 @section Styles {
@@ -20,24 +19,22 @@
     <div class="row">
         <div class="col">
             <div class="card">
-                <partial name="Partials/_SuccessErrorAlertPartial"></partial>
+                <partial name="Partials/_SuccessErrorAlertPartial" />
                 <div class="card-body">
-                    <table id="stockInputList" class="table table striped" width="100%">
+                    <table id="productionList" class="table table-striped" width="100%">
                         <thead>
                             <tr>
                                 <th>Şube</th>
                                 <th>Ürün Adı</th>
                                 <th>Ürün Kodu</th>
-                                <th>Tedarikçi</th>
-                                <th>Fatura No</th>
-                                <th>Fiyat</th>
-                                <th>Giriş Yapılacak Adet</th>
+                                <th>Üretilen Adet</th>
+                                <th>Üretim Tarihi</th>
                                 <th>Açıklama</th>
-                                <th>Giriş Tarihi</th>
                                 <th>Çalışan</th>
-                                <th>Üretim Durumu</th>
                                 <th>
-                                    <a class="btn btn-success" asp-controller="StockInput" asp-action="Create">Ekle</a>
+                                    <div class="form-group">
+                                        <a class="btn btn-success" asp-controller="Production" asp-action="Create">Ekle</a>
+                                    </div>
                                 </th>
                             </tr>
                         </thead>
@@ -50,28 +47,14 @@
                                         <td>@item.BranchName</td>
                                         <td>@item.ProductName</td>
                                         <td>@item.ProductCode</td>
-                                        <td>@item.CompanyName</td>
-                                        <td>@item.InvoiceNumber</td>
-                                        <td>@item.UnitPrice</td>
-                                        <td>@item.Quantity</td>
+                                        <td>@item.ProductionQuantity</td>
+                                        <td>@item.ProductionDate</td>
                                         <td>@item.Description</td>
-                                        <td>@item.InputDate</td>
                                         <td>@item.UserName</td>
-
-                                        <td>
-                                            @if(item.ProductionStatu== true)
-                                            {
-                                                <span class="badge text-bg-success">
-                                                    Üretim
-                                                </span>
-                                            }
-                                        </td>
-
                                         <td>
                                             <div class="form-group">
-                                                <a class="btn btn-warning btn-block" asp-controller="StockInput" asp-action="Update" asp-route-id="@item.Id">Güncelle</a>
-                                                <a class="btn btn-danger btn-block" asp-controller="StockInput" asp-action="Delete" asp-route-id="@item.Id">Sil</a>
-
+                                                <a class="btn btn-warning btn-block" asp-controller="Production" asp-action="Update" asp-route-id="@item.Id">Güncelle</a>
+                                                <a class="btn btn-danger btn-block" asp-controller="Production" asp-action="Delete" asp-route-id="@item.Id">Sil</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -85,9 +68,7 @@
     </div>
 </div>
 <script>
-    window.onload = function () {
-        
-        intitializeDataTable('stockInputList', 8, 'desc');
-        
+    window.onload = function(){
+        intitializeDataTable('productionList', 4, 'desc');
     }
 </script>

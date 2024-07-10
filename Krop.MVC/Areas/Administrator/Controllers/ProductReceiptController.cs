@@ -23,28 +23,26 @@ namespace Krop.MVC.Areas.Administrator.Controllers
         {
             return View();
         }
-        [HttpGet("Ekle/{produceProductId?}/{productId?}")]
-        public async Task<IActionResult> Create(Guid? produceProductId, Guid? productId)
+        [HttpGet("Ekle/{produceProductId?}")]
+        public async Task<IActionResult> Create(Guid? produceProductId)
         {
             TempData["DeleteAction"] = "Create";
-            if ((produceProductId != null && produceProductId != Guid.Empty) || (productId != null && productId != Guid.Empty))
+            if ((produceProductId != null && produceProductId != Guid.Empty))
             {
                 return View(new CreateProductReceiptVM
                 {
                     GetProductComboBoxDTOs = await ProductSelectList(),
                     GetProductReceiptListDTOs = await ProductReceiptList((Guid)produceProductId),
-                    ProduceProductId = produceProductId,
-                    ProductId = productId
+                    ProduceProductId = produceProductId
                 });
             }
             return View(new CreateProductReceiptVM
             {
-                GetProductComboBoxDTOs = await ProductSelectList(),
-                ProductId = productId
+                GetProductComboBoxDTOs = await ProductSelectList()
             });
 
         }
-        [HttpPost("Ekle/{produceProductId?}/{productId?}")]
+        [HttpPost("Ekle/{produceProductId?}")]
         public async Task<IActionResult> Create(CreateProductReceiptVM createProductReceiptVM)
         {
             HttpResponseMessage response = await _webApiService.httpClient.PostAsJsonAsync("productReceipt/add", createProductReceiptVM.CreateProductReceiptDTO);
@@ -57,8 +55,7 @@ namespace Krop.MVC.Areas.Administrator.Controllers
                     GetProductComboBoxDTOs = await ProductSelectList(),
                     GetProductReceiptListDTOs = await ProductReceiptList(createProductReceiptVM.CreateProductReceiptDTO.ProduceProductId),
                     CreateProductReceiptDTO = createProductReceiptVM.CreateProductReceiptDTO,
-                    ProduceProductId = createProductReceiptVM.CreateProductReceiptDTO.ProduceProductId,
-                    ProductId = createProductReceiptVM.CreateProductReceiptDTO.ProductId
+                    ProduceProductId = createProductReceiptVM.CreateProductReceiptDTO.ProduceProductId
                 });
             }
             TempData["Success"] = "Ürün Reçetesine Ürün Ekleme İşlemi Başarılı!";
